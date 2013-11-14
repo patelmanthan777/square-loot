@@ -1,4 +1,4 @@
 square-loot
 ===========
 
-Video game based on Lwjgl
+Video game in 2D based on Lwjgl 
