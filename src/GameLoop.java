@@ -49,6 +49,7 @@ public class GameLoop {
 		createWindow();
 		initGL();
 		m.generate();
+		p.setPosition(m.getSpawnPosition());
 		isRunning = true;
 	}
 
@@ -110,7 +111,7 @@ public class GameLoop {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 		
-		p.updatePostion(0.01f); // a sortir de la boucle de rendu ?
+		p.updatePostion(0.01f,m); // a sortir de la boucle de rendu ?
 		System.out.println(p.getPosition());
 		p.draw();
 		m.draw();

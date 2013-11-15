@@ -4,6 +4,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import environment.Map;
+
 
 
 public class Player extends Entity{
@@ -22,6 +24,14 @@ public class Player extends Entity{
 		setPosition(pos);
 		Vector2f ori = new Vector2f(0,0);
 		setOrientation(ori);
+	}
+	
+	@Override
+	public boolean isInCollision(float x, float y, Map m){
+		if(m.testCollision(x-halfSize.x, y-halfSize.y) || m.testCollision(x+halfSize.x, y-halfSize.y) || m.testCollision(x-halfSize.x, y+halfSize.y) || m.testCollision(x+halfSize.x, y+halfSize.y)){
+			return false;
+		}
+		return true;
 	}
 	
 	@Override

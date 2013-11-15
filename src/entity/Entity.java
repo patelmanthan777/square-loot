@@ -5,6 +5,8 @@ import rendering.Drawable;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import environment.Map;
+
 public abstract class Entity implements Drawable{
 	protected Vector2f position;
 	protected Vector2f orientation;
@@ -52,7 +54,9 @@ public abstract class Entity implements Drawable{
 		this.translation.y += translationy;
 	}
 	
-	public void updatePostion(float dt){
+	public abstract boolean isInCollision(float x, float y, Map m);
+	
+	public void updatePostion(float dt, Map m){
 			if (translation.length() != 0)
 				translation = (Vector2f)translation.normalise();
 			speed.x = speed.x + translation.x - speed.x / descFactor;
@@ -70,26 +74,29 @@ public abstract class Entity implements Drawable{
 				}
 			}
 			
-			/*float x_tmp = position.x + speed.x * dt;
+			float x_tmp = position.x + speed.x * dt;
 			float y_tmp = position.y + speed.y * dt;
 			
-			if player.noCollision(x_tmp, y_tmp, map) then
-				player._x = x_tmp
-				player._y = y_tmp
+			if(isInCollision(x_tmp, y_tmp, m)){
+				position.x = x_tmp;
+				position.y = y_tmp;
+			}
 			else
-				if player.noCollision(x_tmp, player._y, map) == false then
-					player._speedx = 0
-				end
-				if player.noCollision(player._x, y_tmp, map) == false then
-					player._speedy = 0
-				end
-				if player.noCollision(player._x, y_tmp, map) and player.noCollision(x_tmp, player._y, map) then
-					player._speedx = 0
-					player._speedy = 0
-				end*/
+			{
+				if(!isInCollision(x_tmp, position.y, m)){
+						speed.x = 0;
+			}
+				if(!isInCollision(position.x, y_tmp, m)){
+				speed.y = 0;
+			}
+				if(isInCollision(position.x, y_tmp, m) && isInCollision(x_tmp, position.y, m)){
+					speed.x = 0;
+					speed.y = 0;
+				}
+			
 				position.x = position.x + speed.x * dt;
 				position.y = position.y + speed.y * dt;
-			//end
+			}
 			
 			translation.x = 0;
 			translation.y = 0;

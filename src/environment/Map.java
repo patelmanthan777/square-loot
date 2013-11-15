@@ -16,12 +16,29 @@ public class Map implements Drawable{
 	
 	
 	private int[][] blockGrid;  
+	private int spawnPoint_x;
+	private int spawnPoint_y;
+	private Vector2f spawnPosition;
 	
 	
 	public Map(int width, int height){
 		this.width = width;
 		this.height = height;
 		this.blockGrid = new int[width][height];
+	}
+	
+	public boolean testCollision(float x, float y)
+	{
+		int x_grid = (int) Math.floor(x/(halfBlockSize.x*2));
+		int y_grid = (int) Math.floor(y/(halfBlockSize.y*2));
+		if( x_grid < 0 || y_grid < 0 || x_grid > height || y_grid > width || blockGrid[x_grid][y_grid] == 1){
+			return true;
+		}
+    return false;
+	}
+	
+	public Vector2f getSpawnPosition(){
+		return spawnPosition;
 	}
 	
 	public void generate(){
@@ -36,6 +53,19 @@ public class Map implements Drawable{
 				}
 			}
 		}
+		for(i = 0 ; i < width ; i++){
+			blockGrid[i][0] = 1;
+			blockGrid[i][height-1] = 1;
+		}
+		for(j = 0 ; j < height ; j++){
+			blockGrid[0][j] = 1;
+			blockGrid[width-1][j] = 1;
+		}
+		
+		spawnPoint_x = (int)(Math.random()*width)+1;
+		spawnPoint_y = (int)(Math.random()*height)+1;
+		blockGrid[spawnPoint_x][spawnPoint_y] = 0;
+		spawnPosition = new Vector2f((spawnPoint_x * 2 + 1)* halfBlockSize.x, (spawnPoint_y * 2 +1) * halfBlockSize.y);
 	}
 	
 	
