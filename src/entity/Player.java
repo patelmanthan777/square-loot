@@ -9,6 +9,9 @@ import org.lwjgl.util.vector.Vector3f;
 public class Player extends Entity{
 	
 	private Vector2f halfSize = new Vector2f(10,10);
+	
+	
+	
 	//private Vector2f[] points = new Vector2f[4]; // a initialiser avec l'orientation et la taille
 												 // --> override setOrientation et setPosition pour le maj
 	

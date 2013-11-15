@@ -28,7 +28,7 @@ public class Map implements Drawable{
 		int i;
 		int j;
 		for(i = 0 ; i < width ; i++){
-			for(j = 0 ; j < width ; j++){
+			for(j = 0 ; j < height ; j++){
 				if(Math.random() < probability){
 					blockGrid[i][j] = 1; 
 				}else{

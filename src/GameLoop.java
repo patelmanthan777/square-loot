@@ -3,6 +3,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.util.vector.Vector2f;
 
 import entity.Player;
 import environment.Map;
@@ -19,7 +20,7 @@ public class GameLoop {
 	
 	
 	private Player p = new Player();
-	private Map m = new Map(10, 10);
+	private Map m = new Map(20, 20);
 	
 	
 	
@@ -84,12 +85,16 @@ public class GameLoop {
 			isRunning = false;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+			p.translate(0,-1);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+			p.translate(-1,0);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			p.translate(0,1);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+			p.translate(1,0);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 		}
@@ -105,6 +110,8 @@ public class GameLoop {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 		
+		p.updatePostion(0.01f); // a sortir de la boucle de rendu ?
+		System.out.println(p.getPosition());
 		p.draw();
 		m.draw();
 		
