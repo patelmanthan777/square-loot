@@ -1,0 +1,40 @@
+package entity;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
+
+
+
+public class Player extends Entity{
+	
+	private Vector2f halfSize = new Vector2f(10,10);
+	//private Vector2f[] points = new Vector2f[4]; // a initialiser avec l'orientation et la taille
+												 // --> override setOrientation et setPosition pour le maj
+	
+	public Player(){
+		Vector3f col = new Vector3f(1,1,1); 
+		setColor(col);
+		Vector2f pos = new Vector2f(100,100);
+		setPosition(pos);
+		Vector2f ori = new Vector2f(0,0);
+		setOrientation(ori);
+	}
+	
+	@Override
+	public void draw() {
+		// Clear the screen and depth buffer	
+				// set the color of the quad (R,G,B,A)
+				GL11.glMatrixMode( GL11.GL_MODELVIEW );
+				GL11.glLoadIdentity( );
+				GL11.glColor3f(color.x,color.y,color.z);
+				// draw quad
+				GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
+					GL11.glVertex2f(position.x+halfSize.x,position.y-halfSize.y);
+				    GL11.glVertex2f(position.x-halfSize.x,position.y-halfSize.y);
+				    GL11.glVertex2f(position.x+halfSize.x,position.y+halfSize.y);
+				    GL11.glVertex2f(position.x-halfSize.x,position.y+halfSize.y);
+				GL11.glEnd();
+	}
+	
+}
