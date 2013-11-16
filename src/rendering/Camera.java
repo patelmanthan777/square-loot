@@ -4,9 +4,20 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
-public class Camera {
-	static public void setPosition(Vector2f pos){		
-		GL11.glTranslatef(-pos.x+Display.getWidth()/2, -pos.y+Display.getHeight()/2,0);
+import entity.Node;
+
+public class Camera extends Node implements Drawable{
+	
+	
+	
+	public Camera(Vector2f pos) {
+		super(pos);
+	}
+
+	
+	@Override
+	public void draw() {
+		GL11.glTranslatef(-getX()+Display.getWidth()/2, -getY()+Display.getHeight()/2,0);
 	}
 	
 }

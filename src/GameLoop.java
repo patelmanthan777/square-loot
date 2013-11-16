@@ -1,3 +1,5 @@
+import light.LightManager;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -5,6 +7,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import rendering.Camera;
 import entity.Player;
@@ -19,12 +22,13 @@ public class GameLoop {
 	private static final int FPS = 600000;
 	private boolean isRunning;
 	
+	private LightManager lm;
 	
 	
-	private Player p = new Player();
-	private Map m = new Map(20, 20);
+	private Player p = new Player(new Vector2f(0,0));
+	private Map m = new Map(10, 10);
 	
-	
+	private Camera cam = new Camera(new Vector2f(0,0));
 	
 	public static void main(String[] args) {
 		GameLoop test = new GameLoop();
@@ -51,6 +55,11 @@ public class GameLoop {
 		createWindow();
 		initGL();
 		m.generate();
+		lm = new LightManager(cam);
+		lm.initLightShaders();
+		lm.addActivatedLight( "first", new Vector2f(0,0), new Vector3f(1,0,0), 100);
+		lm.addActivatedLight( "second", new Vector2f(0,200), new Vector3f(0,1,0), 100);
+		lm.addActivatedLight( "third", new Vector2f(200,200), new Vector3f(0,0,1), 100);
 		p.setPosition(m.getSpawnPosition());
 		isRunning = true;
 	}
@@ -65,10 +74,7 @@ public class GameLoop {
 
 		glMatrixMode(GL_MODELVIEW); // on passe en mode Model
 		glLoadIdentity(); // on reinitialise la matrice
-		
-		
-	
-		
+
 	}
 
 	private void createWindow() {
@@ -113,10 +119,10 @@ public class GameLoop {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 		
-		p.updatePostion(0.01f,m); // a sortir de la boucle de rendu ?
-		System.out.println(p.getPosition());
+		p.updatePostion(0.1f,m); // a sortir de la boucle de rendu ?
+		cam.setPosition(p.getPosition());
 		GL11.glPushMatrix();
-		Camera.setPosition(p.getPosition());
+		cam.draw();
 		p.draw();
 		m.draw();
 		GL11.glPopMatrix();

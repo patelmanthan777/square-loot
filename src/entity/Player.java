@@ -17,10 +17,10 @@ public class Player extends Entity{
 	//private Vector2f[] points = new Vector2f[4]; // a initialiser avec l'orientation et la taille
 												 // --> override setOrientation et setPosition pour le maj
 	
-	public Player(){
+	public Player(Vector2f pos){
+		super(pos);
 		Vector3f col = new Vector3f(1,1,1); 
 		setColor(col);
-		Vector2f pos = new Vector2f(100,100);
 		setPosition(pos);
 		Vector2f ori = new Vector2f(0,0);
 		setOrientation(ori);

@@ -7,9 +7,12 @@ import org.lwjgl.util.vector.Vector3f;
 
 import environment.Map;
 
-public abstract class Entity implements Drawable{
-	protected Vector2f position;
-	protected Vector2f orientation;
+public abstract class Entity extends Node implements Drawable{
+
+	public Entity(Vector2f pos) {
+		super(pos);
+	}
+
 	private Vector2f speed = new Vector2f(0,0);
 	private Vector2f translation = new Vector2f(0,0);
 	private float minSpeed = 0.01f;
@@ -17,21 +20,6 @@ public abstract class Entity implements Drawable{
 	private float descFactor = 5;
 	//private float accFactor = 100;
 	protected Vector3f color;
-	
-	public Vector2f getPosition(){
-		return position;
-	}
-	public Vector2f getOrientation(){
-		return orientation;
-	}
-	
-	public void setPosition(Vector2f position){
-		this.position = position;
-	}
-	
-	public void setOrientation(Vector2f orientation){
-		this.orientation = orientation;
-	}
 	
 	public Vector3f getColor(){
 		return color;
@@ -61,7 +49,6 @@ public abstract class Entity implements Drawable{
 				translation = (Vector2f)translation.normalise();
 			speed.x = speed.x + translation.x - speed.x / descFactor;
 			speed.y = speed.y + translation.y - speed.y / descFactor;
-			System.out.println(speed);
 			float normSpeed = speed.length();
 			
 			if (normSpeed != 0){
