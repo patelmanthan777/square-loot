@@ -19,7 +19,7 @@ public class Player extends Entity{
 	
 	public Player(Vector2f pos){
 		super(pos);
-		Vector3f col = new Vector3f(1,1,1); 
+		Vector3f col = new Vector3f(0,0,0); 
 		setColor(col);
 		setPosition(pos);
 		Vector2f ori = new Vector2f(0,0);
@@ -38,7 +38,6 @@ public class Player extends Entity{
 	public void draw() {
 		// Clear the screen and depth buffer	
 				// set the color of the quad (R,G,B,A)
-				GL11.glMatrixMode( GL11.GL_MODELVIEW );
 				GL11.glColor3f(color.x,color.y,color.z);
 				// draw quad
 				GL11.glBegin(GL11.GL_TRIANGLE_STRIP);

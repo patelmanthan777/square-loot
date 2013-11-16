@@ -26,7 +26,7 @@ public class GameLoop {
 	
 	
 	private Player p = new Player(new Vector2f(0,0));
-	private Map m = new Map(10, 10);
+	private Map m = new Map(50, 50);
 	
 	private Camera cam = new Camera(new Vector2f(0,0));
 	
