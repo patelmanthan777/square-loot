@@ -15,7 +15,7 @@ public class Map implements Drawable{
 	private Vector2f halfBlockSize = new Vector2f(20,20);
 	
 	
-	private int[][] blockGrid;  
+	private int[][] blockGrid;
 	private int spawnPoint_x;
 	private int spawnPoint_y;
 	private Vector2f spawnPosition;
@@ -71,7 +71,7 @@ public class Map implements Drawable{
 	
 	@Override
 	public void draw() {
-		GL11.glMatrixMode( GL11.GL_MODELVIEW );
+		//GL11.glMatrixMode( GL11.GL_MODELVIEW );
 		GL11.glColor3f(this.blockColor.x,this.blockColor.y,this.blockColor.z);
 		// draw quad
 		int i;
@@ -93,6 +93,5 @@ public class Map implements Drawable{
 				}
 			}
 		}
-		
 	}
 }

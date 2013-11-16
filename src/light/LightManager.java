@@ -1,5 +1,6 @@
 package light;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector2f;
@@ -13,6 +14,8 @@ public class LightManager {
 	private static HashMap<String, Light> activatedLight = new HashMap<String, Light>();
 	private static HashMap<String, Light> desactivatedLight = new HashMap<String, Light>();
 
+	private static HashMap<Light, LinkedList<Shadow>> shadows = new HashMap<Light, LinkedList<Shadow>>();
+	
 	int shaderProgram;
 	
 	private Camera cam;
@@ -67,7 +70,30 @@ public class LightManager {
 		/* on defini notre program actif */
 		GL20.glUseProgram(shaderProgram);
 	}
+	
+	public void setLightPosition(String lightName, Vector2f position){
+		Light l;
+		if((l = activatedLight.get(lightName)) != null){
+			l.setPosition(position);
+			updateRendering();
+		}else if((l = desactivatedLight.get(lightName)) != null){
+			l.setPosition(position);
+		}
+		
+	}
 
+	
+	public void addShadow(String lightName, Shadow s){
+		Light l;
+		if((l = activatedLight.get(lightName)) != null){
+			LinkedList <Shadow> sl = shadows.get(l);
+			if(sl != null){
+				sl.add(s);
+				updateRendering();
+			}
+		}
+	}
+	
 	public void updateRendering() {
 		int i = 0;
 		/* on recupere les ID */
