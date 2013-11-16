@@ -57,9 +57,9 @@ public class GameLoop {
 		m.generate();
 		lm = new LightManager(cam);
 		lm.initLightShaders();
-		lm.addActivatedLight( "first", new Vector2f(0,0), new Vector3f(1,0,0), 100);
-		lm.addActivatedLight( "second", new Vector2f(0,200), new Vector3f(0,1,0), 100);
-		lm.addActivatedLight( "third", new Vector2f(200,200), new Vector3f(0,0,1), 100);
+		lm.addActivatedLight( "first", new Vector2f(0,0), new Vector3f(1,0,0), 1000);
+		//lm.addActivatedLight( "second", new Vector2f(0,200), new Vector3f(0,1,0), 1000);
+		lm.addActivatedLight( "third", new Vector2f(200,200), new Vector3f(0,0,1), 1000);
 		p.setPosition(m.getSpawnPosition());
 		isRunning = true;
 	}
@@ -121,6 +121,7 @@ public class GameLoop {
 		
 		p.updatePostion(0.1f,m); // a sortir de la boucle de rendu ?
 		cam.setPosition(p.getPosition());
+		lm.addActivatedLight( "fourth", p.getPosition(), new Vector3f(1,1,1), 1000);
 		GL11.glPushMatrix();
 		cam.draw();
 		p.draw();
