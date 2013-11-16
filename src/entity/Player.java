@@ -39,7 +39,6 @@ public class Player extends Entity{
 		// Clear the screen and depth buffer	
 				// set the color of the quad (R,G,B,A)
 				GL11.glMatrixMode( GL11.GL_MODELVIEW );
-				GL11.glLoadIdentity( );
 				GL11.glColor3f(color.x,color.y,color.z);
 				// draw quad
 				GL11.glBegin(GL11.GL_TRIANGLE_STRIP);

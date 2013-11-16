@@ -62,8 +62,8 @@ public class Map implements Drawable{
 			blockGrid[width-1][j] = 1;
 		}
 		
-		spawnPoint_x = (int)(Math.random()*width)+1;
-		spawnPoint_y = (int)(Math.random()*height)+1;
+		spawnPoint_x = (int)(Math.random()*(width-2)+1);
+		spawnPoint_y = (int)(Math.random()*(height-2)+1);
 		blockGrid[spawnPoint_x][spawnPoint_y] = 0;
 		spawnPosition = new Vector2f((spawnPoint_x * 2 + 1)* halfBlockSize.x, (spawnPoint_y * 2 +1) * halfBlockSize.y);
 	}
@@ -72,7 +72,6 @@ public class Map implements Drawable{
 	@Override
 	public void draw() {
 		GL11.glMatrixMode( GL11.GL_MODELVIEW );
-		GL11.glLoadIdentity( );
 		GL11.glColor3f(this.blockColor.x,this.blockColor.y,this.blockColor.z);
 		// draw quad
 		int i;

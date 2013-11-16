@@ -3,8 +3,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
+import rendering.Camera;
 import entity.Player;
 import environment.Map;
 import static org.lwjgl.opengl.GL11.*;
@@ -113,9 +115,10 @@ public class GameLoop {
 		
 		p.updatePostion(0.01f,m); // a sortir de la boucle de rendu ?
 		System.out.println(p.getPosition());
+		GL11.glPushMatrix();
+		Camera.setPosition(p.getPosition());
 		p.draw();
 		m.draw();
-		
-		glLoadIdentity();
+		GL11.glPopMatrix();
 	}
 }
