@@ -20,6 +20,6 @@ void main(){
 	float dst = length(vertexToLight);	
 	float attenuation = 1.0/dst;
 	vec4 color = vec4(attenuation, attenuation, attenuation, pow(attenuation, 3)) * vec4(light.color, 1) * light.radius;
-	gl_FragColor = color;
+	gl_FragColor = gl_Color * color;
 	
 }
