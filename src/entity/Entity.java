@@ -18,7 +18,7 @@ public abstract class Entity extends Node implements Drawable{
 	private float minSpeed = 0.01f;
 	private float maxSpeed = 10;
 	private float descFactor = 5;
-	//private float accFactor = 100;
+	private float accFactor = 0.2f;
 	protected Vector3f color;
 	
 	public Vector3f getColor(){
@@ -46,7 +46,7 @@ public abstract class Entity extends Node implements Drawable{
 	
 	public void updatePostion(float dt, Map m){
 			if (translation.length() != 0)
-				translation = (Vector2f)translation.normalise();
+				translation = (Vector2f)translation.normalise().scale(accFactor);
 			speed.x = speed.x + translation.x - speed.x / descFactor;
 			speed.y = speed.y + translation.y - speed.y / descFactor;
 			float normSpeed = speed.length();

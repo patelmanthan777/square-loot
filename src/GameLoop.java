@@ -12,6 +12,7 @@ import org.lwjgl.util.vector.Vector3f;
 import rendering.Camera;
 import entity.Player;
 import environment.Map;
+import event.Timer;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GameLoop {
@@ -26,7 +27,7 @@ public class GameLoop {
 	
 	
 	private Player p = new Player(new Vector2f(0,0));
-	private Map m = new Map(50, 50);
+	private Map m = new Map(400, 400);
 	
 	private Camera cam = new Camera(new Vector2f(0,0));
 	
@@ -39,8 +40,9 @@ public class GameLoop {
 		try {
 			init();
 			while (isRunning) {
+				long elapsedTime = Timer.getDelta();
 				getInput(); // read input
-				render(); // render graphics
+				render(elapsedTime); // render graphics
 				
 				Display.sync(FPS); // sync to fps
 				Display.update(); // update the view/screen
@@ -62,6 +64,7 @@ public class GameLoop {
 		lm.addActivatedLight( "player", new Vector2f(200,200), new Vector3f(1,1,1), 1000);
 		p.setPosition(m.getSpawnPosition());
 		isRunning = true;
+		Timer.initTimer();
 	}
 
 	private void initGL() {
@@ -115,11 +118,11 @@ public class GameLoop {
 		}
 	}
 
-	private void render() {
+	private void render(long elapsedTime) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		//glMatrixMode(GL_MODELVIEW);
 		
-		p.updatePostion(0.1f,m); // a sortir de la boucle de rendu ?
+		p.updatePostion(elapsedTime,m); // a sortir de la boucle de rendu ?
 		cam.setPosition(p.getPosition());
 		
 		GL11.glPushMatrix();
