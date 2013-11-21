@@ -18,19 +18,27 @@ public class Laser extends Light {
 		this.dir.y = dir.y;
 	}
 	
-	public void setOrientation(Vector2f dir){
-		this.dir.x = dir.x;
-		this.dir.y = dir.y;
-	}
-	
 	public Vector2f getDirection(){
 		return dir;
 	}
 	
-	@Override
+	/*@Override
 	public void setPosition(Vector2f position){
 		this.position.x = position.x;
 		this.position.y = position.y;
+		lm.updateLaserShadows(this);
+	}*/
+	
+	@Override
+	public void setOrientation(Vector2f ori){
+		this.position.x = position.x;
+		this.position.y = position.y;
+	}
+	
+	@Override
+	public void setOrientation(float posx, float posy){
+		this.dir.x = posx;
+		this.dir.y = posy;
 		lm.updateLaserShadows(this);
 	}
 	

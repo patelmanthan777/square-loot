@@ -70,6 +70,14 @@ public class Player extends Entity {
 	}
 	
 	@Override
+	public void setOrientation(float orix, float oriy){
+		super.setOrientation(orix, oriy);
+		if(laser != null){
+			laser.setOrientation(orix,oriy);
+		}
+	}
+	
+	@Override
 	public void setPosition(Vector2f pos){
 		super.setPosition(pos);
 		if(light != null){
@@ -79,6 +87,7 @@ public class Player extends Entity {
 			laser.setPosition(pos);
 		}
 	}
+	
 	@Override
 	public void setPosition(float posx, float posy){
 		super.setPosition(posx, posy);

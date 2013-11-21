@@ -26,6 +26,11 @@ public class Node {
 		rotation.y = ori.y;
 	}
 	
+	public void setOrientation(float orix, float oriy){
+		rotation.x = orix;
+		rotation.y = oriy;
+	}
+	
 	public Node(Vector2f pos){
 		position = new Vector2f(pos);
 		rotation = new Vector2f(0f,0f);

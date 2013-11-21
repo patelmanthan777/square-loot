@@ -60,6 +60,7 @@ public class GameLoop {
 		p.setPosition(m.getSpawnPosition());
 		lm = new LightManager(cam);
 		lm.initLightShaders();
+		lm.initLaserShader();
 
 		for (int i = 0; i < 10; i++) {
 			lm.addActivatedLight(
@@ -103,7 +104,7 @@ public class GameLoop {
 			Display.setDisplayMode(DISPLAY_MODE);
 			Display.setTitle(WINDOW_TITLE);
 			Display.create(new PixelFormat(0, 16, 1));
-			Mouse.setGrabbed(true);
+			Mouse.setGrabbed(false);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
@@ -144,12 +145,13 @@ public class GameLoop {
 		// glMatrixMode(GL_MODELVIEW);
 
 		p.updatePostion(elapsedTime, m); // a sortir de la boucle de rendu ?
+		p.setOrientation(-(mouse.x-WIDTH/2.0f),mouse.y-HEIGHT/2.0f);
 		cam.setPosition(p.getPosition());
 
 		GL11.glPushMatrix();
 		cam.draw();
 		//lm.setLightPosition("player", p.getPosition());
-		p.setOrientation(mouse);
+		
 		lm.render();
 
 		p.draw();
