@@ -6,6 +6,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -26,7 +27,7 @@ public class GameLoop {
 	
 	
 	private Player p = new Player(new Vector2f(0,0));
-	private Map m = new Map(50, 50);
+	private Map m = new Map(20, 20);
 	
 	private Camera cam = new Camera(new Vector2f(0,0));
 	
@@ -57,31 +58,37 @@ public class GameLoop {
 		m.generate();
 		lm = new LightManager(cam);
 		lm.initLightShaders();
-		lm.addActivatedLight( "first", new Vector2f(0,0), new Vector3f(1,0,0), 400);
-		lm.addActivatedLight( "third", new Vector2f(200,200), new Vector3f(0,0,1), 400);
-		lm.addActivatedLight( "player", new Vector2f(200,200), new Vector3f(1,1,1), 1000);
+
+		for(int i = 0; i < 10;i++){
+			lm.addActivatedLight( ""+i, new Vector2f((int)(Math.random()*800),(int)(Math.random()*800)), new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random()), 10);
+		}
+		lm.addActivatedLight("player", new Vector2f(200,200), new Vector3f(1,1,1), 10);
+		lm.addShadowCaster(m);
+		lm.addLightTaker(m);
 		p.setPosition(m.getSpawnPosition());
 		isRunning = true;
 	}
 
 	private void initGL() {
 
+		
 		glEnable(GL_CULL_FACE);
+        
 		glMatrixMode(GL_PROJECTION); // change de matrice
 		glLoadIdentity();            // la reinitialise
-		
-		glOrtho(0.0f, WIDTH, HEIGHT, 0.0f, 0.0f, 1.0f);
+		glOrtho(0, WIDTH, HEIGHT, 0, 1, -1);
 
 		glMatrixMode(GL_MODELVIEW); // on passe en mode Model
-		glLoadIdentity(); // on reinitialise la matrice
-
+		glEnable(GL_STENCIL_TEST);
+		//glLoadIdentity(); // on reinitialise la matrice
+		glClearColor(0, 0, 0, 0);
 	}
 
 	private void createWindow() {
 		try {
 			Display.setDisplayMode(DISPLAY_MODE);
 			Display.setTitle(WINDOW_TITLE);
-			Display.create();
+			Display.create(new PixelFormat(0, 16, 1));
 			Mouse.setGrabbed(true);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
@@ -125,7 +132,9 @@ public class GameLoop {
 		GL11.glPushMatrix();
 		cam.draw();
 		lm.setLightPosition("player", p.getPosition());
-		m.draw();
+		lm.render();
+		
+		
 		p.draw();
 		GL11.glPopMatrix();
 	}

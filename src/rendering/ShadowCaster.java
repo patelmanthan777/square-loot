@@ -1,8 +1,10 @@
 package rendering;
 
 import java.util.LinkedList;
+
+import light.Light;
 import light.Shadow;
 
 public interface ShadowCaster {
-	public LinkedList<Shadow> computeShadow();
+	public LinkedList<Shadow> computeShadow(Light light);
 }

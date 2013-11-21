@@ -79,12 +79,13 @@ public class Shader {
 					GL20.GL_INFO_LOG_LENGTH);
 			System.out.println(log);
 		}
-
 	}
+	
 	public void link(int program){
 		GL20.glAttachShader(program, vertexShader);
 		GL20.glAttachShader(program, fragmentShader);
 		GL20.glLinkProgram(program);
 		GL20.glValidateProgram(program);
+		GL20.glUseProgram(program);
 	}
 }

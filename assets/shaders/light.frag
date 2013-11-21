@@ -6,7 +6,7 @@ struct Light{
 	float radius;
  }; 
 
-uniform Light light[128];
+uniform Light light;
 uniform int nbLights;
 varying vec3 vertexPosition;
 varying vec3 vertexNormal;
@@ -16,16 +16,10 @@ float b = 0.5;
 float c = 0.25;
 
 void main(){
-	int cpt = 0;
-	vec4 color = gl_Color;
-	gl_FragColor = vec4(0,0,0,0);
-	while(cpt < nbLights){
-		vec2 vertexToLight = light[cpt].position - vertexPosition.xy; //vertexPosition;
-		float dst = length(vertexToLight);	
-	float attenuation = light[cpt].radius / (a + b*dst + c * dst * dst) ;
-		vertexToLight = normalize(vertexToLight);
-		attenuation = max(0.0,attenuation);
-		gl_FragColor += color * vec4(attenuation*light[cpt].color,1.0);
-		cpt++;
-	}
+	vec2 vertexToLight = light.position - vertexPosition.xy;
+	float dst = length(vertexToLight);	
+	float attenuation = 1.0/dst;
+	vec4 color = vec4(attenuation, attenuation, attenuation, pow(attenuation, 3)) * vec4(light.color, 1) * light.radius;
+	gl_FragColor = color;
+	
 }
