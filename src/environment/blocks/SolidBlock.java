@@ -1,9 +1,6 @@
 package environment.blocks;
 
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
+
 
 import java.util.LinkedList;
 
@@ -83,24 +80,11 @@ public class SolidBlock implements Block, ShadowCaster {
 			Vector2f normal = new Vector2f(edge.getY(),-edge.getX());
 			Vector2f lightToCurrent = Vector2f.sub(currentVertex, light.getPosition(), null);
 			if (Vector2f.dot(normal, lightToCurrent) > 0) {
-				Vector2f point1 = Vector2f.add(currentVertex,(Vector2f) Vector2f.sub(currentVertex,light.getPosition(), null).scale(80), null);
-				Vector2f point2 = Vector2f.add(nextVertex,(Vector2f) Vector2f.sub(nextVertex,light.getPosition(), null).scale(80), null);
+				Vector2f point1 = Vector2f.add(currentVertex,(Vector2f) Vector2f.sub(currentVertex,light.getPosition(), null).scale(100), null);
+				Vector2f point2 = Vector2f.add(nextVertex,(Vector2f) Vector2f.sub(nextVertex,light.getPosition(), null).scale(100), null);
 				l.add(new Shadow(currentVertex,nextVertex,point1,point2));
 			}	
 		}
 		return l;
 	}
 }
-
-	/*
-	glBegin(GL_QUADS);
-	{
-		glVertex2f(currentVertex.getX(),
-				currentVertex.getY());
-		glVertex2f(point1.getX(), point1.getY());
-		glVertex2f(point2.getX(), point2.getY());
-		glVertex2f(nextVertex.getX(),
-				nextVertex.getY());
-	}
-	glEnd();
-	*/

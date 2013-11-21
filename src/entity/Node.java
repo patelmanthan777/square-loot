@@ -3,7 +3,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 
 public class Node {
-	Vector2f position;
+	protected Vector2f position;
 	Vector2f rotation;
 	
 	public Node(Vector2f pos, Vector2f rot){
@@ -12,11 +12,18 @@ public class Node {
 	}
 	
 	public void setPosition(Vector2f pos){
-		position = pos;
+		position.x = pos.x;
+		position.y = pos.y;
+	}
+	
+	public void setPosition(float posx, float posy){
+		position.x = posx;
+		position.y = posy;
 	}
 	
 	public void setOrientation(Vector2f ori){
-		rotation = ori;
+		rotation.x = ori.x;
+		rotation.y = ori.y;
 	}
 	
 	public Node(Vector2f pos){

@@ -1,3 +1,5 @@
+import light.Laser;
+import light.Light;
 import light.LightManager;
 
 import org.lwjgl.LWJGLException;
@@ -21,20 +23,14 @@ public class GameLoop {
 	private static final DisplayMode DISPLAY_MODE = new DisplayMode(WIDTH,
 			HEIGHT);
 	private static final String WINDOW_TITLE = "SquareLoot";
-	private static final int FPS = 600000;
+	private static final int FPS = 60;
 	private boolean isRunning;
-	
 	private LightManager lm;
-	
-	
-	private Player p = new Player(new Vector2f(0,0));
-
-
+	private Player p = new Player(new Vector2f(0, 0));
 	private Map m = new Map(50, 50);
+	private Vector2f mouse = new Vector2f();
+	private Camera cam = new Camera(new Vector2f(0, 0));
 
-	
-	private Camera cam = new Camera(new Vector2f(0,0));
-	
 	public static void main(String[] args) {
 		GameLoop test = new GameLoop();
 		test.start();
@@ -47,7 +43,7 @@ public class GameLoop {
 				long elapsedTime = Timer.getDelta();
 				getInput(); // read input
 				render(elapsedTime); // render graphics
-				
+
 				Display.sync(FPS); // sync to fps
 				Display.update(); // update the view/screen
 			}
@@ -61,32 +57,44 @@ public class GameLoop {
 		createWindow();
 		initGL();
 		m.generate();
+		p.setPosition(m.getSpawnPosition());
 		lm = new LightManager(cam);
 		lm.initLightShaders();
 
-		for(int i = 0; i < 10;i++){
-			lm.addActivatedLight( ""+i, new Vector2f((int)(Math.random()*800),(int)(Math.random()*800)), new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random()), 10);
+		for (int i = 0; i < 10; i++) {
+			lm.addActivatedLight(
+					"" + i,
+					new Vector2f((int) (Math.random() * 1200), (int) (Math
+							.random() * 1200)),
+					new Vector3f((float) Math.random(), (float) Math.random(),
+							(float) Math.random()), 10);
 		}
-		lm.addActivatedLight("player", new Vector2f(200,200), new Vector3f(1,1,1), 10);
+		
+		
+		Light playerLight = lm.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1,
+				1, 1), 20);
+		Laser playerLaser = lm.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
+		p.setLight(playerLight);
+		p.setLaser(playerLaser);
+		
 		lm.addShadowCaster(m);
 		lm.addLightTaker(m);
-		p.setPosition(m.getSpawnPosition());
+		
 		isRunning = true;
 		Timer.initTimer();
 	}
 
 	private void initGL() {
 
-		
 		glEnable(GL_CULL_FACE);
-        
+
 		glMatrixMode(GL_PROJECTION); // change de matrice
-		glLoadIdentity();            // la reinitialise
+		glLoadIdentity(); // la reinitialise
 		glOrtho(0, WIDTH, HEIGHT, 0, 1, -1);
 
 		glMatrixMode(GL_MODELVIEW); // on passe en mode Model
 		glEnable(GL_STENCIL_TEST);
-		//glLoadIdentity(); // on reinitialise la matrice
+		// glLoadIdentity(); // on reinitialise la matrice
 		glClearColor(0, 0, 0, 0);
 	}
 
@@ -102,21 +110,24 @@ public class GameLoop {
 	}
 
 	private void getInput() {
+		mouse.x = Mouse.getX(); // will return the X coordinate on the Display.
+		mouse.y = Mouse.getY();
+		
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)
 				|| Display.isCloseRequested()) {
 			isRunning = false;
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
-			p.translate(0,-1);
+			p.translate(0, -1);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-			p.translate(-1,0);
+			p.translate(-1, 0);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			p.translate(0,1);
+			p.translate(0, 1);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			p.translate(1,0);
+			p.translate(1, 0);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 		}
@@ -130,17 +141,17 @@ public class GameLoop {
 
 	private void render(long elapsedTime) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//glMatrixMode(GL_MODELVIEW);
-		
-		p.updatePostion(elapsedTime,m); // a sortir de la boucle de rendu ?
+		// glMatrixMode(GL_MODELVIEW);
+
+		p.updatePostion(elapsedTime, m); // a sortir de la boucle de rendu ?
 		cam.setPosition(p.getPosition());
-		
+
 		GL11.glPushMatrix();
 		cam.draw();
-		lm.setLightPosition("player", p.getPosition());
+		//lm.setLightPosition("player", p.getPosition());
+		p.setOrientation(mouse);
 		lm.render();
-		
-		
+
 		p.draw();
 		GL11.glPopMatrix();
 	}
