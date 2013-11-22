@@ -30,7 +30,7 @@ public class GameLoop {
 	private Player p = new Player(new Vector2f(0,0));
 
 
-	private Map m = new Map(50, 50);
+	private Map m = new Map(2000, 2000);
 
 	
 	private Camera cam = new Camera(new Vector2f(0,0));
@@ -134,7 +134,7 @@ public class GameLoop {
 		
 		p.updatePostion(elapsedTime,m); // a sortir de la boucle de rendu ?
 		cam.setPosition(p.getPosition());
-		
+		m.setDrawPosition(p.getPosition());
 		GL11.glPushMatrix();
 		cam.draw();
 		lm.setLightPosition("player", p.getPosition());

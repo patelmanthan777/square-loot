@@ -17,11 +17,11 @@ import org.lwjgl.util.vector.Vector3f;
 import rendering.ShadowCaster;
 
 public class SolidBlock implements Block, ShadowCaster {
-	private Vector3f color = new Vector3f(0,0,0);
+	private Vector3f color = new Vector3f(1,0,1);
 	private int nb_points = 4;
 	private Vector2f[] points = new Vector2f[4];
 	private Vector2f halfBlockSize;
-
+	
 	protected SolidBlock(int i ,int j, Vector2f size){
 		float x =  (i * size.x * 2 + size.x);
 		float y =  (j * size.y * 2 + size.y);
