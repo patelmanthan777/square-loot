@@ -16,13 +16,17 @@ float b = 0.5;
 float c = 0.25;
 
 void main(){
-	vec2 vertexToLight = laser.position - vertexPosition.xy;
-	float dst = length(vertexToLight);
-		
+	float a = laser.direction.y / laser.direction.y;
+	float b = laser.position.y - laser.position.x * a; 
+	vec2 vertexToLight = vertexPosition.xy - laser.position;
+	float dst1 = length(vertexToLight);
+	float dst2 = dot(vertexToLight,laser.direction);
+	float dst = dst1*dst1 - dst2*dst2;
 	float dot = dot(normalize(vertexToLight), laser.direction);
-	//vec4 color = vec4(attenuation, attenuation, attenuation, pow(attenuation, 3)) * vec4(laser.color, 1);
-	if (dot > 0.999999){
-		gl_FragColor = gl_Color * vec4(laser.color,1.0);
+	float attenuation = 1.0/dst;
+	vec4 color = vec4(attenuation, attenuation, attenuation, pow(attenuation, 10)) * vec4(laser.color, 1);
+	if (dst < 10 && dot < 0){
+		gl_FragColor = gl_Color * color;
 	}else{
 		gl_FragColor = vec4(0,0,0,0);
 	}
