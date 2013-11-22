@@ -23,10 +23,10 @@ void main(){
 	float dst2 = dot(vertexToLight,laser.direction);
 	float dst = dst1*dst1 - dst2*dst2;
 	float dot = dot(normalize(vertexToLight), laser.direction);
-	float attenuation = 1.0/dst;
-	vec4 color = vec4(attenuation, attenuation, attenuation, pow(attenuation, 10)) * vec4(laser.color, 1);
-	if (dst < 10 && dot < 0){
-		gl_FragColor = gl_Color * color;
+	float attenuation1 = 1.0/pow(dst+1.0,1.0);
+	float attenuation2 = 1.0/pow(dst+1.0,2.0);
+	if (dst < 100 && dot < 0){
+		gl_FragColor = gl_Color * (attenuation1 * vec4(laser.color, 1.0) + attenuation1 * vec4(0.5));
 	}else{
 		gl_FragColor = vec4(0,0,0,0);
 	}
