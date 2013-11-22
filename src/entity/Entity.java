@@ -65,8 +65,7 @@ public abstract class Entity extends Node implements Drawable{
 			float y_tmp = position.y + speed.y * dt;
 			
 			if(isInCollision(x_tmp, y_tmp, m)){
-				position.x = x_tmp;
-				position.y = y_tmp;
+				setPosition(x_tmp, y_tmp);
 			}
 			else
 			{
@@ -81,12 +80,10 @@ public abstract class Entity extends Node implements Drawable{
 					speed.y = 0;
 				}
 			
-				position.x = position.x + speed.x * dt;
-				position.y = position.y + speed.y * dt;
+				setPosition(position.x + speed.x * dt, position.y + speed.y * dt);
 			}
 			
 			translation.x = 0;
 			translation.y = 0;
-
 	}
 }

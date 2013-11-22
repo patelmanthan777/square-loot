@@ -1,6 +1,5 @@
 package environment;
 
-import java.util.Collection;
 import java.util.LinkedList;
 
 import light.Light;
@@ -16,7 +15,6 @@ import rendering.Camera;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import rendering.LightTaker;
-import static org.lwjgl.opengl.GL11.*;
 
 public class Map implements Drawable, ShadowCaster, LightTaker{
 	private int width;
