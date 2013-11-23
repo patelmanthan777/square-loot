@@ -13,7 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import rendering.ShadowCaster;
 
-public class SolidBlock implements Block {
+public class SolidBlock implements Block, ShadowCasterBlock{
 	private Vector3f color = new Vector3f(1,0,1);
 	private int nb_points = 4;
 	private Vector2f[] points = new Vector2f[4];
@@ -66,8 +66,10 @@ public class SolidBlock implements Block {
 		return true;
 	}
 
-	
-	public LinkedList<Shadow> computeShadow(Light light, int ix, int iy, Vector2f halfBlockSize){
+
+	@Override
+	public LinkedList<Shadow> computeShadow(Light light, int ix, int iy,
+			Vector2f halfBlockSize, boolean[] neighbour) {
 		LinkedList<Shadow>l = new LinkedList<Shadow>();
 		float x =  (ix * halfBlockSize.x * 2 + halfBlockSize.x);
 		float y =  (iy * halfBlockSize.y * 2 + halfBlockSize.y);
@@ -79,12 +81,13 @@ public class SolidBlock implements Block {
 			Vector2f edge = Vector2f.sub(nextVertex,currentVertex, null);
 			Vector2f normal = new Vector2f(edge.getY(),-edge.getX());
 			Vector2f lightToCurrent = Vector2f.sub(currentVertex, light.getPosition(), null);
-			if (Vector2f.dot(normal, lightToCurrent) > 0) {
-				Vector2f point1 = Vector2f.add(currentVertex,(Vector2f) Vector2f.sub(currentVertex,light.getPosition(), null).normalise().scale(2000), null);
-				Vector2f point2 = Vector2f.add(nextVertex,(Vector2f) Vector2f.sub(nextVertex,light.getPosition(), null).normalise().scale(2000), null);
+			if (Vector2f.dot(normal, lightToCurrent) > 0 && !neighbour[i]) {
+				Vector2f point1 = Vector2f.add(currentVertex,(Vector2f) Vector2f.sub(currentVertex,light.getPosition(), null).normalise().scale(4000), null);
+				Vector2f point2 = Vector2f.add(nextVertex,(Vector2f) Vector2f.sub(nextVertex,light.getPosition(), null).normalise().scale(4000), null);
 				l.add(new Shadow(currentVertex,nextVertex,point1,point2));
 			}	
 		}
 		return l;
+
 	}
 }
