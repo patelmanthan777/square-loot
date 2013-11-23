@@ -13,16 +13,14 @@ import org.lwjgl.util.vector.Vector3f;
 
 import rendering.ShadowCaster;
 
-public class SolidBlock implements Block, ShadowCaster {
+public class SolidBlock implements Block {
 	private Vector3f color = new Vector3f(1,0,1);
 	private int nb_points = 4;
 	private Vector2f[] points = new Vector2f[4];
 	private Vector2f halfBlockSize;
 	
-	protected SolidBlock(int i ,int j, Vector2f size){
-		float x =  (i * size.x * 2 + size.x);
-		float y =  (j * size.y * 2 + size.y);
-		initBlock(x, y, size);
+	protected SolidBlock(){
+		
 	}
 	
 	protected SolidBlock(float x, float y, Vector2f size){
@@ -68,10 +66,12 @@ public class SolidBlock implements Block, ShadowCaster {
 		return true;
 	}
 
-	@Override
-	public LinkedList<Shadow> computeShadow(Light light) {
+	
+	public LinkedList<Shadow> computeShadow(Light light, int ix, int iy, Vector2f halfBlockSize){
 		LinkedList<Shadow>l = new LinkedList<Shadow>();
-		
+		float x =  (ix * halfBlockSize.x * 2 + halfBlockSize.x);
+		float y =  (iy * halfBlockSize.y * 2 + halfBlockSize.y);
+		initBlock(x, y, halfBlockSize);
 		for (int i = 0; i < nb_points; i++) {
 			
 			Vector2f currentVertex = points[i];
@@ -80,8 +80,8 @@ public class SolidBlock implements Block, ShadowCaster {
 			Vector2f normal = new Vector2f(edge.getY(),-edge.getX());
 			Vector2f lightToCurrent = Vector2f.sub(currentVertex, light.getPosition(), null);
 			if (Vector2f.dot(normal, lightToCurrent) > 0) {
-				Vector2f point1 = Vector2f.add(currentVertex,(Vector2f) Vector2f.sub(currentVertex,light.getPosition(), null).scale(100), null);
-				Vector2f point2 = Vector2f.add(nextVertex,(Vector2f) Vector2f.sub(nextVertex,light.getPosition(), null).scale(100), null);
+				Vector2f point1 = Vector2f.add(currentVertex,(Vector2f) Vector2f.sub(currentVertex,light.getPosition(), null).normalise().scale(2000), null);
+				Vector2f point2 = Vector2f.add(nextVertex,(Vector2f) Vector2f.sub(nextVertex,light.getPosition(), null).normalise().scale(2000), null);
 				l.add(new Shadow(currentVertex,nextVertex,point1,point2));
 			}	
 		}

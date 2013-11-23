@@ -51,6 +51,7 @@ public class LightManager {
 	public Light addActivatedLight(String name, Vector2f p, Vector3f color,
 			float radius) {
 		Light l = new Light(this, p, color, radius);
+		l.setName(name);
 		activatedLight.put(name, l);
 		updateLightShadows(l);
 		return l;
@@ -59,6 +60,7 @@ public class LightManager {
 	public Light addDesactivatedLight(String name, Vector2f p, Vector3f color,
 			float radius) {
 		Light l = new Light(this, p, color, radius);
+		l.setName(name);
 		desactivatedLight.put(name, l);
 		return l;
 	}

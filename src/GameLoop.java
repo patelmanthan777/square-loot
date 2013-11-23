@@ -134,6 +134,10 @@ public class GameLoop {
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+			if(p.getLight().isActive())
+				p.getLight().desactivate();
+			else
+				p.getLight().activate();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 		}

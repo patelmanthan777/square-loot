@@ -36,13 +36,15 @@ public class Light extends Node{
 	
 	public void activate(){
 		active = true;
+		lm.activateLight(name);
 	}
 	
 	public void desactivate(){
 		active = false;
+		lm.desactivateLight(name);
 	}
 	
-	public boolean active(){
+	public boolean isActive(){
 		return active;
 	}
 	

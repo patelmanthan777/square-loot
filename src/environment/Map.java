@@ -54,7 +54,7 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		for (i = 0; i < width; i++) {
 			for (j = 0; j < height; j++) {
 				if (Math.random() < probability) {
-					blockGrid[i][j] = BlockFactory.createSolidBlock(i,j,halfBlockSize);
+					blockGrid[i][j] = BlockFactory.createSolidBlock();
 				} else {
 					blockGrid[i][j] = BlockFactory.createEmptyBlock();
 				}
@@ -107,17 +107,17 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	@Override
 	public LinkedList<Shadow> computeShadow(Light light) {
 		LinkedList<Shadow> l = new LinkedList<Shadow>();
-		int minX = Math.max(0,(int)Math.floor((drawPosition.x-Display.getWidth()/2)/(halfBlockSize.x*2)));
-		int maxX = Math.min(width,(int)Math.floor((drawPosition.x+Display.getWidth()/2)/(halfBlockSize.x*2))+1);
-		int minY = Math.max(0,(int)Math.floor((drawPosition.y-Display.getHeight()/2)/(halfBlockSize.y*2)));
-		int maxY = Math.min(height,(int)Math.floor((drawPosition.y+Display.getHeight()/2)/(halfBlockSize.y*2))+1);
+		int minX = Math.max(0,(int)Math.floor((light.getX()-Display.getWidth()/2)/(halfBlockSize.x*2)));
+		int maxX = Math.min(width,(int)Math.floor((light.getX()+Display.getWidth()/2)/(halfBlockSize.x*2))+1);
+		int minY = Math.max(0,(int)Math.floor((light.getY()-Display.getHeight()/2)/(halfBlockSize.y*2)));
+		int maxY = Math.min(height,(int)Math.floor((light.getY()+Display.getHeight()/2)/(halfBlockSize.y*2))+1);
 			
 		int i;
 		int j;
 		for (i = minX; i < maxX; i++) {
 			for (j = minY; j < maxY; j++) {
 				if(blockGrid[i][j].castShadows())
-					l.addAll(((ShadowCaster) blockGrid[i][j]).computeShadow(light));
+					l.addAll(((SolidBlock) blockGrid[i][j]).computeShadow(light,i,j,halfBlockSize));
 			}
 		}
 		return l;

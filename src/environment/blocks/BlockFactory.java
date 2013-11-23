@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 public class BlockFactory {
 	static EmptyBlock emptyBlock = new EmptyBlock();
 	static BorderBlock borderBlock = new BorderBlock();
+	static SolidBlock solidBlock = new SolidBlock();
 	static LinkedList <SolidBlock> solidBlocks = new LinkedList<SolidBlock>();
 	
 	private BlockFactory(){
@@ -26,6 +27,10 @@ public class BlockFactory {
 		SolidBlock b = new SolidBlock(i,j, size);
 		solidBlocks.add(b);
 		return b;
+	}
+	
+	static public Block createSolidBlock(){
+		return solidBlock;
 	}
 	
 	static public Block createBorderBlock(){

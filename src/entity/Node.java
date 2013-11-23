@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class Node {
 	protected Vector2f position;
+	protected String name = null;
 	Vector2f rotation;
 	
 	public Node(Vector2f pos, Vector2f rot){
@@ -65,4 +66,7 @@ public class Node {
 		position.y = y;
 	}
 	
+	public void setName(String name){
+		this.name = name;
+	}
 }

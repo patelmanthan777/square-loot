@@ -99,4 +99,7 @@ public class Player extends Entity {
 		}
 	}
 
+	public Light getLight(){
+		return light;
+	}
 }
