@@ -11,8 +11,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import rendering.ShadowCaster;
-
 public class SolidBlock implements Block {
 	private Vector3f color = new Vector3f(1,0,1);
 	private int nb_points = 4;
