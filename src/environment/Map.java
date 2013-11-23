@@ -106,6 +106,7 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	@Override
 	public LinkedList<Shadow> computeShadow(Light light) {
 		LinkedList<Shadow> l = new LinkedList<Shadow>();
+		boolean [] neighbours = new boolean[4];
 		int minX = Math.max(0,(int)Math.floor((light.getX()-Display.getWidth()/2)/(halfBlockSize.x*2)));
 		int maxX = Math.min(width,(int)Math.floor((light.getX()+Display.getWidth()/2)/(halfBlockSize.x*2))+1);
 		int minY = Math.max(0,(int)Math.floor((light.getY()-Display.getHeight()/2)/(halfBlockSize.y*2)));
@@ -115,8 +116,14 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		int j;
 		for (i = minX; i < maxX; i++) {
 			for (j = minY; j < maxY; j++) {
-				if(blockGrid[i][j].castShadows())
-					l.addAll(((SolidBlock) blockGrid[i][j]).computeShadow(light,i,j,halfBlockSize));
+				if(blockGrid[i][j].castShadows()){
+					neighbours[0] = blockGrid[i][j-1].castShadows();
+					neighbours[1] = blockGrid[i+1][j].castShadows();
+					neighbours[2] = blockGrid[i][j+1].castShadows();
+					neighbours[3] = blockGrid[i-1][j].castShadows();
+					l.addAll(((SolidBlock) blockGrid[i][j]).computeShadow(light,i,j,halfBlockSize,neighbours));
+					
+				}
 			}
 		}
 		return l;
