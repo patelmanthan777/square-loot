@@ -10,7 +10,6 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import rendering.Camera;
 import rendering.LightTaker;
 import rendering.Shader;
 import rendering.ShadowCaster;
@@ -29,16 +28,11 @@ public class LightManager {
 	private static HashMap<String, Laser> desactivatedLasers = new HashMap<String, Laser>();
 	private static HashMap<Laser, LinkedList<Shadow>> laserShadows = new HashMap<Laser, LinkedList<Shadow>>();
 
-	int lightShaderProgram;
-	int laserShaderProgram;
+	static int lightShaderProgram;
+	static int laserShaderProgram;
 
-	// private Camera cam;
 
-	public LightManager(Camera cam) {
-		// this.cam = cam;
-	}
-
-	public void addShadowCaster(ShadowCaster sc) {
+	static public void addShadowCaster(ShadowCaster sc) {
 		shadowCasters.add(sc);
 		for (Light l : activatedLight.values()) {
 			lightShadows.put(l, sc.computeShadow(l));
@@ -48,31 +42,31 @@ public class LightManager {
 		}
 	}
 
-	public Light addActivatedLight(String name, Vector2f p, Vector3f color,
+	static public Light addActivatedLight(String name, Vector2f p, Vector3f color,
 			float radius) {
-		Light l = new Light(this, p, color, radius);
+		Light l = new Light(p, color, radius);
 		l.setName(name);
 		activatedLight.put(name, l);
 		updateLightShadows(l);
 		return l;
 	}
 
-	public Light addDesactivatedLight(String name, Vector2f p, Vector3f color,
+	static public Light addDesactivatedLight(String name, Vector2f p, Vector3f color,
 			float radius) {
-		Light l = new Light(this, p, color, radius);
+		Light l = new Light(p, color, radius);
 		l.setName(name);
 		desactivatedLight.put(name, l);
 		return l;
 	}
 
-	public void activateLight(String name) {
+	static public void activateLight(String name) {
 		Light l = desactivatedLight.remove(name);
 		if (l != null) {
 			activatedLight.put(name, l);
 		}
 	}
 
-	public void desactivateLight(String name) {
+	static public void desactivateLight(String name) {
 		Light l = activatedLight.remove(name);
 		if (l != null) {
 			desactivatedLight.put(name, l);
@@ -80,7 +74,7 @@ public class LightManager {
 		lightShadows.remove(l);
 	}
 
-	public void deleteLight(String name) {
+	static public void deleteLight(String name) {
 		if (activatedLight.remove(name) == null) {
 			lightShadows.remove(desactivatedLight.remove(name));
 		} else {
@@ -88,7 +82,7 @@ public class LightManager {
 
 	}
 
-	public void initLightShaders() {
+	static public void initLightShaders() {
 		lightShaderProgram = glCreateProgram();
 		Shader s = new Shader("light");
 		s.loadCode();
@@ -97,7 +91,7 @@ public class LightManager {
 		/* on defini notre program actif */
 	}
 	
-	public void initLaserShader(){
+	static public void initLaserShader(){
 		laserShaderProgram = glCreateProgram();
 		Shader s = new Shader("laser");
 		s.loadCode();
@@ -116,29 +110,29 @@ public class LightManager {
 
 	/*********** LASERS ************/
 
-	public Laser addActivatedLaser(String name, Vector2f p, Vector3f color,
+	static public Laser addActivatedLaser(String name, Vector2f p, Vector3f color,
 			Vector2f dir) {
-		Laser laser = new Laser(this, p, color, dir);
+		Laser laser = new Laser(p, color, dir);
 		activatedLasers.put(name, laser);
 		updateLaserShadows(laser);
 		return laser;
 	}
 
-	public Laser addDesactivatedLaser(String name, Vector2f p, Vector3f color,
+	static public Laser addDesactivatedLaser(String name, Vector2f p, Vector3f color,
 			Vector2f dir) {
-		Laser laser = new Laser(this, p, color, dir);
+		Laser laser = new Laser(p, color, dir);
 		desactivatedLasers.put(name, laser);
 		return laser;
 	}
 
-	public void activateLaser(String name) {
+	static public void activateLaser(String name) {
 		Laser l = desactivatedLasers.remove(name);
 		if (l != null) {
 			activatedLasers.put(name, l);
 		}
 	}
 
-	public void desactivateLaser(String name) {
+	static public void desactivateLaser(String name) {
 		Laser l = activatedLasers.remove(name);
 		if (l != null) {
 			desactivatedLasers.put(name, l);
@@ -152,7 +146,7 @@ public class LightManager {
 	 * lightShadows.get(l); if (sl != null) { sl.add(s); updateShadows(l); } } }
 	 */
 
-	public Collection<Light> getActivatedLight() {
+	static public Collection<Light> getActivatedLight() {
 		return activatedLight.values();
 	}
 
@@ -160,11 +154,11 @@ public class LightManager {
 		return lightShaderProgram;
 	}*/
 
-	public void addLightTaker(LightTaker lt) {
+	static public void addLightTaker(LightTaker lt) {
 		lightTakers.add(lt);
 	}
 
-	public void updateLightShadows(Light l) {
+	static public void updateLightShadows(Light l) {
 		lightShadows.remove(l);
 		LinkedList<Shadow> sl = new LinkedList<Shadow>();
 		for (ShadowCaster sc : shadowCasters) {
@@ -173,7 +167,7 @@ public class LightManager {
 		lightShadows.put(l, sl);
 	}
 
-	public void updateLaserShadows(Laser l) {
+	static public void updateLaserShadows(Laser l) {
 		laserShadows.remove(l);
 		LinkedList<Shadow> sl = new LinkedList<Shadow>();
 		for (ShadowCaster sc : shadowCasters) {
@@ -182,7 +176,7 @@ public class LightManager {
 		laserShadows.put(l, sl);
 	}
 
-	public void render() {
+	static public void render() {
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		for (Light l : activatedLight.values()) {

@@ -26,11 +26,11 @@ public class GameLoop {
 	private static final String WINDOW_TITLE = "SquareLoot";
 	private static final int FPS = 60;
 	private boolean isRunning;
-	private LightManager lm;
+
 	private ProjectileManager pm;
 
 	private Player p = new Player(new Vector2f(0, 0));
-	private Map m = new Map(500, 500);
+	private Map m = new Map(200);
 	private Vector2f mouse = new Vector2f();
 	private Camera cam = new Camera(new Vector2f(0, 0));
 
@@ -63,28 +63,29 @@ public class GameLoop {
 		p.setPosition(m.getSpawnPosition());
 		pm = new ProjectileManager();
 		pm.init();
-		lm = new LightManager(cam);
-		lm.initLightShaders();
-		lm.initLaserShader();
+
+		LightManager.initLightShaders();
+		LightManager.initLaserShader();
+
 
 		for (int i = 0; i < 10; i++) {
-			lm.addActivatedLight(
+			/*LightManager.addActivatedLight(
 					"" + i,
-					new Vector2f((int) (Math.random() * 1200), (int) (Math
-							.random() * 1200)),
+					new Vector2f((int) (Math.random() * 5000), (int) (Math
+							.random() * 5000)),
 					new Vector3f((float) Math.random(), (float) Math.random(),
-							(float) Math.random()), 10);
+							(float) Math.random()), 10);*/
 		}
 		
 		
-		Light playerLight = lm.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1,
-				1, 1), 20);
-		Laser playerLaser = lm.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
+		Light playerLight = LightManager.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1,
+				1, 0.8f), 10);
+		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);
 		
-		lm.addShadowCaster(m);
-		lm.addLightTaker(m);
+		LightManager.addShadowCaster(m);
+		LightManager.addLightTaker(m);
 		
 		isRunning = true;
 		Timer.initTimer();
@@ -167,7 +168,7 @@ public class GameLoop {
 		cam.draw();
 		//lm.setLightPosition("player", p.getPosition());
 		
-		lm.render();
+		LightManager.render();
 
 		p.draw();
 		pm.drawProjectiles();

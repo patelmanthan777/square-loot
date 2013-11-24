@@ -6,14 +6,14 @@ import org.lwjgl.util.vector.Vector3f;
 public class Laser extends Light {
 	private Vector2f dir = new Vector2f();
 	
-	public Laser(LightManager lm, Vector2f p, Vector3f color){
-		super(lm, p, color,-1);
+	public Laser(Vector2f p, Vector3f color){
+		super(p, color,-1);
 		dir.x = 1;
 		dir.y = 1;
 	}
 	
-	public Laser(LightManager lm, Vector2f p, Vector3f color, Vector2f dir){
-		super(lm, p, color,-1);
+	public Laser(Vector2f p, Vector3f color, Vector2f dir){
+		super(p, color,-1);
 		this.dir.x = dir.x;
 		this.dir.y = dir.y;
 	}
@@ -39,7 +39,7 @@ public class Laser extends Light {
 	public void setOrientation(float posx, float posy){
 		this.dir.x = posx;
 		this.dir.y = posy;
-		lm.updateLaserShadows(this);
+		LightManager.updateLaserShadows(this);
 	}
 	
 }
