@@ -44,7 +44,7 @@ public class TestRoom extends Room{
 			grid[width-2][i] = BlockFactory.createSolidBlock();
 		}
 		
-		LightManager.addActivatedLight("l"+x+y, new Vector2f((x+width/2)*blockSize,(y+height/2)*blockSize), new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random()),(float)Math.random()*20,1 * blockSize * width);
+		LightManager.addActivatedLight("l"+x+y, new Vector2f((x+width/2)*blockSize,(y+height/2)*blockSize), new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random()),(float)Math.random()*20,2 * blockSize * width);
 		
 	}
 
