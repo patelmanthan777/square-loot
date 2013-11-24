@@ -72,7 +72,7 @@ public class GameLoop {
 		
 		
 		Light playerLight = LightManager.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1,
-				1, 1), 20);
+				1, 0.8f), 10);
 		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);

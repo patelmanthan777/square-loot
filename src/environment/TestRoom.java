@@ -9,10 +9,20 @@ import environment.blocks.BlockFactory;
 public class TestRoom extends Room{
 	
 	public TestRoom(int width, int height, int posX, int posY, int blockSize){
-		super(width, height, posX, posY);
+		super(width, height, posX, posY,blockSize);
+		construct();
+	}
+
+	@Override
+	protected void construct() {
 		for(int i = 1; i < width-1;i++){
 			for(int j = 1; j < height-1; j++){
-				grid[i][j] = BlockFactory.createEmptyBlock();
+				if(Math.random() > 0.02){
+					grid[i][j] = BlockFactory.createEmptyBlock();
+				}else{
+					grid[i][j] = BlockFactory.createSolidBlock();
+				}
+				
 			}
 		}
 		for(int i = 0; i < width;i++){
@@ -32,10 +42,12 @@ public class TestRoom extends Room{
 			grid[1][i] = BlockFactory.createSolidBlock();
 			grid[width-2][i] = BlockFactory.createSolidBlock();
 		}
+		
 		LightManager.addActivatedLight("l"+x+y, new Vector2f((x+width/2)*blockSize,(y+height/2)*blockSize), new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random()),(float)Math.random()*20);
 		
-		
 	}
+	
+	
 	
 	
 }

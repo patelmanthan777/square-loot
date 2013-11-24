@@ -4,8 +4,14 @@ import environment.blocks.BlockFactory;
 
 public class SpawnRoom extends Room{
 
-	public SpawnRoom(int width, int height, int posX, int posY) {
-		super(width, height,posX,posY);
+	public SpawnRoom(int width, int height, int posX, int posY,int blockSize) {
+		super(width, height,posX,posY,blockSize);
+
+		
+	}
+
+	@Override
+	protected void construct() {
 		for(int i = 1; i < width-1;i++){
 			for(int j = 1; j < height-1; j++){
 				grid[i][j] = BlockFactory.createEmptyBlock();
@@ -28,7 +34,10 @@ public class SpawnRoom extends Room{
 			grid[1][i] = BlockFactory.createSolidBlock();
 			grid[width-2][i] = BlockFactory.createSolidBlock();
 		}
-		
+		grid[width/2][height/2] = BlockFactory.createSpawnBlock();
+		grid[width/2-1][height/2] = BlockFactory.createSpawnBlock();
+		grid[width/2][height/2-1] = BlockFactory.createSpawnBlock();
+		grid[width/2-1][height/2-1] = BlockFactory.createSpawnBlock();
 	}
 	
 }

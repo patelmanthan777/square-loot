@@ -37,7 +37,7 @@ public class MapGenerator {
 		spawn = new Vector2f((MapGenerator.size + maxRoomSize) / 2,
 				(MapGenerator.size + maxRoomSize) / 2);
 		Room r = new SpawnRoom(maxRoomSize, maxRoomSize, (nbRoomsAligned / 2)
-				* maxRoomSize, (nbRoomsAligned / 2) * maxRoomSize);
+				* maxRoomSize, (nbRoomsAligned / 2) * maxRoomSize,blockSize);
 		roomsGrid[nbRoomsAligned / 2][nbRoomsAligned / 2] = r;
 		rooms.add(r);
 		boolean stop = false;

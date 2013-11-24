@@ -9,19 +9,24 @@ public abstract class Room {
 	protected Block[][] grid;
 	protected int x;
 	protected int y;
+	protected int blockSize;
 	
 	protected boolean[] doors = new boolean[4];
 	
-	public Room(int width, int height,int posX, int posY){
+	public Room(int width, int height,int posX, int posY, int blockSize){
 		this.width = width;
 		this.height = height;
 		this.x = posX;
 		this.y = posY;
+		this.blockSize = blockSize;
 		grid = new Block[width][height];
 		for(int i = 0; i < 4 ;i++){
 			doors[i] = false;
 		}
+		construct();
 	}
+	
+	protected abstract void construct();
 	
 	public void place(Block[][] grid){
 		for(int i = 0; i < width; i++){
