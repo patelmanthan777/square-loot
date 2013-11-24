@@ -8,7 +8,9 @@ public class BlockFactory {
 	static EmptyBlock emptyBlock = new EmptyBlock();
 	static BorderBlock borderBlock = new BorderBlock();
 	static SolidBlock solidBlock = new SolidBlock();
+	static VoidBlock voidBlock = new VoidBlock();
 	static LinkedList <SolidBlock> solidBlocks = new LinkedList<SolidBlock>();
+	
 	
 	private BlockFactory(){
 	}
@@ -37,6 +39,9 @@ public class BlockFactory {
 		return borderBlock;
 	}
 	
+	static public Block createVoidBlock(){
+		return voidBlock;
+	}
 	public static LinkedList<SolidBlock> getSolidBlocks(){
 		return solidBlocks;
 	}

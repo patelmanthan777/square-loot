@@ -14,7 +14,7 @@ import org.lwjgl.util.vector.Vector3f;
 import rendering.ShadowCaster;
 
 public class SolidBlock implements Block, ShadowCasterBlock{
-	private Vector3f color = new Vector3f(1,0,1);
+	private Vector3f color = new Vector3f(0.2f,0.2f,0.2f);
 	private int nb_points = 4;
 	private Vector2f[] points = new Vector2f[4];
 	private Vector2f halfBlockSize;
