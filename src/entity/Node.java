@@ -5,7 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 public class Node {
 	protected Vector2f position;
 	protected String name = null;
-	Vector2f rotation;
+	protected Vector2f rotation;
 	
 	public Node(Vector2f pos, Vector2f rot){
 		position = pos;

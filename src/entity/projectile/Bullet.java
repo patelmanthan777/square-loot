@@ -3,15 +3,18 @@ package entity.projectile;
 
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.*;
+
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import environment.Map;
 
 public class Bullet extends Projectile {
-	private static float speedValue = 1f;
+	private static float speedValue = 2f;
 	private static Vector2f size = new Vector2f(10,10);
-	private static float radius = 2.0f;
-
+	private static float radius = 10.0f;
+	private static float length = 10.0f;
 	
 	public Bullet(Vector2f pos, Vector2f rot) {
 		super(pos,rot);
@@ -19,13 +22,17 @@ public class Bullet extends Projectile {
 		rot.normalise(speed);
 		speed.scale(speedValue);
 		this.setSpeed(speed);
+		this.setColor(new Vector3f(1,0,1));
 	}
 
 	@Override
 	public void draw() {
+		GL11.glColor3f(color.x, color.y, color.z);
 		glUseProgram(ProjectileManager.bulletShaderProgram);
 		glUniform2f(glGetUniformLocation(ProjectileManager.bulletShaderProgram, "bullet.position"),this.position.x,this.position.y);
+		glUniform2f(glGetUniformLocation(ProjectileManager.bulletShaderProgram, "bullet.direction"),this.rotation.x,this.rotation.y);
 		glUniform1f(glGetUniformLocation(ProjectileManager.bulletShaderProgram, "bullet.radius"),radius);
+		glUniform1f(glGetUniformLocation(ProjectileManager.bulletShaderProgram, "bullet.length"),length);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
 		glBegin(GL_TRIANGLE_STRIP);
@@ -36,20 +43,6 @@ public class Bullet extends Projectile {
 		glEnd();
 		glDisable(GL_BLEND);
 		glUseProgram(0);
-		
-		
-		/*
-		// GL11.glColor3f(color.x,color.y,color.z);
-		GL11.glColor3f(0, 0, 0);
-		// draw quad
-		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
-		GL11.glVertex2f(position.x + 5, position.y - 5);
-		GL11.glVertex2f(position.x - 5, position.y - 5);
-		GL11.glVertex2f(position.x + 5, position.y + 5);
-		GL11.glVertex2f(position.x - 5, position.y + 5);
-		GL11.glEnd();
-		// TODO Auto-generated method stub
-*/
 	}
 
 	@Override
