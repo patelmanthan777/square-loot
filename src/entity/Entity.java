@@ -12,13 +12,17 @@ public abstract class Entity extends Node implements Drawable{
 	public Entity(Vector2f pos) {
 		super(pos);
 	}
-
-	private Vector2f speed = new Vector2f(0,0);
+	
+	public Entity(Vector2f pos, Vector2f rot) {
+		super(pos, rot);
+	}
+	
+	protected Vector2f speed = new Vector2f(0,0);
 	private Vector2f translation = new Vector2f(0,0);
-	private float minSpeed = 0.01f;
-	private float maxSpeed = 10;
-	private float descFactor = 5;
-	private float accFactor = 0.2f;
+	protected float minSpeed = 0.01f;
+	protected float maxSpeed = 2f;
+	protected float descFactor = 5;
+	protected float accFactor = 0.2f;
 	protected Vector3f color;
 	
 	public Vector3f getColor(){
@@ -64,18 +68,18 @@ public abstract class Entity extends Node implements Drawable{
 			float x_tmp = position.x + speed.x * dt;
 			float y_tmp = position.y + speed.y * dt;
 			
-			if(isInCollision(x_tmp, y_tmp, m)){
+			if(!isInCollision(x_tmp, y_tmp, m)){
 				setPosition(x_tmp, y_tmp);
 			}
 			else
 			{
-				if(!isInCollision(x_tmp, position.y, m)){
+				if(isInCollision(x_tmp, position.y, m)){
 						speed.x = 0;
 			}
-				if(!isInCollision(position.x, y_tmp, m)){
+				if(isInCollision(position.x, y_tmp, m)){
 				speed.y = 0;
 			}
-				if(isInCollision(position.x, y_tmp, m) && isInCollision(x_tmp, position.y, m)){
+				if(!isInCollision(position.x, y_tmp, m) && !isInCollision(x_tmp, position.y, m)){
 					speed.x = 0;
 					speed.y = 0;
 				}

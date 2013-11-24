@@ -14,6 +14,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import rendering.Camera;
 import entity.Player;
+import entity.projectile.ProjectileManager;
 import environment.Map;
 import event.Timer;
 import static org.lwjgl.opengl.GL11.*;
@@ -26,6 +27,7 @@ public class GameLoop {
 	private static final int FPS = 60;
 	private boolean isRunning;
 	private LightManager lm;
+	private ProjectileManager pm;
 
 	private Player p = new Player(new Vector2f(0, 0));
 	private Map m = new Map(500, 500);
@@ -59,6 +61,8 @@ public class GameLoop {
 		initGL();
 		m.generate();
 		p.setPosition(m.getSpawnPosition());
+		pm = new ProjectileManager();
+		pm.init();
 		lm = new LightManager(cam);
 		lm.initLightShaders();
 		lm.initLaserShader();
@@ -115,6 +119,10 @@ public class GameLoop {
 		mouse.x = Mouse.getX(); // will return the X coordinate on the Display.
 		mouse.y = Mouse.getY();
 		
+		if(Mouse.isButtonDown(0)){
+			pm.createBullet(new Vector2f(p.getPosition()), new Vector2f(mouse.x-Display.getWidth()/2.0f,Display.getHeight()/2.0f - mouse.y));
+		}
+		
 		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)
 				|| Display.isCloseRequested()) {
 			isRunning = false;
@@ -150,6 +158,7 @@ public class GameLoop {
 		// glMatrixMode(GL_MODELVIEW);
 
 		p.updatePostion(elapsedTime, m); // a sortir de la boucle de rendu ?
+		pm.updateProjectiles(elapsedTime, m);
 		p.setOrientation(-(mouse.x-WIDTH/2.0f),mouse.y-HEIGHT/2.0f);
 		cam.setPosition(p.getPosition());
 		m.setDrawPosition(p.getPosition());
@@ -161,6 +170,7 @@ public class GameLoop {
 		lm.render();
 
 		p.draw();
+		pm.drawProjectiles();
 		GL11.glPopMatrix();
 	}
 }

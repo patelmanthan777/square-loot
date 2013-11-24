@@ -37,7 +37,7 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	public boolean testCollision(float x, float y) {
 		int x_grid = (int) Math.floor(x / (halfBlockSize.x * 2));
 		int y_grid = (int) Math.floor(y / (halfBlockSize.y * 2));
-		if (x_grid < 0 || y_grid < 0 || x_grid > height || y_grid > width)
+		if (x_grid < 0 || y_grid < 0 || x_grid > height-1 || y_grid > width-1)
 			return true;
 		else
 			return blockGrid[x_grid][y_grid].testCollision();

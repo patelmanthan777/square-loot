@@ -31,9 +31,9 @@ public class Player extends Entity {
 				|| m.testCollision(x + halfSize.x, y - halfSize.y)
 				|| m.testCollision(x - halfSize.x, y + halfSize.y)
 				|| m.testCollision(x + halfSize.x, y + halfSize.y)) {
-			return false;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public void setLight(Light l){
