@@ -12,7 +12,6 @@ import org.lwjgl.util.vector.Vector2f;
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
 import environment.blocks.SolidBlock;
-import rendering.Camera;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import rendering.LightTaker;
