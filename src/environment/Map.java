@@ -82,10 +82,10 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	public LinkedList<Shadow> computeShadow(Light light) {
 		LinkedList<Shadow> l = new LinkedList<Shadow>();
 		boolean [] neighbours = new boolean[4];
-		int minX = Math.max(0,(int)Math.floor((light.getX()-Display.getWidth()/2)/(halfBlockSize.x*2)));
-		int maxX = Math.min(size,(int)Math.floor((light.getX()+Display.getWidth()/2)/(halfBlockSize.x*2))+1);
-		int minY = Math.max(0,(int)Math.floor((light.getY()-Display.getHeight()/2)/(halfBlockSize.y*2)));
-		int maxY = Math.min(size,(int)Math.floor((light.getY()+Display.getHeight()/2)/(halfBlockSize.y*2))+1);
+		int minX = Math.max(0,(int)Math.floor((light.getX()-Display.getWidth())/(halfBlockSize.x*2)));
+		int maxX = Math.min(size,(int)Math.floor((light.getX()+Display.getWidth())/(halfBlockSize.x*2))+1);
+		int minY = Math.max(0,(int)Math.floor((light.getY()-Display.getHeight())/(halfBlockSize.y*2)));
+		int maxY = Math.min(size,(int)Math.floor((light.getY()+Display.getHeight())/(halfBlockSize.y*2))+1);
 			
 		int i;
 		int j;

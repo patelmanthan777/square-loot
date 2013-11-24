@@ -10,10 +10,12 @@ public class Light extends Node{
 	protected Vector3f color; // couleur de la lumiere
 	protected boolean active = true;
 	protected float radius; // distance max d'eclairage
-	public Light(Vector2f p, Vector3f color, float radius){
+	protected float maxDst;
+	public Light(Vector2f p, Vector3f color, float radius, float dstMax){
 		super(p);
 		this.color = color;
 		this.radius = radius;
+		this.maxDst = dstMax;
 	}
 	
 	public void setRadius(float rad){
@@ -26,6 +28,10 @@ public class Light extends Node{
 	
 	public Vector3f getColor(){
 		return color;
+	}
+	
+	public float getMaxDst(){
+		return maxDst;
 	}
 	
 	public float getRadius(){
@@ -59,4 +65,6 @@ public class Light extends Node{
 		this.position.y = posy;
 		LightManager.updateLightShadows(this);
 	}
+	
+	
 }

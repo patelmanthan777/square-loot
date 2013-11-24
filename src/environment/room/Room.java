@@ -1,4 +1,4 @@
-package environment;
+package environment.room;
 
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
@@ -27,6 +27,7 @@ public abstract class Room {
 	}
 	
 	protected abstract void construct();
+	public abstract void drawOnMiniMap();
 	
 	public void place(Block[][] grid){
 		for(int i = 0; i < width; i++){

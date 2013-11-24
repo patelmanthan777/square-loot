@@ -80,8 +80,8 @@ public class SolidBlock implements Block, ShadowCasterBlock{
 			Vector2f normal = new Vector2f(edge.getY(),-edge.getX());
 			Vector2f lightToCurrent = Vector2f.sub(currentVertex, light.getPosition(), null);
 			if (Vector2f.dot(normal, lightToCurrent) > 0 && !neighbour[i]) {
-				Vector2f point1 = Vector2f.add(currentVertex,(Vector2f) Vector2f.sub(currentVertex,light.getPosition(), null).normalise().scale(4000), null);
-				Vector2f point2 = Vector2f.add(nextVertex,(Vector2f) Vector2f.sub(nextVertex,light.getPosition(), null).normalise().scale(4000), null);
+				Vector2f point1 = Vector2f.add(currentVertex,(Vector2f) Vector2f.sub(currentVertex,light.getPosition(), null).normalise().scale(10000), null);
+				Vector2f point2 = Vector2f.add(nextVertex,(Vector2f) Vector2f.sub(nextVertex,light.getPosition(), null).normalise().scale(10000), null);
 				l.add(new Shadow(currentVertex,nextVertex,point1,point2));
 			}	
 		}

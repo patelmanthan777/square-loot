@@ -43,8 +43,8 @@ public class LightManager {
 	}
 
 	static public Light addActivatedLight(String name, Vector2f p, Vector3f color,
-			float radius) {
-		Light l = new Light(p, color, radius);
+			float radius, float maxDst) {
+		Light l = new Light(p, color, radius,maxDst);
 		l.setName(name);
 		activatedLight.put(name, l);
 		updateLightShadows(l);
@@ -52,8 +52,8 @@ public class LightManager {
 	}
 
 	static public Light addDesactivatedLight(String name, Vector2f p, Vector3f color,
-			float radius) {
-		Light l = new Light(p, color, radius);
+			float radius, float maxDst) {
+		Light l = new Light(p, color, radius, maxDst);
 		l.setName(name);
 		desactivatedLight.put(name, l);
 		return l;
@@ -209,6 +209,8 @@ public class LightManager {
 			// "cameraPosition"), cam.getX(), cam.getY());
 
 			glUseProgram(lightShaderProgram);
+			glUniform1f(glGetUniformLocation(lightShaderProgram, "light.maxDst"),
+					l.getMaxDst());
 			glUniform1f(glGetUniformLocation(lightShaderProgram, "light.radius"),
 					l.getRadius());
 			glUniform2f(glGetUniformLocation(lightShaderProgram, "light.position"),

@@ -24,13 +24,13 @@ public class GameLoop {
 	private static final DisplayMode DISPLAY_MODE = new DisplayMode(WIDTH,
 			HEIGHT);
 	private static final String WINDOW_TITLE = "SquareLoot";
-	private static final int FPS = 60;
+	private static final int FPS = 0;
 	private boolean isRunning;
 
 	private ProjectileManager pm;
 
 	private Player p = new Player(new Vector2f(0, 0));
-	private Map m = new Map(200);
+	private Map m = new Map(100);
 	private Vector2f mouse = new Vector2f();
 	private Camera cam = new Camera(new Vector2f(0, 0));
 
@@ -79,7 +79,7 @@ public class GameLoop {
 		
 		
 		Light playerLight = LightManager.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1,
-				1, 0.8f), 10);
+				1, 0.8f), 10,2*WIDTH);
 		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);

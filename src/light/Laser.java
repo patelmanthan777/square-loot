@@ -7,13 +7,13 @@ public class Laser extends Light {
 	private Vector2f dir = new Vector2f();
 	
 	public Laser(Vector2f p, Vector3f color){
-		super(p, color,-1);
+		super(p, color,-1,-1);
 		dir.x = 1;
 		dir.y = 1;
 	}
 	
 	public Laser(Vector2f p, Vector3f color, Vector2f dir){
-		super(p, color,-1);
+		super(p, color,-1,-1);
 		this.dir.x = dir.x;
 		this.dir.y = dir.y;
 	}

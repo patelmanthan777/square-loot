@@ -6,6 +6,9 @@ import org.lwjgl.util.vector.Vector2f;
 
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
+import environment.room.Room;
+import environment.room.SpawnRoom;
+import environment.room.TestRoom;
 
 public class MapGenerator {
 	private static Block[][] grid;
@@ -18,7 +21,7 @@ public class MapGenerator {
 	private static LinkedList<Room> rooms;
 	private static LinkedList<Room> surroundedRooms;
 	private static Room[][] roomsGrid;
-
+	
 	static Block[][] generate(int size,int blockSize) {
 		MapGenerator.size = size;
 		MapGenerator.blockSize = blockSize;
