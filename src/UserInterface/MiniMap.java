@@ -2,11 +2,11 @@ package UserInterface;
 
 import environment.room.Room;
 
-public class Minimap extends Overlay{
+public class MiniMap extends Overlay{
 	private Room[][] rooms;
 	private int width;
 	private int height;
-	public Minimap(Room[][] rooms, int width, int height){
+	public MiniMap(Room[][] rooms, int width, int height){
 		this.rooms = rooms;
 		this.width = width;
 		this.height = height;
