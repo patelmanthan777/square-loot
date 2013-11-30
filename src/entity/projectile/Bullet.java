@@ -16,6 +16,11 @@ public class Bullet extends Projectile {
 	private static float radius = 10.0f;
 	private static float length = 10.0f;
 	
+	/**
+	 * Bullet class constructor 
+	 * @param pos
+	 * @param rot
+	 */
 	public Bullet(Vector2f pos, Vector2f rot) {
 		super(pos,rot);
 		Vector2f speed = new Vector2f();
@@ -25,6 +30,9 @@ public class Bullet extends Projectile {
 		this.setColor(new Vector3f(1,0,1));
 	}
 
+	/**
+	 * Draw the bullet
+	 */
 	@Override
 	public void draw() {
 		GL11.glColor3f(color.x, color.y, color.z);
@@ -44,12 +52,20 @@ public class Bullet extends Projectile {
 		glDisable(GL_BLEND);
 		glUseProgram(0);
 	}
+	
 
+	/**
+	 * Is the bullet in collision
+	 */
 	@Override
 	public boolean isInCollision(float x, float y, Map m) {
 		return m.testCollision(x,y);
 	}
 	
+	
+	/**
+	 * Update the position of the bullet
+	 */
 	@Override
 	public void updatePostion(float dt, Map m){
 		float x_tmp = position.x + speed.x * dt;
@@ -63,6 +79,4 @@ public class Bullet extends Projectile {
 			toDestroy = true;
 		}
 	}
-
-
 }

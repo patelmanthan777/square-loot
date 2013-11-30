@@ -13,7 +13,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import rendering.Camera;
-import entity.Player;
+import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
 import event.Timer;

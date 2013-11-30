@@ -22,11 +22,21 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	
 	private Vector2f drawPosition;
 
+	/**
+	 * Map class constructor
+	 * @param size
+	 */
 	public Map(int size) {
 		this.size = size;
 		this.drawPosition = new Vector2f(0,0);
 	}
 
+	/**
+	 * Is the given position in collision?
+	 * @param x the position abscissa
+	 * @param y the position ordinate
+	 * @return true if the position is in collision else false
+	 */
 	public boolean testCollision(float x, float y) {
 		int x_grid = (int) Math.floor(x / (halfBlockSize.x * 2));
 		int y_grid = (int) Math.floor(y / (halfBlockSize.y * 2));
@@ -36,10 +46,17 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 			return blockGrid[x_grid][y_grid].testCollision();
 	}
 
+	/**
+	 * Get the map spawn point position
+	 * @return the spawn point position
+	 */
 	public Vector2f getSpawnPosition() {
 		return spawnPosition;
 	}
 
+	/**
+	 * Generate the map
+	 */
 	public void generate() {
 		blockGrid = MapGenerator.generate(size,(int)(2*halfBlockSize.x));
 		spawnPosition = MapGenerator.getSpawn();
@@ -50,11 +67,17 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		
 	}
 	
-	
+	/**
+	 * Set the draw position (map will be drawn only around this position)
+	 * @param pos the position 
+	 */
 	public void setDrawPosition(Vector2f pos) {
 		drawPosition = pos;
 	}
 
+	/**
+	 * Draw the map
+	 */
 	@Override
 	public void draw() {
 
@@ -77,7 +100,9 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		}
 	}
 
-
+	/**
+	 * Compute shadow casted by the map
+	 */
 	@Override
 	public LinkedList<Shadow> computeShadow(Light light) {
 		LinkedList<Shadow> l = new LinkedList<Shadow>();
