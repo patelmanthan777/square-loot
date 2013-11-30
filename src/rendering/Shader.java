@@ -2,6 +2,10 @@ package rendering;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import javax.swing.Renderer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -26,7 +30,7 @@ public class Shader {
 	}
 
 	private void loadCodeVertex() {
-		String fileName = "assets/shaders/" + name + ".vert";
+		String fileName = "./assets/shaders/" + name + ".vert";
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 			String line;
@@ -35,6 +39,14 @@ public class Shader {
 			}
 			reader.close();
 		} catch (IOException e) {
+			String current;
+			try {
+				current = new java.io.File( "." ).getCanonicalPath();
+				 System.out.println("Current dir:"+current);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			System.err.println("Vertex shader file : " + fileName
 					+ " does not exist.");
 			System.exit(1);
@@ -43,8 +55,10 @@ public class Shader {
 	}
 
 	private void loadCodeFragment() {
-		String fileName = "assets/shaders/" + name + ".frag";
+		String fileName = "./assets/shaders/" + name + ".frag";
 		try {
+			//InputStream input = Renderer.class.getClass().getResourceAsStream(fileName);
+			//BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -52,6 +66,9 @@ public class Shader {
 			}
 			reader.close();
 		} catch (IOException e) {
+			
+			
+	       
 			System.err.println("Fragment shader file : " + fileName
 					+ " does not exist.");
 			System.exit(1);

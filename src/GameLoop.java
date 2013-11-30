@@ -66,6 +66,8 @@ public class GameLoop {
 
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
+		LightManager.setScreenHeight(HEIGHT);
+		LightManager.setScreenWidth(WIDTH);
 
 
 		for (int i = 0; i < 10; i++) {
@@ -162,6 +164,7 @@ public class GameLoop {
 		pm.updateProjectiles(elapsedTime, m);
 		p.setOrientation(-(mouse.x-WIDTH/2.0f),mouse.y-HEIGHT/2.0f);
 		cam.setPosition(p.getPosition());
+		LightManager.setCamPosition(p.getPosition());
 		m.setDrawPosition(p.getPosition());
 
 		GL11.glPushMatrix();

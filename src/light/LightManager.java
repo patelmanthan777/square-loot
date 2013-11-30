@@ -27,10 +27,13 @@ public class LightManager {
 	private static HashMap<String, Laser> activatedLasers = new HashMap<String, Laser>();
 	private static HashMap<String, Laser> desactivatedLasers = new HashMap<String, Laser>();
 	private static HashMap<Laser, LinkedList<Shadow>> laserShadows = new HashMap<Laser, LinkedList<Shadow>>();
+	private static Vector2f camPos = null;
+	private static int screenWidth = 0;
+	private static int screenHeight = 0;
+	private static float diagonal = 0;
 
 	static int lightShaderProgram;
 	static int laserShaderProgram;
-
 
 	static public void addShadowCaster(ShadowCaster sc) {
 		shadowCasters.add(sc);
@@ -42,17 +45,17 @@ public class LightManager {
 		}
 	}
 
-	static public Light addActivatedLight(String name, Vector2f p, Vector3f color,
-			float radius, float maxDst) {
-		Light l = new Light(p, color, radius,maxDst);
+	static public Light addActivatedLight(String name, Vector2f p,
+			Vector3f color, float radius, float maxDst) {
+		Light l = new Light(p, color, radius, maxDst);
 		l.setName(name);
 		activatedLight.put(name, l);
 		updateLightShadows(l);
 		return l;
 	}
 
-	static public Light addDesactivatedLight(String name, Vector2f p, Vector3f color,
-			float radius, float maxDst) {
+	static public Light addDesactivatedLight(String name, Vector2f p,
+			Vector3f color, float radius, float maxDst) {
 		Light l = new Light(p, color, radius, maxDst);
 		l.setName(name);
 		desactivatedLight.put(name, l);
@@ -90,8 +93,8 @@ public class LightManager {
 		s.link(lightShaderProgram);
 		/* on defini notre program actif */
 	}
-	
-	static public void initLaserShader(){
+
+	static public void initLaserShader() {
 		laserShaderProgram = glCreateProgram();
 		Shader s = new Shader("laser");
 		s.loadCode();
@@ -110,16 +113,16 @@ public class LightManager {
 
 	/*********** LASERS ************/
 
-	static public Laser addActivatedLaser(String name, Vector2f p, Vector3f color,
-			Vector2f dir) {
+	static public Laser addActivatedLaser(String name, Vector2f p,
+			Vector3f color, Vector2f dir) {
 		Laser laser = new Laser(p, color, dir);
 		activatedLasers.put(name, laser);
 		updateLaserShadows(laser);
 		return laser;
 	}
 
-	static public Laser addDesactivatedLaser(String name, Vector2f p, Vector3f color,
-			Vector2f dir) {
+	static public Laser addDesactivatedLaser(String name, Vector2f p,
+			Vector3f color, Vector2f dir) {
 		Laser laser = new Laser(p, color, dir);
 		desactivatedLasers.put(name, laser);
 		return laser;
@@ -150,9 +153,9 @@ public class LightManager {
 		return activatedLight.values();
 	}
 
-	/*public int getShaderProgram() {
-		return lightShaderProgram;
-	}*/
+	/*
+	 * public int getShaderProgram() { return lightShaderProgram; }
+	 */
 
 	static public void addLightTaker(LightTaker lt) {
 		lightTakers.add(lt);
@@ -180,7 +183,7 @@ public class LightManager {
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		for (Light l : activatedLight.values()) {
-
+			if(camPos.sub(camPos, l.getPosition(), null).length() - l.getMaxDst() < diagonal/4){
 			glColorMask(false, false, false, false);
 			glStencilFunc(GL_ALWAYS, 1, 1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -230,7 +233,7 @@ public class LightManager {
 
 			glUseProgram(0);
 			glClear(GL_STENCIL_BUFFER_BIT);
-
+			}
 		}
 		for (Laser l : activatedLasers.values()) {
 
@@ -285,4 +288,22 @@ public class LightManager {
 
 		}
 	}
+	public static void setCamPosition(Vector2f pos){
+		camPos = pos;
+	}
+	
+	public static void  setScreenWidth(int width){
+		screenWidth = width;
+		computeDiagonal();
+	}
+	
+	public static void  setScreenHeight(int height){
+		screenHeight = height;
+		computeDiagonal();
+	}
+	
+	private static void computeDiagonal(){
+		diagonal = (float) Math.sqrt(screenHeight*screenHeight + screenWidth*screenWidth);
+	}
+	
 }
