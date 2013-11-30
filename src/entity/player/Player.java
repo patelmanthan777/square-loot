@@ -1,4 +1,4 @@
-package entity;
+package entity.player;
 
 import light.Laser;
 import light.Light;
@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import entity.Entity;
 import environment.Map;
 
 public class Player extends Entity {
