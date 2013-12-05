@@ -31,4 +31,5 @@ public interface ShadowCasterBlock {
 	 * @return
 	 */
 	public LinkedList<Shadow> computeShadow(Light light, int ix, int iy, Vector2f halfBlockSize,boolean [] neighbour);
+	public LinkedList<Shadow> computeLaserShadow(Light light, int ix, int iy, Vector2f halfBlockSize,boolean [] neighbour);
 }

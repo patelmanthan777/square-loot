@@ -41,7 +41,7 @@ public class LightManager {
 			lightShadows.put(l, sc.computeShadow(l));
 		}
 		for (Laser l : activatedLasers.values()) {
-			laserShadows.put(l, sc.computeShadow(l));
+			laserShadows.put(l, sc.computeLaserShadow(l));
 		}
 	}
 
@@ -174,7 +174,7 @@ public class LightManager {
 		laserShadows.remove(l);
 		LinkedList<Shadow> sl = new LinkedList<Shadow>();
 		for (ShadowCaster sc : shadowCasters) {
-			sl.addAll(sc.computeShadow(l));
+			sl.addAll(sc.computeLaserShadow(l));
 		}
 		laserShadows.put(l, sl);
 	}
