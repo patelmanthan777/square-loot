@@ -16,6 +16,8 @@ import org.lwjgl.util.vector.Vector3f;
 import UserInterface.OverlayManager;
 import rendering.Camera;
 import entity.player.Player;
+import entity.projectile.Bullet;
+import entity.projectile.ProjectileFactory;
 import entity.projectile.ProjectileManager;
 import environment.Map;
 import event.KeyState;
@@ -32,6 +34,7 @@ public class GameLoop {
 	private boolean isRunning;
 
 	private ProjectileManager pm;
+	private ProjectileFactory<Bullet> projecfacto;
 
 	private Player p = new Player(new Vector2f(0, 0));
 	private Map m = new Map(100);
@@ -73,6 +76,8 @@ public class GameLoop {
 		m.generate();
 		p.setPosition(m.getSpawnPosition());
 		pm = new ProjectileManager();
+		projecfacto = pm.createBulletFactory();
+		
 		pm.init();
 
 		LightManager.initLightShaders();
@@ -117,7 +122,7 @@ public class GameLoop {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private void getInput() {
 		keys.update();
 		mouse.x = Mouse.getX(); // will return the X coordinate on the Display.
@@ -126,7 +131,7 @@ public class GameLoop {
 		
 		
 		if(Mouse.isButtonDown(0)){
-			pm.createBullet(new Vector2f(p.getPosition()), new Vector2f(mouse.x-Display.getWidth()/2.0f,Display.getHeight()/2.0f - mouse.y));
+			projecfacto.createProjectile(new Vector2f(p.getPosition()), new Vector2f(mouse.x-Display.getWidth()/2.0f,Display.getHeight()/2.0f - mouse.y));
 		}
 		
 		if (keys.getState(Keyboard.KEY_ESCAPE) == KeyState.PRESSED|| Display.isCloseRequested()) {

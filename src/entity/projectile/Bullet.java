@@ -11,10 +11,14 @@ import org.lwjgl.util.vector.Vector3f;
 import environment.Map;
 
 public class Bullet extends Projectile {
-	private static float speedValue = 2f;
-	private static Vector2f size = new Vector2f(10,10);
-	private static float radius = 10.0f;
-	private static float length = 10.0f;
+	static private float speedValue = 2f;
+	static private Vector2f size = new Vector2f(10,10);
+	static private float radius = 10.0f;
+	static private float length = 10.0f;
+	
+	public Bullet() {
+		super();
+	}
 	
 	/**
 	 * Bullet class constructor 
@@ -78,5 +82,10 @@ public class Bullet extends Projectile {
 		{
 			toDestroy = true;
 		}
+	}
+
+	@Override
+	public Projectile Clone(Vector2f pos, Vector2f rot) {		
+		return new Bullet(pos, rot);
 	}
 }

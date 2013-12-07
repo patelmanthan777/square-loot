@@ -5,14 +5,12 @@ import static org.lwjgl.opengl.GL20.glCreateProgram;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.lwjgl.util.vector.Vector2f;
-
 import rendering.Shader;
 import environment.Map;
 
 
 public class ProjectileManager {
-	private LinkedList <Projectile> projectiles = new LinkedList<Projectile>();
+	private LinkedList <Projectile> projectileList = new LinkedList<Projectile>();
 	
 	static protected int bulletShaderProgram;
 	
@@ -36,25 +34,18 @@ public class ProjectileManager {
 	}
 	
 	
-	
-	/**
-	 * Create a bullet at the given position with the given direction
-	 * @param pos Initial position of the bullet
-	 * @param rot Initial direction of the bullet
-	 */
-	public void createBullet(Vector2f pos, Vector2f rot){
-		Bullet project = new Bullet(pos,rot);
-		projectiles.add(project);
+	public ProjectileFactory<Bullet> createBulletFactory(){
+		return new ProjectileFactory<Bullet>(new Bullet(), projectileList);
 	}
 	
-	
+		
 	/**
 	 * Update all projectiles of the projectileManager
 	 * @param dt the elapsed time since the last update
 	 * @param m the map
 	 */
 	public void updateProjectiles(float dt, Map m) {
-		Iterator<Projectile> ite = projectiles.iterator();
+		Iterator<Projectile> ite = projectileList.iterator();
 		while(ite.hasNext()){
 			Projectile project = ite.next();
 			project.updatePostion(dt,m);
@@ -69,7 +60,7 @@ public class ProjectileManager {
 	 * Draw all projectiles
 	 */
 	public void drawProjectiles() {
-		for(Projectile project : projectiles){
+		for(Projectile project : projectileList){
 			project.draw();
 		}
 	}
