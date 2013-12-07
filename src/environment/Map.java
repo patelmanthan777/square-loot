@@ -46,12 +46,12 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	 * @param size
 	 */
 	public Map(Vector2f mapRoomSize, Vector2f roomBlockSize, Vector2f blockPixelSize) {
-		this.mapRoomSize = mapRoomSize;
-		this.roomBlockSize = roomBlockSize;
-		this.blockPixelSize = blockPixelSize;
-		this.roomPixelSize = new Vector2f(roomBlockSize.x*blockPixelSize.x,roomBlockSize.y*blockPixelSize.y);
-		this.mapBlockSize = new Vector2f(mapRoomSize.x*roomBlockSize.x,mapRoomSize.y*roomBlockSize.y);
-		this.mapPixelSize = new Vector2f(mapRoomSize.x*roomPixelSize.x,mapRoomSize.y*roomPixelSize.y);
+		Map.mapRoomSize = mapRoomSize;
+		Map.roomBlockSize = roomBlockSize;
+		Map.blockPixelSize = blockPixelSize;
+		Map.roomPixelSize = new Vector2f(roomBlockSize.x*blockPixelSize.x,roomBlockSize.y*blockPixelSize.y);
+		Map.mapBlockSize = new Vector2f(mapRoomSize.x*roomBlockSize.x,mapRoomSize.y*roomBlockSize.y);
+		Map.mapPixelSize = new Vector2f(mapRoomSize.x*roomPixelSize.x,mapRoomSize.y*roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0,0);
 		this.drawRoomDistance = new Vector2f(2,2);
 	}

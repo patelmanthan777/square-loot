@@ -24,10 +24,12 @@ public class MapGenerator {
 	}
 
 	private static void createRooms() {
-		Map.spawnPixelPosition = new Vector2f(Map.mapPixelSize.x/2.0f+Map.roomPixelSize.x/2.0f, Map.mapPixelSize.y/2.0f+Map.roomPixelSize.y/2.0f);
-		Map.spawnRoomPosition = new Vector2f(Map.mapRoomSize.x/2.0f, Map.mapRoomSize.y/2.0f);
-		Room r = new SpawnRoom(Map.mapPixelSize.x/2.0f,Map.mapPixelSize.x/2.0f);
-		roomsGrid[(int) (Map.mapRoomSize.x/ 2)][(int) (Map.mapRoomSize.y / 2)] = r;
+		float ispawn = (float)Math.floor(Map.mapRoomSize.x/2.0);
+		float jspawn = (float)Math.floor(Map.mapRoomSize.y/2.0);
+		Map.spawnPixelPosition = new Vector2f(((float)ispawn+0.5f)*Map.roomPixelSize.x, ((float)jspawn+0.5f)*Map.roomPixelSize.y);
+		Map.spawnRoomPosition = new Vector2f(ispawn, jspawn);
+		Room r = new SpawnRoom((float)ispawn*Map.roomPixelSize.x,(float)ispawn*Map.roomPixelSize.x);
+		roomsGrid[(int)ispawn][(int)jspawn] = r;
 		rooms.add(r);
 		boolean stop = false;
 		while (rooms.size() > 0 && !stop) {
