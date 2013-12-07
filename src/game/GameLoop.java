@@ -15,8 +15,8 @@ import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import UserInterface.OverlayManager;
 import rendering.Camera;
+import userInterface.OverlayManager;
 import entity.player.Player;
 import entity.projectile.Bullet;
 import entity.projectile.ProjectileFactory;
@@ -38,7 +38,7 @@ public class GameLoop {
 	private static Weapon weapon = new LaserRifle(250);
 	
 	private Player p = new Player(new Vector2f(0, 0));
-	private Map m = new Map(100);
+	private Map m = new Map(new Vector2f(10,10), new Vector2f(10,10), new Vector2f(40,40));
 	private Vector2f mouse = new Vector2f();
 	private float dwheel;
 	private Camera cam = new Camera(new Vector2f(0, 0));
@@ -75,9 +75,10 @@ public class GameLoop {
 		createWindow();
 		initGL();
 		m.generate();
-		p.setPosition(m.getSpawnPosition());
-		
+
+		p.setPosition(m.getSpawnPixelPosition());
 		ProjectileManager.init();
+
 
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();

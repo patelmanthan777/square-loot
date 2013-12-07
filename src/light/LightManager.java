@@ -1,17 +1,13 @@
 package light;
 
 import game.GameLoop;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.*;
-
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-
 import rendering.LightTaker;
 import rendering.Shader;
 import rendering.ShadowCaster;
@@ -26,9 +22,6 @@ public class LightManager {
 
 	private static HashMap<Light, LinkedList<Shadow>> lightShadows = new HashMap<Light, LinkedList<Shadow>>();
 
-	private static HashMap<String, Laser> activatedLasers = new HashMap<String, Laser>();
-	private static HashMap<String, Laser> desactivatedLasers = new HashMap<String, Laser>();
-	private static HashMap<Laser, LinkedList<Shadow>> laserShadows = new HashMap<Laser, LinkedList<Shadow>>();
 	private static Vector2f camPos = null;
 	private static int screenWidth = 0;
 	private static int screenHeight = 0;
@@ -41,9 +34,6 @@ public class LightManager {
 		shadowCasters.add(sc);
 		for (Light l : activatedLight.values()) {
 			lightShadows.put(l, sc.computeShadow(l));
-		}
-		for (Laser l : activatedLasers.values()) {
-			laserShadows.put(l, sc.computeLaserShadow(l));
 		}
 	}
 
@@ -104,60 +94,21 @@ public class LightManager {
 		s.link(laserShaderProgram);
 	}
 
-	/*
-	 * public void setLightPosition(String lightName, Vector2f position) { Light
-	 * l; if ((l = activatedLight.get(lightName)) != null) {
-	 * l.setPosition(position); updateShadows(l); } else if ((l =
-	 * desactivatedLight.get(lightName)) != null) { l.setPosition(position); }
-	 * 
-	 * }
-	 */
 
 	/*********** LASERS ************/
 
 	static public Laser addActivatedLaser(String name, Vector2f p,
 			Vector3f color, Vector2f dir) {
 		Laser laser = new Laser(p, color, dir);
-		activatedLasers.put(name, laser);
-		updateLaserShadows(laser);
+		activatedLight.put(name, laser);
+		updateLightShadows(laser);
 		return laser;
 	}
 
-	static public Laser addDesactivatedLaser(String name, Vector2f p,
-			Vector3f color, Vector2f dir) {
-		Laser laser = new Laser(p, color, dir);
-		desactivatedLasers.put(name, laser);
-		return laser;
-	}
-
-	static public void activateLaser(String name) {
-		Laser l = desactivatedLasers.remove(name);
-		if (l != null) {
-			activatedLasers.put(name, l);
-		}
-	}
-
-	static public void desactivateLaser(String name) {
-		Laser l = activatedLasers.remove(name);
-		if (l != null) {
-			desactivatedLasers.put(name, l);
-		}
-		laserShadows.remove(l);
-	}
-
-	/*
-	 * public void addShadow(String lightName, Shadow s) { Light l; if ((l =
-	 * activatedLight.get(lightName)) != null) { LinkedList<Shadow> sl =
-	 * lightShadows.get(l); if (sl != null) { sl.add(s); updateShadows(l); } } }
-	 */
 
 	static public Collection<Light> getActivatedLight() {
 		return activatedLight.values();
 	}
-
-	/*
-	 * public int getShaderProgram() { return lightShaderProgram; }
-	 */
 
 	static public void addLightTaker(LightTaker lt) {
 		lightTakers.add(lt);
@@ -172,140 +123,106 @@ public class LightManager {
 		lightShadows.put(l, sl);
 	}
 
-	static public void updateLaserShadows(Laser l) {
-		laserShadows.remove(l);
-		LinkedList<Shadow> sl = new LinkedList<Shadow>();
-		for (ShadowCaster sc : shadowCasters) {
-			sl.addAll(sc.computeLaserShadow(l));
-		}
-		laserShadows.put(l, sl);
-	}
 
 	static public void render() {
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		for (Light l : activatedLight.values()) {
-			if(camPos.sub(camPos, l.getPosition(), null).length() - l.getMaxDst() < diagonal/4){
-			glColorMask(false, false, false, false);
-			glStencilFunc(GL_ALWAYS, 1, 1);
-			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+			if (camPos.sub(camPos, l.getPosition(), null).length()
+					- l.getMaxDst() < diagonal / 4) {
+				glColorMask(false, false, false, false);
+				glStencilFunc(GL_ALWAYS, 1, 1);
+				glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-			LinkedList<Shadow> lsc = lightShadows.get(l);
-			if (lsc != null) {
-				for (Shadow s : lsc) {
-					Vector2f[] points = s.points;
-					// glColor3f(0,0,0);
-					glBegin(GL_TRIANGLE_STRIP);
-					{
-						glVertex2f(points[0].x, points[0].y);
-						glVertex2f(points[1].x, points[1].y);
-						glVertex2f(points[2].x, points[2].y);
-						glVertex2f(points[3].x, points[3].y);
+				LinkedList<Shadow> lsc = lightShadows.get(l);
+				if (lsc != null) {
+					for (Shadow s : lsc) {
+						Vector2f[] points = s.points;
+						glBegin(GL_TRIANGLE_STRIP);
+						{
+							glVertex2f(points[0].x, points[0].y);
+							glVertex2f(points[1].x, points[1].y);
+							glVertex2f(points[2].x, points[2].y);
+							glVertex2f(points[3].x, points[3].y);
+						}
+						glEnd();
 					}
-					glEnd();
 				}
-			}
 
-			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-			glStencilFunc(GL_EQUAL, 0, 1);
-			glColorMask(true, true, true, true);
+				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+				glStencilFunc(GL_EQUAL, 0, 1);
+				glColorMask(true, true, true, true);
 
-			// glUniform2f(glGetUniformLocation(shaderProgram,
-			// "cameraPosition"), cam.getX(), cam.getY());
-
-			glUseProgram(lightShaderProgram);
-			glUniform1f(glGetUniformLocation(lightShaderProgram, "light.maxDst"),
-					l.getMaxDst());
-			glUniform1f(glGetUniformLocation(lightShaderProgram, "light.radius"),
-					l.getRadius());
-			glUniform2f(glGetUniformLocation(lightShaderProgram, "light.position"),
-					l.getX()-camPos.x+GameLoop.WIDTH/2, (-l.getY()+camPos.y)+GameLoop.HEIGHT/2);
-			glUniform3f(glGetUniformLocation(lightShaderProgram, "light.color"),
-					l.getColor().x, l.getColor().y, l.getColor().z);
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE);
-			// glColor3f(0, 0, 0);
-
-			for (LightTaker lt : lightTakers) {
-				lt.draw();
-			}
-
-			glDisable(GL_BLEND);
-
-			glUseProgram(0);
-			glClear(GL_STENCIL_BUFFER_BIT);
-			}
-		}
-		for (Laser l : activatedLasers.values()) {
-
-			glColorMask(false, false, false, false);
-			glStencilFunc(GL_ALWAYS, 1, 1);
-			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-			LinkedList<Shadow> lsc = laserShadows.get(l);
-			if (lsc != null) {
-				for (Shadow s : lsc) {
-					Vector2f[] points = s.points;
-					glBegin(GL_TRIANGLE_STRIP);
-					{
-						glVertex2f(points[0].x, points[0].y);
-						glVertex2f(points[1].x, points[1].y);
-						glVertex2f(points[2].x, points[2].y);
-						glVertex2f(points[3].x, points[3].y);
+				if (l instanceof Light) {
+					glUseProgram(lightShaderProgram);
+					glUniform1f(
+							glGetUniformLocation(lightShaderProgram,
+									"light.maxDst"), l.getMaxDst());
+					glUniform1f(
+							glGetUniformLocation(lightShaderProgram,
+									"light.radius"), l.getRadius());
+					glUniform2f(
+							glGetUniformLocation(lightShaderProgram,
+									"light.position"), l.getX() - camPos.x
+									+ GameLoop.WIDTH / 2,
+							(-l.getY() + camPos.y) + GameLoop.HEIGHT / 2);
+					glUniform3f(
+							glGetUniformLocation(lightShaderProgram,
+									"light.color"), l.getColor().x,
+							l.getColor().y, l.getColor().z);
+				}
+				if (l instanceof Laser) {
+					glUseProgram(laserShaderProgram);
+					if (((Laser) l).getDirection().length() != 0) {
+						Vector2f direction = (Vector2f) ((Laser) l)
+								.getDirection().normalise();
+						glUniform2f(
+								glGetUniformLocation(laserShaderProgram,
+										"laser.direction"), -direction.x,
+								direction.y);
+						glUniform2f(
+								glGetUniformLocation(laserShaderProgram,
+										"laser.position"), l.getX() - camPos.x
+										+ GameLoop.WIDTH / 2,
+								(-l.getY() + camPos.y) + GameLoop.HEIGHT / 2);
+						glUniform3f(
+								glGetUniformLocation(laserShaderProgram,
+										"laser.color"), l.getColor().x,
+								l.getColor().y, l.getColor().z);
 					}
-					glEnd();
 				}
+
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_ONE, GL_ONE);
+				for (LightTaker lt : lightTakers) {
+					lt.draw();
+				}
+
+				glDisable(GL_BLEND);
+
+				glUseProgram(0);
+				glClear(GL_STENCIL_BUFFER_BIT);
 			}
-
-			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-			glStencilFunc(GL_EQUAL, 0, 1);
-			glColorMask(true, true, true, true);
-
-			// glUniform2f(glGetUniformLocation(shaderProgram,
-			// "cameraPosition"), cam.getX(), cam.getY());
-
-			glUseProgram(laserShaderProgram);
-			if(l.getDirection().length() != 0){
-			Vector2f direction = (Vector2f) l.getDirection().normalise();
-			glUniform2f(glGetUniformLocation(laserShaderProgram, "laser.direction"),
-					-direction.x,direction.y);
-			glUniform2f(glGetUniformLocation(laserShaderProgram, "laser.position"),
-					l.getX()-camPos.x+GameLoop.WIDTH/2, (-l.getY()+camPos.y)+GameLoop.HEIGHT/2);
-			glUniform3f(glGetUniformLocation(laserShaderProgram, "laser.color"),
-					l.getColor().x, l.getColor().y, l.getColor().z);
-
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE);
-			// glColor3f(0, 0, 0);
-
-			for (LightTaker lt : lightTakers) {
-				lt.draw();
-			}
-
-			glDisable(GL_BLEND);
-			}
-			glUseProgram(0);
-			glClear(GL_STENCIL_BUFFER_BIT);
-
 		}
 	}
-	public static void setCamPosition(Vector2f pos){
+
+	public static void setCamPosition(Vector2f pos) {
 		camPos = pos;
 	}
-	
-	public static void  setScreenWidth(int width){
+
+	public static void setScreenWidth(int width) {
 		screenWidth = width;
 		computeDiagonal();
 	}
-	
-	public static void  setScreenHeight(int height){
+
+	public static void setScreenHeight(int height) {
 		screenHeight = height;
 		computeDiagonal();
 	}
-	
-	private static void computeDiagonal(){
-		diagonal = (float) Math.sqrt(screenHeight*screenHeight + screenWidth*screenWidth);
+
+	private static void computeDiagonal() {
+		diagonal = (float) Math.sqrt(screenHeight * screenHeight + screenWidth
+				* screenWidth);
 	}
-	
+
 }

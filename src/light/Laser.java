@@ -39,7 +39,7 @@ public class Laser extends Light {
 	public void setOrientation(float posx, float posy){
 		this.dir.x = posx;
 		this.dir.y = posy;
-		LightManager.updateLaserShadows(this);
+		LightManager.updateLightShadows(this);
 	}
 	
 }

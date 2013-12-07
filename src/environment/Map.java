@@ -10,25 +10,50 @@ import org.lwjgl.util.vector.Vector2f;
 
 import environment.blocks.Block;
 import environment.blocks.SolidBlock;
+import environment.room.Room;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import rendering.LightTaker;
 
 public class Map implements Drawable, ShadowCaster, LightTaker{
-	private int size;
-	private Vector2f halfBlockSize = new Vector2f(20, 20);
-	private Block[][] blockGrid;
-	private Vector2f spawnPosition;
 	
-	private Vector2f drawPosition;
+	
+	public static Vector2f blockPixelSize;
+	public static Vector2f roomBlockSize;
+	public static Vector2f roomPixelSize;
+	public static Vector2f mapRoomSize;
+	public static Vector2f mapBlockSize;
+	public static Vector2f mapPixelSize;
+	public static Vector2f spawnPixelPosition;
+	public static Vector2f spawnRoomPosition;
+	
+	//private Block[][] blockGrid;
+	private Room[][] roomGrid;
+	
+	
+	private Vector2f drawRoomPosition;
+	private Vector2f drawRoomDistance;
 
+	
+	
+	private int minX;
+	private int maxX;
+	private int minY;
+	private int maxY;
+	
 	/**
 	 * Map class constructor
 	 * @param size
 	 */
-	public Map(int size) {
-		this.size = size;
-		this.drawPosition = new Vector2f(0,0);
+	public Map(Vector2f mapRoomSize, Vector2f roomBlockSize, Vector2f blockPixelSize) {
+		this.mapRoomSize = mapRoomSize;
+		this.roomBlockSize = roomBlockSize;
+		this.blockPixelSize = blockPixelSize;
+		this.roomPixelSize = new Vector2f(roomBlockSize.x*blockPixelSize.x,roomBlockSize.y*blockPixelSize.y);
+		this.mapBlockSize = new Vector2f(mapRoomSize.x*roomBlockSize.x,mapRoomSize.y*roomBlockSize.y);
+		this.mapPixelSize = new Vector2f(mapRoomSize.x*roomPixelSize.x,mapRoomSize.y*roomPixelSize.y);
+		this.drawRoomPosition = new Vector2f(0,0);
+		this.drawRoomDistance = new Vector2f(2,2);
 	}
 
 	/**
@@ -38,33 +63,32 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	 * @return true if the position is in collision else false
 	 */
 	public boolean testCollision(float x, float y) {
-		int x_grid = (int) Math.floor(x / (halfBlockSize.x * 2));
-		int y_grid = (int) Math.floor(y / (halfBlockSize.y * 2));
-		if (x_grid < 0 || y_grid < 0 || x_grid > size-1 || y_grid > size-1)
+		int roomI = (int) Math.floor(x / (roomPixelSize.x));
+		int roomJ = (int) Math.floor(y / (roomPixelSize.y));
+		if (roomI < 0 || roomJ < 0 || roomI > Map.roomBlockSize.x-1 || roomJ > Map.roomBlockSize.y-1){
 			return true;
-		else
-			return blockGrid[x_grid][y_grid].testCollision();
+		}else{
+			if(roomGrid[roomI][roomJ]!=null){
+				return roomGrid[roomI][roomJ].testCollision(x-roomPixelSize.x*roomI,y-roomPixelSize.y*roomJ);
+			}else{
+				return true;
+			}
+		}
 	}
 
 	/**
 	 * Get the map spawn point position
 	 * @return the spawn point position
 	 */
-	public Vector2f getSpawnPosition() {
-		return spawnPosition;
+	public Vector2f getSpawnPixelPosition() {
+		return spawnPixelPosition;
 	}
 
 	/**
 	 * Generate the map
 	 */
 	public void generate() {
-		blockGrid = MapGenerator.generate(size,(int)(2*halfBlockSize.x));
-		spawnPosition = MapGenerator.getSpawn();
-		spawnPosition.x *= halfBlockSize.x * 2;
-		spawnPosition.x += halfBlockSize.x;
-		spawnPosition.y *= halfBlockSize.y * 2;
-		spawnPosition.y += halfBlockSize.y;
-		
+		roomGrid = MapGenerator.generate();
 	}
 	
 	/**
@@ -72,7 +96,12 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	 * @param pos the position 
 	 */
 	public void setDrawPosition(Vector2f pos) {
-		drawPosition = pos;
+		drawRoomPosition.x = pos.x/Map.roomPixelSize.x;
+		drawRoomPosition.y = pos.y/Map.roomPixelSize.y;
+		minX = (int)Math.max(0,drawRoomPosition.x - drawRoomDistance.x);
+		maxX = (int)Math.min(Map.mapRoomSize.x,drawRoomPosition.x + drawRoomDistance.x+1);
+		minY = (int)Math.max(0,drawRoomPosition.y - drawRoomDistance.y);
+		maxY = (int)Math.min(Map.mapRoomSize.y,drawRoomPosition.y + drawRoomDistance.y+1);
 	}
 
 	/**
@@ -80,22 +109,11 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	 */
 	@Override
 	public void draw() {
-
-		int minX = Math.max(0,(int)Math.floor((drawPosition.x-Display.getWidth()/2)/(halfBlockSize.x*2)));
-		int maxX = Math.min(size,(int)Math.floor((drawPosition.x+Display.getWidth()/2)/(halfBlockSize.x*2))+1);
-		int minY = Math.max(0,(int)Math.floor((drawPosition.y-Display.getHeight()/2)/(halfBlockSize.y*2)));
-		int maxY = Math.min(size,(int)Math.floor((drawPosition.y+Display.getHeight()/2)/(halfBlockSize.y*2))+1);
-		
-		// draw quad
-		int i;
-		int j;
-		float posX;
-		float posY;
-		for (i = minX; i < maxX; i++) {
-			for (j = minY; j < maxY; j++) {
-				posX = i * halfBlockSize.x * 2 + halfBlockSize.x;
-				posY = j * halfBlockSize.y * 2 + halfBlockSize.y;
-				blockGrid[i][j].drawAt(posX, posY, halfBlockSize);
+		for (int i = minX; i < maxX; i++) {
+			for (int j = minY; j < maxY; j++) {
+				if(roomGrid[i][j]!= null){
+					roomGrid[i][j].draw();
+				}
 			}
 		}
 	}
@@ -106,79 +124,19 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	@Override
 	public LinkedList<Shadow> computeShadow(Light light) {
 		LinkedList<Shadow> l = new LinkedList<Shadow>();
-		boolean [] neighbours = new boolean[4];
-		int minX = Math.max(0,(int)Math.floor((light.getX()-Display.getWidth())/(halfBlockSize.x*2)));
-		int maxX = Math.min(size,(int)Math.floor((light.getX()+Display.getWidth())/(halfBlockSize.x*2))+1);
-		int minY = Math.max(0,(int)Math.floor((light.getY()-Display.getHeight())/(halfBlockSize.y*2)));
-		int maxY = Math.min(size,(int)Math.floor((light.getY()+Display.getHeight())/(halfBlockSize.y*2))+1);
+		
+		
+		minX = (int)Math.max(0,light.getX()/Map.roomPixelSize.x - drawRoomDistance.x);
+		maxX = (int)Math.min(Map.mapRoomSize.x,light.getX()/Map.roomPixelSize.x + drawRoomDistance.x+1);
+		minY = (int)Math.max(0,light.getY()/Map.roomPixelSize.y - drawRoomDistance.y);
+		maxY = (int)Math.min(Map.mapRoomSize.y,light.getY()/Map.roomPixelSize.y + drawRoomDistance.y+1);
 			
 		int i;
 		int j;
 		for (i = minX; i < maxX; i++) {
 			for (j = minY; j < maxY; j++) {
-				if(blockGrid[i][j].castShadows()){
-					if(j==0){
-						neighbours[0] = false;
-					}else{
-						neighbours[0] = blockGrid[i][j-1].castShadows();
-					}
-					if(i == 0){
-						neighbours[3] = false;
-					}else{
-						neighbours[3] = blockGrid[i-1][j].castShadows();
-					}
-					if(i == maxX-1){
-						neighbours[1] = false;
-					}else{
-						neighbours[1] = blockGrid[i+1][j].castShadows();
-					}
-					if (j==maxY -1){
-						neighbours[2] = false;
-					}else{
-						neighbours[2] = blockGrid[i][j+1].castShadows();
-					}
-					l.addAll(((SolidBlock) blockGrid[i][j]).computeShadow(light,i,j,halfBlockSize,neighbours));
-				}
-			}
-		}
-		return l;
-	}
-
-	@Override
-	public LinkedList<Shadow> computeLaserShadow(Light light) {
-		LinkedList<Shadow> l = new LinkedList<Shadow>();
-		boolean [] neighbours = new boolean[4];
-		int minX = Math.max(0,(int)Math.floor((light.getX()-Display.getWidth())/(halfBlockSize.x*2)));
-		int maxX = Math.min(size,(int)Math.floor((light.getX()+Display.getWidth())/(halfBlockSize.x*2))+1);
-		int minY = Math.max(0,(int)Math.floor((light.getY()-Display.getHeight())/(halfBlockSize.y*2)));
-		int maxY = Math.min(size,(int)Math.floor((light.getY()+Display.getHeight())/(halfBlockSize.y*2))+1);
-			
-		int i;
-		int j;
-		for (i = minX; i < maxX; i++) {
-			for (j = minY; j < maxY; j++) {
-				if(blockGrid[i][j].castShadows()){
-					if(j==0){
-						neighbours[0] = false;
-					}else{
-						neighbours[0] = blockGrid[i][j-1].castShadows();
-					}
-					if(i == 0){
-						neighbours[3] = false;
-					}else{
-						neighbours[3] = blockGrid[i-1][j].castShadows();
-					}
-					if(i == maxX-1){
-						neighbours[1] = false;
-					}else{
-						neighbours[1] = blockGrid[i+1][j].castShadows();
-					}
-					if (j==maxY -1){
-						neighbours[2] = false;
-					}else{
-						neighbours[2] = blockGrid[i][j+1].castShadows();
-					}
-					l.addAll(((SolidBlock) blockGrid[i][j]).computeLaserShadow(light,i,j,halfBlockSize,neighbours));
+				if(roomGrid[i][j]!= null){
+					l.addAll(((Room)roomGrid[i][j]).computeShadow(light));
 				}
 			}
 		}

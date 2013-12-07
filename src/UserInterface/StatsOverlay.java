@@ -1,4 +1,4 @@
-package UserInterface;
+package userInterface;
 
 import java.awt.Font;
 import org.newdawn.slick.TrueTypeFont;

@@ -1,4 +1,4 @@
-package UserInterface;
+package userInterface;
 
 import environment.room.Room;
 
