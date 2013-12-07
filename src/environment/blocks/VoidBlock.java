@@ -3,6 +3,8 @@ package environment.blocks;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
+import environment.Map;
+
 public class VoidBlock implements Block{
 
 	@Override
@@ -11,14 +13,14 @@ public class VoidBlock implements Block{
 	}
 
 	@Override
-	public void drawAt(float posX, float posY, Vector2f halfBlockSize) {
+	public void drawAt(float posX, float posY) {
 		GL11.glColor3f(0,0,0);
 		// draw quad
 		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
-		GL11.glVertex2f(posX+halfBlockSize.x,posY-halfBlockSize.y);
-		GL11.glVertex2f(posX-halfBlockSize.x,posY-halfBlockSize.y);
-		GL11.glVertex2f(posX+halfBlockSize.x,posY+halfBlockSize.y);
-		GL11.glVertex2f(posX-halfBlockSize.x,posY+halfBlockSize.y);
+		GL11.glVertex2f(posX+Map.blockPixelSize.x,posY);
+		GL11.glVertex2f(posX,posY);
+		GL11.glVertex2f(posX+Map.blockPixelSize.x,posY+Map.blockPixelSize.y);
+		GL11.glVertex2f(posX,posY+Map.blockPixelSize.y);
 		GL11.glEnd();
 	}
 

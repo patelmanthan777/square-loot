@@ -22,11 +22,6 @@ public class LightManager {
 
 	private static HashMap<Light, LinkedList<Shadow>> lightShadows = new HashMap<Light, LinkedList<Shadow>>();
 
-	// private static HashMap<String, Laser> activatedLasers = new
-	// HashMap<String, Laser>();
-	// private static HashMap<String, Laser> desactivatedLasers = new
-	// HashMap<String, Laser>();
-	private static HashMap<Laser, LinkedList<Shadow>> laserShadows = new HashMap<Laser, LinkedList<Shadow>>();
 	private static Vector2f camPos = null;
 	private static int screenWidth = 0;
 	private static int screenHeight = 0;
@@ -40,9 +35,6 @@ public class LightManager {
 		for (Light l : activatedLight.values()) {
 			lightShadows.put(l, sc.computeShadow(l));
 		}
-		// for (Laser l : activatedLasers.values()) {
-		// laserShadows.put(l, sc.computeLaserShadow(l));
-		// }
 	}
 
 	static public Light addActivatedLight(String name, Vector2f p,

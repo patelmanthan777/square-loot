@@ -34,7 +34,7 @@ public class GameLoop {
 	private ProjectileManager pm;
 
 	private Player p = new Player(new Vector2f(0, 0));
-	private Map m = new Map(100);
+	private Map m = new Map(new Vector2f(10,10), new Vector2f(10,10), new Vector2f(40,40));
 	private Vector2f mouse = new Vector2f();
 	private float dwheel;
 	private Camera cam = new Camera(new Vector2f(0, 0));
@@ -71,7 +71,7 @@ public class GameLoop {
 		createWindow();
 		initGL();
 		m.generate();
-		p.setPosition(m.getSpawnPosition());
+		p.setPosition(m.getSpawnPixelPosition());
 		pm = new ProjectileManager();
 		pm.init();
 

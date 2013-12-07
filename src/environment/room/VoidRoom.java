@@ -1,16 +1,17 @@
 package environment.room;
 
+import environment.Map;
 import environment.blocks.BlockFactory;
 
 public class VoidRoom extends Room{
-	public VoidRoom(int width, int height, int posX, int posY, int blockSize){
-		super(width, height, posX, posY,blockSize);
+	public VoidRoom(int posX, int posY){
+		super(posX, posY);
 	}
 
 	@Override
 	protected void construct() {
-		for(int i = 0; i < width;i++){
-			for(int j = 0; j < height; j++){
+		for(int i = 0; i < Map.roomBlockSize.x;i++){
+			for(int j = 0; j < Map.roomBlockSize.y; j++){
 				grid[i][j] = BlockFactory.createVoidBlock();
 			}
 		}

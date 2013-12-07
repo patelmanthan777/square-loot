@@ -11,37 +11,23 @@ import environment.room.SpawnRoom;
 import environment.room.TestRoom;
 
 public class MapGenerator {
-	private static Block[][] grid;
-	private static int maxRoomSize = 10;
-	private static int nbRoomsAligned;
-	private static Vector2f spawn;
-	private static int size;
-	private static int blockSize;
-
 	private static LinkedList<Room> rooms;
 	private static LinkedList<Room> surroundedRooms;
 	private static Room[][] roomsGrid;
 	
-	static Block[][] generate(int size,int blockSize) {
-		MapGenerator.size = size;
-		MapGenerator.blockSize = blockSize;
-		grid = new Block[size][size];
-		maxRoomSize = size / 10;
-		nbRoomsAligned = size / maxRoomSize;
-		roomsGrid = new Room[nbRoomsAligned][nbRoomsAligned];
+	static Room[][] generate() {
+		roomsGrid = new Room[(int)Map.mapRoomSize.x][(int)Map.mapRoomSize.y];
 		rooms = new LinkedList<Room>();
 		surroundedRooms = new LinkedList<Room>();
 		createRooms();
-		pasteRooms();
-		return grid;
+		return roomsGrid;
 	}
 
 	private static void createRooms() {
-		spawn = new Vector2f((MapGenerator.size + maxRoomSize) / 2,
-				(MapGenerator.size + maxRoomSize) / 2);
-		Room r = new SpawnRoom(maxRoomSize, maxRoomSize, (nbRoomsAligned / 2)
-				* maxRoomSize, (nbRoomsAligned / 2) * maxRoomSize,blockSize);
-		roomsGrid[nbRoomsAligned / 2][nbRoomsAligned / 2] = r;
+		Map.spawnPixelPosition = new Vector2f(Map.mapPixelSize.x/2.0f+Map.roomPixelSize.x/2.0f, Map.mapPixelSize.y/2.0f+Map.roomPixelSize.y/2.0f);
+		Map.spawnRoomPosition = new Vector2f(Map.mapRoomSize.x/2.0f, Map.mapRoomSize.y/2.0f);
+		Room r = new SpawnRoom(Map.mapPixelSize.x/2.0f,Map.mapPixelSize.x/2.0f);
+		roomsGrid[(int) (Map.mapRoomSize.x/ 2)][(int) (Map.mapRoomSize.y / 2)] = r;
 		rooms.add(r);
 		boolean stop = false;
 		while (rooms.size() > 0 && !stop) {
@@ -55,8 +41,8 @@ public class MapGenerator {
 			do {
 				cpt = 0;
 				r = rooms.get(rand);
-				x = r.getX() / maxRoomSize;
-				y = r.getY() / maxRoomSize;
+				x = (int) (r.getX() / Map.roomPixelSize.x);
+				y = (int) (r.getY() / Map.roomPixelSize.y);
 				surround = surround(x, y);
 				if(surround>2){
 					surroundedRooms.add(rooms.remove(rand));
@@ -70,28 +56,25 @@ public class MapGenerator {
 				int rand2 = (int) (Math.random() * (4 - surround));
 				if (y != 0 && canBeRoom(x, y - 1)) {
 					if (rand2 == 0) {
-						r2 = new TestRoom(maxRoomSize, maxRoomSize, x
-								* maxRoomSize, (y - 1) * maxRoomSize, blockSize);
+						r2 = new TestRoom(x * Map.roomPixelSize.x, (y - 1) * Map.roomPixelSize.y);
 						roomsGrid[x][y - 1] = r2;
 						rooms.add(r2);
 					} else {
 						rand2--;
 					}
 				}
-				if (x != nbRoomsAligned - 1 && canBeRoom(x + 1, y)) {
+				if (x != Map.mapRoomSize.x - 1 && canBeRoom(x + 1, y)) {
 					if (rand2 == 0) {
-						r2 = new TestRoom(maxRoomSize, maxRoomSize, (x + 1)
-								* maxRoomSize, y * maxRoomSize, blockSize);
+						r2 = new TestRoom((x + 1) * Map.roomPixelSize.x, y * Map.roomPixelSize.y);
 						roomsGrid[x + 1][y] = r2;
 						rooms.add(r2);
 					} else {
 						rand2--;
 					}
 				}
-				if (y != nbRoomsAligned - 1 && canBeRoom(x, y + 1)) {
+				if (y != Map.mapRoomSize.y - 1 && canBeRoom(x, y + 1)) {
 					if (rand2 == 0) {
-						r2 = new TestRoom(maxRoomSize, maxRoomSize, x
-								* maxRoomSize, (y + 1) * maxRoomSize, blockSize);
+						r2 = new TestRoom(x * Map.roomPixelSize.x, (y + 1) * Map.roomPixelSize.y);
 						roomsGrid[x][y + 1] = r2;
 						rooms.add(r2);
 					} else {
@@ -101,8 +84,7 @@ public class MapGenerator {
 				if (x != 0 && roomsGrid[x - 1][y] == null
 						&& canBeRoom(x - 1, y)) {
 					if (rand2 == 0) {
-						r2 = new TestRoom(maxRoomSize, maxRoomSize, (x - 1)
-								* maxRoomSize, y * maxRoomSize, blockSize);
+						r2 = new TestRoom((x - 1) * Map.roomPixelSize.x,y * Map.roomPixelSize.y);
 						roomsGrid[x - 1][y] = r2;
 						rooms.add(r2);
 					} else {
@@ -117,17 +99,17 @@ public class MapGenerator {
 			}
 		}
 
-		for (int i = 0; i < nbRoomsAligned; i++) {
-			for (int j = 0; j < nbRoomsAligned; j++) {
+		for (int i = 0; i < Map.mapRoomSize.x; i++) {
+			for (int j = 0; j < Map.mapRoomSize.y; j++) {
 
 				if (roomsGrid[i][j] != null) {
 					if (j > 0 && roomsGrid[i][j - 1] != null) {
 						roomsGrid[i][j].createDoor(0);
 					}
-					if (i < nbRoomsAligned - 1 && roomsGrid[i + 1][j] != null) {
+					if (i < Map.mapRoomSize.x - 1 && roomsGrid[i + 1][j] != null) {
 						roomsGrid[i][j].createDoor(1);
 					}
-					if (j < nbRoomsAligned - 1 && roomsGrid[i][j + 1] != null) {
+					if (j < Map.mapRoomSize.y - 1 && roomsGrid[i][j + 1] != null) {
 						roomsGrid[i][j].createDoor(2);
 					}
 					if (i > 0 && roomsGrid[i - 1][j] != null) {
@@ -138,20 +120,6 @@ public class MapGenerator {
 		}
 	}
 
-	private static void pasteRooms() {
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				grid[i][j] = BlockFactory.createVoidBlock();
-			}
-		}
-		for (Room r : surroundedRooms) {
-			r.place(grid);
-		}
-	}
-
-	public static Vector2f getSpawn() {
-		return spawn;
-	}
 
 	private static int surround(int i, int j) {
 		int cpt = 0;
@@ -159,10 +127,10 @@ public class MapGenerator {
 		if (j < 1 || roomsGrid[i][j - 1] != null) {
 			cpt++;
 		}
-		if (i >= nbRoomsAligned - 1 || roomsGrid[i + 1][j] != null) {
+		if (i >= Map.mapRoomSize.x - 1 || roomsGrid[i + 1][j] != null) {
 			cpt++;
 		}
-		if (j >= nbRoomsAligned - 1 || roomsGrid[i][j + 1] != null) {
+		if (j >= Map.mapRoomSize.y - 1 || roomsGrid[i][j + 1] != null) {
 			cpt++;
 		}
 		if (i < 1 || roomsGrid[i - 1][j] != null) {
@@ -176,9 +144,9 @@ public class MapGenerator {
 		bool &= (roomsGrid[i][j] == null);
 		bool &= (surround(i, j) < 3);
 		bool &= (j - 1 < 0 || roomsGrid[i][j - 1] == null || surround(i, j - 1) < 3);
-		bool &= (i + 1 >= nbRoomsAligned || roomsGrid[i + 1][j] == null || surround(
+		bool &= (i + 1 >= Map.mapRoomSize.x || roomsGrid[i + 1][j] == null || surround(
 				i + 1, j) < 3);
-		bool &= (j + 1 >= nbRoomsAligned || roomsGrid[i][j + 1] == null || surround(
+		bool &= (j + 1 >= Map.mapRoomSize.y || roomsGrid[i][j + 1] == null || surround(
 				i, j + 1) < 3);
 		bool &= (i - 1 < 0 || roomsGrid[i - 1][j] == null || surround(i - 1, j) < 3);
 		return bool;

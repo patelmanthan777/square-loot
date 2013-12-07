@@ -12,46 +12,42 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import environment.Map;
+
 public class SolidBlock implements Block, ShadowCasterBlock{
 	private Vector3f color = new Vector3f(0.2f,0.2f,0.2f);
 	private int nb_points = 4;
 	private Vector2f[] points = new Vector2f[4];
-	private Vector2f halfBlockSize;
 	
 	protected SolidBlock(){
 		
 	}
 	
-	protected SolidBlock(float x, float y, Vector2f size){
-		initBlock(x, y, size);
+	protected SolidBlock(float x, float y){
+		initBlock(x, y);
 	}
 	
-	protected void initBlock(float positionx, float positiony, Vector2f size){
+	protected void initBlock(float positionx, float positiony){
 		float x = positionx;
 		float y = positiony;
-		this.halfBlockSize = size;
-		points[0] = new Vector2f(x - halfBlockSize.x, y
-				- halfBlockSize.y);
-		points[1] = new Vector2f(x + halfBlockSize.x, y
-				- halfBlockSize.y);
-		points[2] = new Vector2f(x + halfBlockSize.x, y
-				+ halfBlockSize.y);
-		points[3] = new Vector2f(x - halfBlockSize.x, y
-				+ halfBlockSize.y);
+		points[0] = new Vector2f(x, y);
+		points[1] = new Vector2f(x + Map.blockPixelSize.x, y);
+		points[2] = new Vector2f(x + Map.blockPixelSize.x, y + Map.blockPixelSize.y);
+		points[3] = new Vector2f(x, y + Map.blockPixelSize.y);
 		
 	}
 	
 	
 	@Override
-	public void drawAt(float posX, float posY, Vector2f halfBlockSize) {
+	public void drawAt(float posX, float posY) {
 		
 		GL11.glColor3f(color.x,color.y,color.z);
 		// draw quad
 		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
-		GL11.glVertex2f(posX+halfBlockSize.x,posY-halfBlockSize.y);
-		GL11.glVertex2f(posX-halfBlockSize.x,posY-halfBlockSize.y);
-		GL11.glVertex2f(posX+halfBlockSize.x,posY+halfBlockSize.y);
-		GL11.glVertex2f(posX-halfBlockSize.x,posY+halfBlockSize.y);
+		GL11.glVertex2f(posX+Map.blockPixelSize.x,posY);
+		GL11.glVertex2f(posX,posY);
+		GL11.glVertex2f(posX+Map.blockPixelSize.x,posY+Map.blockPixelSize.y);
+		GL11.glVertex2f(posX,posY+Map.blockPixelSize.y);
 		GL11.glEnd();
 	}
 
@@ -67,12 +63,11 @@ public class SolidBlock implements Block, ShadowCasterBlock{
 
 
 	@Override
-	public LinkedList<Shadow> computeShadow(Light light, int ix, int iy,
-			Vector2f halfBlockSize, boolean[] neighbour) {
+	public LinkedList<Shadow> computeShadow(Light light, int ix, int iy, boolean[] neighbour) {
 		LinkedList<Shadow>l = new LinkedList<Shadow>();
-		float x =  (ix * halfBlockSize.x * 2 + halfBlockSize.x);
-		float y =  (iy * halfBlockSize.y * 2 + halfBlockSize.y);
-		initBlock(x, y, halfBlockSize);
+		float x =  (ix * Map.blockPixelSize.x);
+		float y =  (iy * Map.blockPixelSize.y);
+		initBlock(x, y);
 		if(light instanceof Laser){
 			l.add(new Shadow(points[1],points[0],points[2],points[3]));
 		}
