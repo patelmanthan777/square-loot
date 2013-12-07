@@ -23,15 +23,18 @@ public final class ProjectileManager {
 	}
 	
 	
-	
+	/**
+	 * Create a Bullet
+	 * @param pos the bullet position
+	 * @param rot the bullet direction
+	 */
 	static public void createBullet(Vector2f pos, Vector2f rot){
 		bulletFactory.createProjectile(pos, rot);
 	}
 	
 		
 	/**
-	 * Update all projectiles of the projectileManager
-	 * @param dt the elapsed time since the last update
+	 * Update all projectiles
 	 * @param m the map
 	 */
 	static public void updateProjectiles(Map m) {

@@ -12,14 +12,16 @@ import event.Timer;
 public class ProjectileFactory<P extends Projectile> {
 	/** Alive projectile list */ 
 	private LinkedList <Projectile> projectileList;
-
 	
-	private P projectile;
+	private P modelProjectile;
 	
-	
+	/**
+	 * ProjectileFactory class constructor
+	 * @param projectile the porjectile to duplicate
+	 */
 	public ProjectileFactory(P projectile)
 	{
-		this.projectile = projectile;
+		this.modelProjectile = projectile;
 		this.projectileList = new LinkedList<Projectile>();
 	}
 	
@@ -29,7 +31,7 @@ public class ProjectileFactory<P extends Projectile> {
 	 * @param rot Initial direction of the projectile
 	 */
 	public void createProjectile(Vector2f pos, Vector2f rot){
-		Projectile project = projectile.Clone(pos, rot);
+		Projectile project = modelProjectile.Clone(pos, rot);
 		projectileList.add(project);
 	}
 	
@@ -40,7 +42,6 @@ public class ProjectileFactory<P extends Projectile> {
 	
 	/**
 	 * Update all projectiles of the projectileFactory
-	 * @param dt the elapsed time since the last update
 	 * @param m the map
 	 */
 	public void updateProjectiles(Map m) {
@@ -60,6 +61,9 @@ public class ProjectileFactory<P extends Projectile> {
 		}
 	}
 	
+	/**
+	 * Draw all projectiles of the factory
+	 */
 	public void drawProjectiles() {
 		for(Projectile project : projectileList){
 			project.draw();

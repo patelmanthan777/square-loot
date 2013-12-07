@@ -24,8 +24,8 @@ public abstract class Projectile extends Entity implements Drawable{
 	
 	
 	/**
-	 * Is the projectile must be destroy?
-	 * @return true if the projectile must be destroy
+	 * does the projectile must be destroy?
+	 * @return true if the projectile must be destroy, else false
 	 */
 	public boolean mustBeDestroy(){
 		return toDestroy;
