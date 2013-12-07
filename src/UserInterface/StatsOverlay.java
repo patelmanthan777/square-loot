@@ -7,12 +7,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class StatsOverlay extends Overlay{
 	
-	private Font awtFont;
+	
 	private TrueTypeFont font;
 	
 	public StatsOverlay(){
-		Font awtFont = new Font("Times New Roman", Font.BOLD, 18);
-		font = new TrueTypeFont(awtFont, true);
+		font = new TrueTypeFont(new Font("Times New Roman", Font.BOLD, 18), true);
 	}
 	
 	public void draw(){                                    

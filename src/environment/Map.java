@@ -4,12 +4,7 @@ import java.util.LinkedList;
 
 import light.Light;
 import light.Shadow;
-
-import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
-
-import environment.blocks.Block;
-import environment.blocks.SolidBlock;
 import environment.room.Room;
 import game.GameLoop;
 import rendering.Drawable;

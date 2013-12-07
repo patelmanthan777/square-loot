@@ -10,7 +10,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -18,8 +17,6 @@ import org.lwjgl.util.vector.Vector3f;
 import rendering.Camera;
 import userInterface.OverlayManager;
 import entity.player.Player;
-import entity.projectile.Bullet;
-import entity.projectile.ProjectileFactory;
 import entity.projectile.ProjectileManager;
 import environment.Map;
 import event.KeyState;
@@ -38,9 +35,8 @@ public class GameLoop {
 	private static Weapon weapon = new LaserRifle(250);
 	
 	private Player p = new Player(new Vector2f(0, 0));
-	private Map m = new Map(new Vector2f(10,8), new Vector2f(20,16), new Vector2f(40,40));
+	private Map m = new Map(new Vector2f(10,8), new Vector2f(16,12), new Vector2f(40,40));
 	private Vector2f mouse = new Vector2f();
-	private float dwheel;
 	private Camera cam = new Camera(new Vector2f(0, 0));
 	
 	private Keys keys = new Keys();
@@ -108,7 +104,6 @@ public class GameLoop {
 
 		glMatrixMode(GL_MODELVIEW); // on passe en mode Model
 		glEnable(GL_STENCIL_TEST);
-		// glLoadIdentity(); // on reinitialise la matrice
 		glClearColor(0, 0, 0, 0);
 	}
 
@@ -127,7 +122,6 @@ public class GameLoop {
 		keys.update();
 		mouse.x = Mouse.getX(); // will return the X coordinate on the Display.
 		mouse.y = Mouse.getY();
-		dwheel = Mouse.getDWheel();
 		
 		
 		if(Mouse.isButtonDown(0)){

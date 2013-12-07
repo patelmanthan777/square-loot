@@ -128,7 +128,7 @@ public class LightManager {
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		for (Light l : activatedLight.values()) {
-			if (camPos.sub(camPos, l.getPosition(), null).length()
+			if (Vector2f.sub(camPos, l.getPosition(), null).length()
 					- l.getMaxDst() < diagonal / 4) {
 				glColorMask(false, false, false, false);
 				glStencilFunc(GL_ALWAYS, 1, 1);

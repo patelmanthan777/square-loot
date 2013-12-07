@@ -1,7 +1,5 @@
 package event;
 
-import java.util.HashMap;
-
 import org.lwjgl.input.Keyboard;
 
 

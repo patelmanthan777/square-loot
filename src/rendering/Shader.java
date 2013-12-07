@@ -2,11 +2,6 @@ package rendering;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import javax.swing.Renderer;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
@@ -44,7 +39,6 @@ public class Shader {
 				current = new java.io.File( "." ).getCanonicalPath();
 				 System.out.println("Current dir:"+current);
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			System.err.println("Vertex shader file : " + fileName
@@ -57,8 +51,6 @@ public class Shader {
 	private void loadCodeFragment() {
 		String fileName = "./assets/shaders/" + name + ".frag";
 		try {
-			//InputStream input = Renderer.class.getClass().getResourceAsStream(fileName);
-			//BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 			String line;
 			while ((line = reader.readLine()) != null) {

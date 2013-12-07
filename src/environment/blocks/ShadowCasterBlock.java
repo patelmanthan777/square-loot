@@ -1,9 +1,6 @@
 package environment.blocks;
 
 import java.util.LinkedList;
-
-import org.lwjgl.util.vector.Vector2f;
-
 import light.Light;
 import light.Shadow;
 

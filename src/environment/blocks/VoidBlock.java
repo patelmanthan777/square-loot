@@ -1,7 +1,6 @@
 package environment.blocks;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
 
 import environment.Map;
 

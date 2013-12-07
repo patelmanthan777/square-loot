@@ -1,11 +1,7 @@
 package environment.room;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-
-import userInterface.MiniMap;
 import light.LightManager;
 import environment.Map;
 import environment.blocks.BlockFactory;

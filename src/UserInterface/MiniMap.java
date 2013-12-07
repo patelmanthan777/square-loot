@@ -1,10 +1,6 @@
 package userInterface;
 
-import java.util.LinkedList;
-
 import org.lwjgl.util.vector.Vector2f;
-
-import rendering.MiniMapDrawable;
 import entity.player.Player;
 import environment.Map;
 import environment.room.Room;
@@ -16,7 +12,6 @@ public class MiniMap extends Overlay{
 	public static Vector2f roomSize;
 	private Room[][] rooms;
 	private Player player;
-	private LinkedList<MiniMapDrawable> drawable = new LinkedList<MiniMapDrawable>();
 	
 	
 	

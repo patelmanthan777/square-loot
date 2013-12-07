@@ -1,11 +1,7 @@
 package environment;
 
 import java.util.LinkedList;
-
 import org.lwjgl.util.vector.Vector2f;
-
-import environment.blocks.Block;
-import environment.blocks.BlockFactory;
 import environment.room.Room;
 import environment.room.SpawnRoom;
 import environment.room.TestRoom;
@@ -38,10 +34,7 @@ public class MapGenerator {
 			int rand = (int) (Math.random() * rooms.size());
 			int x;
 			int y;
-			int cptMax = rooms.size();
-			int cpt = 0;
 			do {
-				cpt = 0;
 				r = rooms.get(rand);
 				x = (int) (r.getX() / Map.roomPixelSize.x);
 				y = (int) (r.getY() / Map.roomPixelSize.y);
@@ -50,7 +43,6 @@ public class MapGenerator {
 					surroundedRooms.add(rooms.remove(rand));
 					rand = (int)(Math.random() * rooms.size());
 				}
-				cpt++;
 			} while (surround > 2 && rooms.size() > 0);
 			Room r2;
 			
