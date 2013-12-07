@@ -11,6 +11,7 @@ import org.lwjgl.util.vector.Vector2f;
 import environment.blocks.Block;
 import environment.blocks.SolidBlock;
 import environment.room.Room;
+import game.GameLoop;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import rendering.LightTaker;
@@ -27,7 +28,6 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	public static Vector2f spawnPixelPosition;
 	public static Vector2f spawnRoomPosition;
 	
-	//private Block[][] blockGrid;
 	private Room[][] roomGrid;
 	
 	
@@ -53,7 +53,7 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		Map.mapBlockSize = new Vector2f(mapRoomSize.x*roomBlockSize.x,mapRoomSize.y*roomBlockSize.y);
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x*roomPixelSize.x,mapRoomSize.y*roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0,0);
-		this.drawRoomDistance = new Vector2f(2,2);
+		this.drawRoomDistance = new Vector2f(0.5f*GameLoop.WIDTH/Map.roomPixelSize.x,0.5f*GameLoop.HEIGHT/Map.roomPixelSize.y);
 	}
 
 	/**

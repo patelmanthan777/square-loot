@@ -23,7 +23,7 @@ public class MiniMap extends Overlay{
 	public MiniMap(Room[][] rooms, Player p){
 		this.rooms = rooms;
 		this.player = p;
-		MiniMap.position = new Vector2f((float)GameLoop.WIDTH*0.7f,(float)GameLoop.HEIGHT*0.05f);
+		MiniMap.position = new Vector2f((float)GameLoop.WIDTH*0.75f,(float)GameLoop.HEIGHT*0.05f);
 		MiniMap.roomSize = new Vector2f((screenRegion.x * GameLoop.WIDTH)/Map.mapRoomSize.x,(screenRegion.y * GameLoop.HEIGHT)/Map.mapRoomSize.y);
 	}
 	
