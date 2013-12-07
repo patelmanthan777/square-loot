@@ -65,7 +65,7 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	public boolean testCollision(float x, float y) {
 		int roomI = (int) Math.floor(x / (roomPixelSize.x));
 		int roomJ = (int) Math.floor(y / (roomPixelSize.y));
-		if (roomI < 0 || roomJ < 0 || roomI > Map.roomBlockSize.x-1 || roomJ > Map.roomBlockSize.y-1){
+		if (roomI < 0 || roomJ < 0 || roomI > Map.mapRoomSize.x-1 || roomJ > Map.mapRoomSize.y-1){
 			return true;
 		}else{
 			if(roomGrid[roomI][roomJ]!=null){
