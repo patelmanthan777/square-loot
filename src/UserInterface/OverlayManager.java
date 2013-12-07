@@ -22,8 +22,8 @@ public  class OverlayManager {
 		addOverlay(stats);
 	}
 	
-	static public void createMiniMap(Room[][] rooms, int width, int height){
-		MiniMap mm = new MiniMap(rooms, width, height);
+	static public void createMiniMap(Room[][] rooms){
+		MiniMap mm = new MiniMap(rooms);
 		addOverlay(mm);
 	}
 }

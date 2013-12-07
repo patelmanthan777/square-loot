@@ -80,7 +80,7 @@ public class GameLoop {
 		LightManager.setScreenHeight(HEIGHT);
 		LightManager.setScreenWidth(WIDTH);
 		OverlayManager.createStatsOverlay();
-		//OverlayManager.createMiniMap(m.getRooms(), width, height);
+		OverlayManager.createMiniMap(m.getRooms());
 		
 		Light playerLight = LightManager.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 10,2*WIDTH);
 		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
@@ -95,7 +95,7 @@ public class GameLoop {
 
 	private void initGL() {
 
-		//glEnable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
 
 		glMatrixMode(GL_PROJECTION); // change de matrice
 		glLoadIdentity(); // la reinitialise

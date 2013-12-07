@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import userInterface.MiniMap;
 import light.LightManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
@@ -25,7 +26,6 @@ public class TestRoom extends Room{
 				}else{
 					grid[i][j] = BlockFactory.createSolidBlock();
 				}
-				
 			}
 		}
 		for(int i = 0; i < (int)Map.roomBlockSize.x;i++){
@@ -49,24 +49,4 @@ public class TestRoom extends Room{
 		LightManager.addActivatedLight("l"+x+y, new Vector2f(x+Map.roomPixelSize.x/2,y+Map.roomPixelSize.y/2), new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random()),(float)Math.random()*20,Map.roomPixelSize.x * 2);
 		
 	}
-
-	@Override
-	public void drawOnMiniMap() {
-		// GL11.glColor3f(color.x,color.y,color.z);
-		glColor3f(1, 1, 1);
-		// draw quad
-		glPushMatrix();
-		glLoadIdentity();
-		glBegin(GL_TRIANGLE_STRIP);
-		//glVertex2f(x/(int)Map.roomBlockSize.x, y/(int)Map.roomBlockSize.x);
-		//glVertex2f(position.x - halfSize.x, position.y - halfSize.y);
-		//glVertex2f(position.x + halfSize.x, position.y + halfSize.y);
-		//glVertex2f(position.x - halfSize.x, position.y + halfSize.y);
-		glEnd();
-		
-	}
-	
-	
-	
-	
 }

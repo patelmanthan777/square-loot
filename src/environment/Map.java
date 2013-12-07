@@ -142,4 +142,8 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		}
 		return l;
 	}
+	
+	public Room[][] getRooms(){
+		return roomGrid;
+	}
 }
