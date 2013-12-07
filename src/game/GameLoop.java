@@ -38,7 +38,7 @@ public class GameLoop {
 	private static Weapon weapon = new LaserRifle(250);
 	
 	private Player p = new Player(new Vector2f(0, 0));
-	private Map m = new Map(new Vector2f(10,10), new Vector2f(10,10), new Vector2f(40,40));
+	private Map m = new Map(new Vector2f(20,20), new Vector2f(25,25), new Vector2f(40,40));
 	private Vector2f mouse = new Vector2f();
 	private float dwheel;
 	private Camera cam = new Camera(new Vector2f(0, 0));

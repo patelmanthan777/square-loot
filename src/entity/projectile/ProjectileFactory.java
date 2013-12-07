@@ -9,20 +9,24 @@ import environment.Map;
 import event.Timer;
 
 
-public class ProjectileFactory<P extends Projectile> {
+public class ProjectileFactory{
 	/** Alive projectile list */ 
 	private LinkedList <Projectile> projectileList;
 	
-	private P modelProjectile;
+	/** Dead projectile list */
+	private LinkedList <Projectile> deadList;
+	
+	private Projectile modelProjectile;
 	
 	/**
 	 * ProjectileFactory class constructor
 	 * @param projectile the porjectile to duplicate
 	 */
-	public ProjectileFactory(P projectile)
+	public ProjectileFactory(Projectile projectile)
 	{
 		this.modelProjectile = projectile;
 		this.projectileList = new LinkedList<Projectile>();
+		this.deadList = new LinkedList<Projectile>();
 	}
 	
 	/**
@@ -31,13 +35,22 @@ public class ProjectileFactory<P extends Projectile> {
 	 * @param rot Initial direction of the projectile
 	 */
 	public void createProjectile(Vector2f pos, Vector2f rot){
-		Projectile project = modelProjectile.Clone(pos, rot);
-		projectileList.add(project);
+		if(deadList.isEmpty())
+		{
+			Projectile project = modelProjectile.Clone(pos, rot);
+			projectileList.add(project);
+		}
+		else
+		{
+			Projectile project = deadList.poll();
+			project.reset(pos, rot);
+			projectileList.add(project);
+		}
 	}
 	
-	public void destroyProjectile(P projec)
+	public void destroyProjectile(Projectile project)
 	{
-		/** TODO add a linked list to sore destroy projectiles */
+		deadList.add(project);
 	}
 	
 	/**
@@ -51,7 +64,8 @@ public class ProjectileFactory<P extends Projectile> {
 			Projectile project = ite.next();
 			if(project.mustBeDestroy())
 			{
-				ite.remove();				
+				ite.remove();
+				destroyProjectile(project);
 			}
 			else
 			{

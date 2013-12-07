@@ -6,7 +6,7 @@ import environment.Map;
 
 public final class ProjectileManager {
 	/** ProjectileFactory */
-	static private ProjectileFactory<Bullet> bulletFactory = new ProjectileFactory<Bullet>(new Bullet());
+	static private ProjectileFactory bulletFactory = new ProjectileFactory(new Bullet());
 	
 	/**
 	 * Private ProjectileManager Constructor

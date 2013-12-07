@@ -1,22 +1,12 @@
 package entity;
 
-import rendering.Drawable;
-
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import rendering.Drawable;
 import environment.Map;
 
 public abstract class Entity extends Node implements Drawable{
-
-	public Entity(Vector2f pos) {
-		super(pos);
-	}
-	
-	public Entity(Vector2f pos, Vector2f rot) {
-		super(pos, rot);
-	}
-	
 	protected Vector2f speed = new Vector2f(0,0);
 	private Vector2f translation = new Vector2f(0,0);
 	protected float minSpeed = 0.01f;
@@ -24,6 +14,14 @@ public abstract class Entity extends Node implements Drawable{
 	protected float descFactor = 5;
 	protected float accFactor = 0.2f;
 	protected Vector3f color;
+	
+	public Entity(Vector2f pos) {
+		super(pos);
+	}
+	
+	public Entity(Vector2f pos, Vector2f rot) {
+		super(pos, rot);
+	}
 	
 	public Vector3f getColor(){
 		return color;

@@ -4,8 +4,9 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class Node {
 	protected Vector2f position;
-	protected String name = null;
 	protected Vector2f rotation;
+	protected String name = null;
+
 	
 	public Node(Vector2f pos, Vector2f rot){
 		position = pos;
@@ -42,7 +43,7 @@ public class Node {
 	}
 	
 	public Vector2f getRotation(){
-		return position;
+		return rotation;
 	}
 	
 	public float getX(){

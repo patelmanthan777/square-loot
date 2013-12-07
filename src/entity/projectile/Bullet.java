@@ -49,6 +49,16 @@ public class Bullet extends Projectile {
 		this.setSpeed(speed);
 		this.setColor(new Vector3f(1,0,1));
 	}
+	
+	@Override
+	public void reset(Vector2f pos, Vector2f rot)
+	{
+		super.reset(pos,rot);
+		Vector2f speed = new Vector2f();
+		rot.normalise(speed);
+		speed.scale(speedValue);
+		this.setSpeed(speed);
+	}
 
 	/**
 	 * Draw the bullet
