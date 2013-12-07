@@ -1,5 +1,7 @@
 package light;
 
+import game.GameLoop;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -217,7 +219,7 @@ public class LightManager {
 			glUniform1f(glGetUniformLocation(lightShaderProgram, "light.radius"),
 					l.getRadius());
 			glUniform2f(glGetUniformLocation(lightShaderProgram, "light.position"),
-					l.getX(), l.getY());
+					l.getX()-camPos.x+GameLoop.WIDTH/2, (-l.getY()+camPos.y)+GameLoop.HEIGHT/2);
 			glUniform3f(glGetUniformLocation(lightShaderProgram, "light.color"),
 					l.getColor().x, l.getColor().y, l.getColor().z);
 
@@ -267,9 +269,9 @@ public class LightManager {
 			if(l.getDirection().length() != 0){
 			Vector2f direction = (Vector2f) l.getDirection().normalise();
 			glUniform2f(glGetUniformLocation(laserShaderProgram, "laser.direction"),
-					direction.x,direction.y);
+					-direction.x,direction.y);
 			glUniform2f(glGetUniformLocation(laserShaderProgram, "laser.position"),
-					l.getX(), l.getY());
+					l.getX()-camPos.x+GameLoop.WIDTH/2, (-l.getY()+camPos.y)+GameLoop.HEIGHT/2);
 			glUniform3f(glGetUniformLocation(laserShaderProgram, "laser.color"),
 					l.getColor().x, l.getColor().y, l.getColor().z);
 

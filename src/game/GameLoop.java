@@ -1,3 +1,4 @@
+package game;
 import light.Laser;
 import light.Light;
 import light.LightManager;
@@ -12,15 +13,18 @@ import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import UserInterface.OverlayManager;
 import rendering.Camera;
 import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
+import event.KeyState;
+import event.Keys;
 import event.Timer;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GameLoop {
-	private static final int WIDTH = 1600, HEIGHT = 900;
+	public static final int WIDTH = 1600, HEIGHT = 900;
 	private static final DisplayMode DISPLAY_MODE = new DisplayMode(WIDTH,
 			HEIGHT);
 	private static final String WINDOW_TITLE = "SquareLoot";
@@ -32,7 +36,12 @@ public class GameLoop {
 	private Player p = new Player(new Vector2f(0, 0));
 	private Map m = new Map(100);
 	private Vector2f mouse = new Vector2f();
+	private float dwheel;
 	private Camera cam = new Camera(new Vector2f(0, 0));
+	
+	private Keys keys = new Keys();
+	private int displayed_x = WIDTH;
+	private int displayed_y = HEIGHT;
 
 	public static void main(String[] args) {
 		GameLoop test = new GameLoop();
@@ -40,10 +49,12 @@ public class GameLoop {
 	}
 
 	private void start() {
+		int elapsedTime = 0;
 		try {
 			init();
 			while (isRunning) {
-				long elapsedTime = Timer.getDelta();
+				Timer.tick();
+				elapsedTime = Timer.getDelta();
 				getInput(); // read input
 				render(elapsedTime); // render graphics
 
@@ -68,20 +79,10 @@ public class GameLoop {
 		LightManager.initLaserShader();
 		LightManager.setScreenHeight(HEIGHT);
 		LightManager.setScreenWidth(WIDTH);
-
-
-		for (int i = 0; i < 10; i++) {
-			/*LightManager.addActivatedLight(
-					"" + i,
-					new Vector2f((int) (Math.random() * 5000), (int) (Math
-							.random() * 5000)),
-					new Vector3f((float) Math.random(), (float) Math.random(),
-							(float) Math.random()), 10);*/
-		}
+		OverlayManager.createStatsOverlay();
+		//OverlayManager.createMiniMap(m.getRooms(), width, height);
 		
-		
-		Light playerLight = LightManager.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1,
-				1, 0.8f), 10,2*WIDTH);
+		Light playerLight = LightManager.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 10,2*WIDTH);
 		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);
@@ -90,16 +91,15 @@ public class GameLoop {
 		LightManager.addLightTaker(m);
 		
 		isRunning = true;
-		Timer.initTimer();
 	}
 
 	private void initGL() {
 
-		glEnable(GL_CULL_FACE);
+		//glEnable(GL_CULL_FACE);
 
 		glMatrixMode(GL_PROJECTION); // change de matrice
 		glLoadIdentity(); // la reinitialise
-		glOrtho(0, WIDTH, HEIGHT, 0, 1, -1);
+		glOrtho(0, displayed_x, displayed_y, 0, 1, -1);
 
 		glMatrixMode(GL_MODELVIEW); // on passe en mode Model
 		glEnable(GL_STENCIL_TEST);
@@ -119,62 +119,57 @@ public class GameLoop {
 	}
 
 	private void getInput() {
+		keys.update();
 		mouse.x = Mouse.getX(); // will return the X coordinate on the Display.
 		mouse.y = Mouse.getY();
+		dwheel = Mouse.getDWheel();
+		
 		
 		if(Mouse.isButtonDown(0)){
 			pm.createBullet(new Vector2f(p.getPosition()), new Vector2f(mouse.x-Display.getWidth()/2.0f,Display.getHeight()/2.0f - mouse.y));
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)
-				|| Display.isCloseRequested()) {
+		if (keys.getState(Keyboard.KEY_ESCAPE) == KeyState.PRESSED|| Display.isCloseRequested()) {
 			isRunning = false;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_Z)) {
+		if (keys.getState(Keyboard.KEY_Z) == KeyState.HELD || keys.getState(Keyboard.KEY_Z) == KeyState.PRESSED) {
 			p.translate(0, -1);
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
+		if (keys.getState(Keyboard.KEY_Q) == KeyState.HELD || keys.getState(Keyboard.KEY_Q) == KeyState.PRESSED) {
 			p.translate(-1, 0);
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
+		if (keys.getState(Keyboard.KEY_S) == KeyState.HELD || keys.getState(Keyboard.KEY_S) == KeyState.PRESSED) {
 			p.translate(0, 1);
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+		if (keys.getState(Keyboard.KEY_D) == KeyState.HELD || keys.getState(Keyboard.KEY_D) == KeyState.PRESSED) {
 			p.translate(1, 0);
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
+		if (keys.getState(Keyboard.KEY_E) == KeyState.PRESSED) {
 			if(p.getLight().isActive())
 				p.getLight().desactivate();
 			else
 				p.getLight().activate();
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
-		}
 	}
 
 	private void render(long elapsedTime) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// glMatrixMode(GL_MODELVIEW);
 
-		p.updatePostion(elapsedTime, m); // a sortir de la boucle de rendu ?
+		p.updatePostion(elapsedTime, m);
 		pm.updateProjectiles(elapsedTime, m);
 		p.setOrientation(-(mouse.x-WIDTH/2.0f),mouse.y-HEIGHT/2.0f);
 		cam.setPosition(p.getPosition());
 		LightManager.setCamPosition(p.getPosition());
 		m.setDrawPosition(p.getPosition());
 
-		GL11.glPushMatrix();
+		glPushMatrix();
 		cam.draw();
-		//lm.setLightPosition("player", p.getPosition());
-		
 		LightManager.render();
-
+		
 		p.draw();
 		pm.drawProjectiles();
-		GL11.glPopMatrix();
+		
+		OverlayManager.render();
+		glPopMatrix();
 	}
 }

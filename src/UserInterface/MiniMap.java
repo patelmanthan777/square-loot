@@ -16,7 +16,7 @@ public class MiniMap extends Overlay{
 		for(int i = 0; i < width; i++){
 			for(int j = 0; j < width; j++){
 				if (rooms[i][j]!= null){
-					
+					rooms[i][j].drawOnMiniMap();
 				}
 			}
 		}

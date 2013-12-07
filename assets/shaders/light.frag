@@ -10,15 +10,8 @@ struct Light{
 uniform Light light;
 uniform int nbLights;
 
-varying vec3 vertexPosition;
-varying vec3 vertexNormal;
-
-float a = 1;
-float b = 0.5;
-float c = 0.25;
-
 void main(){
-	vec2 vertexToLight = light.position - vertexPosition.xy;
+	vec2 vertexToLight = light.position - gl_FragCoord.xy;
 	float dst = length(vertexToLight);	
 	float attenuation = 1.0/(dst);
 	float dstShade = light.maxDst/2.0;
