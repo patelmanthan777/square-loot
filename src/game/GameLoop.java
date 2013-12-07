@@ -1,4 +1,6 @@
 package game;
+import item.weapon.LaserRifle;
+import item.weapon.Weapon;
 import light.Laser;
 import light.Light;
 import light.LightManager;
@@ -16,6 +18,8 @@ import org.lwjgl.util.vector.Vector3f;
 import rendering.Camera;
 import userInterface.OverlayManager;
 import entity.player.Player;
+import entity.projectile.Bullet;
+import entity.projectile.ProjectileFactory;
 import entity.projectile.ProjectileManager;
 import environment.Map;
 import event.KeyState;
@@ -31,8 +35,8 @@ public class GameLoop {
 	private static final int FPS = 0;
 	private boolean isRunning;
 
-	private ProjectileManager pm;
-
+	private static Weapon weapon = new LaserRifle(250);
+	
 	private Player p = new Player(new Vector2f(0, 0));
 	private Map m = new Map(new Vector2f(10,10), new Vector2f(10,10), new Vector2f(40,40));
 	private Vector2f mouse = new Vector2f();
@@ -71,9 +75,10 @@ public class GameLoop {
 		createWindow();
 		initGL();
 		m.generate();
+
 		p.setPosition(m.getSpawnPixelPosition());
-		pm = new ProjectileManager();
-		pm.init();
+		ProjectileManager.init();
+
 
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
@@ -117,7 +122,7 @@ public class GameLoop {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private void getInput() {
 		keys.update();
 		mouse.x = Mouse.getX(); // will return the X coordinate on the Display.
@@ -126,7 +131,8 @@ public class GameLoop {
 		
 		
 		if(Mouse.isButtonDown(0)){
-			pm.createBullet(new Vector2f(p.getPosition()), new Vector2f(mouse.x-Display.getWidth()/2.0f,Display.getHeight()/2.0f - mouse.y));
+			
+			weapon.Fire(new Vector2f(p.getPosition()), new Vector2f(mouse.x-Display.getWidth()/2.0f,Display.getHeight()/2.0f - mouse.y));
 		}
 		
 		if (keys.getState(Keyboard.KEY_ESCAPE) == KeyState.PRESSED|| Display.isCloseRequested()) {
@@ -156,7 +162,7 @@ public class GameLoop {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		p.updatePostion(elapsedTime, m);
-		pm.updateProjectiles(elapsedTime, m);
+		ProjectileManager.updateProjectiles(m);
 		p.setOrientation(-(mouse.x-WIDTH/2.0f),mouse.y-HEIGHT/2.0f);
 		cam.setPosition(p.getPosition());
 		LightManager.setCamPosition(p.getPosition());
@@ -167,7 +173,7 @@ public class GameLoop {
 		LightManager.render();
 		
 		p.draw();
-		pm.drawProjectiles();
+		ProjectileManager.drawProjectiles();
 		
 		OverlayManager.render();
 		glPopMatrix();

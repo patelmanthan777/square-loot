@@ -33,4 +33,8 @@ public class Timer {
 	static public int getFPS(){
 		return FPS;
 	}
+	
+	static public long getRunningTime(){
+		return runningTime;
+	}
 }

@@ -1,77 +1,51 @@
 package entity.projectile;
 
-import static org.lwjgl.opengl.GL20.glCreateProgram;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-
 import org.lwjgl.util.vector.Vector2f;
-
-import rendering.Shader;
 import environment.Map;
 
 
-public class ProjectileManager {
-	private LinkedList <Projectile> projectiles = new LinkedList<Projectile>();
+public final class ProjectileManager {
+	/** ProjectileFactory */
+	static private ProjectileFactory<Bullet> bulletFactory = new ProjectileFactory<Bullet>(new Bullet());
 	
-	static protected int bulletShaderProgram;
+	/**
+	 * Private ProjectileManager Constructor
+	 * This class must not be instantiated
+	 */
+	private ProjectileManager(){}
+	
 	
 	/**
 	 * Initialize the projectiles
 	 */
-	public void init(){
-		this.initBulletShader();
+	static public void init(){
+		Bullet.initBulletShader();
 	}
 	
 	
 	/**
-	 * Initialize the bullet shader
+	 * Create a Bullet
+	 * @param pos the bullet position
+	 * @param rot the bullet direction
 	 */
-	private void initBulletShader(){
-		bulletShaderProgram = glCreateProgram();
-		Shader s = new Shader("bullet");
-		s.loadCode();
-		s.compile();
-		s.link(bulletShaderProgram);
+	static public void createBullet(Vector2f pos, Vector2f rot){
+		bulletFactory.createProjectile(pos, rot);
 	}
 	
-	
-	
+		
 	/**
-	 * Create a bullet at the given position with the given direction
-	 * @param pos Initial position of the bullet
-	 * @param rot Initial direction of the bullet
-	 */
-	public void createBullet(Vector2f pos, Vector2f rot){
-		Bullet project = new Bullet(pos,rot);
-		projectiles.add(project);
-	}
-	
-	
-	/**
-	 * Update all projectiles of the projectileManager
-	 * @param dt the elapsed time since the last update
+	 * Update all projectiles
 	 * @param m the map
 	 */
-	public void updateProjectiles(float dt, Map m) {
-		Iterator<Projectile> ite = projectiles.iterator();
-		while(ite.hasNext()){
-			Projectile project = ite.next();
-			project.updatePostion(dt,m);
-			if(project.mustBeDestroy())
-				ite.remove();
-		}
-		
+	static public void updateProjectiles(Map m) {
+		bulletFactory.updateProjectiles(m);	
 	}
 	
 	
 	/**
 	 * Draw all projectiles
 	 */
-	public void drawProjectiles() {
-		for(Projectile project : projectiles){
-			project.draw();
+	static public void drawProjectiles() {
+			bulletFactory.drawProjectiles();
 		}
 	}
-
-}
