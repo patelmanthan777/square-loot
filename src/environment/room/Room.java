@@ -12,6 +12,8 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import java.util.LinkedList;
 
+import org.lwjgl.util.vector.Vector3f;
+
 import light.Light;
 import light.Shadow;
 import rendering.Drawable;
@@ -26,6 +28,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;
 	protected float x;
 	protected float y;
+	protected Vector3f miniMapColor = new Vector3f(1,1,1);
 	protected boolean[] doors = new boolean[4];
 
 	public Room(float posX, float posY) {
@@ -184,7 +187,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 				* MiniMap.roomSize.y);
 		float doorRatio = 0.1f;
 		glDisable(GL_BLEND);
-		glColor3f(1, 1, 1);
+		glColor3f(miniMapColor.x, miniMapColor.y, miniMapColor.z);
 		glPushMatrix();
 		glLoadIdentity();
 		if (doors[0]) {

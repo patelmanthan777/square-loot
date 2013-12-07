@@ -85,7 +85,7 @@ public class GameLoop {
 		LightManager.setScreenHeight(HEIGHT);
 		LightManager.setScreenWidth(WIDTH);
 		OverlayManager.createStatsOverlay();
-		OverlayManager.createMiniMap(m.getRooms());
+		OverlayManager.createMiniMap(m.getRooms(),p);
 		
 		Light playerLight = LightManager.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 10,2*WIDTH);
 		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());

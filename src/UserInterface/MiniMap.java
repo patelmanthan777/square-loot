@@ -1,7 +1,11 @@
 package userInterface;
 
+import java.util.LinkedList;
+
 import org.lwjgl.util.vector.Vector2f;
 
+import rendering.MiniMapDrawable;
+import entity.player.Player;
 import environment.Map;
 import environment.room.Room;
 import game.GameLoop;
@@ -11,11 +15,20 @@ public class MiniMap extends Overlay{
 	public static Vector2f screenRegion = new Vector2f(0.2f,0.2f);
 	public static Vector2f roomSize;
 	private Room[][] rooms;
-	public MiniMap(Room[][] rooms){
+	private Player player;
+	private LinkedList<MiniMapDrawable> drawable = new LinkedList<MiniMapDrawable>();
+	
+	
+	
+	public MiniMap(Room[][] rooms, Player p){
 		this.rooms = rooms;
+		this.player = p;
 		MiniMap.position = new Vector2f((float)GameLoop.WIDTH*0.7f,(float)GameLoop.HEIGHT*0.05f);
 		MiniMap.roomSize = new Vector2f((screenRegion.x * GameLoop.WIDTH)/Map.mapRoomSize.x,(screenRegion.y * GameLoop.HEIGHT)/Map.mapRoomSize.y);
 	}
+	
+	
+	
 	@Override
 	public void draw() {
 		
@@ -26,5 +39,6 @@ public class MiniMap extends Overlay{
 				}
 			}
 		}
+		player.drawOnMiniMap();
 	}
 }

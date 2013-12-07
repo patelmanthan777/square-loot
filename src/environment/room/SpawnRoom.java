@@ -7,7 +7,9 @@ public class SpawnRoom extends Room{
 
 	public SpawnRoom(float posX,float posY) {
 		super(posX,posY);
-
+		miniMapColor.x = 0;
+		miniMapColor.y = 1;
+		miniMapColor.z = 0;
 		
 	}
 
@@ -39,5 +41,9 @@ public class SpawnRoom extends Room{
 		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
+	}
+	
+	public void drawOnMiniMap() {
+		super.drawOnMiniMap();
 	}
 }

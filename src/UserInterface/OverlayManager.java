@@ -2,6 +2,7 @@ package userInterface;
 
 import java.util.LinkedList;
 
+import entity.player.Player;
 import environment.room.Room;
 
 public  class OverlayManager {
@@ -22,8 +23,8 @@ public  class OverlayManager {
 		addOverlay(stats);
 	}
 	
-	static public void createMiniMap(Room[][] rooms){
-		MiniMap mm = new MiniMap(rooms);
+	static public void createMiniMap(Room[][] rooms, Player p){
+		MiniMap mm = new MiniMap(rooms,p);
 		addOverlay(mm);
 	}
 }

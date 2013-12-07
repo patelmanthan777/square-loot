@@ -7,10 +7,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import rendering.MiniMapDrawable;
+import userInterface.MiniMap;
 import entity.Entity;
 import environment.Map;
 
-public class Player extends Entity {
+public class Player extends Entity implements MiniMapDrawable {
 
 	private Vector2f halfSize = new Vector2f(10, 10);
 	private Laser laser;
@@ -59,6 +61,23 @@ public class Player extends Entity {
 		GL11.glVertex2f(position.x - halfSize.x, position.y - halfSize.y);
 		GL11.glVertex2f(position.x + halfSize.x, position.y + halfSize.y);
 		GL11.glVertex2f(position.x - halfSize.x, position.y + halfSize.y);
+		GL11.glEnd();
+	}
+	@Override
+	public void drawOnMiniMap(){
+		float persoRatio = 0.5f;
+		int posx = (int) (MiniMap.position.x + (getX() / Map.roomPixelSize.x)
+				* MiniMap.roomSize.x - persoRatio*MiniMap.roomSize.x/2);
+		int posy = (int) (MiniMap.position.y + (getY() / Map.roomPixelSize.y)
+				* MiniMap.roomSize.y - persoRatio*MiniMap.roomSize.y/2);
+		GL11.glColor3f(1, 0, 0);
+		// draw quad
+		GL11.glLoadIdentity();
+		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
+		GL11.glVertex2f(posx+persoRatio*MiniMap.roomSize.x, posy);
+		GL11.glVertex2f(posx, posy);
+		GL11.glVertex2f(posx+persoRatio*MiniMap.roomSize.x, posy + persoRatio*MiniMap.roomSize.y);
+		GL11.glVertex2f(posx, posy+persoRatio*MiniMap.roomSize.y);
 		GL11.glEnd();
 	}
 	
