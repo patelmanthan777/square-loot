@@ -1,4 +1,6 @@
 package game;
+import item.weapon.LaserRifle;
+import item.weapon.Weapon;
 import light.Laser;
 import light.Light;
 import light.LightManager;
@@ -33,9 +35,8 @@ public class GameLoop {
 	private static final int FPS = 0;
 	private boolean isRunning;
 
-	private ProjectileManager pm;
-	private ProjectileFactory<Bullet> projecfacto;
-
+	private static Weapon weapon = new LaserRifle(250);
+	
 	private Player p = new Player(new Vector2f(0, 0));
 	private Map m = new Map(100);
 	private Vector2f mouse = new Vector2f();
@@ -75,10 +76,8 @@ public class GameLoop {
 		initGL();
 		m.generate();
 		p.setPosition(m.getSpawnPosition());
-		pm = new ProjectileManager();
-		projecfacto = pm.createBulletFactory();
 		
-		pm.init();
+		ProjectileManager.init();
 
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
@@ -131,7 +130,8 @@ public class GameLoop {
 		
 		
 		if(Mouse.isButtonDown(0)){
-			projecfacto.createProjectile(new Vector2f(p.getPosition()), new Vector2f(mouse.x-Display.getWidth()/2.0f,Display.getHeight()/2.0f - mouse.y));
+			
+			weapon.Fire(new Vector2f(p.getPosition()), new Vector2f(mouse.x-Display.getWidth()/2.0f,Display.getHeight()/2.0f - mouse.y));
 		}
 		
 		if (keys.getState(Keyboard.KEY_ESCAPE) == KeyState.PRESSED|| Display.isCloseRequested()) {
@@ -161,7 +161,7 @@ public class GameLoop {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		p.updatePostion(elapsedTime, m);
-		pm.updateProjectiles(elapsedTime, m);
+		ProjectileManager.updateProjectiles(m);
 		p.setOrientation(-(mouse.x-WIDTH/2.0f),mouse.y-HEIGHT/2.0f);
 		cam.setPosition(p.getPosition());
 		LightManager.setCamPosition(p.getPosition());
@@ -172,7 +172,7 @@ public class GameLoop {
 		LightManager.render();
 		
 		p.draw();
-		pm.drawProjectiles();
+		ProjectileManager.drawProjectiles();
 		
 		OverlayManager.render();
 		glPopMatrix();

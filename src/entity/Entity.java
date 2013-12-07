@@ -48,7 +48,7 @@ public abstract class Entity extends Node implements Drawable{
 	
 	public abstract boolean isInCollision(float x, float y, Map m);
 	
-	public void updatePostion(float dt, Map m){
+	public void updatePostion(long dt, Map m){
 			if (translation.length() != 0)
 				translation = (Vector2f)translation.normalise().scale(accFactor);
 			speed.x = speed.x + translation.x - speed.x / descFactor;

@@ -1,18 +1,26 @@
 package entity.projectile;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.lwjgl.util.vector.Vector2f;
 
-public class ProjectileFactory<P extends Projectile> {
+import environment.Map;
+import event.Timer;
 
-	private P projectile;
+
+public class ProjectileFactory<P extends Projectile> {
+	/** Alive projectile list */ 
 	private LinkedList <Projectile> projectileList;
+
 	
-	public ProjectileFactory(P projectile, LinkedList <Projectile> list)
+	private P projectile;
+	
+	
+	public ProjectileFactory(P projectile)
 	{
 		this.projectile = projectile;
-		this.projectileList = list;
+		this.projectileList = new LinkedList<Projectile>();
 	}
 	
 	/**
@@ -23,5 +31,38 @@ public class ProjectileFactory<P extends Projectile> {
 	public void createProjectile(Vector2f pos, Vector2f rot){
 		Projectile project = projectile.Clone(pos, rot);
 		projectileList.add(project);
+	}
+	
+	public void destroyProjectile(P projec)
+	{
+		/** TODO add a linked list to sore destroy projectiles */
+	}
+	
+	/**
+	 * Update all projectiles of the projectileFactory
+	 * @param dt the elapsed time since the last update
+	 * @param m the map
+	 */
+	public void updateProjectiles(Map m) {
+		long dt = Timer.getDelta();
+		Iterator<Projectile> ite = projectileList.iterator();
+		while(ite.hasNext()){
+			Projectile project = ite.next();
+			if(project.mustBeDestroy())
+			{
+				ite.remove();				
+			}
+			else
+			{
+				project.updatePostion(dt,m);
+			}
+			
+		}
+	}
+	
+	public void drawProjectiles() {
+		for(Projectile project : projectileList){
+			project.draw();
+		}
 	}
 }

@@ -1,41 +1,31 @@
 package entity.projectile;
 
-import static org.lwjgl.opengl.GL20.glCreateProgram;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import rendering.Shader;
+import org.lwjgl.util.vector.Vector2f;
 import environment.Map;
 
 
-public class ProjectileManager {
-	private LinkedList <Projectile> projectileList = new LinkedList<Projectile>();
+public final class ProjectileManager {
+	/** ProjectileFactory */
+	static private ProjectileFactory<Bullet> bulletFactory = new ProjectileFactory<Bullet>(new Bullet());
 	
-	static protected int bulletShaderProgram;
+	/**
+	 * Private ProjectileManager Constructor
+	 * This class must not be instantiated
+	 */
+	private ProjectileManager(){}
+	
 	
 	/**
 	 * Initialize the projectiles
 	 */
-	public void init(){
-		this.initBulletShader();
+	static public void init(){
+		Bullet.initBulletShader();
 	}
 	
 	
-	/**
-	 * Initialize the bullet shader
-	 */
-	private void initBulletShader(){
-		bulletShaderProgram = glCreateProgram();
-		Shader s = new Shader("bullet");
-		s.loadCode();
-		s.compile();
-		s.link(bulletShaderProgram);
-	}
 	
-	
-	public ProjectileFactory<Bullet> createBulletFactory(){
-		return new ProjectileFactory<Bullet>(new Bullet(), projectileList);
+	static public void createBullet(Vector2f pos, Vector2f rot){
+		bulletFactory.createProjectile(pos, rot);
 	}
 	
 		
@@ -44,25 +34,15 @@ public class ProjectileManager {
 	 * @param dt the elapsed time since the last update
 	 * @param m the map
 	 */
-	public void updateProjectiles(float dt, Map m) {
-		Iterator<Projectile> ite = projectileList.iterator();
-		while(ite.hasNext()){
-			Projectile project = ite.next();
-			project.updatePostion(dt,m);
-			if(project.mustBeDestroy())
-				ite.remove();
-		}
-		
+	static public void updateProjectiles(Map m) {
+		bulletFactory.updateProjectiles(m);	
 	}
 	
 	
 	/**
 	 * Draw all projectiles
 	 */
-	public void drawProjectiles() {
-		for(Projectile project : projectileList){
-			project.draw();
+	static public void drawProjectiles() {
+			bulletFactory.drawProjectiles();
 		}
 	}
-
-}
