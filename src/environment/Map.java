@@ -143,45 +143,4 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		}
 		return l;
 	}
-
-	@Override
-	public LinkedList<Shadow> computeLaserShadow(Light light) {
-		LinkedList<Shadow> l = new LinkedList<Shadow>();
-		boolean [] neighbours = new boolean[4];
-		int minX = Math.max(0,(int)Math.floor((light.getX()-Display.getWidth())/(halfBlockSize.x*2)));
-		int maxX = Math.min(size,(int)Math.floor((light.getX()+Display.getWidth())/(halfBlockSize.x*2))+1);
-		int minY = Math.max(0,(int)Math.floor((light.getY()-Display.getHeight())/(halfBlockSize.y*2)));
-		int maxY = Math.min(size,(int)Math.floor((light.getY()+Display.getHeight())/(halfBlockSize.y*2))+1);
-			
-		int i;
-		int j;
-		for (i = minX; i < maxX; i++) {
-			for (j = minY; j < maxY; j++) {
-				if(blockGrid[i][j].castShadows()){
-					if(j==0){
-						neighbours[0] = false;
-					}else{
-						neighbours[0] = blockGrid[i][j-1].castShadows();
-					}
-					if(i == 0){
-						neighbours[3] = false;
-					}else{
-						neighbours[3] = blockGrid[i-1][j].castShadows();
-					}
-					if(i == maxX-1){
-						neighbours[1] = false;
-					}else{
-						neighbours[1] = blockGrid[i+1][j].castShadows();
-					}
-					if (j==maxY -1){
-						neighbours[2] = false;
-					}else{
-						neighbours[2] = blockGrid[i][j+1].castShadows();
-					}
-					l.addAll(((SolidBlock) blockGrid[i][j]).computeLaserShadow(light,i,j,halfBlockSize,neighbours));
-				}
-			}
-		}
-		return l;
-	}
 }

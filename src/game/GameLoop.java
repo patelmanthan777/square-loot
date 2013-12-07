@@ -13,8 +13,8 @@ import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import UserInterface.OverlayManager;
 import rendering.Camera;
+import userInterface.OverlayManager;
 import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
