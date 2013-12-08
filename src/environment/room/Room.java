@@ -1,14 +1,6 @@
 package environment.room;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_LINE_STRIP;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glVertex2f;
+import static org.lwjgl.opengl.GL11.*;
 
 import java.util.LinkedList;
 
@@ -188,7 +180,6 @@ public abstract class Room implements Drawable, ShadowCaster {
 		float doorRatio = 0.1f;
 		glDisable(GL_BLEND);
 		glColor3f(miniMapColor.x, miniMapColor.y, miniMapColor.z);
-		glPushMatrix();
 		glLoadIdentity();
 		if (doors[0]) {
 			glBegin(GL_LINE_STRIP);

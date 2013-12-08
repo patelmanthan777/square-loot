@@ -9,15 +9,15 @@ import org.lwjgl.util.vector.Vector3f;
 
 import rendering.MiniMapDrawable;
 import userInterface.MiniMap;
-import entity.Entity;
+import entity.LivingEntity;
 import environment.Map;
 
-public class Player extends Entity implements MiniMapDrawable {
+public class Player extends LivingEntity implements MiniMapDrawable {
 
 	private Vector2f halfSize = new Vector2f(10, 10);
 	private Laser laser;
 	private Light light;
-
+	
 	public Player(Vector2f pos) {
 		super(pos);
 		Vector3f col = new Vector3f(0, 0, 0);
@@ -26,6 +26,8 @@ public class Player extends Entity implements MiniMapDrawable {
 		position.y = pos.y;
 		this.rotation.x = 1;
 		this.rotation.y = 1;
+		this.setMaxHealth(100);
+		this.setHealth(60);
 	}
 
 	@Override
