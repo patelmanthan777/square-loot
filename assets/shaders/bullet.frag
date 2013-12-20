@@ -1,4 +1,4 @@
-#120
+#version 120
 
 struct Bullet{
 	vec2 position;
@@ -18,7 +18,7 @@ void main(){
 	
 	float point_dst = length(vertexToBullet);
 	
-	float factor = 1/(line_dst*point_dst);
+	float factor = 1.0/(line_dst*point_dst);
 	
 	if (line_dst < bullet.radius && point_dst < bullet.length){
 		gl_FragColor =  gl_Color * factor;

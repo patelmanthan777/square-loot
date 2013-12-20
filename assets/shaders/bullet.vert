@@ -1,4 +1,4 @@
-# 120
+#version 120
 
 varying vec3 vertexPosition;
 
