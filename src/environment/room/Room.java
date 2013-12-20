@@ -20,8 +20,9 @@ public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;
 	protected float x;
 	protected float y;
-	protected Vector3f miniMapColor = new Vector3f(1,1,1);
+	protected Vector3f miniMapColor = new Vector3f(1, 1, 1);
 	protected boolean[] doors = new boolean[4];
+	protected boolean discovered = false;
 
 	public Room(float posX, float posY) {
 		this.x = posX;
@@ -173,82 +174,123 @@ public abstract class Room implements Drawable, ShadowCaster {
 	}
 
 	public void drawOnMiniMap() {
-		int minix = (int) (MiniMap.position.x + (x / Map.roomPixelSize.x)
-				* MiniMap.roomSize.x);
-		int miniy = (int) (MiniMap.position.y + (y / Map.roomPixelSize.y)
-				* MiniMap.roomSize.y);
-		float doorRatio = 0.1f;
-		glDisable(GL_BLEND);
-		glColor3f(miniMapColor.x, miniMapColor.y, miniMapColor.z);
-		glLoadIdentity();
-		if (doors[0]) {
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glVertex2f(minix + 0.5f * MiniMap.roomSize.x + doorRatio * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glVertex2f(minix + 0.5f * MiniMap.roomSize.x + doorRatio * MiniMap.roomSize.x, miniy);
-			glEnd();
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + 0.5f * MiniMap.roomSize.x - doorRatio * MiniMap.roomSize.x, miniy);
-			glVertex2f(minix + 0.5f * MiniMap.roomSize.x - doorRatio * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glVertex2f(minix + doorRatio * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glEnd();
-		}else{
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glVertex2f(minix + doorRatio * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glEnd();
+		if (discovered) {
+			int minix = (int) (MiniMap.position.x + (x / Map.roomPixelSize.x)
+					* MiniMap.roomSize.x);
+			int miniy = (int) (MiniMap.position.y + (y / Map.roomPixelSize.y)
+					* MiniMap.roomSize.y);
+			float doorRatio = 0.1f;
+			glDisable(GL_BLEND);
+			glColor3f(miniMapColor.x, miniMapColor.y, miniMapColor.z);
+			glLoadIdentity();
+			if (doors[0]) {
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ doorRatio * MiniMap.roomSize.y);
+				glVertex2f(minix + 0.5f * MiniMap.roomSize.x + doorRatio
+						* MiniMap.roomSize.x, miniy + doorRatio
+						* MiniMap.roomSize.y);
+				glVertex2f(minix + 0.5f * MiniMap.roomSize.x + doorRatio
+						* MiniMap.roomSize.x, miniy);
+				glEnd();
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + 0.5f * MiniMap.roomSize.x - doorRatio
+						* MiniMap.roomSize.x, miniy);
+				glVertex2f(minix + 0.5f * MiniMap.roomSize.x - doorRatio
+						* MiniMap.roomSize.x, miniy + doorRatio
+						* MiniMap.roomSize.y);
+				glVertex2f(minix + doorRatio * MiniMap.roomSize.x, miniy
+						+ doorRatio * MiniMap.roomSize.y);
+				glEnd();
+			} else {
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ doorRatio * MiniMap.roomSize.y);
+				glVertex2f(minix + doorRatio * MiniMap.roomSize.x, miniy
+						+ doorRatio * MiniMap.roomSize.y);
+				glEnd();
+			}
+			if (doors[1]) {
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ doorRatio * MiniMap.roomSize.y);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ (0.5f - doorRatio) * MiniMap.roomSize.y);
+				glVertex2f(minix + MiniMap.roomSize.x, miniy
+						+ (0.5f - doorRatio) * MiniMap.roomSize.y);
+				glEnd();
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + MiniMap.roomSize.x, miniy
+						+ (0.5f + doorRatio) * MiniMap.roomSize.y);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ (0.5f + doorRatio) * MiniMap.roomSize.y);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ (1 - doorRatio) * MiniMap.roomSize.y);
+				glEnd();
+			} else {
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ doorRatio * MiniMap.roomSize.y);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ (1 - doorRatio) * MiniMap.roomSize.y);
+				glEnd();
+			}
+			if (doors[2]) {
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ (1 - doorRatio) * MiniMap.roomSize.y);
+				glVertex2f(minix + 0.5f * MiniMap.roomSize.x + doorRatio
+						* MiniMap.roomSize.x, miniy + (1 - doorRatio)
+						* MiniMap.roomSize.y);
+				glVertex2f(minix + 0.5f * MiniMap.roomSize.x + doorRatio
+						* MiniMap.roomSize.x, miniy + MiniMap.roomSize.y);
+				glEnd();
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + 0.5f * MiniMap.roomSize.x - doorRatio
+						* MiniMap.roomSize.x, miniy + MiniMap.roomSize.y);
+				glVertex2f(minix + 0.5f * MiniMap.roomSize.x - doorRatio
+						* MiniMap.roomSize.x, miniy + (1 - doorRatio)
+						* MiniMap.roomSize.y);
+				glVertex2f(minix + doorRatio * MiniMap.roomSize.x, miniy
+						+ (1 - doorRatio) * MiniMap.roomSize.y);
+				glEnd();
+			} else {
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
+						+ (1 - doorRatio) * MiniMap.roomSize.y);
+				glVertex2f(minix + doorRatio * MiniMap.roomSize.x, miniy
+						+ (1 - doorRatio) * MiniMap.roomSize.y);
+				glEnd();
+			}
+			if (doors[3]) {
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy
+						+ doorRatio * MiniMap.roomSize.y);
+				glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy
+						+ (0.5f - doorRatio) * MiniMap.roomSize.y);
+				glVertex2f(minix, miniy + (0.5f - doorRatio)
+						* MiniMap.roomSize.y);
+				glEnd();
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix, miniy + (0.5f + doorRatio)
+						* MiniMap.roomSize.y);
+				glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy
+						+ (0.5f + doorRatio) * MiniMap.roomSize.y);
+				glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy
+						+ (1 - doorRatio) * MiniMap.roomSize.y);
+				glEnd();
+			} else {
+				glBegin(GL_LINE_STRIP);
+				glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy
+						+ doorRatio * MiniMap.roomSize.y);
+				glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy
+						+ (1 - doorRatio) * MiniMap.roomSize.y);
+				glEnd();
+			}
 		}
-		if (doors[1]) {
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + (0.5f -  doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix + MiniMap.roomSize.x, miniy + (0.5f - doorRatio) * MiniMap.roomSize.y);
-			glEnd();
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + MiniMap.roomSize.x, miniy + (0.5f + doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + (0.5f + doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glEnd();
-		}else{
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glEnd();
-		}
-		if (doors[2]) {
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix + 0.5f * MiniMap.roomSize.x + doorRatio * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix + 0.5f * MiniMap.roomSize.x + doorRatio * MiniMap.roomSize.x, miniy + MiniMap.roomSize.y);
-			glEnd();
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + 0.5f * MiniMap.roomSize.x - doorRatio * MiniMap.roomSize.x, miniy + MiniMap.roomSize.y);
-			glVertex2f(minix + 0.5f * MiniMap.roomSize.x - doorRatio * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix + doorRatio * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glEnd();
-		}else{
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + (1-doorRatio) * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix + doorRatio * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glEnd();
-		}
-		if (doors[3]) {
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy + (0.5f -  doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix, miniy + (0.5f - doorRatio) * MiniMap.roomSize.y);
-			glEnd();
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix , miniy + (0.5f + doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy + (0.5f + doorRatio) * MiniMap.roomSize.y);
-			glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glEnd();
-		}else{
-			glBegin(GL_LINE_STRIP);
-			glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy + doorRatio * MiniMap.roomSize.y);
-			glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy + (1-doorRatio) * MiniMap.roomSize.y);
-			glEnd();
-		}
-
 	}
+	
+	public void discover(){
+		discovered = true;
+	} 
 }

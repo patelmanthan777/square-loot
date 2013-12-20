@@ -10,7 +10,7 @@ public class SpawnRoom extends Room{
 		miniMapColor.x = 0;
 		miniMapColor.y = 1;
 		miniMapColor.z = 0;
-		
+		discovered = true;
 	}
 
 	@Override

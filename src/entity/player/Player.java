@@ -26,8 +26,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		position.y = pos.y;
 		this.rotation.x = 1;
 		this.rotation.y = 1;
-		this.setMaxHealth(100);
-		this.setHealth(60);
+		this.setMaxHealth(20);
+		this.setHealth(10);
 	}
 
 	@Override

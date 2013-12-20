@@ -93,6 +93,7 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	public void setDrawPosition(Vector2f pos) {
 		drawRoomPosition.x = pos.x/Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y/Map.roomPixelSize.y;
+		roomGrid[(int)drawRoomPosition.x][(int)drawRoomPosition.y].discover();
 		minX = (int)Math.max(0,drawRoomPosition.x - drawRoomDistance.x);
 		maxX = (int)Math.min(Map.mapRoomSize.x,drawRoomPosition.x + drawRoomDistance.x+1);
 		minY = (int)Math.max(0,drawRoomPosition.y - drawRoomDistance.y);

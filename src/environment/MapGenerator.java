@@ -20,8 +20,8 @@ public class MapGenerator {
 	}
 
 	private static void createRooms() {
-		float ispawn = (float)Math.floor(Map.mapRoomSize.x/2.0);
-		float jspawn = (float)Math.floor(Map.mapRoomSize.y/2.0);
+		int ispawn = (int)(Math.random() * Map.mapRoomSize.x);
+		int jspawn = (int)(Math.random() * Map.mapRoomSize.y);
 		Map.spawnPixelPosition = new Vector2f(((float)ispawn+0.5f)*Map.roomPixelSize.x, ((float)jspawn+0.5f)*Map.roomPixelSize.y);
 		Map.spawnRoomPosition = new Vector2f(ispawn, jspawn);
 		Room r = new SpawnRoom((float)ispawn*Map.roomPixelSize.x,(float)jspawn*Map.roomPixelSize.y);
