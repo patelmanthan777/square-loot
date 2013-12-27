@@ -128,7 +128,6 @@ public abstract class Room implements Drawable, ShadowCaster {
 
 	@Override
 	public void draw() {
-		// draw floor
 		for (int i = 0; i < Map.roomBlockSize.x; i++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				float posX = x + i * Map.blockPixelSize.x;

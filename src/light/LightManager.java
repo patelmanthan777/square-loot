@@ -280,31 +280,27 @@ public class LightManager {
 						l.getColor().x, l.getColor().y, l.getColor().z);
 				glUniform1i(
 						glGetUniformLocation(lightShaderProgram, "texture"),
-						Map.getTextureID());
+						0);
 			}
 
-			
-			for (LightTaker lt : lightTakers) {
-				if (lt instanceof Map) {
-					boolean save = ((Map) lt).getFullRender();
-					((Map) lt).setFullRender(true);
-					//FIXME update map texture
-					/*if(!((Map)lt).isUpdated()){
-						((Map)lt).renderMapToFrameBuffer();
-					}*/
-					glEnable(GL_BLEND);
-					glBlendFunc(GL_ONE, GL_ONE);
-					lt.draw();
-					glDisable(GL_BLEND);
-					((Map) lt).setFullRender(save);
-					
-				}else{
-					glEnable(GL_BLEND);
-					glBlendFunc(GL_ONE, GL_ONE);
-					lt.draw();
-					glDisable(GL_BLEND);
-				}
-			}
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ONE, GL_ONE);
+			glClearColor(0.0f, 0.0f, 0.0f, 1f);
+			int tex_save =  glGetInteger(GL_TEXTURE_BINDING_2D);
+			glBindTexture(GL_TEXTURE_2D, Map.getTextureID());
+			glActiveTexture(GL_TEXTURE0);
+			glBegin(GL_QUADS);
+			glTexCoord2f(0.0f, 0.0f);
+			glVertex2f(0f, Map.mapPixelSize.y);
+			glTexCoord2f(1.0f, 0.0f);
+			glVertex2f(Map.mapPixelSize.x, Map.mapPixelSize.y);
+			glTexCoord2f(1.0f, 1.0f);
+			glVertex2f(Map.mapPixelSize.x, 0f);
+			glTexCoord2f(0.0f, 1.0f);
+			glVertex2f(0f, 0f);
+			glEnd();
+			glBindTexture(GL_TEXTURE_2D, tex_save);
+			glDisable(GL_BLEND);
 			glUseProgram(0);
 			glClear(GL_STENCIL_BUFFER_BIT);
 		}
@@ -354,6 +350,9 @@ public class LightManager {
 							glGetUniformLocation(lightShaderProgram,
 									"light.color"), l.getColor().x,
 							l.getColor().y, l.getColor().z);
+					glUniform1i(
+							glGetUniformLocation(lightShaderProgram, "texture"),
+							0);
 				}
 				if (l instanceof Laser) {
 					glUseProgram(laserShaderProgram);
@@ -378,11 +377,24 @@ public class LightManager {
 
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_ONE, GL_ONE);
-				for (LightTaker lt : lightTakers) {
-					lt.draw();
-				}
-
+				glClearColor(0.0f, 0.0f, 0.0f, 1f);
+				int tex_save =  glGetInteger(GL_TEXTURE_BINDING_2D);
+				glBindTexture(GL_TEXTURE_2D, Map.getTextureID());
+				glActiveTexture(GL_TEXTURE0);
+				glBegin(GL_QUADS);
+				glTexCoord2f(0.0f, 0.0f);
+				glVertex2f(0f, Map.mapPixelSize.y);
+				glTexCoord2f(1.0f, 0.0f);
+				glVertex2f(Map.mapPixelSize.x, Map.mapPixelSize.y);
+				glTexCoord2f(1.0f, 1.0f);
+				glVertex2f(Map.mapPixelSize.x, 0f);
+				glTexCoord2f(0.0f, 1.0f);
+				glVertex2f(0f, 0f);
+				glEnd();
+				glBindTexture(GL_TEXTURE_2D, tex_save);
 				glDisable(GL_BLEND);
+				glUseProgram(0);
+				glClear(GL_STENCIL_BUFFER_BIT);
 
 				glUseProgram(0);
 				glClear(GL_STENCIL_BUFFER_BIT);

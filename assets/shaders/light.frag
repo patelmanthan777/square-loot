@@ -19,5 +19,6 @@ void main(){
 		attenuation *= -(1.0/dstShade)*(dst-dstShade) + 1.0;
 	}
 	vec4 color = vec4(attenuation, attenuation, attenuation, pow(attenuation, 6)) * vec4(light.color, 1.0) * light.radius;
-	gl_FragColor =  gl_Color * color; //texture2D(texture, gl_TexCoord[0].st);
+	gl_FragColor = texture2D(texture, gl_TexCoord[0].st) * color;
+	gl_FragColor.a = 1.0f;
 }

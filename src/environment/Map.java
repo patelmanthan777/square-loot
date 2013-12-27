@@ -82,7 +82,6 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	}
 	
 	private void fullRender(){
-		
 		int minX = 0;
 		int maxX = (int) Map.mapRoomSize.x;
 		int minY = 0;
@@ -113,7 +112,6 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		glLoadIdentity();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		
 		fullRender();
 		glPopMatrix();
 		glPopAttrib();
@@ -191,12 +189,6 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	 * Draw the map
 	 */
 	public void draw() {
-		if(fullRender){
-			fullRender();
-		}else{
-			render();
-		}
-		/*
 		int texSave =  glGetInteger(GL_TEXTURE_BINDING_2D);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glBegin(GL_QUADS);
@@ -210,7 +202,6 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		glVertex2f(0f, 0f);
 		glEnd();
 		glBindTexture(GL_TEXTURE_2D, texSave);
-		*/
 	}
 
 	/**

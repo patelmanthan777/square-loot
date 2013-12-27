@@ -71,12 +71,13 @@ public class GameLoop {
 	private void init() {
 		createWindow();
 		initGL();
-		
+		BlockFactory.initBlocks();
 		m.initTexture();
+		m.renderMapToFrameBuffer();
 		p.setPosition(m.getSpawnPixelPosition());
 		ProjectileManager.init();
 
-		BlockFactory.initBlocks();
+		
 		LightManager.init();
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
