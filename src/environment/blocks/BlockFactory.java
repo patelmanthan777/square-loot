@@ -6,11 +6,14 @@ public class BlockFactory {
 	static SolidBlock solidBlock = new SolidBlock();
 	static SpawnBlock spawnBlock = new SpawnBlock();
 	static VoidBlock voidBlock = new VoidBlock();
-	static SolidBlock solidBlocks = new SolidBlock();
 
 	
-	
-	private BlockFactory(){
+	static public void initBlocks(){
+		emptyBlock.setColor(1f, 1f, 1f);
+		borderBlock.setColor(0.2f, 0.2f, 0.2f);
+		solidBlock.setColor(0.2f, 0.2f, 0.2f);
+		spawnBlock.setColor(0f, 1f, 0f);
+		voidBlock.setColor(0f, 0f, 0f);
 	}
 	
 	static public Block createEmptyBlock(){

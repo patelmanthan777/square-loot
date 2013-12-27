@@ -19,6 +19,7 @@ import userInterface.OverlayManager;
 import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
+import environment.blocks.BlockFactory;
 import event.KeyState;
 import event.Keys;
 import event.Timer;
@@ -40,8 +41,8 @@ public class GameLoop {
 	private Camera cam = new Camera(new Vector2f(0, 0));
 	
 	private Keys keys = new Keys();
-	private int displayed_x = WIDTH;
-	private int displayed_y = HEIGHT;
+	public static int displayed_x = WIDTH;
+	public static int displayed_y = HEIGHT;
 
 	public static void main(String[] args) {
 		GameLoop test = new GameLoop();
@@ -70,21 +71,23 @@ public class GameLoop {
 	private void init() {
 		createWindow();
 		initGL();
-		m.generate();
-
+		
+		m.initTexture();
 		p.setPosition(m.getSpawnPixelPosition());
 		ProjectileManager.init();
 
-
+		BlockFactory.initBlocks();
+		LightManager.init();
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
 		LightManager.setScreenHeight(HEIGHT);
 		LightManager.setScreenWidth(WIDTH);
+		OverlayManager.init();
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(m.getRooms(),p);
 		OverlayManager.createPlayerStatsOverlay(p);
 		
-		Light playerLight = LightManager.addActivatedLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 10,2*WIDTH);
+		Light playerLight = LightManager.addLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 10,2*WIDTH,true);
 		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);
@@ -95,16 +98,15 @@ public class GameLoop {
 		isRunning = true;
 	}
 
-	private void initGL() {
+	public static void initGL() {
 
 		glEnable(GL_CULL_FACE);
-
+		glEnable(GL_STENCIL_TEST);
+		glEnable(GL_TEXTURE_2D);
 		glMatrixMode(GL_PROJECTION); // change de matrice
 		glLoadIdentity(); // la reinitialise
 		glOrtho(0, displayed_x, displayed_y, 0, 1, -1);
-
 		glMatrixMode(GL_MODELVIEW); // on passe en mode Model
-		glEnable(GL_STENCIL_TEST);
 		glClearColor(0, 0, 0, 0);
 	}
 
@@ -123,7 +125,6 @@ public class GameLoop {
 		keys.update();
 		mouse.x = Mouse.getX(); // will return the X coordinate on the Display.
 		mouse.y = Mouse.getY();
-		
 		
 		if(Mouse.isButtonDown(0)){
 			

@@ -8,14 +8,11 @@ import light.Laser;
 import light.Light;
 import light.Shadow;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 import environment.Map;
 
-public class SolidBlock implements Block, ShadowCasterBlock{
-	private Vector3f color = new Vector3f(0.2f,0.2f,0.2f);
+public class SolidBlock extends Block implements ShadowCasterBlock{
 	private int nb_points = 4;
 	private Vector2f[] points = new Vector2f[4];
 	
@@ -37,19 +34,7 @@ public class SolidBlock implements Block, ShadowCasterBlock{
 		
 	}
 	
-	
-	@Override
-	public void drawAt(float posX, float posY) {
-		
-		GL11.glColor3f(color.x,color.y,color.z);
-		// draw quad
-		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
-		GL11.glVertex2f(posX+Map.blockPixelSize.x,posY);
-		GL11.glVertex2f(posX,posY);
-		GL11.glVertex2f(posX+Map.blockPixelSize.x,posY+Map.blockPixelSize.y);
-		GL11.glVertex2f(posX,posY+Map.blockPixelSize.y);
-		GL11.glEnd();
-	}
+
 
 	@Override
 	public boolean testCollision() {

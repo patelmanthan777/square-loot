@@ -19,7 +19,6 @@ public class VoidRoom extends Room{
 
 	@Override
 	public void drawOnMiniMap() {
-		// TODO Auto-generated method stub
 		
 	}
 }
