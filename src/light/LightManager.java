@@ -1,22 +1,20 @@
 package light;
 
 import environment.Map;
-import game.GameLoop;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import configuration.ConfigManager;
+import rendering.FBO;
 import rendering.LightTaker;
 import rendering.Shader;
 import rendering.ShadowCaster;
@@ -36,39 +34,13 @@ public class LightManager {
 	private static int screenWidth = 0;
 	private static int screenHeight = 0;
 	private static float diagonal = 0;
-
+	
 	static int lightShaderProgram;
 	static int laserShaderProgram;
-
-	static private int frameBufferID;
-	static private int textureID;
-	static private int depthBufferID;
-	static private boolean updateFrameBuffer = true;
+	static FBO staticLightsFBO;
 
 	static public void init() {
-		frameBufferID = glGenFramebuffers();
-		textureID = glGenTextures();
-		depthBufferID = glGenRenderbuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (int) Map.mapPixelSize.x,
-				(int) Map.mapPixelSize.y, 0, GL_RGBA, GL_INT,
-				(java.nio.ByteBuffer) null);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-				GL_TEXTURE_2D, textureID, 0);
-
-		glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL,
-				(int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-				GL_RENDERBUFFER, depthBufferID);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
-				GL_RENDERBUFFER, depthBufferID);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		staticLightsFBO = new FBO();
 	}
 
 	static public void addShadowCaster(ShadowCaster sc) {
@@ -187,10 +159,7 @@ public class LightManager {
 	}
 
 	static private void renderStaticsToFrameBuffer() {
-		int texSave =  glGetInteger(GL_TEXTURE_BINDING_2D);
-		int frameBufferSave =  glGetInteger(GL_FRAMEBUFFER_BINDING);
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-		
+		staticLightsFBO.bind();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y, 0, 1, -1);
@@ -206,23 +175,19 @@ public class LightManager {
 		
 		glPopMatrix();
 		glPopAttrib();
-		updateFrameBuffer = false;
+		staticLightsFBO.setUpdated(true);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferSave);
+		staticLightsFBO.unbind();
 		glMatrixMode(GL_MODELVIEW);
-		glBindTexture(GL_TEXTURE_2D, texSave);
 	}
 
 	static public void render() {
-		if (updateFrameBuffer) {
+		if (!staticLightsFBO.isUpdated()) {
 			renderStaticsToFrameBuffer();
 		}
-		
-		glClearColor(0.0f, 0.0f, 0.0f, 1f);
-		int tex_save =  glGetInteger(GL_TEXTURE_BINDING_2D);
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		staticLightsFBO.use();
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(0f, Map.mapPixelSize.y);
@@ -234,7 +199,8 @@ public class LightManager {
 		glVertex2f(0f, 0f);
 		glEnd();
 		renderDynamicLights();
-		glBindTexture(GL_TEXTURE_2D, tex_save);
+		staticLightsFBO.unUse();
+		
 	}
 
 	private static void renderStaticLights() {
@@ -263,7 +229,6 @@ public class LightManager {
 			glColorMask(true, true, true, true);
 
 			if (l instanceof Light) {
-				
 				glUseProgram(lightShaderProgram);
 				glUniform1f(
 						glGetUniformLocation(lightShaderProgram, "light.maxDst"),
@@ -282,7 +247,6 @@ public class LightManager {
 						glGetUniformLocation(lightShaderProgram, "texture"),
 						0);
 			}
-
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
 			glClearColor(0.0f, 0.0f, 0.0f, 1f);

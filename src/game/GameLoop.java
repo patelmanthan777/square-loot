@@ -69,12 +69,9 @@ public class GameLoop {
 		initGL();
 		BlockFactory.initBlocks();
 		m = new Map(new Vector2f(10,10), new Vector2f(16,12), new Vector2f(40,40));
-		m.initTexture();
 		m.renderMapToFrameBuffer();
 		p.setPosition(m.getSpawnPixelPosition());
 		ProjectileManager.init();
-		
-		
 		LightManager.init();
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();

@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
 import entity.player.Player;
-import game.GameLoop;
 
 public class PlayerStatsOverlay extends Overlay{
 

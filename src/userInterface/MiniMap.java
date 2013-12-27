@@ -6,7 +6,6 @@ import configuration.ConfigManager;
 import entity.player.Player;
 import environment.Map;
 import environment.room.Room;
-import game.GameLoop;
 
 public class MiniMap extends Overlay{
 	public static Vector2f position;

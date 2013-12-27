@@ -1,18 +1,18 @@
 package environment;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
 
 import java.util.LinkedList;
 
 import light.Light;
 import light.Shadow;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
 import environment.room.Room;
-import game.GameLoop;
+import rendering.FBO;
 import rendering.ShadowCaster;
 
 public class Map implements ShadowCaster{
@@ -33,12 +33,9 @@ public class Map implements ShadowCaster{
 	private Vector2f drawRoomPosition;
 	private Vector2f drawRoomDistance;
 
-	
+	public static FBO mapFBO;
 	private boolean fullRender = false;
 	
-	static boolean updateFrameBuffer = true;
-	static private int frameBufferID;
-	static private int textureID;
 	/**
 	 * Map class constructor
 	 * @param size
@@ -52,25 +49,8 @@ public class Map implements ShadowCaster{
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x*roomPixelSize.x,mapRoomSize.y*roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0,0);
 		this.drawRoomDistance = new Vector2f(0.5f*(int)ConfigManager.resolution.x/Map.roomPixelSize.x,0.5f*(int)ConfigManager.resolution.y/Map.roomPixelSize.y);
+		mapFBO = new FBO();
 		generate();
-	}
-
-	public void initTexture(){
-		frameBufferID = glGenFramebuffers();
-		textureID = glGenTextures();
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (int) Map.mapPixelSize.x,
-				(int) Map.mapPixelSize.y, 0, GL_RGBA, GL_INT,
-				(java.nio.ByteBuffer) null);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-				GL_TEXTURE_2D, textureID, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		
 	}
 	
 	private void fullRender(){
@@ -90,30 +70,28 @@ public class Map implements ShadowCaster{
 	}
 	
 	public void renderMapToFrameBuffer(){
-		int texSave =  glGetInteger(GL_TEXTURE_BINDING_2D);
-		int frameBufferSave =  glGetInteger(GL_FRAMEBUFFER_BINDING);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+		mapFBO.bind();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y, 0, 1, -1);
 		glMatrixMode(GL_MODELVIEW);
-		glPushAttrib(GL_VIEWPORT_BIT);
+		glPushAttrib(GL11.GL_VIEWPORT_BIT);
 		glViewport(0, 0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y);
 		glPushMatrix();
 		glLoadIdentity();
+		glClearColor(0.0f, 0.0f, 0.0f, 1f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		
 		fullRender();
+		
 		glPopMatrix();
 		glPopAttrib();
-		updateFrameBuffer = false;
+		mapFBO.setUpdated(true);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferSave);
+		mapFBO.unbind();
 		glMatrixMode(GL_MODELVIEW);
-		glBindTexture(GL_TEXTURE_2D, texSave);
 	}
 	
 	/**
@@ -212,9 +190,9 @@ public class Map implements ShadowCaster{
 		return this.fullRender;
 	}
 	public boolean isUpdated(){
-		return !updateFrameBuffer;
+		return mapFBO.isUpdated();
 	}
 	public static int getTextureID(){
-		return textureID;
+		return mapFBO.getTextureID();
 	}
 }
