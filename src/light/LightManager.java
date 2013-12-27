@@ -16,6 +16,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import configuration.ConfigManager;
 import rendering.LightTaker;
 import rendering.Shader;
 import rendering.ShadowCaster;
@@ -208,7 +209,7 @@ public class LightManager {
 		updateFrameBuffer = false;
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, GameLoop.displayed_x, GameLoop.displayed_y, 0, 1, -1);
+		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferSave);
 		glMatrixMode(GL_MODELVIEW);
 		glBindTexture(GL_TEXTURE_2D, texSave);
@@ -343,8 +344,8 @@ public class LightManager {
 					glUniform2f(
 							glGetUniformLocation(lightShaderProgram,
 									"light.position"), l.getX() - camPos.x
-									+ GameLoop.WIDTH / 2,
-							(-l.getY() + camPos.y) + GameLoop.HEIGHT / 2);
+									+ (int)ConfigManager.resolution.x / 2,
+							(-l.getY() + camPos.y) + (int)ConfigManager.resolution.y / 2);
 					glUniform3f(
 							glGetUniformLocation(lightShaderProgram,
 									"light.color"), l.getColor().x,
@@ -365,8 +366,8 @@ public class LightManager {
 						glUniform2f(
 								glGetUniformLocation(laserShaderProgram,
 										"laser.position"), l.getX() - camPos.x
-										+ GameLoop.WIDTH / 2,
-								(-l.getY() + camPos.y) + GameLoop.HEIGHT / 2);
+										+ (int)ConfigManager.resolution.x / 2,
+								(-l.getY() + camPos.y) + (int)ConfigManager.resolution.y / 2);
 						glUniform3f(
 								glGetUniformLocation(laserShaderProgram,
 										"laser.color"), l.getColor().x,

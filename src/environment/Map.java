@@ -10,6 +10,7 @@ import light.Shadow;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import configuration.ConfigManager;
 import environment.room.Room;
 import game.GameLoop;
 import rendering.ShadowCaster;
@@ -50,7 +51,7 @@ public class Map implements ShadowCaster{
 		Map.mapBlockSize = new Vector2f(mapRoomSize.x*roomBlockSize.x,mapRoomSize.y*roomBlockSize.y);
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x*roomPixelSize.x,mapRoomSize.y*roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0,0);
-		this.drawRoomDistance = new Vector2f(0.5f*GameLoop.WIDTH/Map.roomPixelSize.x,0.5f*GameLoop.HEIGHT/Map.roomPixelSize.y);
+		this.drawRoomDistance = new Vector2f(0.5f*(int)ConfigManager.resolution.x/Map.roomPixelSize.x,0.5f*(int)ConfigManager.resolution.y/Map.roomPixelSize.y);
 		generate();
 	}
 
@@ -109,7 +110,7 @@ public class Map implements ShadowCaster{
 		updateFrameBuffer = false;
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, GameLoop.displayed_x, GameLoop.displayed_y, 0, 1, -1);
+		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferSave);
 		glMatrixMode(GL_MODELVIEW);
 		glBindTexture(GL_TEXTURE_2D, texSave);

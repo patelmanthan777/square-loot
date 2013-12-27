@@ -1,6 +1,8 @@
 package userInterface;
 
 import org.lwjgl.util.vector.Vector2f;
+
+import configuration.ConfigManager;
 import entity.player.Player;
 import environment.Map;
 import environment.room.Room;
@@ -18,8 +20,8 @@ public class MiniMap extends Overlay{
 	public MiniMap(Room[][] rooms, Player p){
 		this.rooms = rooms;
 		this.player = p;
-		MiniMap.position = new Vector2f((float)GameLoop.WIDTH*0.75f,(float)GameLoop.HEIGHT*0.05f);
-		MiniMap.roomSize = new Vector2f((screenRegion.x * GameLoop.WIDTH)/Map.mapRoomSize.x,(screenRegion.y * GameLoop.HEIGHT)/Map.mapRoomSize.y);
+		MiniMap.position = new Vector2f(ConfigManager.resolution.x*0.75f,ConfigManager.resolution.y*0.05f);
+		MiniMap.roomSize = new Vector2f((screenRegion.x * ConfigManager.resolution.x)/Map.mapRoomSize.x,(screenRegion.y * ConfigManager.resolution.y)/Map.mapRoomSize.y);
 	}
 	
 	
