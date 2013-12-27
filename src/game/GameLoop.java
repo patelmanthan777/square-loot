@@ -27,7 +27,6 @@ import event.Timer;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GameLoop {
-	private static DisplayMode DISPLAY_MODE;
 	private static final String WINDOW_TITLE = "SquareLoot";
 	private boolean isRunning;
 

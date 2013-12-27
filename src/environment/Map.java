@@ -172,6 +172,8 @@ public class Map implements ShadowCaster{
 		int maxX = 0;
 		int minY = 0;
 		int maxY = 0;
+		int roomPosiX = (int)(light.getX()/Map.roomPixelSize.x);
+		int roomPosiY = (int)(light.getY()/Map.roomPixelSize.y);
 		if(fullRender){
 			minX = 0;
 			maxX = (int) Map.mapRoomSize.x;
@@ -179,19 +181,22 @@ public class Map implements ShadowCaster{
 			maxY = (int) Map.mapRoomSize.y;
 			
 		}else{
-			minX = (int)Math.max(0,light.getX()/Map.roomPixelSize.x - drawRoomDistance.x);
-			maxX = (int)Math.min(Map.mapRoomSize.x,light.getX()/Map.roomPixelSize.x + drawRoomDistance.x+1);
-			minY = (int)Math.max(0,light.getY()/Map.roomPixelSize.y - drawRoomDistance.y);
-			maxY = (int)Math.min(Map.mapRoomSize.y,light.getY()/Map.roomPixelSize.y + drawRoomDistance.y+1);
+			minX = (int)Math.max(0,roomPosiX - drawRoomDistance.x);
+			maxX = (int)Math.min(Map.mapRoomSize.x,roomPosiX + drawRoomDistance.x+1);
+			minY = (int)Math.max(0,roomPosiY - drawRoomDistance.y);
+			maxY = (int)Math.min(Map.mapRoomSize.y,roomPosiY + drawRoomDistance.y+1);
 		}
 		
 		int i;
 		int j;
 		for (i = minX; i < maxX; i++) {
-			for (j = minY; j < maxY; j++) {
-				if(roomGrid[i][j]!= null){
-					l.addAll(((Room)roomGrid[i][j]).computeShadow(light));
-				}
+			if(roomGrid[i][roomPosiY]!= null){
+				l.addAll(((Room)roomGrid[i][roomPosiY]).computeShadow(light));
+			}
+		}
+		for (j = minY; j < maxY; j++) {
+			if(roomGrid[roomPosiX][j]!= null){
+				l.addAll(((Room)roomGrid[roomPosiX][j]).computeShadow(light));
 			}
 		}
 		return l;
