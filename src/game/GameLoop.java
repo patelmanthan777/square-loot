@@ -36,7 +36,7 @@ public class GameLoop {
 	private static Weapon weapon = new LaserRifle(250);
 	
 	private Player p = new Player(new Vector2f(0, 0));
-	private Map m = new Map(new Vector2f(10,8), new Vector2f(16,12), new Vector2f(40,40));
+	private Map m = new Map(new Vector2f(10,10), new Vector2f(16,12), new Vector2f(40,40));
 	private Vector2f mouse = new Vector2f();
 	private Camera cam = new Camera(new Vector2f(0, 0));
 	
@@ -94,7 +94,6 @@ public class GameLoop {
 		p.setLaser(playerLaser);
 		
 		LightManager.addShadowCaster(m);
-		LightManager.addLightTaker(m);
 		
 		isRunning = true;
 	}

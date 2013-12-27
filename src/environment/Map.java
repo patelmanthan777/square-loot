@@ -1,7 +1,6 @@
 package environment;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL14.GL_GENERATE_MIPMAP;
 import static org.lwjgl.opengl.GL30.*;
 
 import java.util.LinkedList;
@@ -13,11 +12,9 @@ import org.lwjgl.util.vector.Vector2f;
 
 import environment.room.Room;
 import game.GameLoop;
-import rendering.Drawable;
 import rendering.ShadowCaster;
-import rendering.LightTaker;
 
-public class Map implements Drawable, ShadowCaster, LightTaker{
+public class Map implements ShadowCaster{
 	
 	
 	public static Vector2f blockPixelSize;
@@ -37,16 +34,10 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 
 	
 	private boolean fullRender = false;
-	private int minX;
-	private int maxX;
-	private int minY;
-	private int maxY;
 	
 	static boolean updateFrameBuffer = true;
 	static private int frameBufferID;
 	static private int textureID;
-	static private int depthBufferID;
-	
 	/**
 	 * Map class constructor
 	 * @param size
@@ -167,41 +158,6 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		drawRoomPosition.x = pos.x/Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y/Map.roomPixelSize.y;
 		roomGrid[(int)drawRoomPosition.x][(int)drawRoomPosition.y].discover();
-		minX = (int)Math.max(0,drawRoomPosition.x - drawRoomDistance.x);
-		maxX = (int)Math.min(Map.mapRoomSize.x,drawRoomPosition.x + drawRoomDistance.x+1);
-		minY = (int)Math.max(0,drawRoomPosition.y - drawRoomDistance.y);
-		maxY = (int)Math.min(Map.mapRoomSize.y,drawRoomPosition.y + drawRoomDistance.y+1);
-	}
-
-	private void render(){
-		glBegin(GL_QUADS);
-		for (int i = minX; i < maxX; i++) {
-			for (int j = minY; j < maxY; j++) {
-				if(roomGrid[i][j]!= null){
-					roomGrid[i][j].draw();
-				}
-			}
-		}
-		glEnd();
-	}
-	
-	/**
-	 * Draw the map
-	 */
-	public void draw() {
-		int texSave =  glGetInteger(GL_TEXTURE_BINDING_2D);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(0f, Map.mapPixelSize.y);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(Map.mapPixelSize.x, Map.mapPixelSize.y);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(Map.mapPixelSize.x, 0f);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0f, 0f);
-		glEnd();
-		glBindTexture(GL_TEXTURE_2D, texSave);
 	}
 
 	/**

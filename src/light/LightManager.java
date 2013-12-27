@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL20.*;
