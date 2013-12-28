@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import light.Light;
 import light.Shadow;
+import light.ShadowBuffer;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import userInterface.MiniMap;
@@ -23,7 +24,8 @@ public abstract class Room implements Drawable, ShadowCaster {
 	protected Vector3f miniMapColor = new Vector3f(1, 1, 1);
 	protected boolean[] doors = new boolean[4];
 	protected boolean discovered = false;
-
+	
+	
 	public Room(float posX, float posY) {
 		this.x = posX;
 		this.y = posY;
@@ -138,9 +140,9 @@ public abstract class Room implements Drawable, ShadowCaster {
 	}
 
 	@Override
-	public LinkedList<Shadow> computeShadow(Light light) {
-		LinkedList<Shadow> l = new LinkedList<Shadow>();
+	public void computeShadow(Light light,ShadowBuffer shadows) {
 		boolean[] neighbours = new boolean[4];
+		
 		for (int i = 0; i < Map.roomBlockSize.x; i++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				if (grid[i][j].castShadows()) {
@@ -164,18 +166,12 @@ public abstract class Room implements Drawable, ShadowCaster {
 					} else {
 						neighbours[2] = grid[i][j + 1].castShadows();
 					}
-					Shadow[] shadows = ((ShadowCasterBlock) grid[i][j]).computeShadow(
+					((ShadowCasterBlock) grid[i][j]).computeShadow(
 							light, (int) (x / Map.blockPixelSize.x) + i,
-							(int) (y / Map.blockPixelSize.y) + j, neighbours);
-					int size = shadows.length;
-					for(int k = 0; k < size ; k++){
-						if(shadows[k].exists)
-							l.add(new Shadow(shadows[k]));
-					}
+							(int) (y / Map.blockPixelSize.y) + j, neighbours, shadows);
 				}
 			}
 		}
-		return l;
 	}
 
 	public void drawOnMiniMap() {

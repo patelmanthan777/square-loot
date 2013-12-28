@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import light.Light;
 import light.Shadow;
+import light.ShadowBuffer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
@@ -143,9 +144,7 @@ public class Map implements ShadowCaster{
 	 * Compute shadow casted by the map
 	 */
 	@Override
-	public LinkedList<Shadow> computeShadow(Light light) {
-		LinkedList<Shadow> l = new LinkedList<Shadow>();
-		
+	public void computeShadow(Light light, ShadowBuffer shadows) {
 		int minX = 0;
 		int maxX = 0;
 		int minY = 0;
@@ -169,15 +168,14 @@ public class Map implements ShadowCaster{
 		int j;
 		for (i = minX; i < maxX; i++) {
 			if(roomGrid[i][roomPosiY]!= null){
-				l.addAll(((Room)roomGrid[i][roomPosiY]).computeShadow(light));
+				((Room)roomGrid[i][roomPosiY]).computeShadow(light,shadows);
 			}
 		}
 		for (j = minY; j < maxY; j++) {
 			if(roomGrid[roomPosiX][j]!= null){
-				l.addAll(((Room)roomGrid[roomPosiX][j]).computeShadow(light));
+				((Room)roomGrid[roomPosiX][j]).computeShadow(light,shadows);
 			}
 		}
-		return l;
 	}
 	
 	public Room[][] getRooms(){
