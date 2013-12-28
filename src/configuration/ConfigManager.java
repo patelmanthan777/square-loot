@@ -15,6 +15,10 @@ public class ConfigManager {
 	public static Vector2f resolution = new Vector2f(1280,720);
 	public static int maxFps = 120;
 	
+	/**
+	 * Initialize the configmanager class by reading from the "options.txt"
+	 * file.
+	 */
 	public static void init(){
 		String fichier = "options.txt";
 		try{

@@ -112,7 +112,7 @@ public class GameLoop {
 		glEnable(GL_TEXTURE_2D);
 
 		glMatrixMode(GL_PROJECTION); // PROJECTION from 3D to Camera plane
-		glLoadIdentity(); // la reinitialise
+		glLoadIdentity(); 
 		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
 
 		glMatrixMode(GL_MODELVIEW); // MODELVIEW manages the 3D scene

@@ -8,6 +8,9 @@ import environment.Map;
 
 public abstract class Entity extends Node implements Drawable{
 	protected Vector2f speed = new Vector2f(0,0);
+	/**
+	 * Represents the direction in which the entity moves
+	 */
 	private Vector2f translation = new Vector2f(0,0);
 	protected float minSpeed = 0.01f;
 	protected float maxSpeed = 2f;
@@ -22,7 +25,7 @@ public abstract class Entity extends Node implements Drawable{
 	public Entity(Vector2f pos, Vector2f rot) {
 		super(pos, rot);
 	}
-	
+
 	public Vector3f getColor(){
 		return color;
 	}
@@ -39,13 +42,35 @@ public abstract class Entity extends Node implements Drawable{
 		this.speed = speed;
 	}
 	
+	/**
+	 * Updates the translation attribute by adding the parameters to the
+	 * respective coordinates. 
+	 * 
+	 * @param translationx represents horizontal motion
+	 * @param translationy represents vertical motion
+	 */
 	public void translate(float translationx, float translationy){
 		this.translation.x += translationx;
 		this.translation.y += translationy;
 	}
 	
+	/**
+	 * Computes whether the point defined by the first and second argument
+	 * is within the boundaries of the map.
+	 * 
+	 * @param x is horizontal coordinate
+	 * @param y is vertical coordinate
+	 * @param m is the world representation
+	 * @return true if the coordinate are outside the map boundaries,
+	 * false otherwise.
+	 */
 	public abstract boolean isInCollision(float x, float y, Map m);
 	
+	/**
+	 * Update the entity position according to its attributes. 
+	 * @param dt represents the time passed since last update 
+	 * @param m is the world representation needed in case of collision
+	 */
 	public void updatePostion(long dt, Map m){
 			if (translation.length() != 0)
 				translation = (Vector2f)translation.normalise().scale(accFactor);
@@ -71,12 +96,10 @@ public abstract class Entity extends Node implements Drawable{
 			}
 			else
 			{
-				if(isInCollision(x_tmp, position.y, m)){
-						speed.x = 0;
-			}
-				if(isInCollision(position.x, y_tmp, m)){
-				speed.y = 0;
-			}
+				if(isInCollision(x_tmp, position.y, m))
+					speed.x = 0;
+				if(isInCollision(position.x, y_tmp, m))
+					speed.y = 0;
 				if(!isInCollision(position.x, y_tmp, m) && !isInCollision(x_tmp, position.y, m)){
 					speed.x = 0;
 					speed.y = 0;
