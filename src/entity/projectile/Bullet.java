@@ -12,7 +12,11 @@ import rendering.Shader;
 import environment.Map;
 
 public class Bullet extends Projectile {
-	static int bulletShaderProgram = -1;
+	/**
+	 * Save the shader program associated with the bullets. -1 means
+	 * not initialized. 
+	 */
+	static int bulletShaderProgram = -1; 
 	static private float speedValue = 2f;
 	static private Vector2f size = new Vector2f(10,10);
 	static private float radius = 10.0f;
@@ -36,11 +40,6 @@ public class Bullet extends Projectile {
 		super();
 	}
 	
-	/**
-	 * Bullet class constructor 
-	 * @param pos
-	 * @param rot
-	 */
 	public Bullet(Vector2f pos, Vector2f rot) {
 		super(pos,rot);
 		Vector2f speed = new Vector2f();
@@ -61,7 +60,7 @@ public class Bullet extends Projectile {
 	}
 
 	/**
-	 * Draw the bullet
+	 * Draw the bullet.
 	 */
 	@Override
 	public void draw() {
@@ -85,7 +84,7 @@ public class Bullet extends Projectile {
 	
 
 	/**
-	 * Is the bullet in collision
+	 * Test whether the bullet is in collision.
 	 */
 	@Override
 	public boolean isInCollision(float x, float y, Map m) {
@@ -94,7 +93,7 @@ public class Bullet extends Projectile {
 	
 	
 	/**
-	 * Update the position of the bullet
+	 * Update the position of the bullet.
 	 */
 	@Override
 	public void updatePostion(long dt, Map m){
@@ -106,7 +105,7 @@ public class Bullet extends Projectile {
 		}
 		else
 		{
-			toDestroy = true;
+			destroyed = true;
 		}
 	}
 

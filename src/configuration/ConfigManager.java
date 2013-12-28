@@ -16,7 +16,7 @@ public class ConfigManager {
 	public static int maxFps = 120;
 	
 	/**
-	 * Initialize the configmanager class by reading from the "options.txt"
+	 * Initialize the ConfigManager class by reading from the "options.txt"
 	 * file.
 	 */
 	public static void init(){

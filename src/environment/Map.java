@@ -17,29 +17,65 @@ import rendering.ShadowCaster;
 
 public class Map implements ShadowCaster{
 	
-	
+	/**
+	 * Block size in number of pixels.
+	 */
 	public static Vector2f blockPixelSize;
+	/**
+	 * Room size in number of block.
+	 */
 	public static Vector2f roomBlockSize;
+	/**
+	 * Room size in number of pixels.
+	 */
 	public static Vector2f roomPixelSize;
+	/**
+	 * Map size in number of room.
+	 */
 	public static Vector2f mapRoomSize;
+	/**
+	 * Map size in number of room.
+	 */
 	public static Vector2f mapBlockSize;
+	/**
+	 * Map size in number of pixels.
+	 */
 	public static Vector2f mapPixelSize;
+	/**
+	 * Spawn coordinates in term of pixels.
+	 */
 	public static Vector2f spawnPixelPosition;
+	/**
+	 * Spawn coordinates in term of rooms.
+	 */
 	public static Vector2f spawnRoomPosition;
 	
+	/**
+	 * Map representation as a matrix.
+	 */
 	private Room[][] roomGrid;
 	
-	
+	/**
+	 * Concretely the position of the player in the room, more generally
+	 * the position on which the screen should be centered. 
+	 */
 	private Vector2f drawRoomPosition;
+	/**
+	 * The distance from which the map is seen, it is needed to optimize
+	 * the shadows drawing.
+	 */
 	private Vector2f drawRoomDistance;
 
+	/**
+	 * FBO stands for <i>Frame Buffer Object</i> it is a rendered view of
+	 * the map stored for performance purposes.
+	 */
 	public static FBO mapFBO;
+	/**
+	 * <b>true</b> if the full map needs to be rendered, <b>false</b> otherwise.
+	 */
 	private boolean fullRender = false;
 	
-	/**
-	 * Map class constructor
-	 * @param size
-	 */
 	public Map(Vector2f mapRoomSize, Vector2f roomBlockSize, Vector2f blockPixelSize) {
 		Map.mapRoomSize = mapRoomSize;
 		Map.roomBlockSize = roomBlockSize;
@@ -52,7 +88,9 @@ public class Map implements ShadowCaster{
 		mapFBO = new FBO();
 		generate();
 	}
-	
+	/**
+	 * Render the full map.
+	 */
 	private void fullRender(){
 		int minX = 0;
 		int maxX = (int) Map.mapRoomSize.x;
@@ -69,6 +107,9 @@ public class Map implements ShadowCaster{
 		glEnd();
 	}
 	
+	/**
+	 * Compute a full map render and stores it in mapFBO 
+	 */
 	public void renderMapToFrameBuffer(){
 		mapFBO.bind();
 		glMatrixMode(GL_PROJECTION);
@@ -95,10 +136,10 @@ public class Map implements ShadowCaster{
 	}
 	
 	/**
-	 * Is the given position in collision?
-	 * @param x the position abscissa
-	 * @param y the position ordinate
-	 * @return true if the position is in collision else false
+	 * Test whether the coordinates are inside the map boundaries.
+	 * @param x the horizontal position
+	 * @param y the vertical position
+	 * @return <b>true</b> if the position is in collision, <b>false</b> otherwise
 	 */
 	public boolean testCollision(float x, float y) {
 		int roomI = (int) Math.floor(x / (roomPixelSize.x));
@@ -114,10 +155,6 @@ public class Map implements ShadowCaster{
 		}
 	}
 
-	/**
-	 * Get the map spawn point position
-	 * @return the spawn point position
-	 */
 	public Vector2f getSpawnPixelPosition() {
 		return spawnPixelPosition;
 	}
@@ -130,7 +167,7 @@ public class Map implements ShadowCaster{
 	}
 	
 	/**
-	 * Set the draw position (map will be drawn only around this position)
+	 * Set the draw position and update the minimap display.
 	 * @param pos the position 
 	 */
 	public void setDrawPosition(Vector2f pos) {
@@ -140,7 +177,7 @@ public class Map implements ShadowCaster{
 	}
 
 	/**
-	 * Compute shadow casted by the map
+	 * Compute the shadows casted by the map
 	 */
 	@Override
 	public LinkedList<Shadow> computeShadow(Light light) {

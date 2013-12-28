@@ -9,7 +9,7 @@ import environment.Map;
 public abstract class Entity extends Node implements Drawable{
 	protected Vector2f speed = new Vector2f(0,0);
 	/**
-	 * Represents the direction in which the entity moves
+	 * Represent the direction in which the entity moves
 	 */
 	private Vector2f translation = new Vector2f(0,0);
 	protected float minSpeed = 0.01f;
@@ -43,7 +43,7 @@ public abstract class Entity extends Node implements Drawable{
 	}
 	
 	/**
-	 * Updates the translation attribute by adding the parameters to the
+	 * Update the translation attribute by adding the parameters to the
 	 * respective coordinates. 
 	 * 
 	 * @param translationx represents horizontal motion
@@ -55,7 +55,7 @@ public abstract class Entity extends Node implements Drawable{
 	}
 	
 	/**
-	 * Computes whether the point defined by the first and second argument
+	 * Test whether the point defined by the first and second argument
 	 * is within the boundaries of the map.
 	 * 
 	 * @param x is horizontal coordinate
