@@ -1,17 +1,21 @@
 package environment;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import java.util.LinkedList;
 
 import light.Light;
 import light.Shadow;
-import org.lwjgl.util.vector.Vector2f;
-import environment.room.Room;
-import game.GameLoop;
-import rendering.Drawable;
-import rendering.ShadowCaster;
-import rendering.LightTaker;
 
-public class Map implements Drawable, ShadowCaster, LightTaker{
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector2f;
+
+import configuration.ConfigManager;
+import environment.room.Room;
+import rendering.FBO;
+import rendering.ShadowCaster;
+
+public class Map implements ShadowCaster{
 	
 	
 	public static Vector2f blockPixelSize;
@@ -29,12 +33,8 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	private Vector2f drawRoomPosition;
 	private Vector2f drawRoomDistance;
 
-	
-	
-	private int minX;
-	private int maxX;
-	private int minY;
-	private int maxY;
+	public static FBO mapFBO;
+	private boolean fullRender = false;
 	
 	/**
 	 * Map class constructor
@@ -48,9 +48,52 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		Map.mapBlockSize = new Vector2f(mapRoomSize.x*roomBlockSize.x,mapRoomSize.y*roomBlockSize.y);
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x*roomPixelSize.x,mapRoomSize.y*roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0,0);
-		this.drawRoomDistance = new Vector2f(0.5f*GameLoop.WIDTH/Map.roomPixelSize.x,0.5f*GameLoop.HEIGHT/Map.roomPixelSize.y);
+		this.drawRoomDistance = new Vector2f(0.5f*(int)ConfigManager.resolution.x/Map.roomPixelSize.x,0.5f*(int)ConfigManager.resolution.y/Map.roomPixelSize.y);
+		mapFBO = new FBO();
+		generate();
 	}
-
+	
+	private void fullRender(){
+		int minX = 0;
+		int maxX = (int) Map.mapRoomSize.x;
+		int minY = 0;
+		int maxY = (int) Map.mapRoomSize.y;
+		glBegin(GL_QUADS);
+		for (int i = minX; i < maxX; i++) {
+			for (int j = minY; j < maxY; j++) {
+				if(roomGrid[i][j]!= null){
+					roomGrid[i][j].draw();
+				}
+			}
+		}
+		glEnd();
+	}
+	
+	public void renderMapToFrameBuffer(){
+		mapFBO.bind();
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y, 0, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
+		glPushAttrib(GL11.GL_VIEWPORT_BIT);
+		glViewport(0, 0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y);
+		glPushMatrix();
+		glLoadIdentity();
+		glClearColor(0.0f, 0.0f, 0.0f, 1f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		fullRender();
+		
+		glPopMatrix();
+		glPopAttrib();
+		mapFBO.setUpdated(true);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
+		mapFBO.unbind();
+		glMatrixMode(GL_MODELVIEW);
+	}
+	
 	/**
 	 * Is the given position in collision?
 	 * @param x the position abscissa
@@ -94,24 +137,6 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 		drawRoomPosition.x = pos.x/Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y/Map.roomPixelSize.y;
 		roomGrid[(int)drawRoomPosition.x][(int)drawRoomPosition.y].discover();
-		minX = (int)Math.max(0,drawRoomPosition.x - drawRoomDistance.x);
-		maxX = (int)Math.min(Map.mapRoomSize.x,drawRoomPosition.x + drawRoomDistance.x+1);
-		minY = (int)Math.max(0,drawRoomPosition.y - drawRoomDistance.y);
-		maxY = (int)Math.min(Map.mapRoomSize.y,drawRoomPosition.y + drawRoomDistance.y+1);
-	}
-
-	/**
-	 * Draw the map
-	 */
-	@Override
-	public void draw() {
-		for (int i = minX; i < maxX; i++) {
-			for (int j = minY; j < maxY; j++) {
-				if(roomGrid[i][j]!= null){
-					roomGrid[i][j].draw();
-				}
-			}
-		}
 	}
 
 	/**
@@ -121,19 +146,35 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	public LinkedList<Shadow> computeShadow(Light light) {
 		LinkedList<Shadow> l = new LinkedList<Shadow>();
 		
-		
-		minX = (int)Math.max(0,light.getX()/Map.roomPixelSize.x - drawRoomDistance.x);
-		maxX = (int)Math.min(Map.mapRoomSize.x,light.getX()/Map.roomPixelSize.x + drawRoomDistance.x+1);
-		minY = (int)Math.max(0,light.getY()/Map.roomPixelSize.y - drawRoomDistance.y);
-		maxY = (int)Math.min(Map.mapRoomSize.y,light.getY()/Map.roomPixelSize.y + drawRoomDistance.y+1);
+		int minX = 0;
+		int maxX = 0;
+		int minY = 0;
+		int maxY = 0;
+		int roomPosiX = (int)(light.getX()/Map.roomPixelSize.x);
+		int roomPosiY = (int)(light.getY()/Map.roomPixelSize.y);
+		if(fullRender){
+			minX = 0;
+			maxX = (int) Map.mapRoomSize.x;
+			minY = 0;
+			maxY = (int) Map.mapRoomSize.y;
 			
+		}else{
+			minX = (int)Math.max(0,roomPosiX - drawRoomDistance.x);
+			maxX = (int)Math.min(Map.mapRoomSize.x,roomPosiX + drawRoomDistance.x+1);
+			minY = (int)Math.max(0,roomPosiY - drawRoomDistance.y);
+			maxY = (int)Math.min(Map.mapRoomSize.y,roomPosiY + drawRoomDistance.y+1);
+		}
+		
 		int i;
 		int j;
 		for (i = minX; i < maxX; i++) {
-			for (j = minY; j < maxY; j++) {
-				if(roomGrid[i][j]!= null){
-					l.addAll(((Room)roomGrid[i][j]).computeShadow(light));
-				}
+			if(roomGrid[i][roomPosiY]!= null){
+				l.addAll(((Room)roomGrid[i][roomPosiY]).computeShadow(light));
+			}
+		}
+		for (j = minY; j < maxY; j++) {
+			if(roomGrid[roomPosiX][j]!= null){
+				l.addAll(((Room)roomGrid[roomPosiX][j]).computeShadow(light));
 			}
 		}
 		return l;
@@ -141,5 +182,17 @@ public class Map implements Drawable, ShadowCaster, LightTaker{
 	
 	public Room[][] getRooms(){
 		return roomGrid;
+	}
+	public void setFullRender(boolean full){
+		this.fullRender = full;
+	}
+	public boolean getFullRender(){
+		return this.fullRender;
+	}
+	public boolean isUpdated(){
+		return mapFBO.isUpdated();
+	}
+	public static int getTextureID(){
+		return mapFBO.getTextureID();
 	}
 }

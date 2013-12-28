@@ -7,13 +7,13 @@ public class Laser extends Light {
 	private Vector2f dir = new Vector2f();
 	
 	public Laser(Vector2f p, Vector3f color){
-		super(p, color,-1,-1);
+		super(p, color,-1,-1,true);
 		dir.x = 1;
 		dir.y = 1;
 	}
 	
 	public Laser(Vector2f p, Vector3f color, Vector2f dir){
-		super(p, color,-1,-1);
+		super(p, color,-1,-1,true);
 		this.dir.x = dir.x;
 		this.dir.y = dir.y;
 	}
@@ -39,7 +39,7 @@ public class Laser extends Light {
 	public void setOrientation(float posx, float posy){
 		this.dir.x = posx;
 		this.dir.y = posy;
-		LightManager.updateLightShadows(this);
+		LightManager.updateLightShadows(this,dynamic);
 	}
 	
 }

@@ -41,8 +41,11 @@ public class TestRoom extends Room{
 			grid[1][i] = BlockFactory.createSolidBlock();
 			grid[(int)Map.roomBlockSize.x-2][i] = BlockFactory.createSolidBlock();
 		}
-		
-		LightManager.addActivatedLight("l"+x+y, new Vector2f(x+Map.roomPixelSize.x/2,y+Map.roomPixelSize.y/2), new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random()),(float)Math.random()*20,Map.roomPixelSize.x * 2);
+		Vector2f pos = new Vector2f(x+Map.roomPixelSize.x/2,y+Map.roomPixelSize.y/2);
+		Vector3f color = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
+		float radius = (float)Math.random()*50;
+		float dstMax = Map.roomPixelSize.x * 2;
+		LightManager.addLight("l"+x+y, pos, color, radius, dstMax ,false);
 		
 	}
 }

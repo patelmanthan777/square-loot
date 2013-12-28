@@ -114,7 +114,6 @@ public class MapGenerator {
 		}
 	}
 
-
 	private static int surround(int i, int j) {
 		int cpt = 0;
 

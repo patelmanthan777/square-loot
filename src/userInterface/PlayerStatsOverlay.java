@@ -4,17 +4,17 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import configuration.ConfigManager;
 import entity.player.Player;
-import game.GameLoop;
 
 public class PlayerStatsOverlay extends Overlay{
 
 	private Player player;
-	private Vector2f size = new Vector2f(0.3f*GameLoop.WIDTH,0.02f*GameLoop.HEIGHT);
+	private Vector2f size = new Vector2f(0.3f*ConfigManager.resolution.x,0.02f*ConfigManager.resolution.y);
 	private Vector2f position;
 	PlayerStatsOverlay(Player p){
 		this.player = p;
-		position = new Vector2f(0.5f*(GameLoop.WIDTH - size.x),0.92f*GameLoop.HEIGHT);
+		position = new Vector2f(0.5f*(ConfigManager.resolution.x - size.x),0.92f*ConfigManager.resolution.y);
 	}
 	
 	@Override

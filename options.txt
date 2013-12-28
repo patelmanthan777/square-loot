@@ -1,0 +1,3 @@
+resolution:1600x900
+fullscreen:false
+maxFps:0
