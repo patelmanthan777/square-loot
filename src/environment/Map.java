@@ -1,16 +1,10 @@
 package environment;
 
 import static org.lwjgl.opengl.GL11.*;
-
-import java.util.LinkedList;
-
 import light.Light;
-import light.Shadow;
 import light.ShadowBuffer;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
-
 import configuration.ConfigManager;
 import environment.room.Room;
 import rendering.FBO;

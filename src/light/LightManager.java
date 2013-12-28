@@ -38,7 +38,11 @@ public class LightManager {
 	static int lightShaderProgram;
 	static int laserShaderProgram;
 	static FBO staticLightsFBO;
-
+	
+	/* Avoid dynamic allocation in rendering methods */
+	private static Vector2f camToLight = new Vector2f();
+	private static Vector2f laserDirection = new Vector2f();
+	/* --------------------------------------------- */
 	static public void init() {
 		staticLightsFBO = new FBO();
 	}
@@ -271,7 +275,8 @@ public class LightManager {
 
 	private static void renderDynamicLights() {
 		for (Light l : activatedDynamicLights.values()) {
-			if (Vector2f.sub(camPos, l.getPosition(), null).length()
+			Vector2f.sub(camPos, l.getPosition(), camToLight);
+			if (camToLight.length()
 					- l.getMaxDst() < diagonal / 4) {
 				glColorMask(false, false, false, false);
 				glStencilFunc(GL_ALWAYS, 1, 1);
@@ -321,12 +326,13 @@ public class LightManager {
 				if (l instanceof Laser) {
 					glUseProgram(laserShaderProgram);
 					if (((Laser) l).getDirection().length() != 0) {
-						Vector2f direction = (Vector2f) ((Laser) l)
-								.getDirection().normalise();
+						
+						laserDirection = ((Laser) l).getDirection();
+						laserDirection.normalise(laserDirection);
 						glUniform2f(
 								glGetUniformLocation(laserShaderProgram,
-										"laser.direction"), -direction.x,
-								direction.y);
+										"laser.direction"), -laserDirection.x,
+								laserDirection.y);
 						glUniform2f(
 								glGetUniformLocation(laserShaderProgram,
 										"laser.position"), l.getX() - camPos.x
@@ -384,5 +390,4 @@ public class LightManager {
 		diagonal = (float) Math.sqrt(screenHeight * screenHeight + screenWidth
 				* screenWidth);
 	}
-
 }

@@ -2,12 +2,9 @@ package environment.room;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.LinkedList;
-
 import org.lwjgl.util.vector.Vector3f;
 
 import light.Light;
-import light.Shadow;
 import light.ShadowBuffer;
 import rendering.Drawable;
 import rendering.ShadowCaster;
@@ -24,7 +21,9 @@ public abstract class Room implements Drawable, ShadowCaster {
 	protected Vector3f miniMapColor = new Vector3f(1, 1, 1);
 	protected boolean[] doors = new boolean[4];
 	protected boolean discovered = false;
-	
+	/* avoid dynamic allocation in compute shadow */
+	boolean[] neighbours = new boolean[4];
+	/* -------------------------------------------*/
 	
 	public Room(float posX, float posY) {
 		this.x = posX;
@@ -141,7 +140,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 
 	@Override
 	public void computeShadow(Light light,ShadowBuffer shadows) {
-		boolean[] neighbours = new boolean[4];
+		
 		
 		for (int i = 0; i < Map.roomBlockSize.x; i++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {

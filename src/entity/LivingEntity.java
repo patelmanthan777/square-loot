@@ -6,6 +6,7 @@ public abstract class LivingEntity extends Entity {
 
 	private int health = 0;
 	private int maxHealth = 100;
+	private String healthFraction;
 	
 	public LivingEntity(Vector2f pos) {
 		super(pos);
@@ -23,24 +24,15 @@ public abstract class LivingEntity extends Entity {
 		}else{
 			this.health = health;
 		}
+		updateHealthFraction();
 	}
 	
-	public void damage(int damage){
-		this.health -= damage;
-		if(health < 0){
-			this.health = 0;
-		}else if (health > maxHealth){
-			this.health = maxHealth;
-		}
+	private void updateHealthFraction(){
+		healthFraction = "" + this.health + " / " + this.maxHealth;
 	}
 	
-	public void heal(int heal){
-		this.health += heal;
-		if(health < 0){
-			this.health = 0;
-		}else if (health > maxHealth){
-			this.health = maxHealth;
-		}
+	public void addHealth(int health){
+		setHealth(this.health + health);
 	}
 	
 	public int getMaxHealth(){
@@ -52,12 +44,14 @@ public abstract class LivingEntity extends Entity {
 		if(maxHealth < 1){
 			this.maxHealth = 1;
 		}
+		updateHealthFraction();
 	}
 	
 	public void increaseMaxHealth(int heal){
-		this.maxHealth += heal;
-		if(maxHealth < 1){
-			this.maxHealth = 1;
-		}
+		setMaxHealth(this.maxHealth += heal);
+	}
+	
+	public String getHealthFraction(){
+		return healthFraction;
 	}
 }
