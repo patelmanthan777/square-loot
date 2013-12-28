@@ -164,9 +164,14 @@ public abstract class Room implements Drawable, ShadowCaster {
 					} else {
 						neighbours[2] = grid[i][j + 1].castShadows();
 					}
-					l.addAll(((ShadowCasterBlock) grid[i][j]).computeShadow(
+					Shadow[] shadows = ((ShadowCasterBlock) grid[i][j]).computeShadow(
 							light, (int) (x / Map.blockPixelSize.x) + i,
-							(int) (y / Map.blockPixelSize.y) + j, neighbours));
+							(int) (y / Map.blockPixelSize.y) + j, neighbours);
+					int size = shadows.length;
+					for(int k = 0; k < size ; k++){
+						if(shadows[k].exists)
+							l.add(new Shadow(shadows[k]));
+					}
 				}
 			}
 		}

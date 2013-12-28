@@ -48,7 +48,7 @@ public class Map implements ShadowCaster{
 		Map.mapBlockSize = new Vector2f(mapRoomSize.x*roomBlockSize.x,mapRoomSize.y*roomBlockSize.y);
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x*roomPixelSize.x,mapRoomSize.y*roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0,0);
-		this.drawRoomDistance = new Vector2f(0.5f*(int)ConfigManager.resolution.x/Map.roomPixelSize.x,0.5f*(int)ConfigManager.resolution.y/Map.roomPixelSize.y);
+		this.drawRoomDistance = new Vector2f(ConfigManager.resolution.x/Map.roomPixelSize.x,ConfigManager.resolution.y/Map.roomPixelSize.y);
 		mapFBO = new FBO();
 		generate();
 	}
