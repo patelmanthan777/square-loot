@@ -2,7 +2,7 @@ package environment.blocks;
 
 
 
-public class BorderBlock extends Block{
+public class BorderBlock extends ShadowCasterBlock{
 	
 	@Override
 	public boolean testCollision(){
@@ -11,7 +11,7 @@ public class BorderBlock extends Block{
 
 	@Override
 	public boolean castShadows(){
-		return false;
+		return true;
 	}
 	
 	

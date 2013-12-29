@@ -21,16 +21,10 @@ public class PlayerStatsOverlay extends Overlay{
 	public void draw() {
 		int health = player.getHealth();
 		int maxHealth = player.getMaxHealth();
+		String display = player.getHealthFraction();
 		glDisable(GL_BLEND);
 		glLoadIdentity();
-		glColor3f(1,1,1);
-		glBegin(GL_LINE_STRIP);
-		glVertex2f(position.x+size.x, position.y);
-		glVertex2f(position.x, position.y);
-		glVertex2f(position.x, position.y+size.y);
-		glVertex2f(position.x+size.x, position.y+size.y);
-		glVertex2f(position.x+size.x, position.y);
-		glEnd();
+		
 		glBegin(GL_TRIANGLE_STRIP);
 		glColor3f(1,0,0.1f);
 		glVertex2f(position.x+((float)health/(float)maxHealth)*(size.x-1), position.y+1);
@@ -43,7 +37,15 @@ public class PlayerStatsOverlay extends Overlay{
 		glEnd();
 		glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		OverlayManager.font.drawString(position.x+size.x/2-15, position.y+0.1f*size.y, health + " / "  + maxHealth);
-		
+        glColor3f(1,1,1);
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(position.x+size.x, position.y);
+		glVertex2f(position.x, position.y);
+		glVertex2f(position.x, position.y+size.y);
+		glVertex2f(position.x+size.x, position.y+size.y);
+		glVertex2f(position.x+size.x, position.y);
+		glEnd();
+		OverlayManager.font.drawString(position.x+size.x/2-15, position.y+0.1f*size.y, display);
+		glDisable(GL_BLEND);
 	}
 }

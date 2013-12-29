@@ -2,12 +2,10 @@ package environment.room;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.LinkedList;
-
 import org.lwjgl.util.vector.Vector3f;
 
 import light.Light;
-import light.Shadow;
+import light.ShadowBuffer;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import userInterface.MiniMap;
@@ -18,12 +16,21 @@ import environment.blocks.ShadowCasterBlock;
 
 public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;
+	/**
+	 * Horizontal index of the room on the map, in pixels.
+	 */
 	protected float x;
+	/**
+	 * Vertical index of the room on the map, in pixels.
+	 */
 	protected float y;
 	protected Vector3f miniMapColor = new Vector3f(1, 1, 1);
 	protected boolean[] doors = new boolean[4];
 	protected boolean discovered = false;
-
+	/* avoid dynamic allocation in computeShadow */
+	boolean[] neighbours = new boolean[4];
+	/* ------------------------------------------*/
+	
 	public Room(float posX, float posY) {
 		this.x = posX;
 		this.y = posY;
@@ -44,79 +51,84 @@ public abstract class Room implements Drawable, ShadowCaster {
 		return (int) y;
 	}
 
+	/**
+	 * Create door on the given wall, clockwise indices starting at noon.
+	 *  
+	 * @param wall is the index of the wall
+	 */
 	public void createDoor(int wall) {
 		doors[wall] = true;
 		if (wall == 0) {
 			grid[(int) Map.roomBlockSize.x / 2 - 2][0] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x / 2 - 1][0] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x / 2 + 0][0] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x / 2 + 1][0] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x / 2 - 2][1] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x / 2 - 1][1] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x / 2 + 0][1] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x / 2 + 1][1] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 		}
 		if (wall == 1) {
 			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x - 2][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x - 2][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x - 2][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x - 2][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 		}
 		if (wall == 2) {
 			grid[(int) Map.roomBlockSize.x / 2 - 2][(int) Map.roomBlockSize.y - 1] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x / 2 - 1][(int) Map.roomBlockSize.y - 1] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x / 2 + 0][(int) Map.roomBlockSize.y - 1] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x / 2 + 1][(int) Map.roomBlockSize.y - 1] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x / 2 - 2][(int) Map.roomBlockSize.y - 2] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x / 2 - 1][(int) Map.roomBlockSize.y - 2] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x / 2 + 0][(int) Map.roomBlockSize.y - 2] = BlockFactory
 					.createEmptyBlock();
 			grid[(int) Map.roomBlockSize.x / 2 + 1][(int) Map.roomBlockSize.y - 2] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 		}
 		if (wall == 3) {
 			grid[0][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[0][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
 					.createEmptyBlock();
 			grid[0][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
 					.createEmptyBlock();
 			grid[0][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[1][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 			grid[1][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
 					.createEmptyBlock();
 			grid[1][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
 					.createEmptyBlock();
 			grid[1][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
-					.createSolidBlock();
+					.createBorderBlock();
 		}
 	}
 
@@ -138,9 +150,9 @@ public abstract class Room implements Drawable, ShadowCaster {
 	}
 
 	@Override
-	public LinkedList<Shadow> computeShadow(Light light) {
-		LinkedList<Shadow> l = new LinkedList<Shadow>();
-		boolean[] neighbours = new boolean[4];
+	public void computeShadow(Light light,ShadowBuffer shadows) {
+		
+		
 		for (int i = 0; i < Map.roomBlockSize.x; i++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				if (grid[i][j].castShadows()) {
@@ -164,15 +176,17 @@ public abstract class Room implements Drawable, ShadowCaster {
 					} else {
 						neighbours[2] = grid[i][j + 1].castShadows();
 					}
-					l.addAll(((ShadowCasterBlock) grid[i][j]).computeShadow(
+					((ShadowCasterBlock) grid[i][j]).computeShadow(
 							light, (int) (x / Map.blockPixelSize.x) + i,
-							(int) (y / Map.blockPixelSize.y) + j, neighbours));
+							(int) (y / Map.blockPixelSize.y) + j, neighbours, shadows);
 				}
 			}
 		}
-		return l;
 	}
 
+	/**
+	 * Draw the room on the minimap if discovered.
+	 */
 	public void drawOnMiniMap() {
 		if (discovered) {
 			int minix = (int) (MiniMap.position.x + (x / Map.roomPixelSize.x)

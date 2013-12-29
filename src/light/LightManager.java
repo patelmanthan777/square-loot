@@ -15,7 +15,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import configuration.ConfigManager;
 import rendering.FBO;
-import rendering.LightTaker;
 import rendering.Shader;
 import rendering.ShadowCaster;
 
@@ -23,13 +22,15 @@ public class LightManager {
 
 	private static HashMap<String, Light> activatedDynamicLights = new HashMap<String, Light>();
 	private static HashMap<String, Light> activatedStaticLights = new HashMap<String, Light>();
-	private static HashMap<String, Light> desactivatedLights = new HashMap<String, Light>();
+	private static HashMap<String, Light> deactivatedLights = new HashMap<String, Light>();
 
 	private static LinkedList<ShadowCaster> shadowCasters = new LinkedList<ShadowCaster>();
-	private static LinkedList<LightTaker> lightTakers = new LinkedList<LightTaker>();
 
-	private static HashMap<Light, LinkedList<Shadow>> lightShadows = new HashMap<Light, LinkedList<Shadow>>();
-
+	/**
+	 * Stores the shadows to be drawn.
+	 */
+	private static HashMap<Light, ShadowBuffer> lightShadows = new HashMap<Light, ShadowBuffer>();
+	
 	private static Vector2f camPos = null;
 	private static int screenWidth = 0;
 	private static int screenHeight = 0;
@@ -38,7 +39,12 @@ public class LightManager {
 	static int lightShaderProgram;
 	static int laserShaderProgram;
 	static FBO staticLightsFBO;
-
+	
+	/* Avoid dynamic allocation in rendering methods */
+	private static Vector2f camToLight = new Vector2f();
+	private static Vector2f laserDirection = new Vector2f();
+	/* --------------------------------------------- */
+	
 	static public void init() {
 		staticLightsFBO = new FBO();
 	}
@@ -47,14 +53,13 @@ public class LightManager {
 		shadowCasters.add(sc);
 
 		for (Light l : activatedDynamicLights.values()) {
-			
-			lightShadows.put(l, sc.computeShadow(l));
+			sc.computeShadow(l,lightShadows.get(l));
 		}
 		for (Light l : activatedStaticLights.values()) {
 			if (sc instanceof Map) {
 				boolean save = ((Map) sc).getFullRender();
 				((Map) sc).setFullRender(true);
-				lightShadows.put(l, sc.computeShadow(l));
+				sc.computeShadow(l,lightShadows.get(l));
 				((Map) sc).setFullRender(save);
 			}
 		}
@@ -64,6 +69,7 @@ public class LightManager {
 			float radius, float maxDst, boolean dynamic) {
 		Light l = new Light(p, color, radius, maxDst,dynamic);
 		l.setName(name);
+		lightShadows.put(l, new ShadowBuffer());
 		if (dynamic) {
 			activatedDynamicLights.put(name, l);
 			updateLightShadows(l,true);
@@ -76,7 +82,7 @@ public class LightManager {
 	}
 
 	static public void activateLight(String name, boolean dynamic) {
-		Light l = desactivatedLights.remove(name);
+		Light l = deactivatedLights.remove(name);
 		if (l != null) {
 			if (dynamic) {
 				activatedDynamicLights.put(name, l);
@@ -88,7 +94,7 @@ public class LightManager {
 		}
 	}
 
-	static public void desactivateLight(String name, boolean dynamic) {
+	static public void deactivateLight(String name, boolean dynamic) {
 
 		Light l;
 		if (dynamic) {
@@ -97,15 +103,14 @@ public class LightManager {
 			l = activatedStaticLights.remove(name);
 		}
 		if (l != null) {
-			desactivatedLights.put(name, l);
-			lightShadows.remove(l);
+			deactivatedLights.put(name, l);
 		}
 	}
 
 	static public void deleteLight(String name) {
 		Light l = activatedDynamicLights.remove(name);
 		if (l == null) {
-			l = desactivatedLights.remove(name);
+			l = deactivatedLights.remove(name);
 		}
 		if (l == null) {
 			l = activatedStaticLights.remove(name);
@@ -133,31 +138,30 @@ public class LightManager {
 	static public Laser addActivatedLaser(String name, Vector2f p,
 			Vector3f color, Vector2f dir) {
 		Laser laser = new Laser(p, color, dir);
+		lightShadows.put(laser, new ShadowBuffer());
 		activatedDynamicLights.put(name, laser);
 		updateLightShadows(laser,true);
 		return laser;
 	}
 
-	static public void addLightTaker(LightTaker lt) {
-		lightTakers.add(lt);
-	}
-
 	static public void updateLightShadows(Light l, boolean dynamic) {
-		lightShadows.remove(l);
-		LinkedList<Shadow> sl = new LinkedList<Shadow>();
+		/* Set to 0 the pointer to the last shadow */
+		lightShadows.get(l).lastShadow = 0;
 		for (ShadowCaster sc : shadowCasters) {
 			if (sc instanceof Map && !dynamic) {
 				boolean save = ((Map) sc).getFullRender();
 				((Map) sc).setFullRender(true);
-				sl.addAll(sc.computeShadow(l));
+				sc.computeShadow(l,lightShadows.get(l));
 				((Map) sc).setFullRender(save);
 			}else{
-				sl.addAll(sc.computeShadow(l));
+				sc.computeShadow(l,lightShadows.get(l));
 			}
 		}
-		lightShadows.put(l, sl);
 	}
 
+	/**
+	 * Compute the FBO resulting from the static lights 
+	 */
 	static private void renderStaticsToFrameBuffer() {
 		staticLightsFBO.bind();
 		glMatrixMode(GL_PROJECTION);
@@ -208,22 +212,23 @@ public class LightManager {
 			glColorMask(false, false, false, false);
 			glStencilFunc(GL_ALWAYS, 1, 1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-			LinkedList<Shadow> lsc = lightShadows.get(l);
-			if (lsc != null) {
-				for (Shadow s : lsc) {
+			glBegin(GL_QUADS);
+			ShadowBuffer shadowBuffer = lightShadows.get(l);
+			if(shadowBuffer != null){
+				for (int i = 0 ; i < shadowBuffer.lastShadow ; i++) {
+					Shadow s = shadowBuffer.get(i);
 					Vector2f[] points = s.points;
-					glBegin(GL_TRIANGLE_STRIP);
+					
 					{
 						glVertex2f(points[0].x, points[0].y);
 						glVertex2f(points[1].x, points[1].y);
-						glVertex2f(points[2].x, points[2].y);
 						glVertex2f(points[3].x, points[3].y);
+						glVertex2f(points[2].x, points[2].y);
+						
 					}
-					glEnd();
 				}
 			}
-
+			glEnd();
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 			glStencilFunc(GL_EQUAL, 0, 1);
 			glColorMask(true, true, true, true);
@@ -272,27 +277,29 @@ public class LightManager {
 
 	private static void renderDynamicLights() {
 		for (Light l : activatedDynamicLights.values()) {
-			if (Vector2f.sub(camPos, l.getPosition(), null).length()
+			Vector2f.sub(camPos, l.getPosition(), camToLight);
+			if (camToLight.length()
 					- l.getMaxDst() < diagonal / 4) {
 				glColorMask(false, false, false, false);
 				glStencilFunc(GL_ALWAYS, 1, 1);
 				glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-				LinkedList<Shadow> lsc = lightShadows.get(l);
-				if (lsc != null) {
-					for (Shadow s : lsc) {
+				glBegin(GL_QUADS);
+				ShadowBuffer shadowBuffer = lightShadows.get(l);
+				if(shadowBuffer != null){
+					for (int i = 0 ; i < shadowBuffer.lastShadow ; i++) {
+						Shadow s = shadowBuffer.get(i);
 						Vector2f[] points = s.points;
-						glBegin(GL_TRIANGLE_STRIP);
+						
 						{
 							glVertex2f(points[0].x, points[0].y);
 							glVertex2f(points[1].x, points[1].y);
-							glVertex2f(points[2].x, points[2].y);
 							glVertex2f(points[3].x, points[3].y);
+							glVertex2f(points[2].x, points[2].y);
 						}
-						glEnd();
+						
 					}
 				}
-
+				glEnd();
 				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 				glStencilFunc(GL_EQUAL, 0, 1);
 				glColorMask(true, true, true, true);
@@ -321,12 +328,13 @@ public class LightManager {
 				if (l instanceof Laser) {
 					glUseProgram(laserShaderProgram);
 					if (((Laser) l).getDirection().length() != 0) {
-						Vector2f direction = (Vector2f) ((Laser) l)
-								.getDirection().normalise();
+						
+						laserDirection = ((Laser) l).getDirection();
+						laserDirection.normalise(laserDirection);
 						glUniform2f(
 								glGetUniformLocation(laserShaderProgram,
-										"laser.direction"), -direction.x,
-								direction.y);
+										"laser.direction"), -laserDirection.x,
+								laserDirection.y);
 						glUniform2f(
 								glGetUniformLocation(laserShaderProgram,
 										"laser.position"), l.getX() - camPos.x
@@ -360,8 +368,6 @@ public class LightManager {
 				glUseProgram(0);
 				glClear(GL_STENCIL_BUFFER_BIT);
 
-				glUseProgram(0);
-				glClear(GL_STENCIL_BUFFER_BIT);
 			}
 		}
 	}
@@ -384,5 +390,4 @@ public class LightManager {
 		diagonal = (float) Math.sqrt(screenHeight * screenHeight + screenWidth
 				* screenWidth);
 	}
-
 }

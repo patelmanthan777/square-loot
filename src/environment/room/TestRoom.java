@@ -34,16 +34,16 @@ public class TestRoom extends Room{
 		}
 		
 		for(int i = 1; i < (int)Map.roomBlockSize.x-1;i++){
-			grid[i][1] = BlockFactory.createSolidBlock();
-			grid[i][(int)Map.roomBlockSize.y-2] = BlockFactory.createSolidBlock();
+			grid[i][1] = BlockFactory.createBorderBlock();
+			grid[i][(int)Map.roomBlockSize.y-2] = BlockFactory.createBorderBlock();
 		}
 		for(int i = 1; i < (int)Map.roomBlockSize.y-1; i++){
-			grid[1][i] = BlockFactory.createSolidBlock();
-			grid[(int)Map.roomBlockSize.x-2][i] = BlockFactory.createSolidBlock();
+			grid[1][i] = BlockFactory.createBorderBlock();
+			grid[(int)Map.roomBlockSize.x-2][i] = BlockFactory.createBorderBlock();
 		}
 		Vector2f pos = new Vector2f(x+Map.roomPixelSize.x/2,y+Map.roomPixelSize.y/2);
 		Vector3f color = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
-		float radius = (float)Math.random()*50;
+		float radius = (float)Math.random()*100;
 		float dstMax = Map.roomPixelSize.x * 2;
 		LightManager.addLight("l"+x+y, pos, color, radius, dstMax ,false);
 		

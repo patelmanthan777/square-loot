@@ -8,9 +8,16 @@ import environment.room.TestRoom;
 
 public class MapGenerator {
 	private static LinkedList<Room> rooms;
+	/**
+	 * Represents the list of rooms that cannot admit more neighbouring rooms.
+	 */
 	private static LinkedList<Room> surroundedRooms;
 	private static Room[][] roomsGrid;
 	
+	/**
+	 * Generate the rooms maze.
+	 * @return The class attribute roomsGrid initialized to form a room maze.
+	 */
 	static Room[][] generate() {
 		roomsGrid = new Room[(int)Map.mapRoomSize.x][(int)Map.mapRoomSize.y];
 		rooms = new LinkedList<Room>();
@@ -19,6 +26,12 @@ public class MapGenerator {
 		return roomsGrid;
 	}
 
+	
+	/**
+	 * Iteratively decide which cells of roomsGrid are going to be rooms.
+	 * For a cell to be a room it must not be surrounded by already existing
+	 * rooms. The generation ends when no cell satisfies this requirement.
+	 */
 	private static void createRooms() {
 		int ispawn = (int)(Math.random() * Map.mapRoomSize.x);
 		int jspawn = (int)(Math.random() * Map.mapRoomSize.y);
@@ -114,6 +127,15 @@ public class MapGenerator {
 		}
 	}
 
+	/**
+	 * Compute the number of cells surrounding the one referenced by the function
+	 * parameters.
+	 * 
+	 * @param i is the line index
+	 * @param j is the column index
+	 * @return An integer representing the number of cells surrounding the one
+	 * located at (<b>i</b>, <b>j</b>). 
+	 */
 	private static int surround(int i, int j) {
 		int cpt = 0;
 
@@ -132,6 +154,14 @@ public class MapGenerator {
 		return cpt;
 	}
 
+	/**
+	 * Test whether the cell located at (<b>i</b>, <b>j</b>) satisfies the
+	 * requirements to be a room.
+	 * 
+	 * @param i is the line index
+	 * @param j is the column index
+	 * @return <b>true</b> if the cell can be a room, <b>false</b> otherwise.
+	 */
 	private static boolean canBeRoom(int i, int j) {
 		boolean bool = true;
 		bool &= (roomsGrid[i][j] == null);

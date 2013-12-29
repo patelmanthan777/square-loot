@@ -9,6 +9,7 @@ public class Timer {
 	static private long runningTime = 0;
 	static private int FPS = 0;
 	static private int FPScpt = 0;
+	static private String fpsDisplay = new String();
 	
 	static public long getTime() {
         return currentFrame ;
@@ -27,11 +28,16 @@ public class Timer {
         if(currentFrame/500 != lastFrame/500){
         	FPS = FPScpt*2;
         	FPScpt = 0;
+        	fpsDisplay = "FPS : " + FPS;
         }
 	}
 	
 	static public int getFPS(){
 		return FPS;
+	}
+	
+	static public String getFPSDisplay(){
+		return fpsDisplay;
 	}
 	
 	static public long getRunningTime(){

@@ -124,4 +124,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public Light getLight(){
 		return light;
 	}
+	
+
 }

@@ -1,10 +1,9 @@
 package rendering;
 
-import java.util.LinkedList;
-
 import light.Light;
-import light.Shadow;
+import light.ShadowBuffer;
 
 public interface ShadowCaster {
-	public LinkedList<Shadow> computeShadow(Light light);
+
+	public void computeShadow(Light light,ShadowBuffer shadows);
 }

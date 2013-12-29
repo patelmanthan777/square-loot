@@ -28,7 +28,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GameLoop {
 	private static final String WINDOW_TITLE = "SquareLoot";
-	private boolean isRunning;
+	private boolean isRunning; //false means that the game is closing
 
 	private static Weapon weapon = new LaserRifle(250);
 	
@@ -40,10 +40,14 @@ public class GameLoop {
 	private Keys keys = new Keys();
 
 	public static void main(String[] args) {
-		GameLoop test = new GameLoop();
-		test.start();
+		GameLoop loop = new GameLoop();
+		loop.start();
 	}
 
+	/**
+	 * Enter the game loop, the function exit only when the variable isRunning
+	 * is set to 'false', meaning that the game is shutting down.
+	 */
 	private void start() {
 		int elapsedTime = 0;
 		try {
@@ -51,11 +55,12 @@ public class GameLoop {
 			while (isRunning) {
 				Timer.tick();
 				elapsedTime = Timer.getDelta();
-				getInput(); // read input
+				getInput(); 
 				render(elapsedTime); // render graphics
 
 				Display.sync(ConfigManager.maxFps); // sync to fps
 				Display.update(); // update the view/screen
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -63,6 +68,10 @@ public class GameLoop {
 		}
 	}
 
+	/**
+	 * Initialize the state of the game entities, as well as the
+	 * window manager and openGL.
+	 */
 	private void init() {
 		ConfigManager.init();
 		createWindow();
@@ -92,15 +101,22 @@ public class GameLoop {
 		isRunning = true;
 	}
 
+	/**
+	 * Specifically initialize openGL. It enables the different options and
+	 * set the matrix modes. 
+	 */
 	public static void initGL() {
 		
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
-		glMatrixMode(GL_PROJECTION); // change de matrice
-		glLoadIdentity(); // la reinitialise
+
+		glMatrixMode(GL_PROJECTION); // PROJECTION from 3D to Camera plane
+		glLoadIdentity(); 
 		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
-		glMatrixMode(GL_MODELVIEW); // on passe en mode Model
+
+		glMatrixMode(GL_MODELVIEW); // MODELVIEW manages the 3D scene
+
 		glClearColor(0, 0, 0, 0);
 	}
 
@@ -165,6 +181,9 @@ public class GameLoop {
 	    }
 	}
 	
+        /**
+         * Initialization the game window.
+         */
 	private void createWindow() {
 		
 		setDisplayMode((int)ConfigManager.resolution.x, (int)ConfigManager.resolution.y, ConfigManager.fullScreen);
@@ -178,9 +197,12 @@ public class GameLoop {
 		}
 	}
 	
+	/**
+	 * Interpret the inputs and modify the game entities accordingly.
+	 */
 	private void getInput() {
 		keys.update();
-		mouse.x = Mouse.getX(); // will return the X coordinate on the Display.
+		mouse.x = Mouse.getX(); 
 		mouse.y = Mouse.getY();
 		
 		if(Mouse.isButtonDown(0)){
@@ -191,8 +213,14 @@ public class GameLoop {
 		if (keys.getState(Keyboard.KEY_ESCAPE) == KeyState.PRESSED|| Display.isCloseRequested()) {
 			isRunning = false;
 		}
+		if (keys.getState(Keyboard.KEY_W) == KeyState.HELD || keys.getState(Keyboard.KEY_W) == KeyState.PRESSED) {
+			p.translate(0, -1);
+		}
 		if (keys.getState(Keyboard.KEY_Z) == KeyState.HELD || keys.getState(Keyboard.KEY_Z) == KeyState.PRESSED) {
 			p.translate(0, -1);
+		}
+		if (keys.getState(Keyboard.KEY_A) == KeyState.HELD || keys.getState(Keyboard.KEY_A) == KeyState.PRESSED) {
+			p.translate(-1, 0);
 		}
 		if (keys.getState(Keyboard.KEY_Q) == KeyState.HELD || keys.getState(Keyboard.KEY_Q) == KeyState.PRESSED) {
 			p.translate(-1, 0);
@@ -205,12 +233,17 @@ public class GameLoop {
 		}
 		if (keys.getState(Keyboard.KEY_E) == KeyState.PRESSED) {
 			if(p.getLight().isActive())
-				p.getLight().desactivate();
+				p.getLight().deactivate();
 			else
 				p.getLight().activate();
 		}
 	}
 
+	/**
+	 * Update the game state, namely entities, HUD and lights
+	 * position and refresh the screen accordingly. 
+	 * @param elapsedTime represents the time passed since last update.
+	 */
 	private void render(long elapsedTime) {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

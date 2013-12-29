@@ -3,15 +3,18 @@ package light;
 import org.lwjgl.util.vector.Vector2f;
 
 public class Shadow {
-	Vector2f [] points = new Vector2f[4];
-	public Shadow(Vector2f points[]){
-		this.points = points;
+	private static int size = 4;
+	public Vector2f [] points = new Vector2f[size];
+	
+	public Shadow(Shadow shadow){
+		for(int i = 0; i < size; i++){
+			this.points[i] = new Vector2f(shadow.points[i]);
+		}
 	}
 	
-	public Shadow(Vector2f point1, Vector2f point2, Vector2f point3, Vector2f point4){
-		this.points[0] = point1;
-		this.points[1] = point2;
-		this.points[2] = point3;
-		this.points[3] = point4;
+	public Shadow(){
+		for(int i = 0; i < size; i++){
+			this.points[i] = new Vector2f();
+		}
 	}
 }
