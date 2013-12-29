@@ -367,8 +367,6 @@ public class LightManager {
 				glUseProgram(0);
 				glClear(GL_STENCIL_BUFFER_BIT);
 
-				glUseProgram(0);
-				glClear(GL_STENCIL_BUFFER_BIT);
 			}
 		}
 	}

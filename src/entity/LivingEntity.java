@@ -16,6 +16,15 @@ public abstract class LivingEntity extends Entity {
 		return health;
 	}
 
+
+	
+	/**
+	 * Modify the health attribute by setting health to the value of the parameter.
+	 * The attribute cannot be negative nor can it be greater than
+	 * <b>maxHealth</b>. 
+	 * 
+	 * @param hp is the new value of <b>health</b>.
+	 */
 	public void setHealth(int health){
 		if(health < 0){
 			this.health = 0;
@@ -28,27 +37,11 @@ public abstract class LivingEntity extends Entity {
 	}
 	
 	/**
-	 * Modify the health attribute by adding the value of the parameter.
-	 * The attribute cannot be negative nor can it be greater than
-	 * <b>maxHealth</b>. 
-	 * 
-	 * @param hp is the relative number of hp to be offsetted.
-	 */
-	private void modifyHealth(int hp){
-		this.health += hp;
-		if(health < 0){
-			this.health = 0;
-		}else if (health > maxHealth){
-			this.health = maxHealth;
-		}
-	}
-	
-	/**
 	 * Decreases the health attribute by an amount equal to <b>damage</b>
 	 * @param damage is the number of health points to be subtracted
 	 */
 	public void damage(int damage){
-		modifyHealth(-damage);
+		setHealth(-damage);
 	}
 	
 	/**
@@ -56,7 +49,7 @@ public abstract class LivingEntity extends Entity {
 	 * @param heal is the number of health points to be added
 	 */
 	public void heal(int heal){
-		modifyHealth(heal);
+		setHealth(this.health + heal);
 	}
 
 	private void updateHealthFraction(){
@@ -82,7 +75,7 @@ public abstract class LivingEntity extends Entity {
 	 * <b>maxHealth</b>
 	 */
 	public void increaseMaxHealth(int heal){
-		setMaxHealth(this.maxHealth += heal);
+		setMaxHealth(this.maxHealth + heal);
 	}
 	
 	public String getHealthFraction(){

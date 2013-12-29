@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 import environment.Map;
 import light.Laser;
 import light.Light;
+import light.Shadow;
 import light.ShadowBuffer;
 
 /**
@@ -53,14 +54,15 @@ public abstract class ShadowCasterBlock extends Block{
 		int shadowInd = shadowBuffer.lastShadow+1;
 		initBlock(x, y);
 		if(light instanceof Laser){
-			(shadowBuffer.getShadows())[shadowInd].points[0].x = points[1].x;
-			(shadowBuffer.getShadows())[shadowInd].points[0].y = points[1].y;
-			(shadowBuffer.getShadows())[shadowInd].points[1].x = points[0].x;
-			(shadowBuffer.getShadows())[shadowInd].points[1].y = points[0].y;
-			(shadowBuffer.getShadows())[shadowInd].points[2].x = points[2].x;
-			(shadowBuffer.getShadows())[shadowInd].points[2].y = points[2].y;
-			(shadowBuffer.getShadows())[shadowInd].points[3].x = points[3].x;
-			(shadowBuffer.getShadows())[shadowInd].points[3].y = points[3].y;
+			Shadow[] shadows = (shadowBuffer.getShadows());
+			shadows[shadowInd].points[0].x = points[1].x;
+			shadows[shadowInd].points[0].y = points[1].y;
+			shadows[shadowInd].points[1].x = points[0].x;
+			shadows[shadowInd].points[1].y = points[0].y;
+			shadows[shadowInd].points[2].x = points[2].x;
+			shadows[shadowInd].points[2].y = points[2].y;
+			shadows[shadowInd].points[3].x = points[3].x;
+			shadows[shadowInd].points[3].y = points[3].y;
 			shadowInd++;
 		}
 		for (int i = 0; i < nb_points; i++){
@@ -70,7 +72,7 @@ public abstract class ShadowCasterBlock extends Block{
 			normal.x = edge.getY();
 			normal.y = -edge.getX();
 			Vector2f.sub(currentVertex, light.getPosition(), lightToCurrent);
-			
+			Shadow[] shadows = (shadowBuffer.getShadows());
 			if (Vector2f.dot(normal, lightToCurrent) > 0 ) {
 				if((light instanceof Light && !neighbour[i]) || light instanceof Laser){
 					Vector2f.sub(currentVertex,light.getPosition(), point1);
@@ -81,14 +83,14 @@ public abstract class ShadowCasterBlock extends Block{
 					point2.normalise(point2);
 					point2.scale(10000);
 					point2 = Vector2f.add(nextVertex, point2, point2);
-					(shadowBuffer.getShadows())[shadowInd].points[0].x = currentVertex.x;
-					(shadowBuffer.getShadows())[shadowInd].points[0].y = currentVertex.y;
-					(shadowBuffer.getShadows())[shadowInd].points[1].x = nextVertex.x;
-					(shadowBuffer.getShadows())[shadowInd].points[1].y = nextVertex.y;
-					(shadowBuffer.getShadows())[shadowInd].points[2].x = point1.x;
-					(shadowBuffer.getShadows())[shadowInd].points[2].y = point1.y;
-					(shadowBuffer.getShadows())[shadowInd].points[3].x = point2.x;
-					(shadowBuffer.getShadows())[shadowInd].points[3].y = point2.y;
+					shadows[shadowInd].points[0].x = currentVertex.x;
+					shadows[shadowInd].points[0].y = currentVertex.y;
+					shadows[shadowInd].points[1].x = nextVertex.x;
+					shadows[shadowInd].points[1].y = nextVertex.y;
+					shadows[shadowInd].points[2].x = point1.x;
+					shadows[shadowInd].points[2].y = point1.y;
+					shadows[shadowInd].points[3].x = point2.x;
+					shadows[shadowInd].points[3].y = point2.y;
 					shadowInd++;
 				}
 			}	
