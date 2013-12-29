@@ -72,8 +72,10 @@ public abstract class Entity extends Node implements Drawable{
 	 * @param m is the world representation needed in case of collision
 	 */
 	public void updatePostion(long dt, Map m){
-			if (translation.length() != 0)
-				translation = (Vector2f)translation.normalise().scale(accFactor);
+			if (translation.length() != 0){
+				translation.normalise(translation);
+				translation.scale(accFactor);
+			}
 			speed.x = speed.x + translation.x - speed.x / descFactor;
 			speed.y = speed.y + translation.y - speed.y / descFactor;
 			float normSpeed = speed.length();

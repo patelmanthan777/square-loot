@@ -22,15 +22,8 @@ public class Laser extends Light {
 		return dir;
 	}
 	
-	/*@Override
-	public void setPosition(Vector2f position){
-		this.position.x = position.x;
-		this.position.y = position.y;
-		lm.updateLaserShadows(this);
-	}*/
-	
 	@Override
-	public void setOrientation(Vector2f ori){
+	public void setPosition(Vector2f position){
 		this.position.x = position.x;
 		this.position.y = position.y;
 	}
@@ -39,7 +32,6 @@ public class Laser extends Light {
 	public void setOrientation(float posx, float posy){
 		this.dir.x = posx;
 		this.dir.y = posy;
-		LightManager.updateLightShadows(this,dynamic);
 	}
 	
 }

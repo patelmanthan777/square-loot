@@ -213,8 +213,14 @@ public class GameLoop {
 		if (keys.getState(Keyboard.KEY_ESCAPE) == KeyState.PRESSED|| Display.isCloseRequested()) {
 			isRunning = false;
 		}
+		if (keys.getState(Keyboard.KEY_W) == KeyState.HELD || keys.getState(Keyboard.KEY_W) == KeyState.PRESSED) {
+			p.translate(0, -1);
+		}
 		if (keys.getState(Keyboard.KEY_Z) == KeyState.HELD || keys.getState(Keyboard.KEY_Z) == KeyState.PRESSED) {
 			p.translate(0, -1);
+		}
+		if (keys.getState(Keyboard.KEY_A) == KeyState.HELD || keys.getState(Keyboard.KEY_A) == KeyState.PRESSED) {
+			p.translate(-1, 0);
 		}
 		if (keys.getState(Keyboard.KEY_Q) == KeyState.HELD || keys.getState(Keyboard.KEY_Q) == KeyState.PRESSED) {
 			p.translate(-1, 0);
