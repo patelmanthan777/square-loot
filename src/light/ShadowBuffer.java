@@ -1,6 +1,10 @@
 package light;
 
 public class ShadowBuffer {
+	/**
+	 * Index of the last meaningful Shadow stored in <b>shadows</b>,
+	 * similar to the current number of computed shadows minus 1.
+	 */
 	public int lastShadow = 0;
 	private static int size = 2000;
 	private Shadow[] shadows = new Shadow[size];

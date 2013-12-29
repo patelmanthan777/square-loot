@@ -15,7 +15,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import configuration.ConfigManager;
 import rendering.FBO;
-import rendering.LightTaker;
 import rendering.Shader;
 import rendering.ShadowCaster;
 
@@ -23,11 +22,13 @@ public class LightManager {
 
 	private static HashMap<String, Light> activatedDynamicLights = new HashMap<String, Light>();
 	private static HashMap<String, Light> activatedStaticLights = new HashMap<String, Light>();
-	private static HashMap<String, Light> desactivatedLights = new HashMap<String, Light>();
+	private static HashMap<String, Light> deactivatedLights = new HashMap<String, Light>();
 
 	private static LinkedList<ShadowCaster> shadowCasters = new LinkedList<ShadowCaster>();
-	private static LinkedList<LightTaker> lightTakers = new LinkedList<LightTaker>();
 
+	/**
+	 * Stores the shadows to be drawn.
+	 */
 	private static HashMap<Light, ShadowBuffer> lightShadows = new HashMap<Light, ShadowBuffer>();
 	
 	private static Vector2f camPos = null;
@@ -43,6 +44,7 @@ public class LightManager {
 	private static Vector2f camToLight = new Vector2f();
 	private static Vector2f laserDirection = new Vector2f();
 	/* --------------------------------------------- */
+	
 	static public void init() {
 		staticLightsFBO = new FBO();
 	}
@@ -80,7 +82,7 @@ public class LightManager {
 	}
 
 	static public void activateLight(String name, boolean dynamic) {
-		Light l = desactivatedLights.remove(name);
+		Light l = deactivatedLights.remove(name);
 		if (l != null) {
 			if (dynamic) {
 				activatedDynamicLights.put(name, l);
@@ -92,7 +94,7 @@ public class LightManager {
 		}
 	}
 
-	static public void desactivateLight(String name, boolean dynamic) {
+	static public void deactivateLight(String name, boolean dynamic) {
 
 		Light l;
 		if (dynamic) {
@@ -101,14 +103,14 @@ public class LightManager {
 			l = activatedStaticLights.remove(name);
 		}
 		if (l != null) {
-			desactivatedLights.put(name, l);
+			deactivatedLights.put(name, l);
 		}
 	}
 
 	static public void deleteLight(String name) {
 		Light l = activatedDynamicLights.remove(name);
 		if (l == null) {
-			l = desactivatedLights.remove(name);
+			l = deactivatedLights.remove(name);
 		}
 		if (l == null) {
 			l = activatedStaticLights.remove(name);
@@ -142,10 +144,6 @@ public class LightManager {
 		return laser;
 	}
 
-	static public void addLightTaker(LightTaker lt) {
-		lightTakers.add(lt);
-	}
-
 	static public void updateLightShadows(Light l, boolean dynamic) {
 		/* Set to 0 the pointer to the last shadow */
 		lightShadows.get(l).lastShadow = 0;
@@ -161,6 +159,9 @@ public class LightManager {
 		}
 	}
 
+	/**
+	 * Compute the FBO resulting from the static lights 
+	 */
 	static private void renderStaticsToFrameBuffer() {
 		staticLightsFBO.bind();
 		glMatrixMode(GL_PROJECTION);

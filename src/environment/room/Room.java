@@ -16,14 +16,20 @@ import environment.blocks.ShadowCasterBlock;
 
 public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;
+	/**
+	 * Horizontal index of the room on the map, in pixels.
+	 */
 	protected float x;
+	/**
+	 * Vertical index of the room on the map, in pixels.
+	 */
 	protected float y;
 	protected Vector3f miniMapColor = new Vector3f(1, 1, 1);
 	protected boolean[] doors = new boolean[4];
 	protected boolean discovered = false;
-	/* avoid dynamic allocation in compute shadow */
+	/* avoid dynamic allocation in computeShadow */
 	boolean[] neighbours = new boolean[4];
-	/* -------------------------------------------*/
+	/* ------------------------------------------*/
 	
 	public Room(float posX, float posY) {
 		this.x = posX;
@@ -45,6 +51,11 @@ public abstract class Room implements Drawable, ShadowCaster {
 		return (int) y;
 	}
 
+	/**
+	 * Create door on the given wall, clockwise indices starting at noon.
+	 *  
+	 * @param wall is the index of the wall
+	 */
 	public void createDoor(int wall) {
 		doors[wall] = true;
 		if (wall == 0) {
@@ -173,6 +184,9 @@ public abstract class Room implements Drawable, ShadowCaster {
 		}
 	}
 
+	/**
+	 * Draw the room on the minimap if discovered.
+	 */
 	public void drawOnMiniMap() {
 		if (discovered) {
 			int minix = (int) (MiniMap.position.x + (x / Map.roomPixelSize.x)

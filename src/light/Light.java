@@ -7,10 +7,16 @@ import entity.Node;
 
 
 public class Light extends Node{
-	protected Vector3f color; // couleur de la lumiere
+	protected Vector3f color;
 	protected boolean active = true;
-	protected float radius; // distance max d'eclairage
+	/**
+	 * Light power.
+	 */
+	protected float radius;
 	protected float maxDst;
+	/**
+	 * <b>true</b> if the light may move
+	 */
 	protected boolean dynamic;
 	
 	public Light(Vector2f p, Vector3f color, float radius, float dstMax,boolean dynamic){
@@ -48,9 +54,9 @@ public class Light extends Node{
 		}
 	}
 	
-	public void desactivate(){
+	public void deactivate(){
 		active = false;
-		LightManager.desactivateLight(name, dynamic);
+		LightManager.deactivateLight(name, dynamic);
 	}
 	
 	public boolean isActive(){

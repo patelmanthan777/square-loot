@@ -15,6 +15,9 @@ public class Keys {
 		}
 	}
 
+	/**
+	 * Handles the keys currently pressed.
+	 */
 	public void update(){
 		for (int i = 0; i < size ; i++){
 			if(Keyboard.isKeyDown(i)){

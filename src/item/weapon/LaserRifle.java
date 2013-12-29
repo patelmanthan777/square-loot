@@ -6,10 +6,6 @@ import entity.projectile.ProjectileManager;
 
 public class LaserRifle extends Weapon {
 
-	/**
-	 * LaserRifle class constructor
-	 * @param fireRate the laser rifle fire rate 
-	 */
 	public LaserRifle(long fireRate)
 	{
 		super(fireRate);

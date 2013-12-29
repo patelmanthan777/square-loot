@@ -233,7 +233,7 @@ public class GameLoop {
 		}
 		if (keys.getState(Keyboard.KEY_E) == KeyState.PRESSED) {
 			if(p.getLight().isActive())
-				p.getLight().desactivate();
+				p.getLight().deactivate();
 			else
 				p.getLight().activate();
 		}

@@ -1,10 +1,22 @@
 package environment.blocks;
 
 public class BlockFactory {
+	/**
+	 * Blocks inside the rooms, do not cast shadows, do not collide.
+	 */
 	static EmptyBlock emptyBlock = new EmptyBlock();
 	static BorderBlock borderBlock = new BorderBlock();
+	/**
+	 * Solid blocks inside the rooms.
+	 */
 	static SolidBlock solidBlock = new SolidBlock();
+	/**
+	 * Player spawning blocks.
+	 */
 	static SpawnBlock spawnBlock = new SpawnBlock();
+	/**
+	 * Blocks outside the rooms.
+	 */
 	static VoidBlock voidBlock = new VoidBlock();
 
 	

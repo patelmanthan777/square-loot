@@ -7,12 +7,12 @@ import item.Item;
 
 public abstract class Weapon extends Item {
 	protected long fireRate;
+	/**
+	 * Last shot timestamp, allow the handling of the
+	 * fire cooldown.
+	 */
 	protected long lastShot;
 	
-	/**
-	 * Weapon class constructor
-	 * @param fireRate The weapon fire rate 
-	 */
 	public Weapon(long fireRate)
 	{
 		this.fireRate = fireRate;
@@ -20,8 +20,8 @@ public abstract class Weapon extends Item {
 	}
 	
 	/**
-	 * Is the weapon ready to fire?
-	 * @return true if the weapon is ready to fire, else false
+	 * Test whether the weapon is ready to fire
+	 * @return <b>true</b> if the weapon is ready to fire, <b>false</b> otherwise.
 	 */
 	protected boolean readyToFire(){
 		long currentTime = Timer.getTime();
@@ -29,7 +29,7 @@ public abstract class Weapon extends Item {
 	}
 	
 	/**
-	 * Update the last shot time
+	 * Update the lastShot
 	 */
 	protected void updateLastShot(){
 		lastShot = Timer.getTime();
