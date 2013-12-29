@@ -94,7 +94,7 @@ public class Shader {
 	 * Link the compiled shaders to be used in the next rendering
 	 * tasks.
 	 *  
-	 * @param program is the program which is run on the graphic card
+	 * @param program is a storage space on the graphic card
 	 */
 	public void link(int program){
 		GL20.glAttachShader(program, vertexShader);
