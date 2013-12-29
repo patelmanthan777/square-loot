@@ -6,37 +6,43 @@ import entity.Entity;
 
 public abstract class Projectile extends Entity implements Drawable{
 
-	protected boolean toDestroy;
+	protected boolean destroyed;
 
 	public Projectile(){
 		super(new Vector2f(),new Vector2f());
 	}
 	
-	/**
-	 * Projectile class constructor
-	 * @param pos Initial position of the projectile
-	 * @param rot Initial direction of the projectile
-	 */
 	public Projectile(Vector2f pos, Vector2f rot) {
 		super(pos, rot);
-		toDestroy = false;
+		destroyed = false;
 	}
 	
-	
+	/**
+	 * Reset a projectile according the method parameters.
+	 * @param pos is the new position
+	 * @param rot id the new orientation 
+	 */
 	public void reset(Vector2f pos, Vector2f rot)
 	{
 		this.setPosition(pos);
 		this.setOrientation(rot);
-		toDestroy = false;
+		destroyed = false;
 	}
 	
 	/**
-	 * does the projectile must be destroy?
-	 * @return true if the projectile must be destroy, else false
+	 * Handle the case where the projectile should be destroyed.
+	 * @return true if the projectile should be destroyed, false otherwise
 	 */
-	public boolean mustBeDestroy(){
-		return toDestroy;
+	public boolean shouldBeDestroyed(){
+		return destroyed;
 	}
 	
+	/**
+	 * A cloning interface to save memory.
+	 * 
+	 * @param pos
+	 * @param rot
+	 * @return 
+	 */ 
 	abstract public Projectile Clone(Vector2f pos, Vector2f rot);
 }

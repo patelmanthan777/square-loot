@@ -20,7 +20,7 @@ public class ProjectileFactory{
 	
 	/**
 	 * ProjectileFactory class constructor
-	 * @param projectile the porjectile to duplicate
+	 * @param projectile the projectile to duplicate
 	 */
 	public ProjectileFactory(Projectile projectile)
 	{
@@ -62,7 +62,7 @@ public class ProjectileFactory{
 		Iterator<Projectile> ite = projectileList.iterator();
 		while(ite.hasNext()){
 			Projectile project = ite.next();
-			if(project.mustBeDestroy())
+			if(project.shouldBeDestroyed())
 			{
 				ite.remove();
 				destroyProjectile(project);
