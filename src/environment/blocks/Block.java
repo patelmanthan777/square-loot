@@ -8,6 +8,9 @@ import org.lwjgl.util.vector.Vector3f;
 import environment.Map;
 
 public abstract class Block {
+	/**
+	 * The blocks are squared shaped.
+	 */
 	protected int nb_points = 4;
 	
 	protected Vector2f[] points = new Vector2f[4];
@@ -29,6 +32,11 @@ public abstract class Block {
 		points[3] = new Vector2f(x, y + Map.blockPixelSize.y);
 	}
 	
+	/**
+	 * Set a block position to the given coordinates.
+	 * @param positionx
+	 * @param positiony
+	 */
 	protected void initBlock(float positionx, float positiony){
 		float x = positionx;
 		float y = positiony;
@@ -42,7 +50,13 @@ public abstract class Block {
 		points[3].y = y + Map.blockPixelSize.y;
 	}
 	
-	
+	/**
+	 * Only a single instance of any specific block will be stored therefore,
+	 * the drawing method needs to be able to draw at multiple locations.
+	 * 
+	 * @param posX
+	 * @param posY
+	 */
 	public void drawAt(float posX, float posY) {
 		glColor3f(color.x,color.y,color.z);
 		glVertex2f(posX,posY);
