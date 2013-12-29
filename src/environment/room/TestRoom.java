@@ -43,7 +43,7 @@ public class TestRoom extends Room{
 		}
 		Vector2f pos = new Vector2f(x+Map.roomPixelSize.x/2,y+Map.roomPixelSize.y/2);
 		Vector3f color = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
-		float radius = (float)Math.random()*50;
+		float radius = (float)Math.random()*100;
 		float dstMax = Map.roomPixelSize.x * 2;
 		LightManager.addLight("l"+x+y, pos, color, radius, dstMax ,false);
 		

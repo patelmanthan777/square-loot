@@ -212,22 +212,23 @@ public class LightManager {
 			glColorMask(false, false, false, false);
 			glStencilFunc(GL_ALWAYS, 1, 1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
+			glBegin(GL_QUADS);
 			ShadowBuffer shadowBuffer = lightShadows.get(l);
 			if(shadowBuffer != null){
 				for (int i = 0 ; i < shadowBuffer.lastShadow ; i++) {
 					Shadow s = shadowBuffer.get(i);
 					Vector2f[] points = s.points;
-					glBegin(GL_TRIANGLE_STRIP);
+					
 					{
 						glVertex2f(points[0].x, points[0].y);
 						glVertex2f(points[1].x, points[1].y);
-						glVertex2f(points[2].x, points[2].y);
 						glVertex2f(points[3].x, points[3].y);
+						glVertex2f(points[2].x, points[2].y);
+						
 					}
-					glEnd();
 				}
 			}
+			glEnd();
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 			glStencilFunc(GL_EQUAL, 0, 1);
 			glColorMask(true, true, true, true);
@@ -282,23 +283,23 @@ public class LightManager {
 				glColorMask(false, false, false, false);
 				glStencilFunc(GL_ALWAYS, 1, 1);
 				glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
+				glBegin(GL_QUADS);
 				ShadowBuffer shadowBuffer = lightShadows.get(l);
 				if(shadowBuffer != null){
 					for (int i = 0 ; i < shadowBuffer.lastShadow ; i++) {
 						Shadow s = shadowBuffer.get(i);
 						Vector2f[] points = s.points;
-						glBegin(GL_TRIANGLE_STRIP);
+						
 						{
 							glVertex2f(points[0].x, points[0].y);
 							glVertex2f(points[1].x, points[1].y);
-							glVertex2f(points[2].x, points[2].y);
 							glVertex2f(points[3].x, points[3].y);
+							glVertex2f(points[2].x, points[2].y);
 						}
-						glEnd();
+						
 					}
 				}
-
+				glEnd();
 				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 				glStencilFunc(GL_EQUAL, 0, 1);
 				glColorMask(true, true, true, true);
