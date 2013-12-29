@@ -12,11 +12,10 @@ import rendering.Shader;
 import environment.Map;
 
 public class Bullet extends Projectile {
-	static int bulletShaderProgram = -1;
-	static private float speedValue = 2f;
-	static private Vector2f size = new Vector2f(10,10);
-	static private float radius = 10.0f;
-	static private float length = 10.0f;
+	static private int bulletShaderProgram = -1;
+	
+	private float speedValue = 2f;
+	private Vector2f size = new Vector2f(10,10);
 	
 	/**
 	 * Initialize the bullet shader
@@ -41,11 +40,13 @@ public class Bullet extends Projectile {
 	 * @param pos
 	 * @param rot
 	 */
-	public Bullet(Vector2f pos, Vector2f rot) {
+	public Bullet(Vector2f pos, Vector2f rot, float speedValue, Vector2f size) {
 		super(pos,rot);
 		Vector2f speed = new Vector2f();
 		rot.normalise(speed);
 		speed.scale(speedValue);
+		this.speedValue = speedValue;
+		this.size = new Vector2f(size);
 		this.setSpeed(speed);
 		this.setColor(new Vector3f(1,0,1));
 	}
@@ -69,8 +70,8 @@ public class Bullet extends Projectile {
 		glUseProgram(Bullet.bulletShaderProgram);
 		glUniform2f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.position"),this.position.x,this.position.y);
 		glUniform2f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.direction"),this.rotation.x,this.rotation.y);
-		glUniform1f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.radius"),radius);
-		glUniform1f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.length"),length);
+		glUniform1f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.radius"),size.x);
+		glUniform1f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.length"),size.y);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
 		glBegin(GL_TRIANGLE_STRIP);
@@ -112,6 +113,6 @@ public class Bullet extends Projectile {
 
 	@Override
 	public Projectile Clone(Vector2f pos, Vector2f rot) {		
-		return new Bullet(pos, rot);
+		return new Bullet(pos, rot, this.speedValue, this.size);
 	}
 }
