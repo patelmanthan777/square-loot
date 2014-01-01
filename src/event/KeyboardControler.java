@@ -3,16 +3,17 @@ package event;
 import org.lwjgl.input.Keyboard;
 
 
-public class Keys {
+public class KeyboardControler {
 	private int size = 256;
-	private KeyState [] keys; 
+	private KeyState [] keys;
 	
-	public Keys(){
+	public KeyboardControler(){
 		
 		keys = new KeyState[size];
 		for(int i =0 ; i < size; i++){
-			keys[i] = KeyState.RELEASED;
+			keys[i] = KeyState.INACTIVE;
 		}
+		
 	}
 
 	/**
@@ -29,7 +30,7 @@ public class Keys {
 			}else{
 				if(keys[i] == KeyState.RELEASED){
 					keys[i] = KeyState.INACTIVE;
-				}else{
+				}else if(keys[i] != KeyState.INACTIVE){
 					keys[i] = KeyState.RELEASED;
 				}
 			}
