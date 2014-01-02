@@ -1,14 +1,13 @@
 package configuration;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.Properties;
 
 import org.lwjgl.util.vector.Vector2f;
 
 public class ConfigManager {
-	private static final String separator = ":"; 
+	private static final String configFileName = "options.txt";
 	
 	
 	public static boolean fullScreen = false;
@@ -20,32 +19,33 @@ public class ConfigManager {
 	 * file.
 	 */
 	public static void init(){
-		String fichier = "options.txt";
+		Properties prop = new Properties();	
 		try{
-			InputStream ips=new FileInputStream(fichier); 
-			InputStreamReader ipsr=new InputStreamReader(ips);
-			BufferedReader br=new BufferedReader(ipsr);
-			String line;
-			while ((line=br.readLine())!=null){
-				String[] lineSplit = line.split(separator);
-				switch(lineSplit[0]){
-					case ("resolution"):
-						String [] resSplit = lineSplit[1].split("x");
-						resolution.x = Float.parseFloat(resSplit[0]);
-						resolution.y = Float.parseFloat(resSplit[1]);
-						break;
-					case ("fullscreen"):
-						fullScreen = Boolean.parseBoolean(lineSplit[1]);
-						break;
-					case ("maxFps"):
-						maxFps = Integer.parseInt(lineSplit[1]);
-						maxFps = (maxFps == 0) ? 5000 : maxFps;
-						break;
-				}
-			}
-			br.close(); 
+			InputStream configFile  = new FileInputStream(configFileName);
+			prop.load(configFile);
+			loadResolution(prop);
+			loadFullscreen(prop);
+			loadMaxFps(prop);
 		}catch (Exception e){
 			System.out.println(e.toString());
 		}
+	}
+	
+	static private void loadResolution(Properties prop) {
+		String str = prop.getProperty("Resolution");
+		String [] resSplit = str.split("x");
+		resolution.x = Float.parseFloat(resSplit[0]);
+		resolution.y = Float.parseFloat(resSplit[1]);
+	}
+	
+	static private void loadFullscreen(Properties prop) {
+		String str = prop.getProperty("Fullscreen");
+		fullScreen = Boolean.parseBoolean(str);
+	}
+	
+	static private void loadMaxFps(Properties prop) {
+		String str = prop.getProperty("MaxFPS");
+		maxFps = Integer.parseInt(str);
+		maxFps = (maxFps == 0) ? 5000 : maxFps;
 	}
 }
