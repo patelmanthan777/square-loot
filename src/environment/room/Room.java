@@ -2,6 +2,9 @@ package environment.room;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.LinkedList;
+import org.lwjgl.util.vector.Vector2f;
+
 import org.lwjgl.util.vector.Vector3f;
 
 import light.Light;
@@ -31,14 +34,50 @@ public abstract class Room implements Drawable, ShadowCaster {
 	boolean[] neighbours = new boolean[4];
 	/* ------------------------------------------*/
 	
+	/**
+	 * Stores the upperleft corner of the blocks on which shadows should
+	 * not be drawn.
+	 */
+	private LinkedList<Vector2f> shadowFreeBlocks = new LinkedList<Vector2f>(); 
+	
+	/**
+	 * Compute and return the blocks on which shadows should
+	 * not be drawn. This method should be updated for
+	 * performance if more than call is made. 
+	 * 
+	 * @return The newly computed value of shadowFreeBlocks.
+	 * 
+	 */
+	public LinkedList<Vector2f> getShadowFreeBlocks(){
+		int gridSizeX =  (int) Map.roomBlockSize.x;
+		int gridSizeY =  (int) Map.roomBlockSize.y;
+
+		for (int i=0; i < gridSizeX; i++){
+			for (int j=0; j < gridSizeY; j++){
+				if (grid[i][j].isShadowFree)
+					shadowFreeBlocks.
+						add(new Vector2f(x + i * Map.blockPixelSize.x,
+								y + j * Map.blockPixelSize.y));
+			}
+		}
+		
+		return shadowFreeBlocks;
+	}
+	
+	
 	public Room(float posX, float posY) {
 		this.x = posX;
 		this.y = posY;
-		grid = new Block[(int) Map.roomBlockSize.x][(int) Map.roomBlockSize.y];
+		int gridSizeX =  (int) Map.roomBlockSize.x;
+		int gridSizeY =  (int) Map.roomBlockSize.y;
+		grid = new Block[gridSizeX][gridSizeY];
 		for (int i = 0; i < 4; i++) {
 			doors[i] = false;
 		}
 		construct();
+		
+
+		
 	}
 
 	protected abstract void construct();

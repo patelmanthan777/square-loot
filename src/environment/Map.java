@@ -1,6 +1,9 @@
 package environment;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import java.util.LinkedList;
+
 import light.Light;
 import light.ShadowBuffer;
 import org.lwjgl.opengl.GL11;
@@ -71,6 +74,13 @@ public class Map implements ShadowCaster{
 	 */
 	private boolean fullRender = false;
 	
+	/**
+	 * Stores the upperleft corner of the blocks on which shadows should
+	 * not be drawn.
+	 */
+	public static LinkedList<Vector2f> shadowFreeBlocks = new LinkedList<Vector2f>(); 
+	
+	
 	public Map(Vector2f mapRoomSize, Vector2f roomBlockSize, Vector2f blockPixelSize) {
 		Map.mapRoomSize = mapRoomSize;
 		Map.roomBlockSize = roomBlockSize;
@@ -82,6 +92,14 @@ public class Map implements ShadowCaster{
 		this.drawRoomDistance = new Vector2f(ConfigManager.resolution.x/Map.roomPixelSize.x,ConfigManager.resolution.y/Map.roomPixelSize.y);
 		mapFBO = new FBO();
 		generate();
+		
+		for (int i=0; i < mapRoomSize.x; i++){
+			for (int j=0; j < mapRoomSize.y; j++){	
+				if (roomGrid[i][j] != null)
+					shadowFreeBlocks.addAll(roomGrid[i][j].getShadowFreeBlocks());
+			}
+		}
+		
 	}
 	/**
 	 * Render the full map.

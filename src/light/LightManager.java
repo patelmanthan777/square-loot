@@ -229,6 +229,18 @@ public class LightManager {
 				}
 			}
 			glEnd();
+						
+			//Cut holes in the stencil where shadow free blocks are
+			glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+			glBegin(GL_QUADS);				
+				for (Vector2f i:Map.shadowFreeBlocks){
+					glVertex2f(i.x,i.y);
+					glVertex2f(i.x,i.y+Map.blockPixelSize.y);
+					glVertex2f(i.x+Map.blockPixelSize.x,i.y+Map.blockPixelSize.y);
+					glVertex2f(i.x+Map.blockPixelSize.x,i.y);
+				}
+			glEnd();				
+			
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 			glStencilFunc(GL_EQUAL, 0, 1);
 			glColorMask(true, true, true, true);
@@ -300,6 +312,19 @@ public class LightManager {
 					}
 				}
 				glEnd();
+				
+				//Cut holes in the stencil where shadow free blocks are
+				glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+				glBegin(GL_QUADS);				
+					for (Vector2f i:Map.shadowFreeBlocks){
+						glVertex2f(i.x,i.y);
+						glVertex2f(i.x,i.y+Map.blockPixelSize.y);
+						glVertex2f(i.x+Map.blockPixelSize.x,i.y+Map.blockPixelSize.y);
+						glVertex2f(i.x+Map.blockPixelSize.x,i.y);
+					}
+				glEnd();				
+
+				
 				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 				glStencilFunc(GL_EQUAL, 0, 1);
 				glColorMask(true, true, true, true);
@@ -366,7 +391,7 @@ public class LightManager {
 				glEnd();
 				glBindTexture(GL_TEXTURE_2D, tex_save);
 				glDisable(GL_BLEND);
-				glUseProgram(0);
+				glUseProgram(0);						
 				glClear(GL_STENCIL_BUFFER_BIT);
 
 			}

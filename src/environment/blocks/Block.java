@@ -16,6 +16,13 @@ public abstract class Block {
 	protected Vector2f[] points = new Vector2f[4];
 	protected Vector3f color = new Vector3f();
 
+	/**
+	 * Indicates whether shadows should be drawn on this block.
+	 */
+	public boolean isShadowFree = false;
+	
+	
+	
 	public abstract boolean testCollision();
 
 	public Block(){
