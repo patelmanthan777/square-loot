@@ -2,6 +2,7 @@ package game;
 import light.Laser;
 import light.Light;
 import light.LightManager;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -9,6 +10,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+
 import configuration.ConfigManager;
 import rendering.Camera;
 import userInterface.OverlayManager;
@@ -17,7 +19,7 @@ import entity.projectile.ProjectileManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
 import event.Timer;
-import event.Controle.Controle;
+import event.control.Control;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GameLoop {
@@ -29,7 +31,7 @@ public class GameLoop {
 
 	private Camera cam = new Camera(new Vector2f(0, 0));
 	
-	private Controle controle;
+	private Control controle;
 
 	public static void main(String[] args) {
 		GameLoop loop = new GameLoop();
@@ -68,7 +70,7 @@ public class GameLoop {
 		ConfigManager.init();
 		createWindow();
 		initGL();
-		controle = new Controle(p);
+		controle = new Control(p);
 		BlockFactory.initBlocks();
 		m = new Map(new Vector2f(10,10), new Vector2f(16,12), new Vector2f(40,40));
 		m.renderMapToFrameBuffer();
