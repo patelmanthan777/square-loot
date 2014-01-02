@@ -331,10 +331,11 @@ public class LightManager {
 						
 						laserDirection = ((Laser) l).getDirection();
 						laserDirection.normalise(laserDirection);
+												
 						glUniform2f(
 								glGetUniformLocation(laserShaderProgram,
-										"laser.direction"), -laserDirection.x,
-								laserDirection.y);
+										"laser.direction"), laserDirection.x,
+								- laserDirection.y);
 						glUniform2f(
 								glGetUniformLocation(laserShaderProgram,
 										"laser.position"), l.getX() - camPos.x
