@@ -3,9 +3,10 @@ package event;
 import org.lwjgl.Sys;
 
 public class Timer {
-	static private long lastFrame = (Sys.getTime() * 1000) / Sys.getTimerResolution();
-	static private long currentFrame = (Sys.getTime() * 1000) / Sys.getTimerResolution();
-	static private int delta = 0;
+	static private long unitInOneSecond = 1000;
+	static private long lastFrame = (Sys.getTime() * unitInOneSecond) / Sys.getTimerResolution();
+	static private long currentFrame = (Sys.getTime() * unitInOneSecond) / Sys.getTimerResolution();
+	static private long delta = 0;
 	static private long runningTime = 0;
 	static private int FPS = 0;
 	static private int FPScpt = 0;
@@ -15,14 +16,14 @@ public class Timer {
         return currentFrame ;
     }
 	
-	static public int getDelta() {
+	static public long getDelta() {
         return delta;
     }
 	
 	static public void tick(){
 		lastFrame = currentFrame;
-		currentFrame = (Sys.getTime() * 1000) / Sys.getTimerResolution();
-        delta = (int) (currentFrame - lastFrame);
+		currentFrame = (Sys.getTime() * unitInOneSecond) / Sys.getTimerResolution();
+        delta = currentFrame - lastFrame;
         runningTime+=delta;
         FPScpt++;
         if(currentFrame/500 != lastFrame/500){

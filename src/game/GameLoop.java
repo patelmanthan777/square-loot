@@ -2,7 +2,6 @@ package game;
 import light.Laser;
 import light.Light;
 import light.LightManager;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -10,7 +9,6 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-
 import configuration.ConfigManager;
 import rendering.Camera;
 import userInterface.OverlayManager;
@@ -43,7 +41,7 @@ public class GameLoop {
 	 * is set to 'false', meaning that the game is shutting down.
 	 */
 	private void start() {
-		int elapsedTime = 0;
+		long elapsedTime = 0;
 		try {
 			init();
 			while (isRunning) {
@@ -86,7 +84,7 @@ public class GameLoop {
 		OverlayManager.createMiniMap(m.getRooms(),p);
 		OverlayManager.createPlayerStatsOverlay(p);
 		
-		Light playerLight = LightManager.addLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 10,2*(int)ConfigManager.resolution.x,true);
+		Light playerLight = LightManager.addLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
 		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);
@@ -180,10 +178,8 @@ public class GameLoop {
          * Initialization the game window.
          */
 	private void createWindow() {
-		
 		setDisplayMode((int)ConfigManager.resolution.x, (int)ConfigManager.resolution.y, ConfigManager.fullScreen);
 		try {
-			
 			Display.setTitle(WINDOW_TITLE);
 			Display.create(new PixelFormat(0, 16, 1));
 			Mouse.setGrabbed(false);

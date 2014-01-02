@@ -74,7 +74,7 @@ public class Bullet extends Projectile {
 		GL11.glColor3f(color.x, color.y, color.z);
 		glUseProgram(Bullet.bulletShaderProgram);
 		glUniform2f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.position"),this.position.x,this.position.y);
-		glUniform2f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.direction"),this.rotation.x,this.rotation.y);
+		glUniform2f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.direction"),this.direction.x,this.direction.y);
 		glUniform1f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.radius"),size.x);
 		glUniform1f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.length"),size.y);
 		glEnable(GL_BLEND);

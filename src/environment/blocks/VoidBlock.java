@@ -4,7 +4,7 @@ public class VoidBlock extends Block{
 
 	@Override
 	public boolean testCollision() {
-		return false;
+		return true;
 	}
 
 	@Override

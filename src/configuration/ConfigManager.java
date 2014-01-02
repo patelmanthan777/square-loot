@@ -39,6 +39,7 @@ public class ConfigManager {
 						break;
 					case ("maxFps"):
 						maxFps = Integer.parseInt(lineSplit[1]);
+						maxFps = (maxFps == 0) ? 5000 : maxFps;
 						break;
 				}
 			}

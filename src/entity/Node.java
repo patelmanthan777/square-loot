@@ -4,13 +4,15 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class Node {
 	protected Vector2f position;
-	protected Vector2f rotation;
+	protected Vector2f direction;
+	protected Vector2f tangent;
 	protected String name = null;
 
 	
 	public Node(Vector2f pos, Vector2f rot){
 		position = pos;
-		rotation = rot;
+		direction = rot;
+		tangent = new Vector2f();
 	}
 	
 	public void setPosition(Vector2f pos){
@@ -24,18 +26,20 @@ public class Node {
 	}
 	
 	public void setOrientation(Vector2f ori){
-		rotation.x = ori.x;
-		rotation.y = ori.y;
+		setOrientation(ori.x,ori.y);
 	}
 	
 	public void setOrientation(float orix, float oriy){
-		rotation.x = orix;
-		rotation.y = oriy;
+		direction.x = orix;
+		direction.y = oriy;
+		tangent.x = oriy;
+		tangent.y = -orix;
 	}
 	
 	public Node(Vector2f pos){
 		position = new Vector2f(pos);
-		rotation = new Vector2f(0f,0f);
+		direction = new Vector2f();
+		tangent = new Vector2f();
 	}
 	
 	public Vector2f getPosition(){
@@ -43,7 +47,7 @@ public class Node {
 	}
 	
 	public Vector2f getRotation(){
-		return rotation;
+		return direction;
 	}
 	
 	public float getX(){
@@ -54,10 +58,10 @@ public class Node {
 	}
 	
 	public float getRotationX(){
-		return rotation.x;
+		return direction.x;
 	}
 	public float getRotationY(){
-		return rotation.y;
+		return direction.y;
 	}
 	
 	public void setX(float x){
