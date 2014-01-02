@@ -1,4 +1,4 @@
-package event.Controle;
+package event.control;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,7 +10,7 @@ import event.KeyState;
 import event.KeyboardControler;
 import event.MouseControler;
 
-public class PlayerControle {
+public class PlayerControl {
 
 	enum playerActions {
 		MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, MOVE_BACKWARD, PRIMARY_WEAPON, LIGHT
@@ -23,7 +23,7 @@ public class PlayerControle {
 	private playerActions[] actions;
 	private Player p;
 
-	public PlayerControle(KeyboardControler keys, MouseControler mouse, Player p) {
+	public PlayerControl(KeyboardControler keys, MouseControler mouse, Player p) {
 
 		this.keys = keys;
 		this.mouse = mouse;

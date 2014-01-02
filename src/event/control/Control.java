@@ -1,4 +1,4 @@
-package event.Controle;
+package event.control;
 
 import game.GameLoop;
 
@@ -10,16 +10,16 @@ import event.KeyState;
 import event.KeyboardControler;
 import event.MouseControler;
 
-public class Controle {
+public class Control {
 	private KeyboardControler keys;
 	private MouseControler mouse;
-	private PlayerControle pControle;
+	private PlayerControl pControle;
 	
-	public Controle(Player p) {
+	public Control(Player p) {
 		keys = new KeyboardControler();
 		mouse = new MouseControler();
 		
-		pControle = new PlayerControle(keys, mouse, p);
+		pControle = new PlayerControl(keys, mouse, p);
 	}
 	
 	
