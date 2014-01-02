@@ -72,13 +72,7 @@ public class Map implements ShadowCaster{
 	/**
 	 * <b>true</b> if the full map needs to be rendered, <b>false</b> otherwise.
 	 */
-	private boolean fullRender = false;
-	
-	/**
-	 * Stores the upperleft corner of the blocks on which shadows should
-	 * not be drawn.
-	 */
-	public static LinkedList<Vector2f> shadowFreeBlocks = new LinkedList<Vector2f>(); 
+	private boolean fullRender = false;	
 	
 	
 	public Map(Vector2f mapRoomSize, Vector2f roomBlockSize, Vector2f blockPixelSize) {
@@ -91,16 +85,10 @@ public class Map implements ShadowCaster{
 		this.drawRoomPosition = new Vector2f(0,0);
 		this.drawRoomDistance = new Vector2f(ConfigManager.resolution.x/Map.roomPixelSize.x,ConfigManager.resolution.y/Map.roomPixelSize.y);
 		mapFBO = new FBO();
-		generate();
-		
-		for (int i=0; i < mapRoomSize.x; i++){
-			for (int j=0; j < mapRoomSize.y; j++){	
-				if (roomGrid[i][j] != null)
-					shadowFreeBlocks.addAll(roomGrid[i][j].getShadowFreeBlocks());
-			}
-		}
-		
+		generate();		
 	}
+	
+	
 	/**
 	 * Render the full map.
 	 */

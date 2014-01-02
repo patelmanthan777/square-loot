@@ -19,7 +19,7 @@ public abstract class Block {
 	/**
 	 * Indicates whether shadows should be drawn on this block.
 	 */
-	public boolean isShadowFree = false;
+	public int layer;
 	
 	
 	
@@ -30,6 +30,8 @@ public abstract class Block {
 		points[1] = new Vector2f();
 		points[2] = new Vector2f();
 		points[3] = new Vector2f();
+		
+		layer = 0;
 	}
 	
 	public Block(float x, float y){
@@ -37,6 +39,8 @@ public abstract class Block {
 		points[1] = new Vector2f(x + Map.blockPixelSize.x, y);
 		points[2] = new Vector2f(x + Map.blockPixelSize.x, y + Map.blockPixelSize.y);
 		points[3] = new Vector2f(x, y + Map.blockPixelSize.y);
+		
+		layer = 0;
 	}
 	
 	/**

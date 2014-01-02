@@ -6,12 +6,12 @@ public class SolidBlock extends ShadowCasterBlock{
 	
 	protected SolidBlock(){
 		super();
-		isShadowFree = true;
+		layer = 1;
 	}
 	
 	protected SolidBlock(float x, float y){
 		super(x,y);
-		isShadowFree = true;
+		layer = 1;
 	}
 
 	@Override

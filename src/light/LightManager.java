@@ -230,6 +230,7 @@ public class LightManager {
 			}
 			glEnd();
 						
+			/*
 			//Cut holes in the stencil where shadow free blocks are
 			glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
 			glBegin(GL_QUADS);				
@@ -239,7 +240,8 @@ public class LightManager {
 					glVertex2f(i.x+Map.blockPixelSize.x,i.y+Map.blockPixelSize.y);
 					glVertex2f(i.x+Map.blockPixelSize.x,i.y);
 				}
-			glEnd();				
+			glEnd();
+			*/				
 			
 			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 			glStencilFunc(GL_EQUAL, 0, 1);
@@ -313,6 +315,7 @@ public class LightManager {
 				}
 				glEnd();
 				
+				/*
 				//Cut holes in the stencil where shadow free blocks are
 				glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
 				glBegin(GL_QUADS);				
@@ -322,7 +325,8 @@ public class LightManager {
 						glVertex2f(i.x+Map.blockPixelSize.x,i.y+Map.blockPixelSize.y);
 						glVertex2f(i.x+Map.blockPixelSize.x,i.y);
 					}
-				glEnd();				
+				glEnd();
+				*/				
 
 				
 				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);

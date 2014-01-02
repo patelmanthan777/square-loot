@@ -6,12 +6,12 @@ public class BorderBlock extends ShadowCasterBlock{
 	
 	protected BorderBlock(){
 		super();
-		isShadowFree = true;
+		layer = 1;
 	}
 	
 	protected BorderBlock(float x, float y){
 		super(x,y);
-		isShadowFree = true;
+		layer = 1;
 	}
 	
 	@Override

@@ -34,36 +34,6 @@ public abstract class Room implements Drawable, ShadowCaster {
 	boolean[] neighbours = new boolean[4];
 	/* ------------------------------------------*/
 	
-	/**
-	 * Stores the upperleft corner of the blocks on which shadows should
-	 * not be drawn.
-	 */
-	private LinkedList<Vector2f> shadowFreeBlocks = new LinkedList<Vector2f>(); 
-	
-	/**
-	 * Compute and return the blocks on which shadows should
-	 * not be drawn. This method should be updated for
-	 * performance if more than call is made. 
-	 * 
-	 * @return The newly computed value of shadowFreeBlocks.
-	 * 
-	 */
-	public LinkedList<Vector2f> getShadowFreeBlocks(){
-		int gridSizeX =  (int) Map.roomBlockSize.x;
-		int gridSizeY =  (int) Map.roomBlockSize.y;
-
-		for (int i=0; i < gridSizeX; i++){
-			for (int j=0; j < gridSizeY; j++){
-				if (grid[i][j].isShadowFree)
-					shadowFreeBlocks.
-						add(new Vector2f(x + i * Map.blockPixelSize.x,
-								y + j * Map.blockPixelSize.y));
-			}
-		}
-		
-		return shadowFreeBlocks;
-	}
-	
 	
 	public Room(float posX, float posY) {
 		this.x = posX;
@@ -75,8 +45,6 @@ public abstract class Room implements Drawable, ShadowCaster {
 			doors[i] = false;
 		}
 		construct();
-		
-
 		
 	}
 
