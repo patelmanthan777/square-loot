@@ -29,7 +29,7 @@ public class LightManager {
 	/**
 	 * Stores the shadows to be drawn.
 	 */
-	private static HashMap<Light, ShadowBuffer> lightShadows = new HashMap<Light, ShadowBuffer>();
+	private static HashMap<Light, ShadowBuffer[]> lightShadows = new HashMap<Light, ShadowBuffer[]>();
 	
 	private static Vector2f camPos = null;
 	private static int screenWidth = 0;
@@ -69,7 +69,13 @@ public class LightManager {
 			float radius, float maxDst, boolean dynamic) {
 		Light l = new Light(p, color, radius, maxDst,dynamic);
 		l.setName(name);
-		lightShadows.put(l, new ShadowBuffer());
+		
+		ShadowBuffer[] shadows = new ShadowBuffer[Map.maxLayer];
+		for (int i = 0; i< Map.maxLayer; i++){
+			shadows[i] = new ShadowBuffer();
+		}
+		
+		lightShadows.put(l, shadows);
 		if (dynamic) {
 			activatedDynamicLights.put(name, l);
 			updateLightShadows(l,true);
@@ -138,7 +144,13 @@ public class LightManager {
 	static public Laser addActivatedLaser(String name, Vector2f p,
 			Vector3f color, Vector2f dir) {
 		Laser laser = new Laser(p, color, dir);
-		lightShadows.put(laser, new ShadowBuffer());
+		
+		ShadowBuffer[] shadows = new ShadowBuffer[Map.maxLayer];
+		for (int i = 0; i< Map.maxLayer; i++){
+			shadows[i] = new ShadowBuffer();
+		}
+		
+		lightShadows.put(laser, shadows);
 		activatedDynamicLights.put(name, laser);
 		updateLightShadows(laser,true);
 		return laser;
@@ -146,7 +158,9 @@ public class LightManager {
 
 	static public void updateLightShadows(Light l, boolean dynamic) {
 		/* Set to 0 the pointer to the last shadow */
-		lightShadows.get(l).lastShadow = 0;
+		ShadowBuffer[] shadows = lightShadows.get(l);
+		for (int i = 0; i < Map.maxLayer; i++)	
+				shadows[i].lastShadow = 0;
 		for (ShadowCaster sc : shadowCasters) {
 			if (sc instanceof Map && !dynamic) {
 				boolean save = ((Map) sc).getFullRender();
@@ -213,18 +227,21 @@ public class LightManager {
 			glStencilFunc(GL_ALWAYS, 1, 1);
 			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 			glBegin(GL_QUADS);
-			ShadowBuffer shadowBuffer = lightShadows.get(l);
-			if(shadowBuffer != null){
-				for (int i = 0 ; i < shadowBuffer.lastShadow ; i++) {
-					Shadow s = shadowBuffer.get(i);
-					Vector2f[] points = s.points;
+			ShadowBuffer[] shadows = lightShadows.get(l);
+			for (int j = 0; j < Map.maxLayer; j++){
+				
+				if(shadows[j] != null){
+					for (int i = 0 ; i < shadows[j].lastShadow ; i++) {
+						Shadow s = shadows[j].get(i);
+						Vector2f[] points = s.points;
 					
-					{
-						glVertex2f(points[0].x, points[0].y);
-						glVertex2f(points[1].x, points[1].y);
-						glVertex2f(points[3].x, points[3].y);
-						glVertex2f(points[2].x, points[2].y);
+						{
+							glVertex2f(points[0].x, points[0].y);
+							glVertex2f(points[1].x, points[1].y);
+							glVertex2f(points[3].x, points[3].y);
+							glVertex2f(points[2].x, points[2].y);
 						
+						}
 					}
 				}
 			}
@@ -298,19 +315,23 @@ public class LightManager {
 				glStencilFunc(GL_ALWAYS, 1, 1);
 				glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 				glBegin(GL_QUADS);
-				ShadowBuffer shadowBuffer = lightShadows.get(l);
-				if(shadowBuffer != null){
-					for (int i = 0 ; i < shadowBuffer.lastShadow ; i++) {
-						Shadow s = shadowBuffer.get(i);
-						Vector2f[] points = s.points;
+								
+				ShadowBuffer[] shadows = lightShadows.get(l);
+				for (int j = 0; j < Map.maxLayer; j++){
+				
+					if(shadows[j] != null){
+						for (int i = 0 ; i < shadows[j].lastShadow ; i++) {
+							Shadow s = shadows[j].get(i);
+							Vector2f[] points = s.points;
 						
-						{
-							glVertex2f(points[0].x, points[0].y);
-							glVertex2f(points[1].x, points[1].y);
-							glVertex2f(points[3].x, points[3].y);
-							glVertex2f(points[2].x, points[2].y);
+							{
+								glVertex2f(points[0].x, points[0].y);
+								glVertex2f(points[1].x, points[1].y);
+								glVertex2f(points[3].x, points[3].y);
+								glVertex2f(points[2].x, points[2].y);
+							}
+						
 						}
-						
 					}
 				}
 				glEnd();

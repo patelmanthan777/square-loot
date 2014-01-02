@@ -14,6 +14,7 @@ import rendering.FBO;
 import rendering.ShadowCaster;
 
 public class Map implements ShadowCaster{
+	public static final int maxLayer = 3;	
 	
 	/**
 	 * Block size in number of pixels.
@@ -181,7 +182,7 @@ public class Map implements ShadowCaster{
 	 * Compute the shadows casted by the map
 	 */
 	@Override
-	public void computeShadow(Light light, ShadowBuffer shadows) {
+	public void computeShadow(Light light, ShadowBuffer[] shadows) {		
 		int minX = 0;
 		int maxX = 0;
 		int minY = 0;

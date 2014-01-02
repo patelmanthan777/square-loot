@@ -157,12 +157,12 @@ public abstract class Room implements Drawable, ShadowCaster {
 	}
 
 	@Override
-	public void computeShadow(Light light,ShadowBuffer shadows) {
+	public void computeShadow(Light light,ShadowBuffer[] shadows) {
 		
 		
 		for (int i = 0; i < Map.roomBlockSize.x; i++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
-				if (grid[i][j].castShadows()) {
+				if (grid[i][j].castShadows() && grid[i][j].getLayer() > 0) {
 					if (j == 0) {
 						neighbours[0] = true;
 					} else {
@@ -185,7 +185,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 					}
 					((ShadowCasterBlock) grid[i][j]).computeShadow(
 							light, (int) (x / Map.blockPixelSize.x) + i,
-							(int) (y / Map.blockPixelSize.y) + j, neighbours, shadows);
+							(int) (y / Map.blockPixelSize.y) + j, neighbours, shadows[grid[i][j].getLayer()-1]);
 				}
 			}
 		}

@@ -19,7 +19,7 @@ public abstract class Block {
 	/**
 	 * Indicates whether shadows should be drawn on this block.
 	 */
-	public int layer;
+	protected int layer;
 	
 	
 	
@@ -83,5 +83,9 @@ public abstract class Block {
 		this.color.x = r;
 		this.color.y = g;
 		this.color.z = b;
+	}
+	
+	public int getLayer(){
+		return layer;
 	}
 }
