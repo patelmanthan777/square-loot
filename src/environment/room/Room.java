@@ -1,10 +1,6 @@
 package environment.room;
 
 import static org.lwjgl.opengl.GL11.*;
-
-import java.util.LinkedList;
-import org.lwjgl.util.vector.Vector2f;
-
 import org.lwjgl.util.vector.Vector3f;
 
 import light.Light;

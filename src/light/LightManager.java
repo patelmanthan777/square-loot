@@ -30,21 +30,22 @@ public class LightManager {
 	 * Stores the shadows to be drawn.
 	 */
 	private static HashMap<Light, ShadowBuffer[]> lightShadows = new HashMap<Light, ShadowBuffer[]>();
-	
+
 	private static Vector2f camPos = null;
 	private static int screenWidth = 0;
 	private static int screenHeight = 0;
 	private static float diagonal = 0;
-	
+
 	static int lightShaderProgram;
 	static int laserShaderProgram;
 	static FBO staticLightsFBO;
-	
+
 	/* Avoid dynamic allocation in rendering methods */
 	private static Vector2f camToLight = new Vector2f();
 	private static Vector2f laserDirection = new Vector2f();
+
 	/* --------------------------------------------- */
-	
+
 	static public void init() {
 		staticLightsFBO = new FBO();
 	}
@@ -53,13 +54,13 @@ public class LightManager {
 		shadowCasters.add(sc);
 
 		for (Light l : activatedDynamicLights.values()) {
-			sc.computeShadow(l,lightShadows.get(l));
+			sc.computeShadow(l, lightShadows.get(l));
 		}
 		for (Light l : activatedStaticLights.values()) {
 			if (sc instanceof Map) {
 				boolean save = ((Map) sc).getFullRender();
 				((Map) sc).setFullRender(true);
-				sc.computeShadow(l,lightShadows.get(l));
+				sc.computeShadow(l, lightShadows.get(l));
 				((Map) sc).setFullRender(save);
 			}
 		}
@@ -67,23 +68,23 @@ public class LightManager {
 
 	static public Light addLight(String name, Vector2f p, Vector3f color,
 			float radius, float maxDst, boolean dynamic) {
-		Light l = new Light(p, color, radius, maxDst,dynamic);
+		Light l = new Light(p, color, radius, maxDst, dynamic);
 		l.setName(name);
-		
+
 		ShadowBuffer[] shadows = new ShadowBuffer[Map.maxLayer];
-		for (int i = 0; i< Map.maxLayer; i++){
+		for (int i = 0; i < Map.maxLayer; i++) {
 			shadows[i] = new ShadowBuffer();
 		}
-		
+
 		lightShadows.put(l, shadows);
 		if (dynamic) {
 			activatedDynamicLights.put(name, l);
-			updateLightShadows(l,true);
+			updateLightShadows(l, true);
 		} else {
 			activatedStaticLights.put(name, l);
-			updateLightShadows(l,false);
+			updateLightShadows(l, false);
 		}
-		
+
 		return l;
 	}
 
@@ -92,10 +93,10 @@ public class LightManager {
 		if (l != null) {
 			if (dynamic) {
 				activatedDynamicLights.put(name, l);
-				updateLightShadows(l,true);
+				updateLightShadows(l, true);
 			} else {
 				activatedStaticLights.put(name, l);
-				updateLightShadows(l,false);
+				updateLightShadows(l, false);
 			}
 		}
 	}
@@ -144,37 +145,37 @@ public class LightManager {
 	static public Laser addActivatedLaser(String name, Vector2f p,
 			Vector3f color, Vector2f dir) {
 		Laser laser = new Laser(p, color, dir);
-		
+
 		ShadowBuffer[] shadows = new ShadowBuffer[Map.maxLayer];
-		for (int i = 0; i< Map.maxLayer; i++){
+		for (int i = 0; i < Map.maxLayer; i++) {
 			shadows[i] = new ShadowBuffer();
 		}
-		
+
 		lightShadows.put(laser, shadows);
 		activatedDynamicLights.put(name, laser);
-		updateLightShadows(laser,true);
+		updateLightShadows(laser, true);
 		return laser;
 	}
 
 	static public void updateLightShadows(Light l, boolean dynamic) {
 		/* Set to 0 the pointer to the last shadow */
 		ShadowBuffer[] shadows = lightShadows.get(l);
-		for (int i = 0; i < Map.maxLayer; i++)	
-				shadows[i].lastShadow = 0;
+		for (int i = 0; i < Map.maxLayer; i++)
+			shadows[i].lastShadow = 0;
 		for (ShadowCaster sc : shadowCasters) {
 			if (sc instanceof Map && !dynamic) {
 				boolean save = ((Map) sc).getFullRender();
 				((Map) sc).setFullRender(true);
-				sc.computeShadow(l,lightShadows.get(l));
+				sc.computeShadow(l, lightShadows.get(l));
 				((Map) sc).setFullRender(save);
-			}else{
-				sc.computeShadow(l,lightShadows.get(l));
+			} else {
+				sc.computeShadow(l, lightShadows.get(l));
 			}
 		}
 	}
 
 	/**
-	 * Compute the FBO resulting from the static lights 
+	 * Compute the FBO resulting from the static lights
 	 */
 	static private void renderStaticsToFrameBuffer() {
 		staticLightsFBO.bind();
@@ -188,15 +189,16 @@ public class LightManager {
 		glLoadIdentity();
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
 		renderStaticLights();
-		
+
 		glPopMatrix();
 		glPopAttrib();
 		staticLightsFBO.setUpdated(true);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
+		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0,
+				1, -1);
 		staticLightsFBO.unbind();
 		glMatrixMode(GL_MODELVIEW);
 	}
@@ -207,7 +209,7 @@ public class LightManager {
 		}
 		staticLightsFBO.use();
 		glBegin(GL_QUADS);
-		
+
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(0f, Map.mapPixelSize.y);
 		glTexCoord2f(1.0f, 0.0f);
@@ -217,143 +219,37 @@ public class LightManager {
 		glTexCoord2f(0.0f, 1.0f);
 		glVertex2f(0f, 0f);
 		glEnd();
-		
+
 		renderDynamicLights();
 		staticLightsFBO.unUse();
-		
+
 	}
 
 	private static void renderStaticLights() {
-		for (Light l : activatedStaticLights.values()) {
-			glColorMask(false, false, false, false);
-			glStencilFunc(GL_ALWAYS, 1, 1);
-			glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-			glBegin(GL_QUADS);
-			ShadowBuffer[] shadows = lightShadows.get(l);
-			for (int j = 0; j < Map.maxLayer; j++){
-				
-				if(shadows[j] != null){
-					for (int i = 0 ; i < shadows[j].lastShadow ; i++) {
-						Shadow s = shadows[j].get(i);
-						Vector2f[] points = s.points;
-					
-						{
-							glVertex2f(points[0].x, points[0].y);
-							glVertex2f(points[1].x, points[1].y);
-							glVertex2f(points[3].x, points[3].y);
-							glVertex2f(points[2].x, points[2].y);
-						
-						}
-					}
-				}
-			}
-			glEnd();
-						
-			/*
-			//Cut holes in the stencil where shadow free blocks are
-			glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
-			glBegin(GL_QUADS);				
-				for (Vector2f i:Map.shadowFreeBlocks){
-					glVertex2f(i.x,i.y);
-					glVertex2f(i.x,i.y+Map.blockPixelSize.y);
-					glVertex2f(i.x+Map.blockPixelSize.x,i.y+Map.blockPixelSize.y);
-					glVertex2f(i.x+Map.blockPixelSize.x,i.y);
-				}
-			glEnd();
-			*/				
-			
-			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-			glStencilFunc(GL_EQUAL, 0, 1);
-			glColorMask(true, true, true, true);
-
-			if (l instanceof Light) {
-				glUseProgram(lightShaderProgram);
-				glUniform1f(
-						glGetUniformLocation(lightShaderProgram, "light.maxDst"),
-						l.getMaxDst());
-				glUniform1f(
-						glGetUniformLocation(lightShaderProgram, "light.radius"),
-						l.getRadius());
-				glUniform2f(
-						glGetUniformLocation(lightShaderProgram,
-								"light.position"), l.getX(), -l.getY()
-								+ Map.mapPixelSize.y);
-				glUniform3f(
-						glGetUniformLocation(lightShaderProgram, "light.color"),
-						l.getColor().x, l.getColor().y, l.getColor().z);
-				glUniform1i(
-						glGetUniformLocation(lightShaderProgram, "texture"),
-						1);
-			}
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_ONE, GL_ONE);
-			glClearColor(0.0f, 0.0f, 0.0f, 1f);
-			int tex_save =  glGetInteger(GL_TEXTURE_BINDING_2D);
-			glBindTexture(GL_TEXTURE_2D, Map.getTextureID(0));
-			glActiveTexture(GL_TEXTURE1);
-			glBegin(GL_QUADS);
-			glTexCoord2f(0.0f, 0.0f);
-			glVertex2f(0f, Map.mapPixelSize.y);
-			glTexCoord2f(1.0f, 0.0f);
-			glVertex2f(Map.mapPixelSize.x, Map.mapPixelSize.y);
-			glTexCoord2f(1.0f, 1.0f);
-			glVertex2f(Map.mapPixelSize.x, 0f);
-			glTexCoord2f(0.0f, 1.0f);
-			glVertex2f(0f, 0f);
-			glEnd();
-			glBindTexture(GL_TEXTURE_2D, tex_save);
-			glActiveTexture(GL_TEXTURE0);
-			glDisable(GL_BLEND);
-			glUseProgram(0);
-			glClear(GL_STENCIL_BUFFER_BIT);
-		}
-	}
-
-	private static void renderDynamicLights() {
-		glColor3f(0,0,0);
-		for (Light l : activatedDynamicLights.values()) {
-			Vector2f.sub(camPos, l.getPosition(), camToLight);
-			if (camToLight.length()
-					- l.getMaxDst() < diagonal / 4) {
+		for (int layer = 0; layer < Map.maxLayer; layer++) {
+			for (Light l : activatedStaticLights.values()) {
 				glColorMask(false, false, false, false);
 				glStencilFunc(GL_ALWAYS, 1, 1);
 				glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 				glBegin(GL_QUADS);
-								
 				ShadowBuffer[] shadows = lightShadows.get(l);
-				for (int j = 0; j < Map.maxLayer; j++){
-				
-					if(shadows[j] != null){
-						for (int i = 0 ; i < shadows[j].lastShadow ; i++) {
-							Shadow s = shadows[j].get(i);
+				for (int shadowLayer = layer; shadowLayer < Map.maxLayer; shadowLayer++) {
+					if (shadows[shadowLayer] != null) {
+						for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
+							Shadow s = shadows[shadowLayer].get(i);
 							Vector2f[] points = s.points;
-						
+
 							{
 								glVertex2f(points[0].x, points[0].y);
 								glVertex2f(points[1].x, points[1].y);
 								glVertex2f(points[3].x, points[3].y);
 								glVertex2f(points[2].x, points[2].y);
+
 							}
-						
 						}
 					}
 				}
 				glEnd();
-				
-				/*
-				//Cut holes in the stencil where shadow free blocks are
-				glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
-				glBegin(GL_QUADS);				
-					for (Vector2f i:Map.shadowFreeBlocks){
-						glVertex2f(i.x,i.y);
-						glVertex2f(i.x,i.y+Map.blockPixelSize.y);
-						glVertex2f(i.x+Map.blockPixelSize.x,i.y+Map.blockPixelSize.y);
-						glVertex2f(i.x+Map.blockPixelSize.x,i.y);
-					}
-				glEnd();
-				*/				
-
-				
 				glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 				glStencilFunc(GL_EQUAL, 0, 1);
 				glColorMask(true, true, true, true);
@@ -368,46 +264,22 @@ public class LightManager {
 									"light.radius"), l.getRadius());
 					glUniform2f(
 							glGetUniformLocation(lightShaderProgram,
-									"light.position"), l.getX() - camPos.x
-									+ (int)ConfigManager.resolution.x / 2,
-							(-l.getY() + camPos.y) + (int)ConfigManager.resolution.y / 2);
+									"light.position"), l.getX(), -l.getY()
+									+ Map.mapPixelSize.y);
 					glUniform3f(
 							glGetUniformLocation(lightShaderProgram,
 									"light.color"), l.getColor().x,
 							l.getColor().y, l.getColor().z);
 					glUniform1i(
 							glGetUniformLocation(lightShaderProgram, "texture"),
-							0);
+							1);
 				}
-				if (l instanceof Laser) {
-					glUseProgram(laserShaderProgram);
-					if (((Laser) l).getDirection().length() != 0) {
-						
-						laserDirection = ((Laser) l).getDirection();
-						laserDirection.normalise(laserDirection);
-												
-						glUniform2f(
-								glGetUniformLocation(laserShaderProgram,
-										"laser.direction"), laserDirection.x,
-								- laserDirection.y);
-						glUniform2f(
-								glGetUniformLocation(laserShaderProgram,
-										"laser.position"), l.getX() - camPos.x
-										+ (int)ConfigManager.resolution.x / 2,
-								(-l.getY() + camPos.y) + (int)ConfigManager.resolution.y / 2);
-						glUniform3f(
-								glGetUniformLocation(laserShaderProgram,
-										"laser.color"), l.getColor().x,
-								l.getColor().y, l.getColor().z);
-					}
-				}
-
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_ONE, GL_ONE);
 				glClearColor(0.0f, 0.0f, 0.0f, 1f);
-				int tex_save =  glGetInteger(GL_TEXTURE_BINDING_2D);
-				glBindTexture(GL_TEXTURE_2D, Map.getTextureID(0));
-				glActiveTexture(GL_TEXTURE0);
+				int tex_save = glGetInteger(GL_TEXTURE_BINDING_2D);
+				glBindTexture(GL_TEXTURE_2D, Map.getTextureID(layer));
+				glActiveTexture(GL_TEXTURE1);
 				glBegin(GL_QUADS);
 				glTexCoord2f(0.0f, 0.0f);
 				glVertex2f(0f, Map.mapPixelSize.y);
@@ -419,10 +291,129 @@ public class LightManager {
 				glVertex2f(0f, 0f);
 				glEnd();
 				glBindTexture(GL_TEXTURE_2D, tex_save);
+				glActiveTexture(GL_TEXTURE0);
 				glDisable(GL_BLEND);
-				glUseProgram(0);						
+				glUseProgram(0);
 				glClear(GL_STENCIL_BUFFER_BIT);
+			}
+		}
+	}
 
+	private static void renderDynamicLights() {
+		for (int layer = 0; layer < Map.maxLayer; layer++) {
+			for (Light l : activatedDynamicLights.values()) {
+				Vector2f.sub(camPos, l.getPosition(), camToLight);
+				if (camToLight.length() - l.getMaxDst() < diagonal / 4) {
+					glColorMask(false, false, false, false);
+					glStencilFunc(GL_ALWAYS, 1, 1);
+					glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+					glBegin(GL_QUADS);
+
+					ShadowBuffer[] shadows = lightShadows.get(l);
+
+					for (int shadowLayer = layer; shadowLayer < Map.maxLayer; shadowLayer++) {
+						if (shadows[shadowLayer] != null) {
+							for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
+								Shadow s = shadows[shadowLayer].get(i);
+								Vector2f[] points = s.points;
+
+								{
+									glVertex2f(points[0].x, points[0].y);
+									glVertex2f(points[1].x, points[1].y);
+									glVertex2f(points[3].x, points[3].y);
+									glVertex2f(points[2].x, points[2].y);
+
+								}
+							}
+						}
+					}
+					glEnd();
+
+					/*
+					 * //Cut holes in the stencil where shadow free blocks are
+					 * glStencilOp(GL_KEEP, GL_KEEP, GL_ZERO);
+					 * glBegin(GL_QUADS); for (Vector2f i:Map.shadowFreeBlocks){
+					 * glVertex2f(i.x,i.y);
+					 * glVertex2f(i.x,i.y+Map.blockPixelSize.y);
+					 * glVertex2f(i.x+Map
+					 * .blockPixelSize.x,i.y+Map.blockPixelSize.y);
+					 * glVertex2f(i.x+Map.blockPixelSize.x,i.y); } glEnd();
+					 */
+
+					glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+					glStencilFunc(GL_EQUAL, 0, 1);
+					glColorMask(true, true, true, true);
+
+					if (l instanceof Light) {
+						glUseProgram(lightShaderProgram);
+						glUniform1f(
+								glGetUniformLocation(lightShaderProgram,
+										"light.maxDst"), l.getMaxDst());
+						glUniform1f(
+								glGetUniformLocation(lightShaderProgram,
+										"light.radius"), l.getRadius());
+						glUniform2f(
+								glGetUniformLocation(lightShaderProgram,
+										"light.position"), l.getX() - camPos.x
+										+ (int) ConfigManager.resolution.x / 2,
+								(-l.getY() + camPos.y)
+										+ (int) ConfigManager.resolution.y / 2);
+						glUniform3f(
+								glGetUniformLocation(lightShaderProgram,
+										"light.color"), l.getColor().x,
+								l.getColor().y, l.getColor().z);
+						glUniform1i(
+								glGetUniformLocation(lightShaderProgram,
+										"texture"), 0);
+					}
+					if (l instanceof Laser) {
+						glUseProgram(laserShaderProgram);
+						if (((Laser) l).getDirection().length() != 0) {
+
+							laserDirection = ((Laser) l).getDirection();
+							laserDirection.normalise(laserDirection);
+
+							glUniform2f(
+									glGetUniformLocation(laserShaderProgram,
+											"laser.direction"),
+									laserDirection.x, -laserDirection.y);
+							glUniform2f(
+									glGetUniformLocation(laserShaderProgram,
+											"laser.position"), l.getX()
+											- camPos.x
+											+ (int) ConfigManager.resolution.x
+											/ 2, (-l.getY() + camPos.y)
+											+ (int) ConfigManager.resolution.y
+											/ 2);
+							glUniform3f(
+									glGetUniformLocation(laserShaderProgram,
+											"laser.color"), l.getColor().x,
+									l.getColor().y, l.getColor().z);
+						}
+					}
+
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_ONE, GL_ONE);
+					glClearColor(0.0f, 0.0f, 0.0f, 1f);
+					int tex_save = glGetInteger(GL_TEXTURE_BINDING_2D);
+					glBindTexture(GL_TEXTURE_2D, Map.getTextureID(layer));
+					glActiveTexture(GL_TEXTURE0);
+					glBegin(GL_QUADS);
+					glTexCoord2f(0.0f, 0.0f);
+					glVertex2f(0f, Map.mapPixelSize.y);
+					glTexCoord2f(1.0f, 0.0f);
+					glVertex2f(Map.mapPixelSize.x, Map.mapPixelSize.y);
+					glTexCoord2f(1.0f, 1.0f);
+					glVertex2f(Map.mapPixelSize.x, 0f);
+					glTexCoord2f(0.0f, 1.0f);
+					glVertex2f(0f, 0f);
+					glEnd();
+					glBindTexture(GL_TEXTURE_2D, tex_save);
+					glDisable(GL_BLEND);
+					glUseProgram(0);
+					glClear(GL_STENCIL_BUFFER_BIT);
+
+				}
 			}
 		}
 	}
