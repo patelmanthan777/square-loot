@@ -222,7 +222,6 @@ public class LightManager {
 
 		renderDynamicLights();
 		staticLightsFBO.unUse();
-
 	}
 
 	private static void drawMap(int textureId){
@@ -231,7 +230,7 @@ public class LightManager {
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
 		int tex_save = glGetInteger(GL_TEXTURE_BINDING_2D);
 		glBindTexture(GL_TEXTURE_2D, textureId);
-		glActiveTexture(GL_TEXTURE1);
+		glActiveTexture(GL_TEXTURE0);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(0f, Map.mapPixelSize.y);
@@ -247,7 +246,6 @@ public class LightManager {
 		glDisable(GL_BLEND);
 		glUseProgram(0);
 		glClear(GL_STENCIL_BUFFER_BIT);
-	
 	}
 	
 	private static void setUniforms(Light l, boolean dynamic){
@@ -270,7 +268,7 @@ public class LightManager {
 					l.getColor().y, l.getColor().z);
 			glUniform1i(
 					glGetUniformLocation(lightShaderProgram, "texture"),
-					1);
+					0);
 		}
 		if (l instanceof Laser) {
 			glUseProgram(laserShaderProgram);
@@ -310,7 +308,7 @@ public class LightManager {
 	}
 	private static void drawShadows(Light l, int layer){
 		ShadowBuffer[] shadows = lightShadows.get(l);
-		for (int shadowLayer = layer; shadowLayer < Map.maxLayer; shadowLayer++) {
+		for (int shadowLayer = layer; shadowLayer < Map.maxLayer-1; shadowLayer++) {
 			if (shadows[shadowLayer] != null) {
 				for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
 					Shadow s = shadows[shadowLayer].get(i);

@@ -188,9 +188,6 @@ public class GameLoop {
 			e.printStackTrace();
 		}
 	}
-	
-
-
 
 	/**
 	 * Update the game state, namely entities, HUD and lights
