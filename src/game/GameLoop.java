@@ -27,7 +27,7 @@ public class GameLoop {
 	static public boolean isRunning; //false means that the game is closing
 	
 	private Player p = new Player(new Vector2f(0, 0));
-	private Map m ;
+	private Map m;
 
 	private Camera cam = new Camera(new Vector2f(0, 0));
 	
@@ -72,8 +72,8 @@ public class GameLoop {
 		initGL();
 		controle = new Control(p);
 		BlockFactory.initBlocks();
-		m = new Map(new Vector2f(10,10), new Vector2f(16,12), new Vector2f(40,40));
-		m.renderMapToFrameBuffer();
+		m = new Map(new Vector2f(5,5), new Vector2f(16,12), new Vector2f(40,40));
+		m.renderMapToFrameBuffers();
 		p.setPosition(m.getSpawnPixelPosition());
 		ProjectileManager.init();
 		LightManager.init();
@@ -105,7 +105,7 @@ public class GameLoop {
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
-
+		//glShadeModel( GL_SMOOTH );
 		glMatrixMode(GL_PROJECTION); // PROJECTION from 3D to Camera plane
 		glLoadIdentity(); 
 		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);

@@ -207,6 +207,7 @@ public class LightManager {
 		}
 		staticLightsFBO.use();
 		glBegin(GL_QUADS);
+		
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(0f, Map.mapPixelSize.y);
 		glTexCoord2f(1.0f, 0.0f);
@@ -216,6 +217,7 @@ public class LightManager {
 		glTexCoord2f(0.0f, 1.0f);
 		glVertex2f(0f, 0f);
 		glEnd();
+		
 		renderDynamicLights();
 		staticLightsFBO.unUse();
 		
@@ -281,14 +283,14 @@ public class LightManager {
 						l.getColor().x, l.getColor().y, l.getColor().z);
 				glUniform1i(
 						glGetUniformLocation(lightShaderProgram, "texture"),
-						0);
+						1);
 			}
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_ONE, GL_ONE);
 			glClearColor(0.0f, 0.0f, 0.0f, 1f);
 			int tex_save =  glGetInteger(GL_TEXTURE_BINDING_2D);
-			glBindTexture(GL_TEXTURE_2D, Map.getTextureID());
-			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, Map.getTextureID(0));
+			glActiveTexture(GL_TEXTURE1);
 			glBegin(GL_QUADS);
 			glTexCoord2f(0.0f, 0.0f);
 			glVertex2f(0f, Map.mapPixelSize.y);
@@ -300,6 +302,7 @@ public class LightManager {
 			glVertex2f(0f, 0f);
 			glEnd();
 			glBindTexture(GL_TEXTURE_2D, tex_save);
+			glActiveTexture(GL_TEXTURE0);
 			glDisable(GL_BLEND);
 			glUseProgram(0);
 			glClear(GL_STENCIL_BUFFER_BIT);
@@ -307,6 +310,7 @@ public class LightManager {
 	}
 
 	private static void renderDynamicLights() {
+		glColor3f(0,0,0);
 		for (Light l : activatedDynamicLights.values()) {
 			Vector2f.sub(camPos, l.getPosition(), camToLight);
 			if (camToLight.length()
@@ -402,7 +406,7 @@ public class LightManager {
 				glBlendFunc(GL_ONE, GL_ONE);
 				glClearColor(0.0f, 0.0f, 0.0f, 1f);
 				int tex_save =  glGetInteger(GL_TEXTURE_BINDING_2D);
-				glBindTexture(GL_TEXTURE_2D, Map.getTextureID());
+				glBindTexture(GL_TEXTURE_2D, Map.getTextureID(0));
 				glActiveTexture(GL_TEXTURE0);
 				glBegin(GL_QUADS);
 				glTexCoord2f(0.0f, 0.0f);

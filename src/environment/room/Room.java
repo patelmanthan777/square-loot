@@ -155,6 +155,18 @@ public abstract class Room implements Drawable, ShadowCaster {
 			}
 		}
 	}
+	
+	public void draw(int layer){
+		for (int i = 0; i < Map.roomBlockSize.x; i++) {
+			for (int j = 0; j < Map.roomBlockSize.y; j++) {
+				float posX = x + i * Map.blockPixelSize.x;
+				float posY = y + j * Map.blockPixelSize.y;
+				if (grid[i][j].getLayer() == layer){
+					grid[i][j].drawAt(posX, posY);
+				}
+			}
+		}
+	}
 
 	@Override
 	public void computeShadow(Light light,ShadowBuffer[] shadows) {
