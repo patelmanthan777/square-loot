@@ -10,10 +10,5 @@ public class EmptyBlock extends Block {
 	public boolean testCollision() {
 		return false;
 	}
-
-	@Override
-	public boolean castShadows() {
-		return false;
-	}
 	
 }

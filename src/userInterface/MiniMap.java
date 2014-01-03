@@ -6,7 +6,7 @@ import configuration.ConfigManager;
 import entity.player.Player;
 import environment.Map;
 import environment.room.Room;
-
+import static org.lwjgl.opengl.GL11.*;
 public class MiniMap extends Overlay{
 	public static Vector2f position;
 	public static Vector2f screenRegion = new Vector2f(0.2f,0.2f);
@@ -27,7 +27,7 @@ public class MiniMap extends Overlay{
 	
 	@Override
 	public void draw() {
-		
+		glDisable(GL_TEXTURE_2D);
 		for(int i = 0; i < Map.mapRoomSize.x; i++){
 			for(int j = 0; j < Map.mapRoomSize.y; j++){
 				if (rooms[i][j]!= null){
@@ -36,5 +36,6 @@ public class MiniMap extends Overlay{
 			}
 		}
 		player.drawOnMiniMap();
+		glEnable(GL_TEXTURE_2D);
 	}
 }

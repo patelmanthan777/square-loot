@@ -105,7 +105,6 @@ public class GameLoop {
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
-		//glShadeModel( GL_SMOOTH );
 		glMatrixMode(GL_PROJECTION); // PROJECTION from 3D to Camera plane
 		glLoadIdentity(); 
 		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);

@@ -89,7 +89,7 @@ public abstract class ShadowCasterBlock extends Block{
 			Vector2f.sub(currentVertex, light.getPosition(), lightToCurrent);
 			Shadow[] shadows = (shadowBuffer.getShadows());
 			if (Vector2f.dot(normal, lightToCurrent) > 0 ) {
-				if((light instanceof Light && !neighbour[i]) || light instanceof Laser){
+				if((light instanceof Light && !neighbour[i]) || light instanceof Laser || this instanceof VoidBlock){
 					Vector2f.sub(currentVertex,light.getPosition(), point1);
 					point1.normalise(point1);
 					point1.scale(10000);

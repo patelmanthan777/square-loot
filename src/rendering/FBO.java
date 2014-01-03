@@ -19,11 +19,6 @@ public class FBO {
 	 */
 	private int depthBufferID;
 	private boolean isUpdated = false;
-	
-	/**
-	 * texture used for the rendering
-	 */
-	private int textureBound = 0;
 	/**
 	 * previous texture state
 	 */
@@ -63,10 +58,7 @@ public class FBO {
 	 * Set OpenGL to the appropriate frame buffer
 	 */
 	public void bind(){
-		//texSave =  glGetInteger(GL_TEXTURE_BINDING_2D);
 		frameBufferSave =  glGetInteger(GL_FRAMEBUFFER_BINDING);
-		//glBindTexture(GL_TEXTURE_2D, textureBound);
-		
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
 	}
 	
@@ -74,7 +66,6 @@ public class FBO {
 	 * Set OpenGL back to its previous frame buffer state
 	 */
 	public void unbind(){
-		//glBindTexture(GL_TEXTURE_2D, texSave);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferSave);
 	}
 	
@@ -90,7 +81,7 @@ public class FBO {
 	 * Trigger the use of the computed texture
 	 */
 	public void use(){
-		glClearColor(1.0f, 1.0f, 1.0f, 1f);
+		glClearColor(1f, 1f, 1f, 1f);
 		texSave =  glGetInteger(GL_TEXTURE_BINDING_2D);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}

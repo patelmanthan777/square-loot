@@ -77,7 +77,9 @@ public abstract class Block {
         
 	}
 
-	public abstract boolean castShadows();
+	public boolean castShadows(){
+		return false;
+	}
 
 	public void setColor(float r, float g, float b) {
 		this.color.x = r;

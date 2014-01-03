@@ -19,11 +19,4 @@ public class BorderBlock extends ShadowCasterBlock{
 		return true;
 	}
 
-	@Override
-	public boolean castShadows(){
-		return true;
-	}
-	
-	
-
 }

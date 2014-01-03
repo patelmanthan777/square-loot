@@ -24,7 +24,7 @@ public class BlockFactory {
 		emptyBlock.setColor(1f, 1f, 1f);				
 		borderBlock.setColor(0.2f, 0.2f, 0.2f);
 		solidBlock.setColor(0.2f, 0.2f, 0.2f);
-		spawnBlock.setColor(0f, 0.2f, 0f);
+		spawnBlock.setColor(0f, 1f, 0f);
 		voidBlock.setColor(0f, 0f, 0f);
 	}
 	
