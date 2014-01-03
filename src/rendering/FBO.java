@@ -22,11 +22,11 @@ public class FBO {
 	/**
 	 * previous texture state
 	 */
-	private int texSave;
+	//private int texSave;
 	/**
 	 * previous frame buffer state
 	 */
-	private int frameBufferSave;
+	//private int frameBufferSave;
 	
 	public FBO(){
 		frameBufferID = glGenFramebuffers();
@@ -58,7 +58,7 @@ public class FBO {
 	 * Set OpenGL to the appropriate frame buffer
 	 */
 	public void bind(){
-		frameBufferSave =  glGetInteger(GL_FRAMEBUFFER_BINDING);
+		//frameBufferSave =  glGetInteger(GL_FRAMEBUFFER_BINDING);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
 	}
 	
@@ -66,7 +66,7 @@ public class FBO {
 	 * Set OpenGL back to its previous frame buffer state
 	 */
 	public void unbind(){
-		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferSave);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0/*frameBufferSave*/);
 	}
 	
 	public void setUpdated(boolean isUpdated){
@@ -82,7 +82,7 @@ public class FBO {
 	 */
 	public void use(){
 		glClearColor(1f, 1f, 1f, 1f);
-		texSave =  glGetInteger(GL_TEXTURE_BINDING_2D);
+		//texSave =  glGetInteger(GL_TEXTURE_BINDING_2D);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 	
@@ -90,7 +90,7 @@ public class FBO {
 	 * Set the texture back to its previous state.
 	 */
 	public void unUse(){
-		glBindTexture(GL_TEXTURE_2D, texSave);
+		glBindTexture(GL_TEXTURE_2D, 0/*texSave*/);
 	}
 	
 	public int getTextureID(){

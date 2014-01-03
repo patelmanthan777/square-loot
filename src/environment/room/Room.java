@@ -193,7 +193,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 					}
 					((ShadowCasterBlock) grid[i][j]).computeShadow(
 							light, (int) (x / Map.blockPixelSize.x) + i,
-							(int) (y / Map.blockPixelSize.y) + j, neighbours, shadows[grid[i][j].getLayer()]);
+							(int) (y / Map.blockPixelSize.y) + j, neighbours, shadows[grid[i][j].getLayer()-1]);
 				}
 			}
 		}
