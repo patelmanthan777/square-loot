@@ -8,11 +8,25 @@ public class Node {
 	protected Vector2f tangent;
 	protected String name = null;
 
+	public Node(Vector2f pos){
+		this(pos.x, pos.y);
+	}
 	
 	public Node(Vector2f pos, Vector2f rot){
-		position = pos;
-		direction = rot;
+		this(pos.x,pos.y,rot.x,rot.y);
+	}
+	
+	public Node(float posx, float posy){
+		position = new Vector2f(posx, posy);
+		direction = new Vector2f();
 		tangent = new Vector2f();
+	}
+	
+	
+	public Node(float posx, float posy, float dirx, float diry){
+		position = new Vector2f(posx, posy);
+		direction = new Vector2f(dirx,diry);
+		tangent = new Vector2f(diry,-dirx);
 	}
 	
 	public void setPosition(Vector2f pos){
@@ -34,12 +48,6 @@ public class Node {
 		direction.y = oriy;
 		tangent.x = oriy;
 		tangent.y = -orix;
-	}
-	
-	public Node(Vector2f pos){
-		position = new Vector2f(pos);
-		direction = new Vector2f();
-		tangent = new Vector2f();
 	}
 	
 	public Vector2f getPosition(){

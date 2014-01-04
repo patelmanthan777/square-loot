@@ -24,6 +24,13 @@ public abstract class Entity extends Node implements Drawable {
 	public Entity(Vector2f pos, Vector2f rot) {
 		super(pos, rot);
 	}
+	
+	public Entity(float posx, float posy, float dirx, float diry) {
+		super(posx,posy,dirx,diry);
+	}
+	public Entity(float posx, float posy) {
+		super(posx,posy);
+	}
 
 	public Vector3f getColor() {
 		return color;

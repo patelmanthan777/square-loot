@@ -12,11 +12,21 @@ public abstract class LivingEntity extends Entity {
 		super(pos);
 	}
 	
+	public LivingEntity(Vector2f pos,Vector2f dir) {
+		super(pos,dir);
+	}
+	public LivingEntity(float posx, float posy, float dirx, float diry) {
+		super(posx,posy,dirx,diry);
+	}
+	public LivingEntity(float posx, float posy) {
+		super(posx,posy);
+	}
+	
 	public int getHealth(){
 		return health;
 	}
 
-
+	
 	
 	/**
 	 * Modify the health attribute by setting health to the value of the parameter.

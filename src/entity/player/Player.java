@@ -66,8 +66,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	@Override
 	public void draw() {
 
-		// GL11.glColor3f(color.x,color.y,color.z);
-		GL11.glColor3f(0, 0, 0);
+		 GL11.glColor3f(color.x,color.y,color.z);
+		//GL11.glColor3f(0, 0, 0);
 		// draw quad
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glVertex2f(points[0].x, points[0].y);
@@ -84,7 +84,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 				* MiniMap.roomSize.x - persoRatio * MiniMap.roomSize.x / 2);
 		int posy = (int) (MiniMap.position.y + (getY() / Map.roomPixelSize.y)
 				* MiniMap.roomSize.y - persoRatio * MiniMap.roomSize.y / 2);
-		GL11.glColor3f(1, 0, 0);
+		GL11.glColor3f(0, 1, 0);
 		// draw quad
 		GL11.glLoadIdentity();
 		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
