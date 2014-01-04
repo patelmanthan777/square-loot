@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import configuration.ConfigManager;
 import rendering.Camera;
+import rendering.TextureManager;
 import userInterface.OverlayManager;
 import entity.npc.LivingEntityManager;
 import entity.player.Player;
@@ -71,6 +72,7 @@ public class GameLoop {
 		ConfigManager.init();
 		createWindow();
 		initGL();
+		TextureManager.init();
 		map = new Map(new Vector2f(10,10), new Vector2f(16,12), new Vector2f(40,40));
 		p = LivingEntityManager.createPlayer();
 		controle = new Control(p);
@@ -80,7 +82,6 @@ public class GameLoop {
 		p.setPosition(map.getSpawnPixelPosition());
 		ProjectileManager.init();
 		LivingEntityManager.init();
-		//LivingEntityManager.createZombie(m.getSpawnPixelPosition().x, m.getSpawnPixelPosition().y);
 		LightManager.init();
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
@@ -106,7 +107,7 @@ public class GameLoop {
 	 */
 	public static void initGL() {
 		
-		//glEnable(GL_CULL_FACE);
+		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
 

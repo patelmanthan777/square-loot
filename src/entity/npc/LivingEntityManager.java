@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import rendering.TextureManager;
 import entity.player.Player;
 import event.Timer;
 import game.GameLoop;
@@ -30,13 +31,16 @@ public class LivingEntityManager {
 	}
 	
 	public static void render(){
-		glDisable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND); 
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBindTexture(GL_TEXTURE_2D, TextureManager.zombieTexture().getTextureID());
 		glBegin(GL_QUADS);
 		for(Npc npc : npcs){
 			npc.draw();
 		}
 		glEnd();
-		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_BLEND);
 	}
 	
 	public static Player createPlayer(){

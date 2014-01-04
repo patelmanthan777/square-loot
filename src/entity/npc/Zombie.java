@@ -1,12 +1,14 @@
 package entity.npc;
 
 import java.util.LinkedList;
+
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import rendering.MiniMapDrawable;
+import rendering.TextureManager;
 import userInterface.MiniMap;
 import entity.player.Player;
 import environment.Map;
@@ -16,7 +18,7 @@ public class Zombie extends Npc implements MiniMapDrawable{
 	
 	private static final int nbPoints = 4;
 	private Vector2f[] points = new Vector2f[nbPoints];
-	private Vector2f halfSize = new Vector2f(15, 15);
+	private Vector2f halfSize = new Vector2f(20, 20);
 	private static int scentDistanceBlk = 10;
 	private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
 	
@@ -78,11 +80,15 @@ public class Zombie extends Npc implements MiniMapDrawable{
 
 	@Override
 	public void draw() {
+		glColor3f(1,1,1);
 		
-		glColor3f(color.x,color.y,color.z);
+		glTexCoord2f(0,1);
 		glVertex2f(points[0].x, points[0].y);
+		glTexCoord2f(0,0);
 		glVertex2f(points[3].x, points[3].y);
+		glTexCoord2f(1,0);
 		glVertex2f(points[2].x, points[2].y);
+		glTexCoord2f(1,1);
 		glVertex2f(points[1].x, points[1].y);
 		
 	}
@@ -155,7 +161,6 @@ public class Zombie extends Npc implements MiniMapDrawable{
 			Vector2f.sub(p.getPosition(),this.getPosition(),thisToPlayer);
 			length = thisToPlayer.length();
 			thisToPlayer.normalise(thisToPlayer);
-			System.out.println(length);
 			if(length < dst || dst == -1){
 				dst = length;
 				this.setOrientation(thisToPlayer);
