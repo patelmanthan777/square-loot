@@ -82,13 +82,13 @@ public class Zombie extends Npc implements MiniMapDrawable{
 	public void draw() {
 		glColor3f(1,1,1);
 		
-		glTexCoord2f(0,1);
-		glVertex2f(points[0].x, points[0].y);
-		glTexCoord2f(0,0);
-		glVertex2f(points[3].x, points[3].y);
-		glTexCoord2f(1,0);
-		glVertex2f(points[2].x, points[2].y);
 		glTexCoord2f(1,1);
+		glVertex2f(points[0].x, points[0].y);
+		glTexCoord2f(1,0);
+		glVertex2f(points[3].x, points[3].y);
+		glTexCoord2f(0,0);
+		glVertex2f(points[2].x, points[2].y);
+		glTexCoord2f(0,1);
 		glVertex2f(points[1].x, points[1].y);
 		
 	}
@@ -157,16 +157,21 @@ public class Zombie extends Npc implements MiniMapDrawable{
 	public void thinkAndAct(LinkedList<Player> players) {
 		float dst = scentDistancePx;
 		float length;
+		boolean waiting = true;
 		for(Player p : players){
 			Vector2f.sub(p.getPosition(),this.getPosition(),thisToPlayer);
 			length = thisToPlayer.length();
 			thisToPlayer.normalise(thisToPlayer);
 			if(length < dst || dst == -1){
+				// chase the nearest player
+				waiting = false;
 				dst = length;
 				this.setOrientation(thisToPlayer);
 				this.translate(thisToPlayer.x, thisToPlayer.y);
 				updatePoints();
-				
+			}
+			if(waiting){
+				// randomly moves
 			}
 		}
 	}
