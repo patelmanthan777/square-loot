@@ -46,7 +46,7 @@ public class LightManager {
 	/* --------------------------------------------- */
 	
 	static public void init() {
-		staticLightsFBO = new FBO();
+		staticLightsFBO = new FBO((int) Map.mapPixelSize.x,(int) Map.mapPixelSize.y);
 	}
 
 	static public void addShadowCaster(ShadowCaster sc) {
@@ -163,28 +163,15 @@ public class LightManager {
 	 * Compute the FBO resulting from the static lights 
 	 */
 	static private void renderStaticsToFrameBuffer() {
-		staticLightsFBO.bind();
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y, 0, 1, -1);
-		glMatrixMode(GL_MODELVIEW);
-		glPushAttrib(GL11.GL_VIEWPORT_BIT);
-		glViewport(0, 0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y);
-		glPushMatrix();
-		glLoadIdentity();
-		glClearColor(0.0f, 0.0f, 0.0f, 1f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		staticLightsFBO.bind(Map.getTextureID());
 		
 		renderStaticLights();
 		
-		glPopMatrix();
-		glPopAttrib();
 		staticLightsFBO.setUpdated(true);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
+		
 		staticLightsFBO.unbind();
-		glMatrixMode(GL_MODELVIEW);
+		
 	}
 
 	static public void render() {

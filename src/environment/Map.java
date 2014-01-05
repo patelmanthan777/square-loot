@@ -3,8 +3,10 @@ package environment;
 import static org.lwjgl.opengl.GL11.*;
 import light.Light;
 import light.ShadowBuffer;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
+
 import configuration.ConfigManager;
 import environment.room.Room;
 import rendering.FBO;
@@ -80,7 +82,7 @@ public class Map implements ShadowCaster{
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x*roomPixelSize.x,mapRoomSize.y*roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0,0);
 		this.drawRoomDistance = new Vector2f(ConfigManager.resolution.x/Map.roomPixelSize.x,ConfigManager.resolution.y/Map.roomPixelSize.y);
-		mapFBO = new FBO();
+		mapFBO = new FBO((int) Map.mapPixelSize.x,(int) Map.mapPixelSize.y);
 		generate();
 	}
 	/**
@@ -106,28 +108,12 @@ public class Map implements ShadowCaster{
 	 * Compute a full map render and stores it in mapFBO 
 	 */
 	public void renderMapToFrameBuffer(){
-		mapFBO.bind();
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y, 0, 1, -1);
-		glMatrixMode(GL_MODELVIEW);
-		glPushAttrib(GL11.GL_VIEWPORT_BIT);
-		glViewport(0, 0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y);
-		glPushMatrix();
-		glLoadIdentity();
-		glClearColor(0.0f, 0.0f, 0.0f, 1f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		mapFBO.bind(0);
 		
 		fullRender();
 		
-		glPopMatrix();
-		glPopAttrib();
-		mapFBO.setUpdated(true);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
 		mapFBO.unbind();
-		glMatrixMode(GL_MODELVIEW);
 	}
 	
 	/**
@@ -169,6 +155,7 @@ public class Map implements ShadowCaster{
 		drawRoomPosition.x = pos.x/Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y/Map.roomPixelSize.y;
 		roomGrid[(int)drawRoomPosition.x][(int)drawRoomPosition.y].discover();
+		//renderMapToFrameBuffer();
 	}
 
 	/**
