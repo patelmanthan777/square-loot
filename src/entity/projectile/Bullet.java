@@ -71,6 +71,7 @@ public class Bullet extends Projectile {
 	 */
 	@Override
 	public void draw() {
+		glDisable(GL_TEXTURE_2D);
 		GL11.glColor3f(color.x, color.y, color.z);
 		glUseProgram(Bullet.bulletShaderProgram);
 		glUniform2f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.position"),this.position.x,this.position.y);
@@ -87,6 +88,7 @@ public class Bullet extends Projectile {
 		glEnd();
 		glDisable(GL_BLEND);
 		glUseProgram(0);
+		glEnable(GL_TEXTURE_2D);
 	}
 	
 

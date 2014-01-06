@@ -59,7 +59,7 @@ public class FBO {
 	 * Set OpenGL to the appropriate frame buffer
 	 */
 	public void bind(int textureId){
-		//glBindTexture(GL_TEXTURE_2D, textureID);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glViewport(0, 0, width, height);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
 		glMatrixMode(GL_PROJECTION);
@@ -71,7 +71,7 @@ public class FBO {
 		glPushMatrix();
 		glLoadIdentity();
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 	
 	/**
@@ -88,7 +88,9 @@ public class FBO {
 				1, -1);
 		glMatrixMode(GL_MODELVIEW);
 		glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		
 		
 	}
 	

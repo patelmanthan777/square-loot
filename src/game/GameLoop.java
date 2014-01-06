@@ -2,6 +2,8 @@ package game;
 import light.Laser;
 import light.Light;
 import light.LightManager;
+import light.Shadow;
+import light.ShadowBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
@@ -23,6 +25,14 @@ import environment.blocks.BlockFactory;
 import event.Timer;
 import event.control.Control;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glUniform1f;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform2f;
+import static org.lwjgl.opengl.GL20.glUniform3f;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class GameLoop {
 	private static final String WINDOW_TITLE = "SquareLoot";
@@ -98,6 +108,15 @@ public class GameLoop {
 		
 		LightManager.addShadowCaster(map);
 		
+		
+		map.renderMapToFrameBuffer();
+		LightManager.render();
+		map.renderMapToFrameBuffer();
+		LightManager.render();
+		map.renderMapToFrameBuffer();
+		LightManager.render();
+		
+		
 		isRunning = true;
 	}
 
@@ -110,6 +129,7 @@ public class GameLoop {
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
 
 		glMatrixMode(GL_PROJECTION); // PROJECTION from 3D to Camera plane
 		glLoadIdentity(); 
@@ -118,6 +138,7 @@ public class GameLoop {
 		glMatrixMode(GL_MODELVIEW); // MODELVIEW manages the 3D scene
 
 		glClearColor(0, 0, 0, 0);
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	/**
@@ -204,17 +225,26 @@ public class GameLoop {
 	 * @param elapsedTime represents the time passed since last update.
 	 */
 	private void render(long elapsedTime) {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		/*** UPDATE ***/
+		
 		p.updatePostion(elapsedTime, map);
 		ProjectileManager.updateProjectiles(map);
 		cam.setPosition(p.getPosition());
 		LightManager.setCamPosition(p.getPosition());
 		map.setDrawPosition(p.getPosition());
+		LivingEntityManager.update();
+		
+		/*** RENDER ***/
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glClearColor(0,0,0,0);
 		glPushMatrix();
+
+		
 		cam.draw();
 		LightManager.render();
+		map.renderMapToFrameBuffer();
 		p.draw();
-		LivingEntityManager.update();
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();

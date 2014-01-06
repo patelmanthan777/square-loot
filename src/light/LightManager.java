@@ -31,7 +31,7 @@ public class LightManager {
 	 */
 	private static HashMap<Light, ShadowBuffer> lightShadows = new HashMap<Light, ShadowBuffer>();
 	
-	private static Vector2f camPos = null;
+	private static Vector2f camPos = new Vector2f();
 	private static int screenWidth = 0;
 	private static int screenHeight = 0;
 	private static float diagonal = 0;
@@ -176,9 +176,11 @@ public class LightManager {
 
 	static public void render() {
 		if (!staticLightsFBO.isUpdated()) {
+			System.out.println("prout");
 			renderStaticsToFrameBuffer();
 		}
 		staticLightsFBO.use();
+		glColor3f(1,1,1);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
 		glVertex2f(0f, Map.mapPixelSize.y);
@@ -338,7 +340,7 @@ public class LightManager {
 				glEnable(GL_BLEND);
 				glBlendFunc(GL_ONE, GL_ONE);
 				glClearColor(0.0f, 0.0f, 0.0f, 1f);
-				int tex_save =  glGetInteger(GL_TEXTURE_BINDING_2D);
+				//int tex_save =  glGetInteger(GL_TEXTURE_BINDING_2D);
 				glBindTexture(GL_TEXTURE_2D, Map.getTextureID());
 				glActiveTexture(GL_TEXTURE0);
 				glBegin(GL_QUADS);
@@ -351,7 +353,7 @@ public class LightManager {
 				glTexCoord2f(0.0f, 1.0f);
 				glVertex2f(0f, 0f);
 				glEnd();
-				glBindTexture(GL_TEXTURE_2D, tex_save);
+				glBindTexture(GL_TEXTURE_2D, /*tex_save*/ 0);
 				glDisable(GL_BLEND);
 				glUseProgram(0);
 				glClear(GL_STENCIL_BUFFER_BIT);
@@ -361,7 +363,8 @@ public class LightManager {
 	}
 
 	public static void setCamPosition(Vector2f pos) {
-		camPos = pos;
+		camPos.x = pos.x;
+		camPos.y = pos.y;
 	}
 
 	public static void setScreenWidth(int width) {
