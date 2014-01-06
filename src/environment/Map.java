@@ -91,7 +91,7 @@ public class Map implements ShadowCaster {
 				/ Map.roomPixelSize.x, ConfigManager.resolution.y
 				/ Map.roomPixelSize.y);
 		for (int i = 0; i < maxLayer; i++) {
-			mapFBO[i] = new FBO((int)Map.mapPixelSize.x,(int)Map.mapPixelSize.x);
+			mapFBO[i] = new FBO((int)Map.mapPixelSize.x,(int)Map.mapPixelSize.y);
 		}
 
 		generate();
@@ -138,10 +138,12 @@ public class Map implements ShadowCaster {
 	public void renderMapToFrameBuffers() {
 		for (int i = 0; i < maxLayer; i++) {
 			mapFBO[i].bind();
+			glPushMatrix();
+			glLoadIdentity();
 			
 
 			fullRender(i);
-
+			glPopMatrix();
 			
 			mapFBO[i].unbind();
 			
@@ -237,12 +239,12 @@ public class Map implements ShadowCaster {
 		int j;
 		for (i = minX; i < maxX; i++) {
 			if (roomGrid[i][roomPosiY] != null) {
-				((Room) roomGrid[i][roomPosiY]).computeShadow(light, shadows);
+				roomGrid[i][roomPosiY].computeShadow(light, shadows);
 			}
 		}
 		for (j = minY; j < maxY; j++) {
 			if (roomGrid[roomPosiX][j] != null) {
-				((Room) roomGrid[roomPosiX][j]).computeShadow(light, shadows);
+				roomGrid[roomPosiX][j].computeShadow(light, shadows);
 			}
 		}
 	}

@@ -38,15 +38,15 @@ public class FBO {
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, (int) Map.mapPixelSize.x,
-				(int) Map.mapPixelSize.y, 0, GL_RGBA, GL_INT,
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width,
+				height, 0, GL_RGBA, GL_INT,
 				(java.nio.ByteBuffer) null);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 				GL_TEXTURE_2D, textureID, 0);
 
 		glBindRenderbuffer(GL_RENDERBUFFER, depthBufferID);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_STENCIL,
-				(int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y);
+				width, height);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
 				GL_RENDERBUFFER, depthBufferID);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,

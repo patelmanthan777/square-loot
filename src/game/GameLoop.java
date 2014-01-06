@@ -29,7 +29,7 @@ public class GameLoop {
 	static public boolean isRunning; //false means that the game is closing
 	
 
-	private Player p;// = new Player(new Vector2f(0, 0));
+	private static Player p;// = new Player(new Vector2f(0, 0));
 	public static Map map ;
 
 
@@ -75,7 +75,7 @@ public class GameLoop {
 		createWindow();
 		initGL();
 		TextureManager.init();
-		map = new Map(new Vector2f(8,5), new Vector2f(16,12), new Vector2f(40,40));
+		
 		p = LivingEntityManager.createPlayer();
 		controle = new Control(p);
 		BlockFactory.initBlocks();
@@ -83,7 +83,6 @@ public class GameLoop {
 		map = new Map(new Vector2f(5,5), new Vector2f(16,12), new Vector2f(40,40));
 		map.renderMapToFrameBuffers();
 		p.setPosition(map.getSpawnPixelPosition());
-
 		ProjectileManager.init();
 		LivingEntityManager.init();
 		LightManager.init();
