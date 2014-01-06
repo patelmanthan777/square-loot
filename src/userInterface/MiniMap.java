@@ -1,5 +1,6 @@
 package userInterface;
 
+import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
@@ -27,7 +28,7 @@ public class MiniMap extends Overlay{
 	
 	@Override
 	public void draw() {
-		
+		glDisable(GL_TEXTURE_2D);
 		for(int i = 0; i < Map.mapRoomSize.x; i++){
 			for(int j = 0; j < Map.mapRoomSize.y; j++){
 				if (rooms[i][j]!= null){
@@ -36,5 +37,6 @@ public class MiniMap extends Overlay{
 			}
 		}
 		player.drawOnMiniMap();
+		glEnable(GL_TEXTURE_2D);
 	}
 }
