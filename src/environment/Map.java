@@ -74,6 +74,9 @@ public class Map implements ShadowCaster {
 	 */
 	private boolean fullRender = false;
 
+	public static final int textureSize = 512;
+	public static Vector2f currentBufferPosition;
+	
 	public Map(Vector2f mapRoomSize, Vector2f roomBlockSize,
 			Vector2f blockPixelSize) {
 		Map.mapRoomSize = mapRoomSize;
@@ -87,34 +90,16 @@ public class Map implements ShadowCaster {
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x * roomPixelSize.x,
 				mapRoomSize.y * roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0, 0);
-		this.drawRoomDistance = new Vector2f(ConfigManager.resolution.x
-				/ Map.roomPixelSize.x, ConfigManager.resolution.y
-				/ Map.roomPixelSize.y);
+		this.drawRoomDistance = new Vector2f(textureSize / Map.roomPixelSize.x, textureSize / Map.roomPixelSize.y);
 		for (int i = 0; i < maxLayer; i++) {
-			mapFBO[i] = new FBO((int)Map.mapPixelSize.x,(int)Map.mapPixelSize.y);
+			mapFBO[i] = new FBO(textureSize,textureSize);
 		}
 
 		generate();
+		
+		//currentBufferPosition = new Vector2f(0,0);
+		currentBufferPosition = new Vector2f(spawnPixelPosition.x - 0.5f*textureSize, spawnPixelPosition.y - 0.5f*textureSize);
 	}
-
-	/**
-	 * Render the full map.
-	 */
-	/*private void fullRender() {
-		int minX = 0;
-		int maxX = (int) Map.mapRoomSize.x;
-		int minY = 0;
-		int maxY = (int) Map.mapRoomSize.y;
-		glBegin(GL_QUADS);
-		for (int i = minX; i < maxX; i++) {
-			for (int j = minY; j < maxY; j++) {
-				if (roomGrid[i][j] != null) {
-					roomGrid[i][j].draw();
-				}
-			}
-		}
-		glEnd();
-	}*/
 
 	private void fullRender(int layer){
 		int minX = 0;
@@ -140,8 +125,7 @@ public class Map implements ShadowCaster {
 			mapFBO[i].bind();
 			glPushMatrix();
 			glLoadIdentity();
-			
-
+			glTranslatef(-(currentBufferPosition.x),-(currentBufferPosition.y),0);
 			fullRender(i);
 			glPopMatrix();
 			
@@ -198,6 +182,8 @@ public class Map implements ShadowCaster {
 		drawRoomPosition.x = pos.x/Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y/Map.roomPixelSize.y;
 		roomGrid[(int)drawRoomPosition.x][(int)drawRoomPosition.y].discover();
+		currentBufferPosition.x = pos.x - 0.5f*textureSize;
+		currentBufferPosition.y = pos.y - 0.5f*textureSize;
 	}
 
 	/**

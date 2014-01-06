@@ -9,7 +9,7 @@ import environment.Map;
 import environment.blocks.BlockFactory;
 
 public class TestRoom extends Room{
-	
+	private float proba = 0;
 	public TestRoom(float posX, float posY){
 		super(posX, posY);
 		construct();
@@ -19,7 +19,7 @@ public class TestRoom extends Room{
 	protected void construct() {
 		for(int i = 1; i < (int)Map.roomBlockSize.x-1;i++){
 			for(int j = 1; j < (int)Map.roomBlockSize.y-1; j++){
-				if(Math.random() > 0.02){
+				if(Math.random() > proba){
 					grid[i][j] = BlockFactory.createEmptyBlock();
 				}else{
 					grid[i][j] = BlockFactory.createSolidBlock();

@@ -45,7 +45,7 @@ public class LightManager {
 	/* --------------------------------------------- */
 
 	static public void init() {
-		staticLightsFBO = new FBO((int) Map.mapPixelSize.x,(int) Map.mapPixelSize.y);
+		staticLightsFBO = new FBO(Map.textureSize,Map.textureSize);
 	}
 
 	static public void addShadowCaster(ShadowCaster sc) {
@@ -181,7 +181,7 @@ public class LightManager {
 		
 		renderStaticLights();
 		
-		staticLightsFBO.setUpdated(true);
+		//staticLightsFBO.setUpdated(true);
 
 		staticLightsFBO.unbind();
 		
@@ -197,13 +197,13 @@ public class LightManager {
 		glBegin(GL_QUADS);
 
 		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(0f, Map.mapPixelSize.y);
+		glVertex2f(Map.currentBufferPosition.x, Map.currentBufferPosition.y + Map.textureSize);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(Map.mapPixelSize.x, Map.mapPixelSize.y);
+		glVertex2f(Map.currentBufferPosition.x + Map.textureSize, Map.currentBufferPosition.y + Map.textureSize);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(Map.mapPixelSize.x, 0f);
+		glVertex2f(Map.currentBufferPosition.x + Map.textureSize, Map.currentBufferPosition.y);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0f, 0f);
+		glVertex2f(Map.currentBufferPosition.x, Map.currentBufferPosition.y);
 		glEnd();
 
 		renderDynamicLights();
@@ -217,15 +217,17 @@ public class LightManager {
 		int tex_save = glGetInteger(GL_TEXTURE_BINDING_2D);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glActiveTexture(GL_TEXTURE0);
+		glColor3f(1,1,1);
 		glBegin(GL_QUADS);
+
 		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(0f, Map.mapPixelSize.y);
+		glVertex2f(Map.currentBufferPosition.x, Map.currentBufferPosition.y + Map.textureSize);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(Map.mapPixelSize.x, Map.mapPixelSize.y);
+		glVertex2f(Map.currentBufferPosition.x + Map.textureSize, Map.currentBufferPosition.y + Map.textureSize);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(Map.mapPixelSize.x, 0f);
+		glVertex2f(Map.currentBufferPosition.x + Map.textureSize, Map.currentBufferPosition.y);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0f, 0f);
+		glVertex2f(Map.currentBufferPosition.x, Map.currentBufferPosition.y);
 		glEnd();
 		glBindTexture(GL_TEXTURE_2D, tex_save);
 		glActiveTexture(GL_TEXTURE0);
@@ -235,8 +237,14 @@ public class LightManager {
 	}
 	
 	private static void setUniforms(Light l, boolean dynamic){
-		float posx = dynamic ? l.getX() - camPos.x + (int) ConfigManager.resolution.x / 2 : l.getX();
-		float posy = dynamic ? (-l.getY() + camPos.y) + (int) ConfigManager.resolution.y / 2 : -l.getY() + Map.mapPixelSize.y;
+		/*
+			float posx = dynamic ? l.getX() - camPos.x + (int) ConfigManager.resolution.x / 2 : l.getX();
+			float posy = dynamic ? l.getY() - camPos.y  + (int) ConfigManager.resolution.y / 2 : -l.getY() + Map.mapPixelSize.y;
+		*/
+		
+			float posx = dynamic ? l.getX() - camPos.x + (int) ConfigManager.resolution.x / 2 : l.getX() - Map.currentBufferPosition.x;
+			float posy = dynamic ? l.getY() - camPos.y  + (int) ConfigManager.resolution.y / 2 : -l.getY() + Map.currentBufferPosition.y + Map.textureSize;
+		
 		if (l instanceof Light) {
 			glUseProgram(lightShaderProgram);
 			glUniform1f(
@@ -311,6 +319,9 @@ public class LightManager {
 		}
 	}
 	private static void renderStaticLights() {
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslatef(-(Map.currentBufferPosition.x),-(Map.currentBufferPosition.y),0);
 		for (int layer = 0; layer < Map.maxLayer; layer++) {
 			for (Light l : activatedStaticLights.values()) {
 				initShadowDrawing();
@@ -320,6 +331,7 @@ public class LightManager {
 				drawMap(Map.getTextureID(layer));
 			}
 		}
+		glPopMatrix();
 	}
 	private static void renderDynamicLights() {
 		int layer = 0;

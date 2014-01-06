@@ -33,7 +33,7 @@ public class GameLoop {
 	public static Map map ;
 
 
-	private Camera cam = new Camera(new Vector2f(0, 0));
+	public static Camera cam = new Camera(new Vector2f(0, 0));
 	
 	private Control controle;
 
@@ -80,7 +80,7 @@ public class GameLoop {
 		controle = new Control(p);
 		BlockFactory.initBlocks();
 
-		map = new Map(new Vector2f(5,5), new Vector2f(16,12), new Vector2f(40,40));
+		map = new Map(new Vector2f(5,5), new Vector2f(6,6), new Vector2f(40,40));
 		map.renderMapToFrameBuffers();
 		p.setPosition(map.getSpawnPixelPosition());
 		ProjectileManager.init();
@@ -98,7 +98,6 @@ public class GameLoop {
 		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);
-		
 		LightManager.addShadowCaster(map);
 		
 		
@@ -234,7 +233,7 @@ public class GameLoop {
 
 		
 		cam.draw();
-		//map.renderMapToFrameBuffers();
+		map.renderMapToFrameBuffers();
 		LightManager.render();
 		
 		p.draw();
