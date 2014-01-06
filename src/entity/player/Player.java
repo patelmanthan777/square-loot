@@ -4,12 +4,13 @@ import item.weapon.LaserRifle;
 import item.weapon.Weapon;
 import light.Laser;
 import light.Light;
+import static org.lwjgl.opengl.GL11.*;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import rendering.MiniMapDrawable;
+import rendering.TextureManager;
 import userInterface.MiniMap;
 import entity.LivingEntity;
 import environment.Map;
@@ -17,7 +18,7 @@ import environment.Map;
 public class Player extends LivingEntity implements MiniMapDrawable {
 	private static final int nbPoints = 4;
 	private Vector2f[] points = new Vector2f[nbPoints];
-	private Vector2f halfSize = new Vector2f(10, 10);
+	private Vector2f halfSize = new Vector2f(20, 20);
 	private Laser laser;
 	private Light light;
 	
@@ -65,16 +66,22 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	@Override
 	public void draw() {
-
-		// GL11.glColor3f(color.x,color.y,color.z);
-		GL11.glColor3f(0, 0, 0);
-		// draw quad
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex2f(points[0].x, points[0].y);
-		GL11.glVertex2f(points[3].x, points[3].y);
-		GL11.glVertex2f(points[2].x, points[2].y);
-		GL11.glVertex2f(points[1].x, points[1].y);
-		GL11.glEnd();
+		glEnable(GL_BLEND); 
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor3f(1,1,1);
+		glBindTexture(GL_TEXTURE_2D, TextureManager.playerTexture().getTextureID());
+		glBegin(GL_QUADS);
+		glTexCoord2f(1,1);
+		glVertex2f(points[0].x, points[0].y);
+		glTexCoord2f(1,0);
+		glVertex2f(points[3].x, points[3].y);
+		glTexCoord2f(0,0);
+		glVertex2f(points[2].x, points[2].y);
+		glTexCoord2f(0,1);
+		glVertex2f(points[1].x, points[1].y);
+		glEnd();
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_BLEND);
 	}
 
 	@Override
@@ -84,16 +91,16 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 				* MiniMap.roomSize.x - persoRatio * MiniMap.roomSize.x / 2);
 		int posy = (int) (MiniMap.position.y + (getY() / Map.roomPixelSize.y)
 				* MiniMap.roomSize.y - persoRatio * MiniMap.roomSize.y / 2);
-		GL11.glColor3f(1, 0, 0);
+		glColor3f(0, 1, 0);
 		// draw quad
-		GL11.glLoadIdentity();
-		GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
-		GL11.glVertex2f(posx + persoRatio * MiniMap.roomSize.x, posy);
-		GL11.glVertex2f(posx, posy);
-		GL11.glVertex2f(posx + persoRatio * MiniMap.roomSize.x, posy
+		glLoadIdentity();
+		glBegin(GL_TRIANGLE_STRIP);
+		glVertex2f(posx + persoRatio * MiniMap.roomSize.x, posy);
+		glVertex2f(posx, posy);
+		glVertex2f(posx + persoRatio * MiniMap.roomSize.x, posy
 				+ persoRatio * MiniMap.roomSize.y);
-		GL11.glVertex2f(posx, posy + persoRatio * MiniMap.roomSize.y);
-		GL11.glEnd();
+		glVertex2f(posx, posy + persoRatio * MiniMap.roomSize.y);
+		glEnd();
 	}
 
 

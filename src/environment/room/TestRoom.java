@@ -2,7 +2,9 @@ package environment.room;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+
 import light.LightManager;
+import entity.npc.LivingEntityManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
 
@@ -45,7 +47,7 @@ public class TestRoom extends Room{
 		Vector3f color = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 		float radius = (float)Math.random()*100;
 		float dstMax = Map.roomPixelSize.x * 2;
-		LightManager.addLight("l"+x+y, pos, color, radius, dstMax ,false);
-		
+		LightManager.addLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
+		LivingEntityManager.createZombie(pos.x, pos.y);
 	}
 }

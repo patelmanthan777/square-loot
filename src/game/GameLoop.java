@@ -13,7 +13,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import configuration.ConfigManager;
 import rendering.Camera;
+import rendering.TextureManager;
 import userInterface.OverlayManager;
+import entity.npc.LivingEntityManager;
 import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
@@ -26,8 +28,10 @@ public class GameLoop {
 	private static final String WINDOW_TITLE = "SquareLoot";
 	static public boolean isRunning; //false means that the game is closing
 	
-	private Player p = new Player(new Vector2f(0, 0));
-	private Map m;
+
+	private Player p;// = new Player(new Vector2f(0, 0));
+	public static Map map ;
+
 
 	private Camera cam = new Camera(new Vector2f(0, 0));
 	
@@ -70,12 +74,18 @@ public class GameLoop {
 		ConfigManager.init();
 		createWindow();
 		initGL();
+		TextureManager.init();
+		map = new Map(new Vector2f(8,5), new Vector2f(16,12), new Vector2f(40,40));
+		p = LivingEntityManager.createPlayer();
 		controle = new Control(p);
 		BlockFactory.initBlocks();
-		m = new Map(new Vector2f(5,5), new Vector2f(16,12), new Vector2f(40,40));
-		m.renderMapToFrameBuffers();
-		p.setPosition(m.getSpawnPixelPosition());
+
+		map = new Map(new Vector2f(5,5), new Vector2f(16,12), new Vector2f(40,40));
+		map.renderMapToFrameBuffers();
+		p.setPosition(map.getSpawnPixelPosition());
+
 		ProjectileManager.init();
+		LivingEntityManager.init();
 		LightManager.init();
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
@@ -83,15 +93,23 @@ public class GameLoop {
 		LightManager.setScreenWidth((int)ConfigManager.resolution.x);
 		OverlayManager.init();
 		OverlayManager.createStatsOverlay();
-		OverlayManager.createMiniMap(m.getRooms(),p);
+		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
-		
 		Light playerLight = LightManager.addLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
 		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);
 		
-		LightManager.addShadowCaster(m);
+		LightManager.addShadowCaster(map);
+		
+		
+		map.renderMapToFrameBuffers();
+		LightManager.render();
+		map.renderMapToFrameBuffers();
+		LightManager.render();
+		map.renderMapToFrameBuffers();
+		LightManager.render();
+		
 		
 		isRunning = true;
 	}
@@ -105,6 +123,10 @@ public class GameLoop {
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
+
+		glEnable(GL_BLEND);
+
+
 		glMatrixMode(GL_PROJECTION); // PROJECTION from 3D to Camera plane
 		glLoadIdentity(); 
 		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0, 1, -1);
@@ -112,6 +134,7 @@ public class GameLoop {
 		glMatrixMode(GL_MODELVIEW); // MODELVIEW manages the 3D scene
 
 		glClearColor(0, 0, 0, 0);
+		glEnable(GL_TEXTURE_2D);
 	}
 
 	/**
@@ -195,22 +218,29 @@ public class GameLoop {
 	 * @param elapsedTime represents the time passed since last update.
 	 */
 	private void render(long elapsedTime) {
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		p.updatePostion(elapsedTime, m);
-		ProjectileManager.updateProjectiles(m);
 		
+		/*** UPDATE ***/
+		
+		p.updatePostion(elapsedTime, map);
+		ProjectileManager.updateProjectiles(map);
 		cam.setPosition(p.getPosition());
 		LightManager.setCamPosition(p.getPosition());
-		m.setDrawPosition(p.getPosition());
-
+		map.setDrawPosition(p.getPosition());
+		LivingEntityManager.update();
+		
+		/*** RENDER ***/
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+		glClearColor(0,0,0,0);
 		glPushMatrix();
+
+		
 		cam.draw();
+		//map.renderMapToFrameBuffers();
 		LightManager.render();
 		
 		p.draw();
+		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
-		
 		OverlayManager.render();
 		glPopMatrix();
 	}

@@ -8,8 +8,6 @@ import java.util.LinkedList;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL20.*;
-
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -30,8 +28,8 @@ public class LightManager {
 	 * Stores the shadows to be drawn.
 	 */
 	private static HashMap<Light, ShadowBuffer[]> lightShadows = new HashMap<Light, ShadowBuffer[]>();
+	private static Vector2f camPos = new Vector2f();
 
-	private static Vector2f camPos = null;
 	private static int screenWidth = 0;
 	private static int screenHeight = 0;
 	private static float diagonal = 0;
@@ -47,7 +45,7 @@ public class LightManager {
 	/* --------------------------------------------- */
 
 	static public void init() {
-		staticLightsFBO = new FBO();
+		staticLightsFBO = new FBO((int) Map.mapPixelSize.x,(int) Map.mapPixelSize.y);
 	}
 
 	static public void addShadowCaster(ShadowCaster sc) {
@@ -178,36 +176,24 @@ public class LightManager {
 	 * Compute the FBO resulting from the static lights
 	 */
 	static private void renderStaticsToFrameBuffer() {
+
 		staticLightsFBO.bind();
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y, 0, 1, -1);
-		glMatrixMode(GL_MODELVIEW);
-		glPushAttrib(GL11.GL_VIEWPORT_BIT);
-		glViewport(0, 0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y);
-		glPushMatrix();
-		glLoadIdentity();
-		glClearColor(0.0f, 0.0f, 0.0f, 1f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		
 		renderStaticLights();
-
-		glPopMatrix();
-		glPopAttrib();
+		
 		staticLightsFBO.setUpdated(true);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y, 0,
-				1, -1);
+
 		staticLightsFBO.unbind();
-		glMatrixMode(GL_MODELVIEW);
+		
 	}
 
 	static public void render() {
 		if (!staticLightsFBO.isUpdated()) {
+			System.out.println("prout");
 			renderStaticsToFrameBuffer();
 		}
 		staticLightsFBO.use();
+		glColor3f(1,1,1);
 		glBegin(GL_QUADS);
 
 		glTexCoord2f(0.0f, 0.0f);
@@ -339,18 +325,21 @@ public class LightManager {
 		int layer = 0;
 		for (Light l : activatedDynamicLights.values()) {
 			Vector2f.sub(camPos, l.getPosition(), camToLight);
+
 			if (camToLight.length() - l.getMaxDst() < diagonal / 4) {
 				initShadowDrawing();
 				drawShadows(l,layer);
 				endShadowDrawing();
 				setUniforms(l,true);
 				drawMap(Map.getTextureID(layer));
+
 			}
 		}
 	}
 
 	public static void setCamPosition(Vector2f pos) {
-		camPos = pos;
+		camPos.x = pos.x;
+		camPos.y = pos.y;
 	}
 
 	public static void setScreenWidth(int width) {

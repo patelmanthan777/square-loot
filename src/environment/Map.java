@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import light.Light;
 import light.ShadowBuffer;
 import org.lwjgl.util.vector.Vector2f;
+
 import configuration.ConfigManager;
 import environment.room.Room;
 import rendering.FBO;
@@ -78,6 +79,7 @@ public class Map implements ShadowCaster {
 		Map.mapRoomSize = mapRoomSize;
 		Map.roomBlockSize = roomBlockSize;
 		Map.blockPixelSize = blockPixelSize;
+
 		Map.roomPixelSize = new Vector2f(roomBlockSize.x * blockPixelSize.x,
 				roomBlockSize.y * blockPixelSize.y);
 		Map.mapBlockSize = new Vector2f(mapRoomSize.x * roomBlockSize.x,
@@ -89,8 +91,9 @@ public class Map implements ShadowCaster {
 				/ Map.roomPixelSize.x, ConfigManager.resolution.y
 				/ Map.roomPixelSize.y);
 		for (int i = 0; i < maxLayer; i++) {
-			mapFBO[i] = new FBO();
+			mapFBO[i] = new FBO((int)Map.mapPixelSize.x,(int)Map.mapPixelSize.x);
 		}
+
 		generate();
 	}
 
@@ -135,29 +138,13 @@ public class Map implements ShadowCaster {
 	public void renderMapToFrameBuffers() {
 		for (int i = 0; i < maxLayer; i++) {
 			mapFBO[i].bind();
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glOrtho(0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y, 0,
-					1, -1);
-			glMatrixMode(GL_MODELVIEW);
-			glPushAttrib(GL_VIEWPORT_BIT);
-			glViewport(0, 0, (int) Map.mapPixelSize.x, (int) Map.mapPixelSize.y);
-			glPushMatrix();
-			glLoadIdentity();
-			glClearColor(0.0f, 0.0f, 0.0f, 1f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			
 
 			fullRender(i);
 
-			glPopMatrix();
-			glPopAttrib();
-			mapFBO[i].setUpdated(true);
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glOrtho(0, ConfigManager.resolution.x, ConfigManager.resolution.y,
-					0, 1, -1);
+			
 			mapFBO[i].unbind();
-			glMatrixMode(GL_MODELVIEW);
+			
 		}
 		mapFBOIsUpdated = true;
 	}
@@ -206,9 +193,9 @@ public class Map implements ShadowCaster {
 	 *            the position
 	 */
 	public void setDrawPosition(Vector2f pos) {
-		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
-		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
-		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
+		drawRoomPosition.x = pos.x/Map.roomPixelSize.x;
+		drawRoomPosition.y = pos.y/Map.roomPixelSize.y;
+		roomGrid[(int)drawRoomPosition.x][(int)drawRoomPosition.y].discover();
 	}
 
 	/**
@@ -222,6 +209,10 @@ public class Map implements ShadowCaster {
 		int maxY = 0;
 		int roomPosiX = (int) (light.getX() / Map.roomPixelSize.x);
 		int roomPosiY = (int) (light.getY() / Map.roomPixelSize.y);
+		
+		System.out.println("x : " + roomPosiX);
+		System.out.println("y : " + roomPosiY);
+		System.out.println(light);
 		if (fullRender) {
 			minX = 0;
 			maxX = (int) Map.mapRoomSize.x;
@@ -229,12 +220,17 @@ public class Map implements ShadowCaster {
 			maxY = (int) Map.mapRoomSize.y;
 
 		} else {
+			minX = 0;
+			maxX = (int) Map.mapRoomSize.x;
+			minY = 0;
+			maxY = (int) Map.mapRoomSize.y;
+			/*
 			minX = (int) Math.max(0, roomPosiX - drawRoomDistance.x);
 			maxX = (int) Math.min(Map.mapRoomSize.x, roomPosiX
 					+ drawRoomDistance.x + 1);
 			minY = (int) Math.max(0, roomPosiY - drawRoomDistance.y);
 			maxY = (int) Math.min(Map.mapRoomSize.y, roomPosiY
-					+ drawRoomDistance.y + 1);
+					+ drawRoomDistance.y + 1);*/
 		}
 
 		int i;

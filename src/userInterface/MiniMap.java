@@ -1,12 +1,13 @@
 package userInterface;
 
+import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
 import entity.player.Player;
 import environment.Map;
 import environment.room.Room;
-import static org.lwjgl.opengl.GL11.*;
+
 public class MiniMap extends Overlay{
 	public static Vector2f position;
 	public static Vector2f screenRegion = new Vector2f(0.2f,0.2f);

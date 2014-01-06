@@ -3,6 +3,10 @@ package rendering;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL14.GL_GENERATE_MIPMAP;
 import static org.lwjgl.opengl.GL30.*;
+
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
+
 import environment.Map;
 
 public class FBO {
@@ -19,16 +23,13 @@ public class FBO {
 	 */
 	private int depthBufferID;
 	private boolean isUpdated = false;
-	/**
-	 * previous texture state
-	 */
-	//private int texSave;
-	/**
-	 * previous frame buffer state
-	 */
-	//private int frameBufferSave;
+
 	
-	public FBO(){
+	private int width;
+	private int height;
+
+	public FBO(int width, int height){
+
 		frameBufferID = glGenFramebuffers();
 		textureID = glGenTextures();
 		depthBufferID = glGenRenderbuffers();
@@ -52,45 +53,67 @@ public class FBO {
 				GL_RENDERBUFFER, depthBufferID);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		this.width = width;
+		this.height = height;
 	}
 	
 	/**
 	 * Set OpenGL to the appropriate frame buffer
 	 */
+
 	public void bind(){
-		//frameBufferSave =  glGetInteger(GL_FRAMEBUFFER_BINDING);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glViewport(0, 0, width, height);
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, width, height, 0, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
+		glPushAttrib(GL11.GL_VIEWPORT_BIT);
+		glViewport(0, 0, width, height);
+		glPushMatrix();
+		glLoadIdentity();
+		glClearColor(0.0f, 0.0f, 0.0f, 1f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 	
 	/**
 	 * Set OpenGL back to its previous frame buffer state
 	 */
 	public void unbind(){
-		glBindFramebuffer(GL_FRAMEBUFFER, 0/*frameBufferSave*/);
+
+		glPopMatrix();
+		glPopAttrib();
+		
+		
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, Display.getWidth(), Display.getHeight(), 0,
+				1, -1);
+		glMatrixMode(GL_MODELVIEW);
+		glViewport(0, 0, Display.getWidth(), Display.getHeight());
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		
 	}
 	
+	public void use(){
+		glClearColor(1f, 1f, 1f, 1f);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
+	
+	public void unUse(){
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+	
+
 	public void setUpdated(boolean isUpdated){
 		this.isUpdated = isUpdated;
 	}
 	
 	public boolean isUpdated(){
 		return isUpdated;
-	}
-	
-	/**
-	 * Trigger the use of the computed texture
-	 */
-	public void use(){
-		glClearColor(1f, 1f, 1f, 1f);
-		//texSave =  glGetInteger(GL_TEXTURE_BINDING_2D);
-		glBindTexture(GL_TEXTURE_2D, textureID);
-	}
-	
-	/**
-	 * Set the texture back to its previous state.
-	 */
-	public void unUse(){
-		glBindTexture(GL_TEXTURE_2D, 0/*texSave*/);
+
 	}
 	
 	public int getTextureID(){

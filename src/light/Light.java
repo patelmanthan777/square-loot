@@ -77,5 +77,9 @@ public class Light extends Node{
 		LightManager.updateLightShadows(this,dynamic);
 	}
 	
+	@Override
+	public String toString(){
+		return name;
+	}
 	
 }
