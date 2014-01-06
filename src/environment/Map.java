@@ -96,8 +96,6 @@ public class Map implements ShadowCaster {
 		}
 
 		generate();
-		
-		//currentBufferPosition = new Vector2f(0,0);
 		currentBufferPosition = new Vector2f(spawnPixelPosition.x - 0.5f*textureSize, spawnPixelPosition.y - 0.5f*textureSize);
 	}
 
@@ -182,8 +180,28 @@ public class Map implements ShadowCaster {
 		drawRoomPosition.x = pos.x/Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y/Map.roomPixelSize.y;
 		roomGrid[(int)drawRoomPosition.x][(int)drawRoomPosition.y].discover();
-		currentBufferPosition.x = pos.x - 0.5f*textureSize;
-		currentBufferPosition.y = pos.y - 0.5f*textureSize;
+		
+		
+		int translateMapFBOx = 0;
+        int translateMapFBOy = 0;
+        if (pos.x < currentBufferPosition.x)
+                translateMapFBOx = -1;
+        else if (pos.x > currentBufferPosition.x + Map.textureSize)
+                translateMapFBOx = 1;
+        
+        if (pos.y < currentBufferPosition.y)
+                translateMapFBOy = -1;
+        else if (pos.y > currentBufferPosition.y + Map.textureSize)
+                translateMapFBOy = 1;
+        
+        if (translateMapFBOx == -1)
+        	currentBufferPosition.x -= Map.textureSize;
+        if (translateMapFBOx == 1)
+        	currentBufferPosition.x += Map.textureSize; 
+        if (translateMapFBOy == -1)
+        	currentBufferPosition.y -= Map.textureSize; 
+        if (translateMapFBOy == 1)
+        	currentBufferPosition.y += Map.textureSize;
 	}
 
 	/**
