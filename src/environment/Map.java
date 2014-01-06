@@ -2,7 +2,9 @@ package environment;
 
 import static org.lwjgl.opengl.GL11.*;
 import light.Light;
+import light.LightManager;
 import light.ShadowBuffer;
+
 import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
@@ -76,6 +78,7 @@ public class Map implements ShadowCaster {
 
 	public static final int textureSize = 512;
 	public static Vector2f currentBufferPosition;
+	private static boolean shouldBeRendered = true;
 	
 	public Map(Vector2f mapRoomSize, Vector2f roomBlockSize,
 			Vector2f blockPixelSize) {
@@ -119,18 +122,20 @@ public class Map implements ShadowCaster {
 	 * Compute a full map render and stores it in mapFBO
 	 */
 	public void renderMapToFrameBuffers() {
-		for (int i = 0; i < maxLayer; i++) {
-			mapFBO[i].bind();
+		
+		for (int layer = 0; layer < maxLayer; layer++) {
+			if(!mapFBO[layer].isUpdated()){
+			mapFBO[layer].bind();
 			glPushMatrix();
 			glLoadIdentity();
 			glTranslatef(-(currentBufferPosition.x),-(currentBufferPosition.y),0);
-			fullRender(i);
+			fullRender(layer);
 			glPopMatrix();
 			
-			mapFBO[i].unbind();
+			mapFBO[layer].unbind();
+			}
 			
 		}
-		mapFBOIsUpdated = true;
 	}
 
 	/**
@@ -194,14 +199,33 @@ public class Map implements ShadowCaster {
         else if (pos.y > currentBufferPosition.y + Map.textureSize)
                 translateMapFBOy = 1;
         
-        if (translateMapFBOx == -1)
+        if (translateMapFBOx == -1){
         	currentBufferPosition.x -= Map.textureSize;
-        if (translateMapFBOx == 1)
-        	currentBufferPosition.x += Map.textureSize; 
-        if (translateMapFBOy == -1)
-        	currentBufferPosition.y -= Map.textureSize; 
-        if (translateMapFBOy == 1)
+        	for(int layer = 0; layer < Map.maxLayer ; layer ++){
+        		mapFBO[layer].setUpdated(false);
+        	}
+        	LightManager.needStaticUpdate();
+        }else if (translateMapFBOx == 1){
+        	currentBufferPosition.x += Map.textureSize;
+        	for(int layer = 0; layer < Map.maxLayer ; layer ++){
+        		mapFBO[layer].setUpdated(false);
+        	}
+        	LightManager.needStaticUpdate();
+        }
+        if (translateMapFBOy == -1){
+        	currentBufferPosition.y -= Map.textureSize;
+        	for(int layer = 0; layer < Map.maxLayer ; layer ++){
+        		mapFBO[layer].setUpdated(false);
+        	}
+        	LightManager.needStaticUpdate();
+        }else if (translateMapFBOy == 1){
         	currentBufferPosition.y += Map.textureSize;
+        	for(int layer = 0; layer < Map.maxLayer ; layer ++){
+        		mapFBO[layer].setUpdated(false);
+        	}
+        	LightManager.needStaticUpdate();
+        }
+        
 	}
 
 	/**
@@ -216,9 +240,6 @@ public class Map implements ShadowCaster {
 		int roomPosiX = (int) (light.getX() / Map.roomPixelSize.x);
 		int roomPosiY = (int) (light.getY() / Map.roomPixelSize.y);
 		
-		System.out.println("x : " + roomPosiX);
-		System.out.println("y : " + roomPosiY);
-		System.out.println(light);
 		if (fullRender) {
 			minX = 0;
 			maxX = (int) Map.mapRoomSize.x;

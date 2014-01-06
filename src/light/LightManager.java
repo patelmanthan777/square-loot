@@ -38,6 +38,7 @@ public class LightManager {
 	static int laserShaderProgram;
 	static FBO staticLightsFBO;
 
+	static boolean refreshStaticFBO = true;
 	/* Avoid dynamic allocation in rendering methods */
 	private static Vector2f camToLight = new Vector2f();
 	private static Vector2f laserDirection = new Vector2f();
@@ -181,7 +182,7 @@ public class LightManager {
 		
 		renderStaticLights();
 		
-		//staticLightsFBO.setUpdated(true);
+		staticLightsFBO.setUpdated(true);
 
 		staticLightsFBO.unbind();
 		
@@ -189,7 +190,6 @@ public class LightManager {
 
 	static public void render() {
 		if (!staticLightsFBO.isUpdated()) {
-			System.out.println("prout");
 			renderStaticsToFrameBuffer();
 		}
 		staticLightsFBO.use();
@@ -367,5 +367,9 @@ public class LightManager {
 	private static void computeDiagonal() {
 		diagonal = (float) Math.sqrt(screenHeight * screenHeight + screenWidth
 				* screenWidth);
+	}
+	
+	public static void needStaticUpdate(){
+		staticLightsFBO.setUpdated(false);
 	}
 }
