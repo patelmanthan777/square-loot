@@ -65,21 +65,20 @@ public class Map implements ShadowCaster {
 	private Vector2f drawRoomDistance;
 
 	/**
-	 * FBO stands for <i>Frame Buffer Object</i> it is a rendered view of the
-	 * map stored for performance purposes. There is one FBO per layer.
-	 */
-	public static FBO[] mapFBO = new FBO[maxLayer];
-	
-	private static boolean mapFBOIsUpdated = false;
-	/**
 	 * <b>true</b> if the full map needs to be rendered, <b>false</b> otherwise.
 	 */
 	private boolean fullRender = false;
 
 	public static final int textureSize = 512;
+	public static final int textureNb = 2;
 	public static Vector2f currentBufferPosition;
-	private static boolean shouldBeRendered = true;
-	
+	private static boolean shouldBeRendered[][] = new boolean[textureNb][textureNb];
+	/**
+	 * FBO stands for <i>Frame Buffer Object</i> it is a rendered view of the
+	 * map stored for performance purposes. There is one FBO per layer.
+	 */
+	public static FBO[][][] mapFBO = new FBO[textureNb][textureNb][maxLayer];
+
 	public Map(Vector2f mapRoomSize, Vector2f roomBlockSize,
 			Vector2f blockPixelSize) {
 		Map.mapRoomSize = mapRoomSize;
@@ -93,16 +92,26 @@ public class Map implements ShadowCaster {
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x * roomPixelSize.x,
 				mapRoomSize.y * roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0, 0);
-		this.drawRoomDistance = new Vector2f(textureSize / Map.roomPixelSize.x, textureSize / Map.roomPixelSize.y);
-		for (int i = 0; i < maxLayer; i++) {
-			mapFBO[i] = new FBO(textureSize,textureSize);
+		this.drawRoomDistance = new Vector2f(textureSize / Map.roomPixelSize.x,
+				textureSize / Map.roomPixelSize.y);
+		for (int layer = 0; layer < maxLayer; layer++) {
+			for (int i = 0; i < Map.textureNb; i++) {
+				for (int j = 0; j < Map.textureNb; j++) {
+					mapFBO[i][j][layer] = new FBO(textureSize, textureSize);
+				}
+			}
 		}
-
+		for (int i = 0; i < textureNb; i++) {
+			for (int j = 0; j < textureNb; j++) {
+				shouldBeRendered[i][j] = true;
+			}
+		}
 		generate();
-		currentBufferPosition = new Vector2f(spawnPixelPosition.x - 0.5f*textureSize, spawnPixelPosition.y - 0.5f*textureSize);
+		currentBufferPosition = new Vector2f(spawnPixelPosition.x - (Map.textureNb/2.0f)
+				* textureSize, spawnPixelPosition.y - (Map.textureNb/2.0f) * textureSize);
 	}
 
-	private void fullRender(int layer){
+	private void fullRender(int layer) {
 		int minX = 0;
 		int maxX = (int) Map.mapRoomSize.x;
 		int minY = 0;
@@ -117,24 +126,28 @@ public class Map implements ShadowCaster {
 		}
 		glEnd();
 	}
-	
+
 	/**
 	 * Compute a full map render and stores it in mapFBO
 	 */
 	public void renderMapToFrameBuffers() {
-		
-		for (int layer = 0; layer < maxLayer; layer++) {
-			if(!mapFBO[layer].isUpdated()){
-			mapFBO[layer].bind();
-			glPushMatrix();
-			glLoadIdentity();
-			glTranslatef(-(currentBufferPosition.x),-(currentBufferPosition.y),0);
-			fullRender(layer);
-			glPopMatrix();
-			
-			mapFBO[layer].unbind();
+		for (int i = 0; i < textureNb; i++) {
+			for (int j = 0; j < textureNb; j++) {
+				if (shouldBeRendered[i][j]) {
+					shouldBeRendered[i][j] = false;
+					for (int layer = 0; layer < maxLayer; layer++) {
+
+						mapFBO[i][j][layer].bind();
+						glPushMatrix();
+						glLoadIdentity();
+						glTranslatef(-(currentBufferPosition.x + i * Map.textureSize),-(currentBufferPosition.y + j * Map.textureSize),0);
+						fullRender(layer);
+						glPopMatrix();
+
+						mapFBO[i][j][layer].unbind();
+					}
+				}
 			}
-			
 		}
 	}
 
@@ -182,50 +195,60 @@ public class Map implements ShadowCaster {
 	 *            the position
 	 */
 	public void setDrawPosition(Vector2f pos) {
-		drawRoomPosition.x = pos.x/Map.roomPixelSize.x;
-		drawRoomPosition.y = pos.y/Map.roomPixelSize.y;
-		roomGrid[(int)drawRoomPosition.x][(int)drawRoomPosition.y].discover();
-		
-		
+		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
+		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
+		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
+
 		int translateMapFBOx = 0;
-        int translateMapFBOy = 0;
-        if (pos.x < currentBufferPosition.x)
-                translateMapFBOx = -1;
-        else if (pos.x > currentBufferPosition.x + Map.textureSize)
-                translateMapFBOx = 1;
-        
-        if (pos.y < currentBufferPosition.y)
-                translateMapFBOy = -1;
-        else if (pos.y > currentBufferPosition.y + Map.textureSize)
-                translateMapFBOy = 1;
-        
-        if (translateMapFBOx == -1){
-        	currentBufferPosition.x -= Map.textureSize;
-        	for(int layer = 0; layer < Map.maxLayer ; layer ++){
-        		mapFBO[layer].setUpdated(false);
-        	}
-        	LightManager.needStaticUpdate();
-        }else if (translateMapFBOx == 1){
-        	currentBufferPosition.x += Map.textureSize;
-        	for(int layer = 0; layer < Map.maxLayer ; layer ++){
-        		mapFBO[layer].setUpdated(false);
-        	}
-        	LightManager.needStaticUpdate();
-        }
-        if (translateMapFBOy == -1){
-        	currentBufferPosition.y -= Map.textureSize;
-        	for(int layer = 0; layer < Map.maxLayer ; layer ++){
-        		mapFBO[layer].setUpdated(false);
-        	}
-        	LightManager.needStaticUpdate();
-        }else if (translateMapFBOy == 1){
-        	currentBufferPosition.y += Map.textureSize;
-        	for(int layer = 0; layer < Map.maxLayer ; layer ++){
-        		mapFBO[layer].setUpdated(false);
-        	}
-        	LightManager.needStaticUpdate();
-        }
-        
+		int translateMapFBOy = 0;
+		if (pos.x < currentBufferPosition.x)
+			translateMapFBOx = -1;
+		else if (pos.x > currentBufferPosition.x + Map.textureNb
+				* Map.textureSize)
+			translateMapFBOx = 1;
+
+		if (pos.y < currentBufferPosition.y)
+			translateMapFBOy = -1;
+		else if (pos.y > currentBufferPosition.y + Map.textureNb
+				* Map.textureSize)
+			translateMapFBOy = 1;
+
+		if (translateMapFBOx == -1) {
+			currentBufferPosition.x -= Map.textureSize;
+
+			for (int i = 0; i < textureNb; i++) {
+				for (int j = 0; j < textureNb; j++) {
+					shouldBeRendered[i][j] = true;
+				}
+			}
+			LightManager.needStaticUpdate();
+		} else if (translateMapFBOx == 1) {
+			currentBufferPosition.x += Map.textureSize;
+			for (int i = 0; i < textureNb; i++) {
+				for (int j = 0; j < textureNb; j++) {
+					shouldBeRendered[i][j] = true;
+				}
+			}
+			LightManager.needStaticUpdate();
+		}
+		if (translateMapFBOy == -1) {
+			currentBufferPosition.y -= Map.textureSize;
+			for (int i = 0; i < textureNb; i++) {
+				for (int j = 0; j < textureNb; j++) {
+					shouldBeRendered[i][j] = true;
+				}
+			}
+			LightManager.needStaticUpdate();
+		} else if (translateMapFBOy == 1) {
+			currentBufferPosition.y += Map.textureSize;
+			for (int i = 0; i < textureNb; i++) {
+				for (int j = 0; j < textureNb; j++) {
+					shouldBeRendered[i][j] = true;
+				}
+			}
+			LightManager.needStaticUpdate();
+		}
+
 	}
 
 	/**
@@ -239,7 +262,7 @@ public class Map implements ShadowCaster {
 		int maxY = 0;
 		int roomPosiX = (int) (light.getX() / Map.roomPixelSize.x);
 		int roomPosiY = (int) (light.getY() / Map.roomPixelSize.y);
-		
+
 		if (fullRender) {
 			minX = 0;
 			maxX = (int) Map.mapRoomSize.x;
@@ -252,12 +275,12 @@ public class Map implements ShadowCaster {
 			minY = 0;
 			maxY = (int) Map.mapRoomSize.y;
 			/*
-			minX = (int) Math.max(0, roomPosiX - drawRoomDistance.x);
-			maxX = (int) Math.min(Map.mapRoomSize.x, roomPosiX
-					+ drawRoomDistance.x + 1);
-			minY = (int) Math.max(0, roomPosiY - drawRoomDistance.y);
-			maxY = (int) Math.min(Map.mapRoomSize.y, roomPosiY
-					+ drawRoomDistance.y + 1);*/
+			 * minX = (int) Math.max(0, roomPosiX - drawRoomDistance.x); maxX =
+			 * (int) Math.min(Map.mapRoomSize.x, roomPosiX + drawRoomDistance.x
+			 * + 1); minY = (int) Math.max(0, roomPosiY - drawRoomDistance.y);
+			 * maxY = (int) Math.min(Map.mapRoomSize.y, roomPosiY +
+			 * drawRoomDistance.y + 1);
+			 */
 		}
 
 		int i;
@@ -286,11 +309,11 @@ public class Map implements ShadowCaster {
 		return this.fullRender;
 	}
 
-	public boolean isUpdated() {
-		return (mapFBOIsUpdated);
+	public boolean isUpdated(int i, int j) {
+		return (shouldBeRendered[i][j]);
 	}
 
-	public static int getTextureID(int layer) {
-		return mapFBO[layer].getTextureID();
+	public static int getTextureID(int i, int j,int layer) {
+		return mapFBO[i][j][layer].getTextureID();
 	}
 }

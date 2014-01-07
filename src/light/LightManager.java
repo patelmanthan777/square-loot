@@ -36,7 +36,7 @@ public class LightManager {
 
 	static int lightShaderProgram;
 	static int laserShaderProgram;
-	static FBO staticLightsFBO;
+	static FBO[][] staticLightsFBO = new FBO[Map.textureNb][Map.textureNb];
 
 	static boolean refreshStaticFBO = true;
 	/* Avoid dynamic allocation in rendering methods */
@@ -46,7 +46,12 @@ public class LightManager {
 	/* --------------------------------------------- */
 
 	static public void init() {
-		staticLightsFBO = new FBO(Map.textureSize,Map.textureSize);
+		for (int i = 0; i < Map.textureNb; i++) {
+			for (int j = 0; j < Map.textureNb; j++) {
+				staticLightsFBO[i][j] = new FBO(Map.textureSize,
+						Map.textureSize);
+			}
+		}
 	}
 
 	static public void addShadowCaster(ShadowCaster sc) {
@@ -176,93 +181,83 @@ public class LightManager {
 	/**
 	 * Compute the FBO resulting from the static lights
 	 */
-	static private void renderStaticsToFrameBuffer() {
+	static private void renderStaticsToFrameBuffer(int i,int j) {
 
-		staticLightsFBO.bind();
-		
-		renderStaticLights();
-		
-		staticLightsFBO.setUpdated(true);
+		staticLightsFBO[i][j].bind();
 
-		staticLightsFBO.unbind();
-		
+		renderStaticLights(i, j);
+
+		staticLightsFBO[i][j].setUpdated(true);
+
+		staticLightsFBO[i][j].unbind();
+
 	}
 
 	static public void render() {
-		if (!staticLightsFBO.isUpdated()) {
-			renderStaticsToFrameBuffer();
+		for (int i = 0; i < Map.textureNb ; i++) {
+			for (int j = 0; j < Map.textureNb; j++) {
+				if (!staticLightsFBO[i][j].isUpdated()) {
+					renderStaticsToFrameBuffer(i,j);
+				}
+				staticLightsFBO[i][j].use();
+
+				drawQuad(Map.currentBufferPosition.x+i*Map.textureSize, Map.currentBufferPosition.y+j*Map.textureSize, Map.textureSize, Map.textureSize);
+
+				renderDynamicLights(i,j);
+				staticLightsFBO[i][j].unUse();
+			}
 		}
-		staticLightsFBO.use();
-		glColor3f(1,1,1);
-		glBegin(GL_QUADS);
-
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(Map.currentBufferPosition.x, Map.currentBufferPosition.y + Map.textureSize);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(Map.currentBufferPosition.x + Map.textureSize, Map.currentBufferPosition.y + Map.textureSize);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(Map.currentBufferPosition.x + Map.textureSize, Map.currentBufferPosition.y);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(Map.currentBufferPosition.x, Map.currentBufferPosition.y);
-		glEnd();
-
-		renderDynamicLights();
-		staticLightsFBO.unUse();
 	}
 
-	private static void drawMap(int textureId){
+	private static void drawMap(int i, int j, int textureId) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
 		int tex_save = glGetInteger(GL_TEXTURE_BINDING_2D);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glActiveTexture(GL_TEXTURE0);
-		glColor3f(1,1,1);
-		glBegin(GL_QUADS);
 
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(Map.currentBufferPosition.x, Map.currentBufferPosition.y + Map.textureSize);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(Map.currentBufferPosition.x + Map.textureSize, Map.currentBufferPosition.y + Map.textureSize);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(Map.currentBufferPosition.x + Map.textureSize, Map.currentBufferPosition.y);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(Map.currentBufferPosition.x, Map.currentBufferPosition.y);
-		glEnd();
+		drawQuad(Map.currentBufferPosition.x+i*Map.textureSize, Map.currentBufferPosition.y+j*Map.textureSize, Map.textureSize, Map.textureSize);
+
 		glBindTexture(GL_TEXTURE_2D, tex_save);
 		glActiveTexture(GL_TEXTURE0);
 		glDisable(GL_BLEND);
 		glUseProgram(0);
 		glClear(GL_STENCIL_BUFFER_BIT);
 	}
-	
-	private static void setUniforms(Light l, boolean dynamic){
-		/*
-			float posx = dynamic ? l.getX() - camPos.x + (int) ConfigManager.resolution.x / 2 : l.getX();
-			float posy = dynamic ? l.getY() - camPos.y  + (int) ConfigManager.resolution.y / 2 : -l.getY() + Map.mapPixelSize.y;
-		*/
-		
-			float posx = dynamic ? l.getX() - camPos.x + (int) ConfigManager.resolution.x / 2 : l.getX() - Map.currentBufferPosition.x;
-			float posy = dynamic ? l.getY() - camPos.y  + (int) ConfigManager.resolution.y / 2 : -l.getY() + Map.currentBufferPosition.y + Map.textureSize;
-		
+
+	private static void setUniforms(Light l, boolean dynamic,int i, int j) {
+
+		/*float posx = dynamic ? l.getX() - camPos.x
+				+ (int) ConfigManager.resolution.x / 2 : l.getX()
+				- Map.currentBufferPosition.x;
+		float posy = dynamic ? l.getY() - camPos.y
+				+ (int) ConfigManager.resolution.y / 2 : -l.getY()
+				+ Map.currentBufferPosition.y + Map.textureSize;
+*/
+		float posx = dynamic ? l.getX() - camPos.x
+				+ (int) ConfigManager.resolution.x / 2 : l.getX()
+				- (Map.currentBufferPosition.x+i*Map.textureSize);
+		float posy = dynamic ? l.getY() - camPos.y
+				+ (int) ConfigManager.resolution.y / 2 : -l.getY()
+				+ Map.currentBufferPosition.y+j* Map.textureSize + Map.textureSize;
+				
+				
 		if (l instanceof Light) {
 			glUseProgram(lightShaderProgram);
 			glUniform1f(
-					glGetUniformLocation(lightShaderProgram,
-							"light.maxDst"), l.getMaxDst());
+					glGetUniformLocation(lightShaderProgram, "light.maxDst"),
+					l.getMaxDst());
 			glUniform1f(
-					glGetUniformLocation(lightShaderProgram,
-							"light.radius"), l.getRadius());
+					glGetUniformLocation(lightShaderProgram, "light.radius"),
+					l.getRadius());
 			glUniform2f(
-					glGetUniformLocation(lightShaderProgram,
-							"light.position"), posx, posy);
+					glGetUniformLocation(lightShaderProgram, "light.position"),
+					posx, posy);
 			glUniform3f(
-					glGetUniformLocation(lightShaderProgram,
-							"light.color"), l.getColor().x,
-					l.getColor().y, l.getColor().z);
-			glUniform1i(
-					glGetUniformLocation(lightShaderProgram, "texture"),
-					0);
+					glGetUniformLocation(lightShaderProgram, "light.color"),
+					l.getColor().x, l.getColor().y, l.getColor().z);
+			glUniform1i(glGetUniformLocation(lightShaderProgram, "texture"), 0);
 		}
 		if (l instanceof Laser) {
 			glUseProgram(laserShaderProgram);
@@ -277,32 +272,31 @@ public class LightManager {
 						-laserDirection.y);
 				glUniform2f(
 						glGetUniformLocation(laserShaderProgram,
-								"laser.position"), posx,
-						posy);
+								"laser.position"), posx, posy);
 				glUniform3f(
-						glGetUniformLocation(laserShaderProgram,
-								"laser.color"), l.getColor().x,
-						l.getColor().y, l.getColor().z);
+						glGetUniformLocation(laserShaderProgram, "laser.color"),
+						l.getColor().x, l.getColor().y, l.getColor().z);
 			}
 		}
 	}
-	
-	private static void initShadowDrawing(){
+
+	private static void initShadowDrawing() {
 		glColorMask(false, false, false, false);
 		glStencilFunc(GL_ALWAYS, 1, 1);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glBegin(GL_QUADS);
 	}
-	
-	private static void endShadowDrawing(){
+
+	private static void endShadowDrawing() {
 		glEnd();
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 		glStencilFunc(GL_EQUAL, 0, 1);
 		glColorMask(true, true, true, true);
 	}
-	private static void drawShadows(Light l, int layer){
+
+	private static void drawShadows(Light l, int layer) {
 		ShadowBuffer[] shadows = lightShadows.get(l);
-		for (int shadowLayer = layer; shadowLayer < Map.maxLayer-1; shadowLayer++) {
+		for (int shadowLayer = layer; shadowLayer < Map.maxLayer - 1; shadowLayer++) {
 			if (shadows[shadowLayer] != null) {
 				for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
 					Shadow s = shadows[shadowLayer].get(i);
@@ -318,32 +312,36 @@ public class LightManager {
 			}
 		}
 	}
-	private static void renderStaticLights() {
+
+	private static void renderStaticLights(int i, int j) {
 		glPushMatrix();
 		glLoadIdentity();
-		glTranslatef(-(Map.currentBufferPosition.x),-(Map.currentBufferPosition.y),0);
+		glTranslatef(-(Map.currentBufferPosition.x+i*Map.textureSize),
+				-(Map.currentBufferPosition.y+j*Map.textureSize), 0);
 		for (int layer = 0; layer < Map.maxLayer; layer++) {
 			for (Light l : activatedStaticLights.values()) {
 				initShadowDrawing();
-				drawShadows(l,layer);
+				drawShadows(l, layer);
 				endShadowDrawing();
-				setUniforms(l,false);
-				drawMap(Map.getTextureID(layer));
+				setUniforms(l, false,i,j);
+				drawMap(i,j,Map.getTextureID(i, j, layer)); 
 			}
 		}
 		glPopMatrix();
 	}
-	private static void renderDynamicLights() {
+
+	private static void renderDynamicLights(int i, int j) {
+		
 		int layer = 0;
 		for (Light l : activatedDynamicLights.values()) {
 			Vector2f.sub(camPos, l.getPosition(), camToLight);
 
 			if (camToLight.length() - l.getMaxDst() < diagonal / 4) {
 				initShadowDrawing();
-				drawShadows(l,layer);
+				drawShadows(l, layer);
 				endShadowDrawing();
-				setUniforms(l,true);
-				drawMap(Map.getTextureID(layer));
+				setUniforms(l, true,i,j);
+				drawMap(i, j, Map.getTextureID(i, j, layer));
 
 			}
 		}
@@ -368,8 +366,27 @@ public class LightManager {
 		diagonal = (float) Math.sqrt(screenHeight * screenHeight + screenWidth
 				* screenWidth);
 	}
-	
-	public static void needStaticUpdate(){
-		staticLightsFBO.setUpdated(false);
+
+	public static void needStaticUpdate() {
+		for (int i = 0; i < Map.textureNb; i++) {
+			for (int j = 0; j < Map.textureNb; j++) {
+				staticLightsFBO[i][j].setUpdated(false);
+			}
+		}
 	}
+
+	public static void drawQuad(float x, float y, float sizex, float sizey) {
+		glColor3f(1, 1, 1);
+		glBegin(GL_QUADS);
+		glTexCoord2f(0.0f, 0.0f);
+		glVertex2f(x, y + sizey);
+		glTexCoord2f(1.0f, 0.0f);
+		glVertex2f(x + sizex, y + sizey);
+		glTexCoord2f(1.0f, 1.0f);
+		glVertex2f(x + sizex, y);
+		glTexCoord2f(0.0f, 1.0f);
+		glVertex2f(x, y);
+		glEnd();
+	}
+
 }
