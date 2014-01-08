@@ -207,13 +207,13 @@ public class LightManager {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
-		int tex_save = glGetInteger(GL_TEXTURE_BINDING_2D);
+		//int tex_save = glGetInteger(GL_TEXTURE_BINDING_2D);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glActiveTexture(GL_TEXTURE0);
 
 		drawQuad(Map.currentBufferPosition.x+i*Map.textureSize, Map.currentBufferPosition.y+j*Map.textureSize, Map.textureSize, Map.textureSize);
 
-		glBindTexture(GL_TEXTURE_2D, tex_save);
+		glBindTexture(GL_TEXTURE_2D, /*tex_save*/0);
 		glActiveTexture(GL_TEXTURE0);
 		glDisable(GL_BLEND);
 		Shader.unuse();
