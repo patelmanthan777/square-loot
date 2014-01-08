@@ -70,9 +70,11 @@ public class Map implements ShadowCaster {
 	private boolean fullRender = false;
 
 	public static int textureSize;
-	public static final int textureNb = 3;
+	public static final int textureNb = 5;
 	public static Vector2f currentBufferPosition;
 	private static boolean shouldBeRendered[][] = new boolean[textureNb][textureNb];
+	private static int indx = 0;
+	private static int indy = 0;
 	/**
 	 * FBO stands for <i>Frame Buffer Object</i> it is a rendered view of the
 	 * map stored for performance purposes. There is one FBO per layer.
@@ -92,9 +94,10 @@ public class Map implements ShadowCaster {
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x * roomPixelSize.x,
 				mapRoomSize.y * roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0, 0);
-		
-		Map.textureSize = (int) Math.max(ConfigManager.resolution.x,ConfigManager.resolution.y)/ (textureNb - 2);
-		
+
+		Map.textureSize = (int) Math.max(ConfigManager.resolution.x,
+				ConfigManager.resolution.y) / (textureNb - 2);
+
 		this.drawRoomDistance = new Vector2f(textureSize / Map.roomPixelSize.x,
 				textureSize / Map.roomPixelSize.y);
 		for (int layer = 0; layer < maxLayer; layer++) {
@@ -110,8 +113,9 @@ public class Map implements ShadowCaster {
 			}
 		}
 		generate();
-		currentBufferPosition = new Vector2f(spawnPixelPosition.x - (Map.textureNb/2.0f)
-				* textureSize, spawnPixelPosition.y - (Map.textureNb/2.0f) * textureSize);
+		currentBufferPosition = new Vector2f(spawnPixelPosition.x
+				- (Map.textureNb / 2.0f) * textureSize, spawnPixelPosition.y
+				- (Map.textureNb / 2.0f) * textureSize);
 	}
 
 	private void fullRender(int layer) {
@@ -140,14 +144,17 @@ public class Map implements ShadowCaster {
 					shouldBeRendered[i][j] = false;
 					for (int layer = 0; layer < maxLayer; layer++) {
 
-						mapFBO[i][j][layer].bind();
+						getFBO(i, j, layer).bind();
 						glPushMatrix();
 						glLoadIdentity();
-						glTranslatef(-(currentBufferPosition.x + i * Map.textureSize),-(currentBufferPosition.y + j * Map.textureSize),0);
+						glTranslatef(
+								-(currentBufferPosition.x + i * Map.textureSize),
+								-(currentBufferPosition.y + j * Map.textureSize),
+								0);
 						fullRender(layer);
 						glPopMatrix();
 
-						mapFBO[i][j][layer].unbind();
+						getFBO(i, j, layer).unbind();
 					}
 				}
 			}
@@ -204,16 +211,16 @@ public class Map implements ShadowCaster {
 
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
-		if (pos.x - ConfigManager.resolution.x/2 < currentBufferPosition.x)
+		if (pos.x - ConfigManager.resolution.x / 2 < currentBufferPosition.x)
 			translateMapFBOx = -1;
-		else if (pos.x + ConfigManager.resolution.x/2> currentBufferPosition.x + Map.textureNb
-				* Map.textureSize)
+		else if (pos.x + ConfigManager.resolution.x / 2 > currentBufferPosition.x
+				+ Map.textureNb * Map.textureSize)
 			translateMapFBOx = 1;
 
-		if (pos.y - ConfigManager.resolution.y/2 < currentBufferPosition.y)
+		if (pos.y - ConfigManager.resolution.y / 2 < currentBufferPosition.y)
 			translateMapFBOy = -1;
-		else if (pos.y + ConfigManager.resolution.y/2 > currentBufferPosition.y + Map.textureNb
-				* Map.textureSize)
+		else if (pos.y + ConfigManager.resolution.y / 2 > currentBufferPosition.y
+				+ Map.textureNb * Map.textureSize)
 			translateMapFBOy = 1;
 
 		if (translateMapFBOx == -1) {
@@ -224,9 +231,11 @@ public class Map implements ShadowCaster {
 					shouldBeRendered[i][j] = true;
 				}
 			}
+			indx = (indx - 1 + textureNb) % textureNb;
 			LightManager.needStaticUpdate();
 		} else if (translateMapFBOx == 1) {
 			currentBufferPosition.x += Map.textureSize;
+			indx = (indx + 1 + textureNb) % textureNb;
 			for (int i = 0; i < textureNb; i++) {
 				for (int j = 0; j < textureNb; j++) {
 					shouldBeRendered[i][j] = true;
@@ -236,6 +245,7 @@ public class Map implements ShadowCaster {
 		}
 		if (translateMapFBOy == -1) {
 			currentBufferPosition.y -= Map.textureSize;
+			indy = (indy - 1 + textureNb) % textureNb;
 			for (int i = 0; i < textureNb; i++) {
 				for (int j = 0; j < textureNb; j++) {
 					shouldBeRendered[i][j] = true;
@@ -244,6 +254,7 @@ public class Map implements ShadowCaster {
 			LightManager.needStaticUpdate();
 		} else if (translateMapFBOy == 1) {
 			currentBufferPosition.y += Map.textureSize;
+			indy = (indy + 1 + textureNb) % textureNb;
 			for (int i = 0; i < textureNb; i++) {
 				for (int j = 0; j < textureNb; j++) {
 					shouldBeRendered[i][j] = true;
@@ -316,7 +327,11 @@ public class Map implements ShadowCaster {
 		return (shouldBeRendered[i][j]);
 	}
 
-	public static int getTextureID(int i, int j,int layer) {
-		return mapFBO[i][j][layer].getTextureID();
+	public static FBO getFBO(int i, int j, int layer) {
+		return mapFBO[(i + indx) % textureNb][(j + indy) % textureNb][layer];
+	}
+
+	public static int getTextureID(int i, int j, int layer) {
+		return getFBO(i, j, layer).getTextureID();
 	}
 }
