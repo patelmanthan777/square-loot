@@ -69,8 +69,8 @@ public class Map implements ShadowCaster {
 	 */
 	private boolean fullRender = false;
 
-	public static final int textureSize = 512;
-	public static final int textureNb = 2;
+	public static int textureSize;
+	public static final int textureNb = 3;
 	public static Vector2f currentBufferPosition;
 	private static boolean shouldBeRendered[][] = new boolean[textureNb][textureNb];
 	/**
@@ -92,6 +92,9 @@ public class Map implements ShadowCaster {
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x * roomPixelSize.x,
 				mapRoomSize.y * roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0, 0);
+		
+		Map.textureSize = (int) Math.max(ConfigManager.resolution.x,ConfigManager.resolution.y)/ (textureNb - 2);
+		
 		this.drawRoomDistance = new Vector2f(textureSize / Map.roomPixelSize.x,
 				textureSize / Map.roomPixelSize.y);
 		for (int layer = 0; layer < maxLayer; layer++) {
@@ -201,15 +204,15 @@ public class Map implements ShadowCaster {
 
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
-		if (pos.x < currentBufferPosition.x)
+		if (pos.x - ConfigManager.resolution.x/2 < currentBufferPosition.x)
 			translateMapFBOx = -1;
-		else if (pos.x > currentBufferPosition.x + Map.textureNb
+		else if (pos.x + ConfigManager.resolution.x/2> currentBufferPosition.x + Map.textureNb
 				* Map.textureSize)
 			translateMapFBOx = 1;
 
-		if (pos.y < currentBufferPosition.y)
+		if (pos.y - ConfigManager.resolution.y/2 < currentBufferPosition.y)
 			translateMapFBOy = -1;
-		else if (pos.y > currentBufferPosition.y + Map.textureNb
+		else if (pos.y + ConfigManager.resolution.y/2 > currentBufferPosition.y + Map.textureNb
 				* Map.textureSize)
 			translateMapFBOy = 1;
 
