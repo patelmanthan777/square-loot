@@ -34,8 +34,8 @@ public class LightManager {
 	private static int screenHeight = 0;
 	private static float diagonal = 0;
 
-	static int lightShaderProgram;
-	static int laserShaderProgram;
+	static Shader lightShaderProgram;
+	static Shader laserShaderProgram;
 	static FBO[][] staticLightsFBO = new FBO[Map.textureNb][Map.textureNb];
 
 	static boolean refreshStaticFBO = true;
@@ -131,19 +131,11 @@ public class LightManager {
 	}
 
 	static public void initLightShaders() {
-		lightShaderProgram = glCreateProgram();
-		Shader s = new Shader("light");
-		s.loadCode();
-		s.compile();
-		s.link(lightShaderProgram);
+		lightShaderProgram = new Shader("light");
 	}
 
 	static public void initLaserShader() {
-		laserShaderProgram = glCreateProgram();
-		Shader s = new Shader("laser");
-		s.loadCode();
-		s.compile();
-		s.link(laserShaderProgram);
+		laserShaderProgram = new Shader("laser");
 	}
 
 	static public Laser addActivatedLaser(String name, Vector2f p,
@@ -222,19 +214,12 @@ public class LightManager {
 		glBindTexture(GL_TEXTURE_2D, tex_save);
 		glActiveTexture(GL_TEXTURE0);
 		glDisable(GL_BLEND);
-		glUseProgram(0);
+		Shader.unuse();
 		glClear(GL_STENCIL_BUFFER_BIT);
 	}
 
 	private static void setUniforms(Light l, boolean dynamic,int i, int j) {
 
-		/*float posx = dynamic ? l.getX() - camPos.x
-				+ (int) ConfigManager.resolution.x / 2 : l.getX()
-				- Map.currentBufferPosition.x;
-		float posy = dynamic ? l.getY() - camPos.y
-				+ (int) ConfigManager.resolution.y / 2 : -l.getY()
-				+ Map.currentBufferPosition.y + Map.textureSize;
-*/
 		float posx = dynamic ? l.getX() - camPos.x
 				+ (int) ConfigManager.resolution.x / 2 : l.getX()
 				- (Map.currentBufferPosition.x+i*Map.textureSize);
@@ -244,38 +229,21 @@ public class LightManager {
 				
 				
 		if (l instanceof Light) {
-			glUseProgram(lightShaderProgram);
-			glUniform1f(
-					glGetUniformLocation(lightShaderProgram, "light.maxDst"),
-					l.getMaxDst());
-			glUniform1f(
-					glGetUniformLocation(lightShaderProgram, "light.radius"),
-					l.getRadius());
-			glUniform2f(
-					glGetUniformLocation(lightShaderProgram, "light.position"),
-					posx, posy);
-			glUniform3f(
-					glGetUniformLocation(lightShaderProgram, "light.color"),
-					l.getColor().x, l.getColor().y, l.getColor().z);
-			glUniform1i(glGetUniformLocation(lightShaderProgram, "texture"), 0);
+			lightShaderProgram.use();
+			lightShaderProgram.setUniform1f("light.maxDst",l.getMaxDst());	
+			lightShaderProgram.setUniform1f("light.radius",l.getRadius());
+			lightShaderProgram.setUniform2f("light.position",posx, posy);
+			lightShaderProgram.setUniform3f("light.color",l.getColor().x, l.getColor().y, l.getColor().z);
+			lightShaderProgram.setUniform1i("texture", 0);
 		}
 		if (l instanceof Laser) {
-			glUseProgram(laserShaderProgram);
+			laserShaderProgram.use();
 			if (((Laser) l).getDirection().length() != 0) {
-
 				laserDirection = ((Laser) l).getDirection();
 				laserDirection.normalise(laserDirection);
-
-				glUniform2f(
-						glGetUniformLocation(laserShaderProgram,
-								"laser.direction"), laserDirection.x,
-						-laserDirection.y);
-				glUniform2f(
-						glGetUniformLocation(laserShaderProgram,
-								"laser.position"), posx, posy);
-				glUniform3f(
-						glGetUniformLocation(laserShaderProgram, "laser.color"),
-						l.getColor().x, l.getColor().y, l.getColor().z);
+				laserShaderProgram.setUniform2f("laser.direction", laserDirection.x,-laserDirection.y);
+				laserShaderProgram.setUniform2f("laser.position", posx, posy);
+				laserShaderProgram.setUniform3f("laser.color",l.getColor().x, l.getColor().y, l.getColor().z);
 			}
 		}
 	}
