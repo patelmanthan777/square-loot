@@ -160,11 +160,10 @@ public class LightManager {
 			shadows[i].lastShadow = 0;
 		for (ShadowCaster sc : shadowCasters) {
 			if (sc instanceof Map && !dynamic) {
-				boolean save = ((Map) sc).getFullRender();
-				((Map) sc).setFullRender(true);
+				((Map) sc).setFullRender(false); //FIXME
 				sc.computeShadow(l, lightShadows.get(l));
-				((Map) sc).setFullRender(save);
 			} else {
+				((Map) sc).setFullRender(false);
 				sc.computeShadow(l, lightShadows.get(l));
 			}
 		}

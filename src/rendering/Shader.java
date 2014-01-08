@@ -128,7 +128,6 @@ public class Shader {
 	private int getUniform(String name){
 		int i;
 		if(uniforms.get(name) == null){
-			System.out.println(name);
 			i = glGetUniformLocation(programHandle, name);
 			uniforms.put(name, i);
 		} else {

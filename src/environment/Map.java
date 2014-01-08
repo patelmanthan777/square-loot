@@ -118,16 +118,17 @@ public class Map implements ShadowCaster {
 				- (Map.textureNb / 2.0f) * textureSize);
 	}
 
-	private void fullRender(int layer) {
-		int minX = 0;
-		int maxX = (int) Map.mapRoomSize.x;
-		int minY = 0;
-		int maxY = (int) Map.mapRoomSize.y;
+	private void render(int i, int j, int layer) {
+		int minX = (int) Math.max(0, ( ( Map.currentBufferPosition.x + i * Map.textureSize)/Map.roomPixelSize.x));
+		int maxX = (int) Math.min(Map.mapRoomSize.x,((Map.currentBufferPosition.x + (i+1) * Map.textureSize)/Map.roomPixelSize.x)+1);
+        int minY = (int) Math.max(0, ((Map.currentBufferPosition.y + j * Map.textureSize)/Map.roomPixelSize.y));
+        int maxY = (int) Math.min(Map.mapRoomSize.y,((Map.currentBufferPosition.y + (j+1) *  Map.textureSize)/Map.roomPixelSize.y)+1);
+		
 		glBegin(GL_QUADS);
-		for (int i = minX; i < maxX; i++) {
-			for (int j = minY; j < maxY; j++) {
-				if (roomGrid[i][j] != null) {
-					roomGrid[i][j].draw(layer);
+		for (int k = minX; k < maxX; k++) {
+			for (int l = minY; l < maxY; l++) {
+				if (roomGrid[k][l] != null) {
+					roomGrid[k][l].draw(layer);
 				}
 			}
 		}
@@ -151,7 +152,7 @@ public class Map implements ShadowCaster {
 								-(currentBufferPosition.x + i * Map.textureSize),
 								-(currentBufferPosition.y + j * Map.textureSize),
 								0);
-						fullRender(layer);
+						render(i,j,layer);
 						glPopMatrix();
 
 						getFBO(i, j, layer).unbind();
@@ -284,17 +285,14 @@ public class Map implements ShadowCaster {
 			maxY = (int) Map.mapRoomSize.y;
 
 		} else {
-			minX = 0;
-			maxX = (int) Map.mapRoomSize.x;
-			minY = 0;
-			maxY = (int) Map.mapRoomSize.y;
-			/*
-			 * minX = (int) Math.max(0, roomPosiX - drawRoomDistance.x); maxX =
-			 * (int) Math.min(Map.mapRoomSize.x, roomPosiX + drawRoomDistance.x
-			 * + 1); minY = (int) Math.max(0, roomPosiY - drawRoomDistance.y);
-			 * maxY = (int) Math.min(Map.mapRoomSize.y, roomPosiY +
-			 * drawRoomDistance.y + 1);
-			 */
+
+			minX = (int) Math.max(0, roomPosiX - drawRoomDistance.x);
+			maxX = (int) Math.min(Map.mapRoomSize.x, roomPosiX
+					+ drawRoomDistance.x + 1);
+			minY = (int) Math.max(0, roomPosiY - drawRoomDistance.y);
+			maxY = (int) Math.min(Map.mapRoomSize.y, roomPosiY
+					+ drawRoomDistance.y + 1);
+
 		}
 
 		int i;
