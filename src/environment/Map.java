@@ -70,7 +70,7 @@ public class Map implements ShadowCaster {
 	private boolean fullRender = false;
 
 	public static int textureSize;
-	public static final int textureNb = 5;
+	public static final int textureNb = 6;
 	public static Vector2f currentBufferPosition;
 	private static boolean shouldBeRendered[][] = new boolean[textureNb][textureNb];
 	private static int indx = 0;
@@ -119,11 +119,17 @@ public class Map implements ShadowCaster {
 	}
 
 	private void render(int i, int j, int layer) {
-		int minX = (int) Math.max(0, ( ( Map.currentBufferPosition.x + i * Map.textureSize)/Map.roomPixelSize.x));
-		int maxX = (int) Math.min(Map.mapRoomSize.x,((Map.currentBufferPosition.x + (i+1) * Map.textureSize)/Map.roomPixelSize.x)+1);
-        int minY = (int) Math.max(0, ((Map.currentBufferPosition.y + j * Map.textureSize)/Map.roomPixelSize.y));
-        int maxY = (int) Math.min(Map.mapRoomSize.y,((Map.currentBufferPosition.y + (j+1) *  Map.textureSize)/Map.roomPixelSize.y)+1);
-		
+		int minX = (int) Math.max(0, ((Map.currentBufferPosition.x + i
+				* Map.textureSize) / Map.roomPixelSize.x));
+		int maxX = (int) Math
+				.min(Map.mapRoomSize.x, ((Map.currentBufferPosition.x + (i + 1)
+						* Map.textureSize) / Map.roomPixelSize.x) + 1);
+		int minY = (int) Math.max(0, ((Map.currentBufferPosition.y + j
+				* Map.textureSize) / Map.roomPixelSize.y));
+		int maxY = (int) Math
+				.min(Map.mapRoomSize.y, ((Map.currentBufferPosition.y + (j + 1)
+						* Map.textureSize) / Map.roomPixelSize.y) + 1);
+
 		glBegin(GL_QUADS);
 		for (int k = minX; k < maxX; k++) {
 			for (int l = minY; l < maxY; l++) {
@@ -152,7 +158,7 @@ public class Map implements ShadowCaster {
 								-(currentBufferPosition.x + i * Map.textureSize),
 								-(currentBufferPosition.y + j * Map.textureSize),
 								0);
-						render(i,j,layer);
+						render(i, j, layer);
 						glPopMatrix();
 
 						getFBO(i, j, layer).unbind();
@@ -226,41 +232,35 @@ public class Map implements ShadowCaster {
 
 		if (translateMapFBOx == -1) {
 			currentBufferPosition.x -= Map.textureSize;
-
-			for (int i = 0; i < textureNb; i++) {
-				for (int j = 0; j < textureNb; j++) {
-					shouldBeRendered[i][j] = true;
-				}
-			}
 			indx = (indx - 1 + textureNb) % textureNb;
+			for (int i = 0; i < textureNb; i++) {
+				shouldBeRendered[0][i] = true;
+			}
+			
 			LightManager.needStaticUpdate();
 		} else if (translateMapFBOx == 1) {
 			currentBufferPosition.x += Map.textureSize;
-			indx = (indx + 1 + textureNb) % textureNb;
+
 			for (int i = 0; i < textureNb; i++) {
-				for (int j = 0; j < textureNb; j++) {
-					shouldBeRendered[i][j] = true;
-				}
+				shouldBeRendered[textureNb - 1][i] = true;
 			}
+			indx = (indx + 1 + textureNb) % textureNb;
 			LightManager.needStaticUpdate();
 		}
 		if (translateMapFBOy == -1) {
 			currentBufferPosition.y -= Map.textureSize;
 			indy = (indy - 1 + textureNb) % textureNb;
 			for (int i = 0; i < textureNb; i++) {
-				for (int j = 0; j < textureNb; j++) {
-					shouldBeRendered[i][j] = true;
-				}
+				shouldBeRendered[i][0] = true;
 			}
+			
 			LightManager.needStaticUpdate();
 		} else if (translateMapFBOy == 1) {
 			currentBufferPosition.y += Map.textureSize;
-			indy = (indy + 1 + textureNb) % textureNb;
 			for (int i = 0; i < textureNb; i++) {
-				for (int j = 0; j < textureNb; j++) {
-					shouldBeRendered[i][j] = true;
-				}
+				shouldBeRendered[i][textureNb - 1] = true;
 			}
+			indy = (indy + 1 + textureNb) % textureNb;
 			LightManager.needStaticUpdate();
 		}
 
