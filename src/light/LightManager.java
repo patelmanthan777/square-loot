@@ -37,12 +37,15 @@ public class LightManager {
 	static Shader lightShaderProgram;
 	static Shader laserShaderProgram;
 	static FBO[][] staticLightsFBO = new FBO[Map.textureNb][Map.textureNb];
+	private static boolean shouldBeRendered[][] = new boolean[Map.textureNb][Map.textureNb];
 
 	static boolean refreshStaticFBO = true;
 	/* Avoid dynamic allocation in rendering methods */
 	private static Vector2f camToLight = new Vector2f();
 	private static Vector2f laserDirection = new Vector2f();
-
+	
+	private static int indx = 0;
+	private static int indy = 0;
 	/* --------------------------------------------- */
 
 	static public void init() {
@@ -50,6 +53,7 @@ public class LightManager {
 			for (int j = 0; j < Map.textureNb; j++) {
 				staticLightsFBO[i][j] = new FBO(Map.textureSize,
 						Map.textureSize);
+				shouldBeRendered[i][j] = true;
 			}
 		}
 	}
@@ -174,28 +178,27 @@ public class LightManager {
 	 */
 	static private void renderStaticsToFrameBuffer(int i,int j) {
 
-		staticLightsFBO[i][j].bind();
+		getFBO(i,j).bind();
 
 		renderStaticLights(i, j);
 
-		staticLightsFBO[i][j].setUpdated(true);
-
-		staticLightsFBO[i][j].unbind();
+		getFBO(i,j).unbind();
 
 	}
 
 	static public void render() {
 		for (int i = 0; i < Map.textureNb ; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
-				if (!staticLightsFBO[i][j].isUpdated()) {
+				if (shouldBeRendered[i][j]) {
+					shouldBeRendered[i][j] = false;
 					renderStaticsToFrameBuffer(i,j);
 				}
-				staticLightsFBO[i][j].use();
+				getFBO(i,j).use();
 
 				drawQuad(Map.currentBufferPosition.x+i*Map.textureSize, Map.currentBufferPosition.y+j*Map.textureSize, Map.textureSize, Map.textureSize);
 
 				renderDynamicLights(i,j);
-				staticLightsFBO[i][j].unUse();
+				getFBO(i,j).unUse();
 			}
 		}
 	}
@@ -334,11 +337,29 @@ public class LightManager {
 				* screenWidth);
 	}
 
-	public static void needStaticUpdate() {
-		for (int i = 0; i < Map.textureNb; i++) {
-			for (int j = 0; j < Map.textureNb; j++) {
-				staticLightsFBO[i][j].setUpdated(false);
+	public static void needStaticUpdate(int dx,int dy) {
+		if (dx == -1) {
+			indx = (indx - 1 + Map.textureNb) % Map.textureNb;
+			for (int i = 0; i < Map.textureNb; i++) {
+				shouldBeRendered[0][i] = true;
 			}
+		} else if (dx == 1) {
+
+			for (int i = 0; i < Map.textureNb; i++) {
+				shouldBeRendered[Map.textureNb - 1][i] = true;
+			}
+			indx = (indx + 1 + Map.textureNb) % Map.textureNb;
+		}
+		if (dy == -1) {
+			indy = (indy - 1 + Map.textureNb) % Map.textureNb;
+			for (int i = 0; i < Map.textureNb; i++) {
+				shouldBeRendered[i][0] = true;
+			}
+		} else if (dy == 1) {
+			for (int i = 0; i < Map.textureNb; i++) {
+				shouldBeRendered[i][Map.textureNb - 1] = true;
+			}
+			indy = (indy + 1 + Map.textureNb) % Map.textureNb;
 		}
 	}
 
@@ -354,6 +375,10 @@ public class LightManager {
 		glTexCoord2f(0.0f, 1.0f);
 		glVertex2f(x, y);
 		glEnd();
+	}
+	
+	public static FBO getFBO(int i, int j) {
+		return staticLightsFBO[(i + indx) % Map.textureNb][(j + indy) % Map.textureNb];
 	}
 
 }

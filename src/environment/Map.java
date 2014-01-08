@@ -236,8 +236,6 @@ public class Map implements ShadowCaster {
 			for (int i = 0; i < textureNb; i++) {
 				shouldBeRendered[0][i] = true;
 			}
-			
-			LightManager.needStaticUpdate();
 		} else if (translateMapFBOx == 1) {
 			currentBufferPosition.x += Map.textureSize;
 
@@ -245,7 +243,6 @@ public class Map implements ShadowCaster {
 				shouldBeRendered[textureNb - 1][i] = true;
 			}
 			indx = (indx + 1 + textureNb) % textureNb;
-			LightManager.needStaticUpdate();
 		}
 		if (translateMapFBOy == -1) {
 			currentBufferPosition.y -= Map.textureSize;
@@ -253,16 +250,14 @@ public class Map implements ShadowCaster {
 			for (int i = 0; i < textureNb; i++) {
 				shouldBeRendered[i][0] = true;
 			}
-			
-			LightManager.needStaticUpdate();
 		} else if (translateMapFBOy == 1) {
 			currentBufferPosition.y += Map.textureSize;
 			for (int i = 0; i < textureNb; i++) {
 				shouldBeRendered[i][textureNb - 1] = true;
 			}
 			indy = (indy + 1 + textureNb) % textureNb;
-			LightManager.needStaticUpdate();
 		}
+		LightManager.needStaticUpdate(translateMapFBOx, translateMapFBOy);
 
 	}
 
