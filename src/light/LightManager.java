@@ -69,9 +69,9 @@ public class LightManager {
 		}
 	}
 
-	static public Light addLight(String name, Vector2f p, Vector3f color,
+	static public Light addPointLight(String name, Vector2f p, Vector3f color,
 			float radius, float maxDst, boolean dynamic) {
-		Light l = new Light(p, color, radius, maxDst, dynamic);
+		Light l = new PointLight(p, color, radius, maxDst, dynamic);
 		l.setName(name);
 
 		ShadowBuffer[] shadows = new ShadowBuffer[Map.maxLayer];
@@ -137,7 +137,7 @@ public class LightManager {
 		laserShaderProgram = new Shader("laser");
 	}
 
-	static public Laser addActivatedLaser(String name, Vector2f p,
+	static public Laser addLaser(String name, Vector2f p,
 			Vector3f color, Vector2f dir) {
 		Laser laser = new Laser(p, color, dir);
 
@@ -223,10 +223,10 @@ public class LightManager {
 				+ Map.currentBufferPosition.y+j* Map.textureSize + Map.textureSize;
 				
 				
-		if (l instanceof Light) {
+		if (l instanceof PointLight) {
 			lightShaderProgram.use();
-			lightShaderProgram.setUniform1f("light.maxDst",l.getMaxDst());	
-			lightShaderProgram.setUniform1f("light.radius",l.getRadius());
+			lightShaderProgram.setUniform1f("light.maxDst",((PointLight) l).getMaxDst());	
+			lightShaderProgram.setUniform1f("light.radius",((PointLight) l).getRadius());
 			lightShaderProgram.setUniform2f("light.position",posx, posy);
 			lightShaderProgram.setUniform3f("light.color",l.getColor().x, l.getColor().y, l.getColor().z);
 			lightShaderProgram.setUniform1i("texture", 0);
@@ -286,12 +286,13 @@ public class LightManager {
 				bufferToLight.x = (Map.currentBufferPosition.x + i * Map.textureSize + Map.textureSize/2) - l.getX();
 				bufferToLight.y = (Map.currentBufferPosition.y + j * Map.textureSize + Map.textureSize/2) - l.getY();
 
-				if (bufferToLight.length() - l.getMaxDst() < diagonal) {
-				initShadowDrawing();
-				drawShadows(l, layer);
-				endShadowDrawing();
-				setUniforms(l, false,i,j);
-				drawMap(i,j,Map.getTextureID(i, j, layer)); 
+				if (l instanceof Laser ||
+					bufferToLight.length() - ((PointLight) l).getMaxDst() < diagonal) {
+					initShadowDrawing();
+					drawShadows(l, layer);
+					endShadowDrawing();
+					setUniforms(l, false,i,j);
+					drawMap(i,j,Map.getTextureID(i, j, layer)); 
 				}
 			}
 		}
@@ -305,10 +306,10 @@ public class LightManager {
 			bufferToLight.x = (Map.currentBufferPosition.x + i * Map.textureSize + Map.textureSize/2) - l.getX();
 			bufferToLight.y = (Map.currentBufferPosition.y + j * Map.textureSize + Map.textureSize/2) - l.getY();
 
-			if (bufferToLight.length() - l.getMaxDst() < diagonal) {
+			if (l instanceof Laser ||
+				bufferToLight.length() - ((PointLight) l).getMaxDst() < diagonal) {
 				initShadowDrawing();
-				drawShadows(l, layer);
-				
+				drawShadows(l, layer);				
 				endShadowDrawing();
 				setUniforms(l, true,i,j);
 				drawMap(i, j, Map.getTextureID(i, j, layer));

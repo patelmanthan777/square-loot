@@ -2,24 +2,23 @@ package light;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import light.Light;
 
-public class Laser extends Light {
-	private Vector2f dir = new Vector2f();
+public class Laser extends Light{	
 	
 	public Laser(Vector2f p, Vector3f color){
-		super(p, color,-1,-1,true);
-		dir.x = 1;
-		dir.y = 1;
+		super(p, color, true);				
+		this.direction.x = 1;
+		this.direction.y = 1;
 	}
 	
 	public Laser(Vector2f p, Vector3f color, Vector2f dir){
-		super(p, color,-1,-1,true);
-		this.dir.x = dir.x;
-		this.dir.y = dir.y;
+		super(p, color, true);		
+		this.direction = dir;		
 	}
 	
 	public Vector2f getDirection(){
-		return dir;
+		return direction;
 	}
 	
 	@Override
@@ -30,8 +29,8 @@ public class Laser extends Light {
 	
 	@Override
 	public void setOrientation(float posx, float posy){
-		this.dir.x = posx;
-		this.dir.y = posy;
+		this.direction.x = posx;
+		this.direction.y = posy;
 	}
 	
 }

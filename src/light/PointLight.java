@@ -1,51 +1,45 @@
 package light;
 
+import light.LightManager;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import entity.Node;
+import light.Light;
 
 
-public class Light extends Node{
+public class PointLight extends Light {
 	protected Vector3f color;
 	protected boolean active = true;
-	
-	/*
+	/**
+	 * Light power.
+	 */
+	protected float radius;
+	protected float maxDst;
+	/**
 	 * <b>true</b> if the light may move
 	 */
 	protected boolean dynamic;
 	
-	public Light(Vector2f p, Vector3f color, boolean dynamic){
-		super(p);
-		this.color = color;
-		this.dynamic = dynamic;
+	public PointLight(Vector2f p, Vector3f color, float radius, float dstMax,boolean dynamic){
+		super(p, color, dynamic);
+		this.radius = radius;
+		this.maxDst = dstMax;
+		
 	}
 	
-	
-	public void setColor(Vector3f color){
-		this.color = color;
+	public void setRadius(float rad){
+		radius = rad;
 	}
 	
-	public Vector3f getColor(){
-		return color;
+	public float getMaxDst(){
+		return maxDst;
 	}
 	
-	public void activate(){
-		active = true;
-		if(dynamic){
-			LightManager.activateLight(name, dynamic);
-		}
+	public float getRadius(){
+		return radius;
 	}
-	
-	public void deactivate(){
-		active = false;
-		LightManager.deactivateLight(name, dynamic);
-	}
-	
-	public boolean isActive(){
-		return active;
-	}
-	
+		
 	@Override
 	public void setPosition(Vector2f position){
 		this.position.x = position.x;
@@ -64,5 +58,4 @@ public class Light extends Node{
 	public String toString(){
 		return name;
 	}
-	
 }

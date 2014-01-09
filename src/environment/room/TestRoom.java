@@ -47,7 +47,7 @@ public class TestRoom extends Room{
 		Vector3f color = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 		float radius = (float)Math.random()*100;
 		float dstMax = Map.roomPixelSize.x * 2;
-		LightManager.addLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
+		LightManager.addPointLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
 		LivingEntityManager.createZombie(pos.x, pos.y);
 	}
 }
