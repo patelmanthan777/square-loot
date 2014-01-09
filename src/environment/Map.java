@@ -256,28 +256,41 @@ public class Map implements ShadowCaster {
 	 */
 	@Override
 	public void computeShadow(Light l, ShadowBuffer[] shadows) {
-		int roomPosiX = (int) (l.getX() / Map.roomPixelSize.x);
-		int roomPosiY = (int) (l.getY() / Map.roomPixelSize.y);
-
 		if(l instanceof PointLight){
 			PointLight light = (PointLight) l; 
+			int roomPosiX = (int) (l.getX() / Map.roomPixelSize.x);
+			int roomPosiY = (int) (l.getY() / Map.roomPixelSize.y);
 		
 			int minX = (int) Math.max(0, (light.getX() - light.getMaxDst())/Map.roomPixelSize.x);
 			int maxX = (int) Math.min(Map.mapRoomSize.x-1, (light.getX() + light.getMaxDst())/Map.roomPixelSize.x);
 			int minY = (int) Math.max(0, (light.getY() - light.getMaxDst())/Map.roomPixelSize.y);
-			int maxY = (int) Math.min(Map.mapRoomSize.y-1, (light.getY() + light.getMaxDst())/Map.roomPixelSize.y + 1);
+			int maxY = (int) Math.min(Map.mapRoomSize.y-1, (light.getY() + light.getMaxDst())/Map.roomPixelSize.y);
 
 			int i;
 			int j;
 			for (i = minX; i <= maxX; i++) {
 				if (roomGrid[i][roomPosiY] != null) {
-					roomGrid[i][roomPosiY].computeShadow(light, shadows);
+					roomGrid[i][roomPosiY].computeShadow(l, shadows);
 				}
 			}
 			for (j = minY; j <= maxY; j++) {
 				if (roomGrid[roomPosiX][j] != null) {
-					roomGrid[roomPosiX][j].computeShadow(light, shadows);
+					roomGrid[roomPosiX][j].computeShadow(l, shadows);
 				}
+			}
+		}
+		else if(l instanceof Laser){
+			boolean shadowAdded = false;	
+			Vector2f cpos = new Vector2f(l.getX(), l.getY());
+			while(!shadowAdded){
+				int idxX = (int) (cpos.x / Map.roomPixelSize.x);
+				int idxY = (int) (cpos.y / Map.roomPixelSize.y);
+				
+				roomGrid[idxX][idxY].laserShadow(l, shadows, cpos);
+				if(cpos.x / Map.roomPixelSize.x == idxX ||
+				   cpos.y / Map.roomPixelSize.y == idxY)
+					shadowAdded = true;
+			
 			}
 		}
 	}
