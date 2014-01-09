@@ -192,9 +192,10 @@ public class LightManager {
 				drawQuad(Map.currentBufferPosition.x+i*Map.textureSize, Map.currentBufferPosition.y+j*Map.textureSize, Map.textureSize, Map.textureSize);
 
 				getFBO(i,j).unUse();
-				renderDynamicLights(i,j);
+				
 			}
 		}
+		renderDynamicLights();
 	}
 
 	private static void drawMap(int i, int j, int textureId) {
@@ -209,7 +210,7 @@ public class LightManager {
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glActiveTexture(GL_TEXTURE0);
 		glDisable(GL_BLEND);
-		Shader.unuse();
+		
 		glClear(GL_STENCIL_BUFFER_BIT);
 	}
 
@@ -286,7 +287,6 @@ public class LightManager {
 				bufferToLight.x = (Map.currentBufferPosition.x + i * Map.textureSize + Map.textureSize/2) - l.getX();
 				bufferToLight.y = (Map.currentBufferPosition.y + j * Map.textureSize + Map.textureSize/2) - l.getY();
 
-
 				if (l instanceof Laser ||
 					bufferToLight.length() - ((PointLight) l).getMaxDst() < diagonal) {
 					initShadowDrawing();
@@ -300,25 +300,34 @@ public class LightManager {
 		glPopMatrix();
 	}
 
-	private static void renderDynamicLights(int i, int j) {
+	private static void renderDynamicLights() {
 		
 		int layer = 0;
+		
 		for (Light l : activatedDynamicLights.values()) {
-			bufferToLight.x = (Map.currentBufferPosition.x + i * Map.textureSize + Map.textureSize/2) - l.getX();
-			bufferToLight.y = (Map.currentBufferPosition.y + j * Map.textureSize + Map.textureSize/2) - l.getY();
+			bufferToLight.x = (Map.currentBufferPosition.x + (Map.textureNb * Map.textureSize/2)) - l.getX();
+			bufferToLight.y = (Map.currentBufferPosition.y + (Map.textureNb * Map.textureSize/2)) - l.getY();
 
 			if (l instanceof Laser ||
 				bufferToLight.length() - ((PointLight) l).getMaxDst() < diagonal) {
 				initShadowDrawing();
-				drawShadows(l, layer);				
+				drawShadows(l, layer);
 				endShadowDrawing();
-				setUniforms(l, true,i,j);
-				drawMap(i, j, Map.getTextureID(i, j, layer));
-
+				setUniforms(l, true,0,0);
+				drawFullMap(layer);
+				Shader.unuse();
 			}
 		}
 	}
 
+	private static void drawFullMap(int layer){
+		for (int i = 0; i < Map.textureNb ; i++) {
+			for (int j = 0; j < Map.textureNb; j++) {
+				drawMap(i, j, Map.getTextureID(i, j, layer));
+			}
+		}
+	}
+	
 	public static void setCamPosition(Vector2f pos) {
 		camPos.x = pos.x;
 		camPos.y = pos.y;
