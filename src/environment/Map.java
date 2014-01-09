@@ -70,7 +70,7 @@ public class Map implements ShadowCaster {
 	private boolean fullRender = false;
 
 	public static int textureSize;
-	public static final int textureNb = 3;
+	public static final int textureNb = 5;
 	public static Vector2f currentBufferPosition;
 	private static boolean shouldBeRendered[][] = new boolean[textureNb][textureNb];
 	private static int indx = 0;
@@ -273,22 +273,12 @@ public class Map implements ShadowCaster {
 		int roomPosiX = (int) (light.getX() / Map.roomPixelSize.x);
 		int roomPosiY = (int) (light.getY() / Map.roomPixelSize.y);
 
-		if (fullRender) {
-			minX = 0;
-			maxX = (int) Map.mapRoomSize.x;
-			minY = 0;
-			maxY = (int) Map.mapRoomSize.y;
-
-		} else {
-
-			minX = (int) Math.max(0, roomPosiX - drawRoomDistance.x);
-			maxX = (int) Math.min(Map.mapRoomSize.x, roomPosiX
+		minX = (int) Math.max(0, roomPosiX - drawRoomDistance.x);
+		maxX = (int) Math.min(Map.mapRoomSize.x, roomPosiX
 					+ drawRoomDistance.x + 1);
-			minY = (int) Math.max(0, roomPosiY - drawRoomDistance.y);
-			maxY = (int) Math.min(Map.mapRoomSize.y, roomPosiY
+		minY = (int) Math.max(0, roomPosiY - drawRoomDistance.y);
+		maxY = (int) Math.min(Map.mapRoomSize.y, roomPosiY
 					+ drawRoomDistance.y + 1);
-
-		}
 
 		int i;
 		int j;

@@ -41,7 +41,7 @@ public class LightManager {
 
 	static boolean refreshStaticFBO = true;
 	/* Avoid dynamic allocation in rendering methods */
-	private static Vector2f camToLight = new Vector2f();
+	private static Vector2f bufferToLight = new Vector2f();
 	private static Vector2f laserDirection = new Vector2f();
 	
 	private static int indx = 0;
@@ -187,8 +187,10 @@ public class LightManager {
 	}
 
 	static public void render() {
+		//System.out.println("*************************************"); // FIXME
 		for (int i = 0; i < Map.textureNb ; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
+				
 				if (shouldBeRendered[i][j]) {
 					shouldBeRendered[i][j] = false;
 					renderStaticsToFrameBuffer(i,j);
@@ -197,8 +199,8 @@ public class LightManager {
 
 				drawQuad(Map.currentBufferPosition.x+i*Map.textureSize, Map.currentBufferPosition.y+j*Map.textureSize, Map.textureSize, Map.textureSize);
 
-				renderDynamicLights(i,j);
 				getFBO(i,j).unUse();
+				renderDynamicLights(i,j);
 			}
 		}
 	}
@@ -268,6 +270,8 @@ public class LightManager {
 		ShadowBuffer[] shadows = lightShadows.get(l);
 		for (int shadowLayer = layer; shadowLayer < Map.maxLayer - 1; shadowLayer++) {
 			if (shadows[shadowLayer] != null) {
+				//System.out.println(l); // FIXME
+				//System.out.println(shadows[shadowLayer].lastShadow);
 				for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
 					Shadow s = shadows[shadowLayer].get(i);
 					Vector2f[] points = s.points;
@@ -284,31 +288,41 @@ public class LightManager {
 	}
 
 	private static void renderStaticLights(int i, int j) {
+		//System.out.println("renderStaticLights"); // FIXME
 		glPushMatrix();
 		glLoadIdentity();
 		glTranslatef(-(Map.currentBufferPosition.x+i*Map.textureSize),
 				-(Map.currentBufferPosition.y+j*Map.textureSize), 0);
 		for (int layer = 0; layer < Map.maxLayer; layer++) {
 			for (Light l : activatedStaticLights.values()) {
+				bufferToLight.x = (Map.currentBufferPosition.x + i * Map.textureSize + Map.textureSize/2) - l.getX();
+				bufferToLight.y = (Map.currentBufferPosition.y + j * Map.textureSize + Map.textureSize/2) - l.getY();
+
+				if (bufferToLight.length() - l.getMaxDst() < diagonal) {
 				initShadowDrawing();
 				drawShadows(l, layer);
 				endShadowDrawing();
 				setUniforms(l, false,i,j);
 				drawMap(i,j,Map.getTextureID(i, j, layer)); 
+				}
 			}
 		}
 		glPopMatrix();
 	}
 
 	private static void renderDynamicLights(int i, int j) {
+		//System.out.println("renderDynamicLights"); // FIXME
 		
 		int layer = 0;
+		//System.out.println(activatedDynamicLights.values());
 		for (Light l : activatedDynamicLights.values()) {
-			Vector2f.sub(camPos, l.getPosition(), camToLight);
+			bufferToLight.x = (Map.currentBufferPosition.x + i * Map.textureSize + Map.textureSize/2) - l.getX();
+			bufferToLight.y = (Map.currentBufferPosition.y + j * Map.textureSize + Map.textureSize/2) - l.getY();
 
-			if (camToLight.length() - l.getMaxDst() < diagonal / 4) {
+			if (bufferToLight.length() - l.getMaxDst() < diagonal) {
 				initShadowDrawing();
 				drawShadows(l, layer);
+				
 				endShadowDrawing();
 				setUniforms(l, true,i,j);
 				drawMap(i, j, Map.getTextureID(i, j, layer));
@@ -322,19 +336,8 @@ public class LightManager {
 		camPos.y = pos.y;
 	}
 
-	public static void setScreenWidth(int width) {
-		screenWidth = width;
-		computeDiagonal();
-	}
-
-	public static void setScreenHeight(int height) {
-		screenHeight = height;
-		computeDiagonal();
-	}
-
-	private static void computeDiagonal() {
-		diagonal = (float) Math.sqrt(screenHeight * screenHeight + screenWidth
-				* screenWidth);
+	private static void computeTextureDiagonal() {
+		diagonal = (float) Math.sqrt(2 * Map.textureSize* Map.textureSize);
 	}
 
 	public static void needStaticUpdate(int dx,int dy) {

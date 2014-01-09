@@ -80,7 +80,7 @@ public class GameLoop {
 		controle = new Control(p);
 		BlockFactory.initBlocks();
 
-		map = new Map(new Vector2f(10,10), new Vector2f(12,12), new Vector2f(40,40));
+		map = new Map(new Vector2f(15,15), new Vector2f(12,12), new Vector2f(40,40));
 		map.renderMapToFrameBuffers();
 		p.setPosition(map.getSpawnPixelPosition());
 		ProjectileManager.init();
@@ -88,8 +88,6 @@ public class GameLoop {
 		LightManager.init();
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
-		LightManager.setScreenHeight((int)ConfigManager.resolution.y);
-		LightManager.setScreenWidth((int)ConfigManager.resolution.x);
 		OverlayManager.init();
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
