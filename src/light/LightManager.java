@@ -339,8 +339,9 @@ public class LightManager {
 					}
 				}
 			}
+			glClear(GL_STENCIL_BUFFER_BIT);
 		}
-		glClear(GL_STENCIL_BUFFER_BIT);
+		
 	}
 
 	private static void drawFullMap(int layer) {
