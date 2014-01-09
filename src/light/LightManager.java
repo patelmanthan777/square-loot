@@ -286,6 +286,7 @@ public class LightManager {
 				bufferToLight.x = (Map.currentBufferPosition.x + i * Map.textureSize + Map.textureSize/2) - l.getX();
 				bufferToLight.y = (Map.currentBufferPosition.y + j * Map.textureSize + Map.textureSize/2) - l.getY();
 
+
 				if (l instanceof Laser ||
 					bufferToLight.length() - ((PointLight) l).getMaxDst() < diagonal) {
 					initShadowDrawing();

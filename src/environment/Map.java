@@ -2,6 +2,8 @@ package environment;
 
 import static org.lwjgl.opengl.GL11.*;
 import light.Light;
+import light.PointLight;
+import light.Laser;
 import light.LightManager;
 import light.ShadowBuffer;
 
@@ -58,16 +60,7 @@ public class Map implements ShadowCaster {
 	 * position on which the screen should be centered.
 	 */
 	private Vector2f drawRoomPosition;
-	/**
-	 * The distance from which the map is seen, it is needed to optimize the
-	 * shadows drawing.
-	 */
-	private Vector2f drawRoomDistance;
 
-	/**
-	 * <b>true</b> if the full map needs to be rendered, <b>false</b> otherwise.
-	 */
-	private boolean fullRender = false;
 
 	public static int textureSize;
 	public static final int textureNb = 5;
@@ -97,9 +90,6 @@ public class Map implements ShadowCaster {
 
 		Map.textureSize = (int) Math.max(ConfigManager.resolution.x,
 				ConfigManager.resolution.y) / (textureNb - 2);
-
-		this.drawRoomDistance = new Vector2f(textureSize / Map.roomPixelSize.x,
-				textureSize / Map.roomPixelSize.y);
 		for (int layer = 0; layer < maxLayer; layer++) {
 			for (int i = 0; i < Map.textureNb; i++) {
 				for (int j = 0; j < Map.textureNb; j++) {
@@ -265,31 +255,29 @@ public class Map implements ShadowCaster {
 	 * Compute the shadows casted by the map
 	 */
 	@Override
-	public void computeShadow(Light light, ShadowBuffer[] shadows) {
-		int minX = 0;
-		int maxX = 0;
-		int minY = 0;
-		int maxY = 0;
-		int roomPosiX = (int) (light.getX() / Map.roomPixelSize.x);
-		int roomPosiY = (int) (light.getY() / Map.roomPixelSize.y);
+	public void computeShadow(Light l, ShadowBuffer[] shadows) {
+		int roomPosiX = (int) (l.getX() / Map.roomPixelSize.x);
+		int roomPosiY = (int) (l.getY() / Map.roomPixelSize.y);
 
-		minX = (int) Math.max(0, roomPosiX - drawRoomDistance.x);
-		maxX = (int) Math.min(Map.mapRoomSize.x, roomPosiX
-					+ drawRoomDistance.x + 1);
-		minY = (int) Math.max(0, roomPosiY - drawRoomDistance.y);
-		maxY = (int) Math.min(Map.mapRoomSize.y, roomPosiY
-					+ drawRoomDistance.y + 1);
+		if(l instanceof PointLight){
+			PointLight light = (PointLight) l; 
+		
+			int minX = (int) Math.max(0, (light.getX() - light.getMaxDst())/Map.roomPixelSize.x);
+			int maxX = (int) Math.min(Map.mapRoomSize.x-1, (light.getX() + light.getMaxDst())/Map.roomPixelSize.x);
+			int minY = (int) Math.max(0, (light.getY() - light.getMaxDst())/Map.roomPixelSize.y);
+			int maxY = (int) Math.min(Map.mapRoomSize.y-1, (light.getY() + light.getMaxDst())/Map.roomPixelSize.y + 1);
 
-		int i;
-		int j;
-		for (i = minX; i < maxX; i++) {
-			if (roomGrid[i][roomPosiY] != null) {
-				roomGrid[i][roomPosiY].computeShadow(light, shadows);
+			int i;
+			int j;
+			for (i = minX; i <= maxX; i++) {
+				if (roomGrid[i][roomPosiY] != null) {
+					roomGrid[i][roomPosiY].computeShadow(light, shadows);
+				}
 			}
-		}
-		for (j = minY; j < maxY; j++) {
-			if (roomGrid[roomPosiX][j] != null) {
-				roomGrid[roomPosiX][j].computeShadow(light, shadows);
+			for (j = minY; j <= maxY; j++) {
+				if (roomGrid[roomPosiX][j] != null) {
+					roomGrid[roomPosiX][j].computeShadow(light, shadows);
+				}
 			}
 		}
 	}

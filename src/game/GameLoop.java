@@ -80,7 +80,7 @@ public class GameLoop {
 		controle = new Control(p);
 		BlockFactory.initBlocks();
 
-		map = new Map(new Vector2f(15,15), new Vector2f(12,12), new Vector2f(40,40));
+		map = new Map(new Vector2f(15,15), new Vector2f(16,12), new Vector2f(40,40));
 		map.renderMapToFrameBuffers();
 		p.setPosition(map.getSpawnPixelPosition());
 		ProjectileManager.init();
@@ -94,6 +94,7 @@ public class GameLoop {
 		OverlayManager.createPlayerStatsOverlay(p);
 		Light playerLight = LightManager.addPointLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
 		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
+
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);
 		LightManager.addShadowCaster(map);
