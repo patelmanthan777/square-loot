@@ -216,7 +216,6 @@ public class LightManager {
 		glActiveTexture(GL_TEXTURE0);
 		glDisable(GL_BLEND);
 
-		glClear(GL_STENCIL_BUFFER_BIT);
 	}
 
 	private static void setUniforms(Light l, boolean dynamic, int i, int j) {
@@ -309,6 +308,7 @@ public class LightManager {
 					endShadowDrawing();
 					setUniforms(l, false, i, j);
 					drawMap(i, j, Map.getTextureID(i, j, layer));
+					glClear(GL_STENCIL_BUFFER_BIT);
 				}
 			}
 		}
@@ -340,6 +340,7 @@ public class LightManager {
 				}
 			}
 		}
+		glClear(GL_STENCIL_BUFFER_BIT);
 	}
 
 	private static void drawFullMap(int layer) {
