@@ -29,9 +29,6 @@ public class LightManager {
 	 */
 	private static HashMap<Light, ShadowBuffer[]> lightShadows = new HashMap<Light, ShadowBuffer[]>();
 	private static Vector2f camPos = new Vector2f();
-
-	private static int screenWidth = 0;
-	private static int screenHeight = 0;
 	private static float diagonal = 0;
 
 	static Shader lightShaderProgram;
@@ -56,6 +53,7 @@ public class LightManager {
 				shouldBeRendered[i][j] = true;
 			}
 		}
+		computeTextureDiagonal();
 	}
 
 	static public void addShadowCaster(ShadowCaster sc) {
@@ -66,10 +64,10 @@ public class LightManager {
 		}
 		for (Light l : activatedStaticLights.values()) {
 			if (sc instanceof Map) {
-				boolean save = ((Map) sc).getFullRender();
-				((Map) sc).setFullRender(true);
+				//boolean save = ((Map) sc).getFullRender();
+				//((Map) sc).setFullRender(true);
 				sc.computeShadow(l, lightShadows.get(l));
-				((Map) sc).setFullRender(save);
+				//((Map) sc).setFullRender(save);
 			}
 		}
 	}
@@ -164,10 +162,10 @@ public class LightManager {
 			shadows[i].lastShadow = 0;
 		for (ShadowCaster sc : shadowCasters) {
 			if (sc instanceof Map && !dynamic) {
-				((Map) sc).setFullRender(false); //FIXME
+				//((Map) sc).setFullRender(false); //FIXME
 				sc.computeShadow(l, lightShadows.get(l));
 			} else {
-				((Map) sc).setFullRender(false);
+				//((Map) sc).setFullRender(false);
 				sc.computeShadow(l, lightShadows.get(l));
 			}
 		}

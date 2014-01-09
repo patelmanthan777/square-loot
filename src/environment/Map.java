@@ -298,13 +298,13 @@ public class Map implements ShadowCaster {
 		return roomGrid;
 	}
 
-	public void setFullRender(boolean full) {
+	/*public void setFullRender(boolean full) {
 		this.fullRender = full;
 	}
 
 	public boolean getFullRender() {
 		return this.fullRender;
-	}
+	}*/
 
 	public boolean isUpdated(int i, int j) {
 		return (shouldBeRendered[i][j]);
