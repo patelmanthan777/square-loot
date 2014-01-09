@@ -7,7 +7,6 @@ import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL20.*;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -189,7 +188,7 @@ public class LightManager {
 					renderStaticsToFrameBuffer(i, j);
 				}
 				getFBO(i, j).use();
-
+				glClearColor(0.0f, 0.0f, 0.0f, 1f);
 				drawQuad(Map.currentBufferPosition.x + i * Map.textureSize,
 						Map.currentBufferPosition.y + j * Map.textureSize,
 						Map.textureSize, Map.textureSize);
@@ -342,14 +341,6 @@ public class LightManager {
 			glClear(GL_STENCIL_BUFFER_BIT);
 		}
 		
-	}
-
-	private static void drawFullMap(int layer) {
-		for (int i = 0; i < Map.textureNb; i++) {
-			for (int j = 0; j < Map.textureNb; j++) {
-				drawMap(i, j, Map.getTextureID(i, j, layer));
-			}
-		}
 	}
 
 	public static void setCamPosition(Vector2f pos) {

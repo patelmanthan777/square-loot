@@ -15,7 +15,7 @@ import rendering.FBO;
 import rendering.ShadowCaster;
 
 public class Map implements ShadowCaster {
-	public static final int maxLayer = 3;
+	public static final int maxLayer = 5;
 
 	/**
 	 * Block size in number of pixels.

@@ -80,7 +80,7 @@ public class GameLoop {
 		controle = new Control(p);
 		BlockFactory.initBlocks();
 
-		map = new Map(new Vector2f(15,15), new Vector2f(16,12), new Vector2f(40,40));
+		map = new Map(new Vector2f(20,20), new Vector2f(16,12), new Vector2f(50,50));
 		map.renderMapToFrameBuffers();
 		p.setPosition(map.getSpawnPixelPosition());
 		ProjectileManager.init();
