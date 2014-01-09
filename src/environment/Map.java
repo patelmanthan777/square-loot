@@ -278,7 +278,7 @@ public class Map implements ShadowCaster {
 					roomGrid[roomPosiX][j].computeShadow(l, shadows);
 				}
 			}
-		}
+		}		
 		else if(l instanceof Laser){
 			boolean shadowAdded = false;	
 			Vector2f cpos = new Vector2f(l.getX(), l.getY());
@@ -287,12 +287,12 @@ public class Map implements ShadowCaster {
 				int idxY = (int) (cpos.y / Map.roomPixelSize.y);
 				
 				roomGrid[idxX][idxY].laserShadow(l, shadows, cpos);
-				if(cpos.x / Map.roomPixelSize.x == idxX ||
-				   cpos.y / Map.roomPixelSize.y == idxY)
+				if((int) (cpos.x / Map.roomPixelSize.x) == idxX ||
+				   (int) (cpos.y / Map.roomPixelSize.y) == idxY)
 					shadowAdded = true;
 			
 			}
-		}
+		}		
 	}
 
 	public Room[][] getRooms() {
