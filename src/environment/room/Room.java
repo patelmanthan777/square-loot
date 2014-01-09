@@ -1,6 +1,8 @@
 package environment.room;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import light.Light;
@@ -197,6 +199,10 @@ public abstract class Room implements Drawable, ShadowCaster {
 				}
 			}
 		}
+	}
+	
+	public void laserShadow(Light l, ShadowBuffer[] shadows, Vector2f cpos){
+		
 	}
 
 	/**
