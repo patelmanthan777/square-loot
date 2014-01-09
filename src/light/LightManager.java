@@ -64,10 +64,7 @@ public class LightManager {
 		}
 		for (Light l : activatedStaticLights.values()) {
 			if (sc instanceof Map) {
-				//boolean save = ((Map) sc).getFullRender();
-				//((Map) sc).setFullRender(true);
 				sc.computeShadow(l, lightShadows.get(l));
-				//((Map) sc).setFullRender(save);
 			}
 		}
 	}
@@ -162,10 +159,8 @@ public class LightManager {
 			shadows[i].lastShadow = 0;
 		for (ShadowCaster sc : shadowCasters) {
 			if (sc instanceof Map && !dynamic) {
-				//((Map) sc).setFullRender(false); //FIXME
 				sc.computeShadow(l, lightShadows.get(l));
 			} else {
-				//((Map) sc).setFullRender(false);
 				sc.computeShadow(l, lightShadows.get(l));
 			}
 		}
@@ -185,7 +180,6 @@ public class LightManager {
 	}
 
 	static public void render() {
-		//System.out.println("*************************************"); // FIXME
 		for (int i = 0; i < Map.textureNb ; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
 				
@@ -207,13 +201,12 @@ public class LightManager {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
-		//int tex_save = glGetInteger(GL_TEXTURE_BINDING_2D);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glActiveTexture(GL_TEXTURE0);
 
 		drawQuad(Map.currentBufferPosition.x+i*Map.textureSize, Map.currentBufferPosition.y+j*Map.textureSize, Map.textureSize, Map.textureSize);
 
-		glBindTexture(GL_TEXTURE_2D, /*tex_save*/0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glActiveTexture(GL_TEXTURE0);
 		glDisable(GL_BLEND);
 		Shader.unuse();
@@ -268,8 +261,6 @@ public class LightManager {
 		ShadowBuffer[] shadows = lightShadows.get(l);
 		for (int shadowLayer = layer; shadowLayer < Map.maxLayer - 1; shadowLayer++) {
 			if (shadows[shadowLayer] != null) {
-				//System.out.println(l); // FIXME
-				//System.out.println(shadows[shadowLayer].lastShadow);
 				for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
 					Shadow s = shadows[shadowLayer].get(i);
 					Vector2f[] points = s.points;
@@ -286,7 +277,6 @@ public class LightManager {
 	}
 
 	private static void renderStaticLights(int i, int j) {
-		//System.out.println("renderStaticLights"); // FIXME
 		glPushMatrix();
 		glLoadIdentity();
 		glTranslatef(-(Map.currentBufferPosition.x+i*Map.textureSize),
@@ -309,10 +299,8 @@ public class LightManager {
 	}
 
 	private static void renderDynamicLights(int i, int j) {
-		//System.out.println("renderDynamicLights"); // FIXME
 		
 		int layer = 0;
-		//System.out.println(activatedDynamicLights.values());
 		for (Light l : activatedDynamicLights.values()) {
 			bufferToLight.x = (Map.currentBufferPosition.x + i * Map.textureSize + Map.textureSize/2) - l.getX();
 			bufferToLight.y = (Map.currentBufferPosition.y + j * Map.textureSize + Map.textureSize/2) - l.getY();
