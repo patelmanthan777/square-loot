@@ -9,7 +9,7 @@ import environment.Map;
 import environment.blocks.BlockFactory;
 
 public class TestRoom extends Room{
-	private float proba = 0;
+	private float proba = 0.05f;
 	public TestRoom(float posX, float posY){
 		super(posX, posY);
 		construct();
@@ -46,7 +46,7 @@ public class TestRoom extends Room{
 		Vector2f pos = new Vector2f(x+Map.roomPixelSize.x/2,y+Map.roomPixelSize.y/2);
 		Vector3f color = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 		float radius = (float)Math.random()*100;
-		float dstMax = Map.roomPixelSize.x * 2;
+		float dstMax = Map.roomPixelSize.x;
 		LightManager.addLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
 		LivingEntityManager.createZombie(pos.x, pos.y);
 	}

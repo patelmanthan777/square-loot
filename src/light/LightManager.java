@@ -291,7 +291,7 @@ public class LightManager {
 				drawShadows(l, layer);
 				endShadowDrawing();
 				setUniforms(l, false,i,j);
-				drawMap(i,j,Map.getTextureID(i, j, layer)); 
+				drawMap(i,j,Map.getTextureID(i, j, layer));
 				}
 			}
 		}
