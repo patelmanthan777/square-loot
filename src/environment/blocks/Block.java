@@ -16,6 +16,13 @@ public abstract class Block {
 	protected Vector2f[] points = new Vector2f[4];
 	protected Vector3f color = new Vector3f();
 
+	/**
+	 * Indicates whether shadows should be drawn on this block.
+	 */
+	protected int layer;
+	
+	
+	
 	public abstract boolean testCollision();
 
 	public Block(){
@@ -23,6 +30,8 @@ public abstract class Block {
 		points[1] = new Vector2f();
 		points[2] = new Vector2f();
 		points[3] = new Vector2f();
+		
+		layer = 0;
 	}
 	
 	public Block(float x, float y){
@@ -30,6 +39,8 @@ public abstract class Block {
 		points[1] = new Vector2f(x + Map.blockPixelSize.x, y);
 		points[2] = new Vector2f(x + Map.blockPixelSize.x, y + Map.blockPixelSize.y);
 		points[3] = new Vector2f(x, y + Map.blockPixelSize.y);
+		
+		layer = 0;
 	}
 	
 	/**
@@ -66,11 +77,17 @@ public abstract class Block {
         
 	}
 
-	public abstract boolean castShadows();
+	public boolean castShadows(){
+		return false;
+	}
 
 	public void setColor(float r, float g, float b) {
 		this.color.x = r;
 		this.color.y = g;
 		this.color.z = b;
+	}
+	
+	public int getLayer(){
+		return layer;
 	}
 }

@@ -5,5 +5,5 @@ import light.ShadowBuffer;
 
 public interface ShadowCaster {
 
-	public void computeShadow(Light light,ShadowBuffer shadows);
+	public void computeShadow(Light light,ShadowBuffer[] shadows);
 }

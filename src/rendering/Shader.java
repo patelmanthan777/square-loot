@@ -1,7 +1,12 @@
 package rendering;
+import static org.lwjgl.opengl.GL20.*;
+
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
@@ -12,14 +17,23 @@ public class Shader {
 
 	int vertexShader;
 	int fragmentShader;
+	private int programHandle;
+	
+	private HashMap<String,Integer> uniforms = new HashMap<String,Integer>();
 
 	public Shader(String name) {
+		programHandle = glCreateProgram();
 		this.name = name;
 		vertexShader = GL20.glCreateShader(GL20.GL_VERTEX_SHADER);
 		fragmentShader = GL20.glCreateShader(GL20.GL_FRAGMENT_SHADER);
+		loadCode();
+		compile();
+		link();
 	}
 
-	public void loadCode() {
+	
+	
+	private void loadCode() {
 		loadCodeVertex();
 		loadCodeFragment();
 	}
@@ -68,7 +82,7 @@ public class Shader {
 		System.out.println(fragmentShaderSource);
 	}
 
-	public void compile() {
+	private void compile() {
 		GL20.glShaderSource(vertexShader, vertexShaderSource);
 		GL20.glCompileShader(vertexShader);
 		if (GL20.glGetShaderi(vertexShader, GL20.GL_COMPILE_STATUS) == GL11.GL_FALSE) {
@@ -96,10 +110,43 @@ public class Shader {
 	 *  
 	 * @param program is a storage space on the graphic card
 	 */
-	public void link(int program){
-		GL20.glAttachShader(program, vertexShader);
-		GL20.glAttachShader(program, fragmentShader);
-		GL20.glLinkProgram(program);
-		GL20.glValidateProgram(program);
+	private void link(){
+		GL20.glAttachShader(programHandle, vertexShader);
+		GL20.glAttachShader(programHandle, fragmentShader);
+		GL20.glLinkProgram(programHandle);
+		GL20.glValidateProgram(programHandle);
+	}
+	
+	public void use(){
+		glUseProgram(programHandle);
+	}
+	
+	public static void unuse(){
+		glUseProgram(0);
+	}
+	
+	private int getUniform(String name){
+		int i;
+		if(uniforms.get(name) == null){
+			i = glGetUniformLocation(programHandle, name);
+			uniforms.put(name, i);
+		} else {
+			i = uniforms.get(name).intValue();
+		}
+		return i;
+	}
+	
+	public void setUniform1f(String name, float f){
+		int tmp = getUniform(name);
+		glUniform1f(tmp,f);
+	}
+	public void setUniform2f(String name, float f1, float f2){
+		glUniform2f(getUniform(name), f1, f2);
+	}
+	public void setUniform3f(String name, float f1, float f2, float f3){
+		glUniform3f(getUniform(name), f1, f2,f3);
+	}
+	public void setUniform1i(String name, int i){
+		glUniform1i(getUniform(name), i);
 	}
 }

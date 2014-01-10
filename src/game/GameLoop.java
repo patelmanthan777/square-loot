@@ -2,8 +2,6 @@ package game;
 import light.Laser;
 import light.Light;
 import light.LightManager;
-import light.Shadow;
-import light.ShadowBuffer;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
@@ -25,23 +23,17 @@ import environment.blocks.BlockFactory;
 import event.Timer;
 import event.control.Control;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glUniform1f;
-import static org.lwjgl.opengl.GL20.glUniform1i;
-import static org.lwjgl.opengl.GL20.glUniform2f;
-import static org.lwjgl.opengl.GL20.glUniform3f;
-import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public class GameLoop {
 	private static final String WINDOW_TITLE = "SquareLoot";
 	static public boolean isRunning; //false means that the game is closing
 	
-	private Player p;// = new Player(new Vector2f(0, 0));
+
+	private static Player p;// = new Player(new Vector2f(0, 0));
 	public static Map map ;
 
-	private Camera cam = new Camera(new Vector2f(0, 0));
+
+	public static Camera cam = new Camera(new Vector2f(0, 0));
 	
 	private Control controle;
 
@@ -83,37 +75,36 @@ public class GameLoop {
 		createWindow();
 		initGL();
 		TextureManager.init();
-		map = new Map(new Vector2f(10,10), new Vector2f(16,12), new Vector2f(40,40));
+		
 		p = LivingEntityManager.createPlayer();
 		controle = new Control(p);
 		BlockFactory.initBlocks();
-		
-		map.renderMapToFrameBuffer();
+
+		map = new Map(new Vector2f(4,4), new Vector2f(12,10), new Vector2f(48,48));
+		map.renderMapToFrameBuffers();
 		p.setPosition(map.getSpawnPixelPosition());
 		ProjectileManager.init();
 		LivingEntityManager.init();
 		LightManager.init();
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
-		LightManager.setScreenHeight((int)ConfigManager.resolution.y);
-		LightManager.setScreenWidth((int)ConfigManager.resolution.x);
 		OverlayManager.init();
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
-		Light playerLight = LightManager.addLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
-		Laser playerLaser = LightManager.addActivatedLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
+		Light playerLight = LightManager.addPointLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
+		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getRotation());
+
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);
-		
 		LightManager.addShadowCaster(map);
 		
 		
-		map.renderMapToFrameBuffer();
+		map.renderMapToFrameBuffers();
 		LightManager.render();
-		map.renderMapToFrameBuffer();
+		map.renderMapToFrameBuffers();
 		LightManager.render();
-		map.renderMapToFrameBuffer();
+		map.renderMapToFrameBuffers();
 		LightManager.render();
 		
 		
@@ -129,7 +120,9 @@ public class GameLoop {
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
+
 		glEnable(GL_BLEND);
+
 
 		glMatrixMode(GL_PROJECTION); // PROJECTION from 3D to Camera plane
 		glLoadIdentity(); 
@@ -215,9 +208,6 @@ public class GameLoop {
 			e.printStackTrace();
 		}
 	}
-	
-
-
 
 	/**
 	 * Update the game state, namely entities, HUD and lights
@@ -242,8 +232,9 @@ public class GameLoop {
 
 		
 		cam.draw();
+		map.renderMapToFrameBuffers();
 		LightManager.render();
-		map.renderMapToFrameBuffer();
+		
 		p.draw();
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();

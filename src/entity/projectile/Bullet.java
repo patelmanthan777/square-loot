@@ -1,7 +1,5 @@
 package entity.projectile;
 
-
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL11;
@@ -17,7 +15,7 @@ public class Bullet extends Projectile {
  * Save the shader program associated with the bullets. -1 means
  * not initialized. 
  */
-	static private int bulletShaderProgram = -1;
+	static private Shader bulletShaderProgram = null;
 	
 	private float speedValue = 2f;
 	private Vector2f size = new Vector2f(10,10);
@@ -26,13 +24,9 @@ public class Bullet extends Projectile {
 	 * Initialize the bullet shader
 	 */
 	static public void initBulletShader(){
-		if(bulletShaderProgram < 0)
+		if(bulletShaderProgram == null)
 		{
-			bulletShaderProgram = glCreateProgram();
-			Shader s = new Shader("bullet");
-			s.loadCode();
-			s.compile();
-			s.link(bulletShaderProgram);
+			bulletShaderProgram = new Shader("bullet");
 		}
 	}
 	
@@ -73,11 +67,11 @@ public class Bullet extends Projectile {
 	public void draw() {
 		glDisable(GL_TEXTURE_2D);
 		GL11.glColor3f(color.x, color.y, color.z);
-		glUseProgram(Bullet.bulletShaderProgram);
-		glUniform2f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.position"),this.position.x,this.position.y);
-		glUniform2f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.direction"),this.direction.x,this.direction.y);
-		glUniform1f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.radius"),size.x);
-		glUniform1f(glGetUniformLocation(Bullet.bulletShaderProgram, "bullet.length"),size.y);
+		Bullet.bulletShaderProgram.use();
+		bulletShaderProgram.setUniform2f("bullet.position",this.position.x,this.position.y);
+		bulletShaderProgram.setUniform2f("bullet.direction",this.direction.x,this.direction.y);
+		bulletShaderProgram.setUniform1f("bullet.radius",size.x);
+		bulletShaderProgram.setUniform1f("bullet.length",size.y);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
 		glBegin(GL_TRIANGLE_STRIP);
@@ -87,7 +81,7 @@ public class Bullet extends Projectile {
 		glVertex2f(position.x - size.x, position.y + size.y);
 		glEnd();
 		glDisable(GL_BLEND);
-		glUseProgram(0);
+		Shader.unuse();
 		glEnable(GL_TEXTURE_2D);
 	}
 	

@@ -23,8 +23,11 @@ public class PlayerStatsOverlay extends Overlay{
 		int maxHealth = player.getMaxHealth();
 		String display = player.getHealthFraction();
 		glDisable(GL_BLEND);
-		glLoadIdentity();
 		glDisable(GL_TEXTURE_2D);
+		glLoadIdentity();
+
+		glDisable(GL_TEXTURE_2D);
+
 		glBegin(GL_TRIANGLE_STRIP);
 		glColor3f(1,0,0.1f);
 		glVertex2f(position.x+((float)health/(float)maxHealth)*(size.x-1), position.y+1);

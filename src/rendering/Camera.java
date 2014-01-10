@@ -17,7 +17,7 @@ public class Camera extends Node implements Drawable{
 	
 	@Override
 	public void draw() {
-		GL11.glTranslatef(-getX()+Display.getWidth()/2, -getY()+Display.getHeight()/2,0);
+		GL11.glTranslatef((int)(-getX()+Display.getWidth()/2.0f), (int)(-getY()+Display.getHeight()/2.0f),0);
 	}
 	
 }

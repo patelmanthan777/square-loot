@@ -8,7 +8,6 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import rendering.MiniMapDrawable;
-import rendering.TextureManager;
 import userInterface.MiniMap;
 import entity.player.Player;
 import environment.Map;
