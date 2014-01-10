@@ -34,9 +34,6 @@ public class LightManager {
 	static Shader laserShaderProgram;
 	static FBO[][] staticLightsFBO = new FBO[Map.textureNb][Map.textureNb];
 	private static boolean shouldBeRendered[][] = new boolean[Map.textureNb][Map.textureNb];
-	private static FBO verticalShadowFBO = new FBO(Map.textureSize, Map.textureSize * Map.textureNb);
-	private static FBO horisontalShadowFBO = new FBO(Map.textureSize * Map.textureNb, Map.textureSize);
-	private static FBO fullShadowFBO = new FBO(Map.textureSize * Map.textureNb, Map.textureSize * Map.textureNb);
 	
 	static boolean refreshStaticFBO = true;
 	/* Avoid dynamic allocation in rendering methods */
