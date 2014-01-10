@@ -60,7 +60,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	public void setLaser(Laser l) {
 		laser = l;
-		l.setOrientation(direction);
+		l.setDirection(direction);
 		l.setPosition(position);
 	}
 
@@ -105,10 +105,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 
 	@Override
-	public void setOrientation(float orix, float oriy) {
-		super.setOrientation(orix, oriy);
+	public void setDirection(float orix, float oriy) {
+		super.setDirection(orix, oriy);
 		if (laser != null) {
-			laser.setOrientation(orix, oriy);
+			laser.setDirection(orix, oriy);
 		}
 		updatePoints();
 	}

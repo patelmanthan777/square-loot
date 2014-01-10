@@ -28,7 +28,7 @@ public class Laser extends Light{
 	}
 	
 	@Override
-	public void setOrientation(float posx, float posy){
+	public void setDirection(float posx, float posy){
 		this.direction.x = posx;
 		this.direction.y = posy;
 	}

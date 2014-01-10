@@ -30,8 +30,7 @@ public class Node {
 	}
 	
 	public void setPosition(Vector2f pos){
-		position.x = pos.x;
-		position.y = pos.y;
+		setPosition(pos.x,pos.y);
 	}
 	
 	public void setPosition(float posx, float posy){
@@ -39,11 +38,11 @@ public class Node {
 		position.y = posy;
 	}
 	
-	public void setOrientation(Vector2f ori){
-		setOrientation(ori.x,ori.y);
+	public void setDirection(Vector2f ori){
+		setDirection(ori.x,ori.y);
 	}
 	
-	public void setOrientation(float orix, float oriy){
+	public void setDirection(float orix, float oriy){
 		direction.x = orix;
 		direction.y = oriy;
 		tangent.x = oriy;

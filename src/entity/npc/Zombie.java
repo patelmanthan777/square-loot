@@ -20,7 +20,8 @@ public class Zombie extends Npc implements MiniMapDrawable{
 	private Vector2f halfSize = new Vector2f(20, 20);
 	private static int scentDistanceBlk = 10;
 	private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
-	
+	private ZombieState state;
+	private float orientationSpeed = 0;
 	/*** avoid dynamic allocation in thinkAndAct ***/
 	private Vector2f thisToPlayer = new Vector2f();
 	/**********************************************/
@@ -57,8 +58,7 @@ public class Zombie extends Npc implements MiniMapDrawable{
 		this.setHealth(10); 
 		this.accFactor = 0.010f;
 		this.descFactor = 30f;
-		//		protected float descFactor = 50;
-		//protected float accFactor = 0.025f;
+		state = ZombieState.IDLE;
 	}
 	
 	
@@ -111,8 +111,8 @@ public class Zombie extends Npc implements MiniMapDrawable{
 
 
 	@Override
-	public void setOrientation(float orix, float oriy) {
-		super.setOrientation(orix, oriy);
+	public void setDirection(float orix, float oriy) {
+		super.setDirection(orix, oriy);
 		updatePoints();
 	}
 
@@ -161,15 +161,17 @@ public class Zombie extends Npc implements MiniMapDrawable{
 			thisToPlayer.normalise(thisToPlayer);
 			if(length < dst || dst == -1){
 				// chase the nearest player
-				waiting = false;
+				state = ZombieState.CHASING;
 				dst = length;
-				this.setOrientation(thisToPlayer);
+				this.setDirection(thisToPlayer);
 				this.translate(thisToPlayer.x, thisToPlayer.y);
 				updatePoints();
 			}
-			if(waiting){
-				// randomly moves
-			}
+			
+		}
+		if(state == ZombieState.IDLE){
+			// randomly moves
+			
 		}
 	}
 
