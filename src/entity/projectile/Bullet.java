@@ -1,7 +1,5 @@
 package entity.projectile;
 
-
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL11;

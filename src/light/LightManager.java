@@ -34,7 +34,10 @@ public class LightManager {
 	static Shader laserShaderProgram;
 	static FBO[][] staticLightsFBO = new FBO[Map.textureNb][Map.textureNb];
 	private static boolean shouldBeRendered[][] = new boolean[Map.textureNb][Map.textureNb];
-
+	private static FBO verticalShadowFBO = new FBO(Map.textureSize, Map.textureSize * Map.textureNb);
+	private static FBO horisontalShadowFBO = new FBO(Map.textureSize * Map.textureNb, Map.textureSize);
+	private static FBO fullShadowFBO = new FBO(Map.textureSize * Map.textureNb, Map.textureSize * Map.textureNb);
+	
 	static boolean refreshStaticFBO = true;
 	/* Avoid dynamic allocation in rendering methods */
 	private static Vector2f bufferToLight = new Vector2f();
@@ -233,39 +236,28 @@ public class LightManager {
 		}
 	}
 
-	private static void initShadowDrawing() {
+
+	private static void drawShadows(Light l, int layer) {
 		glColorMask(false, false, false, false);
 		glStencilFunc(GL_ALWAYS, 1, 1);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glBegin(GL_QUADS);
-	}
-
-	private static void endShadowDrawing() {
+		ShadowBuffer[] shadows = lightShadows.get(l);
+		for (int shadowLayer = layer; shadowLayer < Map.maxLayer - 1; shadowLayer++) {
+			if (shadows[shadowLayer] != null) {
+				for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
+					Shadow s = shadows[shadowLayer].get(i);
+					s.draw();
+				}
+			}
+		}
 		glEnd();
 		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 		glStencilFunc(GL_EQUAL, 0, 1);
 		glColorMask(true, true, true, true);
 	}
 
-	private static void drawShadows(Light l, int layer) {
-		ShadowBuffer[] shadows = lightShadows.get(l);
-		for (int shadowLayer = layer; shadowLayer < Map.maxLayer - 1; shadowLayer++) {
-			if (shadows[shadowLayer] != null) {
-				for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
-					Shadow s = shadows[shadowLayer].get(i);
-					Vector2f[] points = s.points;
-					{
-						glVertex2f(points[0].x, points[0].y);
-						glVertex2f(points[1].x, points[1].y);
-						glVertex2f(points[3].x, points[3].y);
-						glVertex2f(points[2].x, points[2].y);
-
-					}
-				}
-			}
-		}
-	}
-
+	
 	private static void renderStaticLights() {
 		for (int i = 0; i < Map.textureNb; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
@@ -291,9 +283,9 @@ public class LightManager {
 							if (l instanceof Laser
 									|| bufferToLight.length()
 											- ((PointLight) l).getMaxDst() < diagonal) {
-								initShadowDrawing();
+								
 								drawShadows(l, layer);
-								endShadowDrawing();
+							
 								setUniforms(l, false, i, j);
 								drawMap(i, j, Map.getTextureID(i, j, layer));
 								glClear(GL_STENCIL_BUFFER_BIT);
@@ -321,9 +313,9 @@ public class LightManager {
 
 			if (l instanceof Laser
 					|| bufferToLight.length() - ((PointLight) l).getMaxDst() < diagonal) {
-				initShadowDrawing();
+			
 				drawShadows(l, layer);
-				endShadowDrawing();
+				
 				for (int i = 0; i < Map.textureNb; i++) {
 					for (int j = 0; j < Map.textureNb; j++) {
 						setUniforms(l, true, 0, 0);
