@@ -184,18 +184,18 @@ public abstract class Room implements Drawable, ShadowCaster {
 				int first = -1;
 				for (int i = 0; i < Map.roomBlockSize.x; i++) {
 					if (light.getY() > j * Map.blockPixelSize.y + this.y) {
-						if (grid[i][j].castShadows()) {
+						if (grid[i][j].castShadows() && grid[i][j].getLayer() == layer) {
 							if (first == -1) {
 								beginShadow(light,i,j,0);
 								first = i;
 							}
 							if(i == Map.roomBlockSize.x-1){
-								endShadow(light, shadowBuffer[layer], i, j, 0);
+								endShadow(light, shadowBuffer[layer-1], i, j, 0);
 								first = -1;
 							}
 						} else {
 							if (first != -1) {
-								endShadow(light, shadowBuffer[layer], i-1, j, 0);
+								endShadow(light, shadowBuffer[layer-1], i-1, j, 0);
 								first = -1;
 							}
 						}
@@ -209,18 +209,18 @@ public abstract class Room implements Drawable, ShadowCaster {
 				int first = -1;
 				for (int i = (int) (Map.roomBlockSize.x-1); i >=0; i--) {
 					if (light.getY() < (j+1) * Map.blockPixelSize.y + this.y) {
-						if (grid[i][j].castShadows()) {
+						if (grid[i][j].castShadows()&& grid[i][j].getLayer() == layer) {
 							if (first == -1) {
 								beginShadow(light,i,j,2);
 								first = i;
 							}
 							if(i == 0){
-								endShadow(light, shadowBuffer[layer], i, j, 2);
+								endShadow(light, shadowBuffer[layer-1], i, j, 2);
 								first = -1;
 							}
 						} else {
 							if (first != -1) {
-								endShadow(light, shadowBuffer[layer], i+1, j, 2);
+								endShadow(light, shadowBuffer[layer-1], i+1, j, 2);
 								first = -1;
 							}
 						}
@@ -236,18 +236,18 @@ public abstract class Room implements Drawable, ShadowCaster {
 				int first = -1;
 				for (int j = 0; j < Map.roomBlockSize.y; j++) {
 					if (light.getX() < (i+1) * Map.blockPixelSize.x + this.x) {
-						if (grid[i][j].castShadows()) {
+						if (grid[i][j].castShadows()&& grid[i][j].getLayer() == layer) {
 							if (first == -1) {
 								beginShadow(light,i,j,1);
 								first = i;
 							}
 							if(j == Map.roomBlockSize.y-1){
-								endShadow(light, shadowBuffer[layer], i, j, 1);
+								endShadow(light, shadowBuffer[layer-1], i, j, 1);
 								first = -1;
 							}
 						} else {
 							if (first != -1) {
-								endShadow(light, shadowBuffer[layer], i, j-1, 1);
+								endShadow(light, shadowBuffer[layer-1], i, j-1, 1);
 								first = -1;
 							}
 						}
@@ -261,18 +261,18 @@ public abstract class Room implements Drawable, ShadowCaster {
 				int first = -1;
 				for (int j = (int) (Map.roomBlockSize.y-1); j >= 0; j--) {
 					if (light.getX() > i * Map.blockPixelSize.x + this.x) {
-						if (grid[i][j].castShadows()) {
+						if (grid[i][j].castShadows()&& grid[i][j].getLayer() == layer) {
 							if (first == -1) {
 								beginShadow(light,i,j,3);
 								first = i;
 							}
 							if(j == 0){
-								endShadow(light, shadowBuffer[layer], i, j, 3);
+								endShadow(light, shadowBuffer[layer-1], i, j, 3);
 								first = -1;
 							}
 						} else {
 							if (first != -1) {
-								endShadow(light, shadowBuffer[layer], i, j+1, 3);
+								endShadow(light, shadowBuffer[layer-1], i, j+1, 3);
 								first = -1;
 							}
 						}
