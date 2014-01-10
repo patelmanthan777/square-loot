@@ -2,6 +2,7 @@ package environment.blocks;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import entity.npc.LivingEntityManager;
 import environment.Map;
 import light.Laser;
 import light.Light;
@@ -68,18 +69,7 @@ public abstract class ShadowCasterBlock extends Block{
 		float y =  (iy * Map.blockPixelSize.y);
 		int shadowInd = shadowBuffer.lastShadow+1;
 		initBlock(x, y);
-		if(light instanceof Laser){
-			Shadow[] shadows = (shadowBuffer.getShadows());
-			shadows[shadowInd].points[0].x = points[1].x;
-			shadows[shadowInd].points[0].y = points[1].y;
-			shadows[shadowInd].points[1].x = points[0].x;
-			shadows[shadowInd].points[1].y = points[0].y;
-			shadows[shadowInd].points[2].x = points[2].x;
-			shadows[shadowInd].points[2].y = points[2].y;
-			shadows[shadowInd].points[3].x = points[3].x;
-			shadows[shadowInd].points[3].y = points[3].y;
-			shadowInd++;
-		}
+
 		for (int i = 0; i < nb_points; i++){
 			Vector2f currentVertex = points[i];
 			Vector2f nextVertex = points[(i + 1) % 4];
@@ -89,7 +79,8 @@ public abstract class ShadowCasterBlock extends Block{
 			Vector2f.sub(currentVertex, light.getPosition(), lightToCurrent);
 			Shadow[] shadows = (shadowBuffer.getShadows());
 			if (Vector2f.dot(normal, lightToCurrent) > 0 ) {
-				if((light instanceof Light && !neighbour[i]) || light instanceof Laser || this instanceof VoidBlock){
+				if((light instanceof Light && !neighbour[i]) ||
+					this instanceof VoidBlock){
 					Vector2f.sub(currentVertex,light.getPosition(), point1);
 					point1.normalise(point1);
 					point1.scale(10000);
@@ -111,6 +102,55 @@ public abstract class ShadowCasterBlock extends Block{
 			}	
 		}
 		shadowBuffer.lastShadow = Math.max(0, shadowInd - 1);
+	}
+
+	/**
+	 * Create the shadow aimed at hiding the laser once it collides
+	 * with a shadow casting block.
+	 * 
+	 * @param l
+	 * @param ix
+	 * @param iy
+	 * @param shadows
+	 */
+	public void laserShadow(Light l, int ix, int iy, ShadowBuffer shadows){
+		float x =  (ix * Map.blockPixelSize.x);
+		float y =  (iy * Map.blockPixelSize.y);
+		int shadowInd = shadows.lastShadow+1;
+		initBlock(x, y);				
+		
+		for (int i = 0; i < nb_points; i++){
+			Vector2f currentVertex = points[i];
+			Vector2f nextVertex = points[(i + 1) % 4];
+			Vector2f.sub(nextVertex,currentVertex, edge);
+			normal.x = edge.getY();
+			normal.y = -edge.getX();			
+			Shadow[] shade = (shadows.getShadows());
+			if (Vector2f.dot(normal, l.getRotation()) < 0 ) {
+				
+				point1.x = l.getRotationX();
+				point1.y = l.getRotationY();
+				point1.normalise(point1);
+				point1.scale(10000);
+				point1 = Vector2f.add(currentVertex, point1, point1);
+				
+				point2.x = l.getRotationX();
+				point2.y = l.getRotationY();
+				point2.normalise(point2);
+				point2.scale(10000);
+				point2 = Vector2f.add(nextVertex, point2, point2);
+				shade[shadowInd].points[0].x = currentVertex.x;
+				shade[shadowInd].points[0].y = currentVertex.y;
+				shade[shadowInd].points[1].x = nextVertex.x;
+				shade[shadowInd].points[1].y = nextVertex.y;
+				shade[shadowInd].points[2].x = point1.x;
+				shade[shadowInd].points[2].y = point1.y;
+				shade[shadowInd].points[3].x = point2.x;
+				shade[shadowInd].points[3].y = point2.y;
+				shadowInd++;				
+			}
+		}
+		shadows.lastShadow = shadowInd - 1;
 	}
 
 	

@@ -351,10 +351,37 @@ public abstract class Room implements Drawable, ShadowCaster {
 		shadowBuffer.lastShadow++;
 	}
 	
-	
 
-	public void laserShadow(Light l, ShadowBuffer[] shadows, Vector2f cpos) {
-
+	/**
+	 * Draws the shadow in the case of a laser. Starts by determining which
+	 * block will cast it and return having only modified <b>cpos</b> if it is not
+	 * in the room.
+	 * 
+	 * @param l is the laser source
+	 * @param shadows is the shadow storage system
+	 * @param cpos represents a fictional position of the laser source.
+	 * It is modified by the algorithm to follow the laser direction. 
+	 */
+	public void laserShadow(Light l, ShadowBuffer[] shadows, Vector2f cpos){		
+		int i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
+		int j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
+		
+		boolean addShadow = false;
+		
+		while( !addShadow &&
+			   (((int) cpos.x / Map.roomBlockSize.x) == ((int) this.x / Map.roomBlockSize.x) &&
+				((int) cpos.y / Map.roomBlockSize.y) == ((int) this.y / Map.roomBlockSize.y))) {
+			if (grid[i][j] instanceof ShadowCasterBlock){
+				((ShadowCasterBlock) grid[i][j]).laserShadow(l, i, j, shadows[0]);
+				addShadow = true;
+			}
+			else {				
+				grid[i][j].nextBlock(cpos, l.getRotation(), i, j);
+						
+				i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
+				j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
+			}
+		}		
 	}
 
 	/**
