@@ -206,7 +206,6 @@ public class LightManager {
 		glClearColor(0.0f, 0.0f, 0.0f, 1f);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glActiveTexture(GL_TEXTURE0);
-
 		drawQuad(Map.currentBufferPosition.x + i * Map.textureSize,
 				Map.currentBufferPosition.y + j * Map.textureSize,
 				Map.textureSize, Map.textureSize);
@@ -288,8 +287,7 @@ public class LightManager {
 	private static void renderStaticLights(int i, int j) {
 		glPushMatrix();
 		glLoadIdentity();
-		glTranslatef(-(Map.currentBufferPosition.x + i * Map.textureSize),
-				-(Map.currentBufferPosition.y + j * Map.textureSize), 0);
+		glTranslatef(-(Map.currentBufferPosition.x + i * Map.textureSize), -(Map.currentBufferPosition.y + j * Map.textureSize), 0);
 		for (int layer = 0; layer < Map.maxLayer; layer++) {
 			for (Light l : activatedStaticLights.values()) {
 				bufferToLight.x = (Map.currentBufferPosition.x + i
@@ -379,6 +377,7 @@ public class LightManager {
 	}
 
 	public static void drawQuad(float x, float y, float sizex, float sizey) {
+		//System.out.println("" + x + " " + y);
 		glColor3f(1, 1, 1);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 0.0f);
@@ -386,7 +385,7 @@ public class LightManager {
 		glTexCoord2f(1.0f, 0.0f);
 		glVertex2f(x + sizex, y + sizey);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(x + sizex, y);
+		glVertex2f(x + sizex,y);
 		glTexCoord2f(0.0f, 1.0f);
 		glVertex2f(x, y);
 		glEnd();

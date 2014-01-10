@@ -15,7 +15,7 @@ import rendering.FBO;
 import rendering.ShadowCaster;
 
 public class Map implements ShadowCaster {
-	public static final int maxLayer = 5;
+	public static final int maxLayer = 4;
 
 	/**
 	 * Block size in number of pixels.
@@ -88,8 +88,8 @@ public class Map implements ShadowCaster {
 				mapRoomSize.y * roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0, 0);
 
-		Map.textureSize = (int) Math.max(ConfigManager.resolution.x,
-				ConfigManager.resolution.y) / (textureNb - 2);
+		Map.textureSize = (int) (Math.max(ConfigManager.resolution.x,
+				ConfigManager.resolution.y) / (textureNb - 2));
 		for (int layer = 0; layer < maxLayer; layer++) {
 			for (int i = 0; i < Map.textureNb; i++) {
 				for (int j = 0; j < Map.textureNb; j++) {
@@ -103,9 +103,7 @@ public class Map implements ShadowCaster {
 			}
 		}
 		generate();
-		currentBufferPosition = new Vector2f(spawnPixelPosition.x
-				- (Map.textureNb / 2.0f) * textureSize, spawnPixelPosition.y
-				- (Map.textureNb / 2.0f) * textureSize);
+		currentBufferPosition = new Vector2f((int)(spawnPixelPosition.x - (Map.textureNb / 2.0f) * textureSize), (int)(spawnPixelPosition.y - (Map.textureNb / 2.0f) * textureSize));
 	}
 
 	private void render(int i, int j, int layer) {
