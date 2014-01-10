@@ -223,7 +223,7 @@ public class GameLoop {
 		cam.setPosition(p.getPosition());
 		LightManager.setCamPosition(p.getPosition());
 		map.setDrawPosition(p.getPosition());
-		LivingEntityManager.update();
+		LivingEntityManager.update(elapsedTime);
 		
 		/*** RENDER ***/
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);

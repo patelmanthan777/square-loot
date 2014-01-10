@@ -23,10 +23,10 @@ public class LivingEntityManager {
 		npcs.add(new Zombie(posx,posy,1,1));
 	}
 	
-	public static void update(){
+	public static void update(long deltaT){
 		for(Npc npc : npcs){
-			npc.thinkAndAct(players);
-			npc.updatePostion(Timer.getDelta(), GameLoop.map);
+			npc.thinkAndAct(players,deltaT);
+			npc.updatePostion(deltaT, GameLoop.map);
 		}
 	}
 	

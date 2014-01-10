@@ -25,6 +25,6 @@ public abstract class Npc extends LivingEntity implements Drawable {
 		super(posx,posy);
 	}
 	
-	public abstract void thinkAndAct(LinkedList<Player> players);
+	public abstract void thinkAndAct(LinkedList<Player> players, long deltaT);
 
 }

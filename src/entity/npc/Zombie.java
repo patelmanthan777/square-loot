@@ -118,7 +118,7 @@ public class Zombie extends Npc implements MiniMapDrawable{
 
 
 	@Override
-	public void thinkAndAct(LinkedList<Player> players) {
+	public void thinkAndAct(LinkedList<Player> players, long deltaT) {
 		float dst = scentDistancePx;
 		float length;
 		for(Player p : players){
