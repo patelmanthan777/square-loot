@@ -9,7 +9,7 @@ import environment.Map;
 import environment.blocks.BlockFactory;
 
 public class TestRoom extends Room{
-	private float proba = 0.05f;
+	private float proba = 0.02f;
 	public TestRoom(float posX, float posY){
 		super(posX, posY);
 		construct();

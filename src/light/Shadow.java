@@ -26,7 +26,7 @@ public class Shadow implements Drawable{
 	public void draw() {
 		glVertex2f(points[0].x, points[0].y);
 		glVertex2f(points[1].x, points[1].y);
-		glVertex2f(points[3].x, points[3].y);
 		glVertex2f(points[2].x, points[2].y);
+		glVertex2f(points[3].x, points[3].y);
 	}
 }

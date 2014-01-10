@@ -155,8 +155,10 @@ public class LightManager {
 	static public void updateLightShadows(Light l, boolean dynamic) {
 		/* Set to 0 the pointer to the last shadow */
 		ShadowBuffer[] shadows = lightShadows.get(l);
-		for (int i = 0; i < Map.maxLayer; i++)
+		for (int i = 0; i < Map.maxLayer; i++){
+			//System.out.println(shadows[i].lastShadow); // FIXME
 			shadows[i].lastShadow = 0;
+		}
 		for (ShadowCaster sc : shadowCasters) {
 			if (sc instanceof Map && !dynamic) {
 				sc.computeShadow(l, lightShadows.get(l));
@@ -277,9 +279,7 @@ public class LightManager {
 									* Map.textureSize + Map.textureSize / 2)
 									- l.getY();
 
-							if (l instanceof Laser
-									|| bufferToLight.length()
-											- ((PointLight) l).getMaxDst() < diagonal) {
+							if ((l instanceof Laser || bufferToLight.length() - ((PointLight) l).getMaxDst() < diagonal)) {
 								
 								drawShadows(l, layer);
 							
