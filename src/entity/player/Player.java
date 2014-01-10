@@ -16,9 +16,9 @@ import entity.LivingEntity;
 import environment.Map;
 
 public class Player extends LivingEntity implements MiniMapDrawable {
-	private static final int nbPoints = 4;
-	private Vector2f[] points = new Vector2f[nbPoints];
-	private Vector2f halfSize = new Vector2f(20, 20);
+	
+	
+	
 	private Laser laser;
 	private Light light;
 	
@@ -27,14 +27,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public Player(Vector2f pos) {
 		super(pos);
 		Vector3f col = new Vector3f(0, 0, 0);
-		for(int i = 0 ; i < nbPoints; i++){
-			points[i] = new Vector2f();
-		}
 		setColor(col);
-		position.x = pos.x;
-		position.y = pos.y;
-		this.direction.x = 1;
-		this.direction.y = 1;
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
@@ -60,7 +53,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	public void setLaser(Laser l) {
 		laser = l;
-		l.setDirection(direction);
+		l.setDirection(getDirection());
 		l.setPosition(position);
 	}
 
@@ -129,32 +122,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return light;
 	}
 	
-	/**
-	 * Compute the coordinates of the 4 points
-	 * using the position the size and the orientation of the player
-	 * 
-	 * 0      1
-	 * +------+
-	 * |      |
-	 * |      |
-	 * +------+
-	 * 3	  2
-	 */
-	
-	private void updatePoints(){
-		this.direction.normalise(direction);
-		this.direction.scale(halfSize.y);
-		this.tangent.normalise(tangent);
-		this.tangent.scale(halfSize.x);
-		points[0].x = this.position.x - this.tangent.x - this.direction.x;
-		points[0].y = this.position.y - this.tangent.y - this.direction.y;
-		points[1].x = this.position.x + this.tangent.x - this.direction.x;
-		points[1].y = this.position.y + this.tangent.y - this.direction.y;
-		points[3].x = this.position.x - this.tangent.x + this.direction.x;
-		points[3].y = this.position.y - this.tangent.y + this.direction.y;
-		points[2].x = this.position.x + this.tangent.x + this.direction.x;
-		points[2].y = this.position.y + this.tangent.y + this.direction.y;
-	}
+
 
 	public void primaryWeapon(float directionX, float directionY){
 		weapon.Fire(new Vector2f(position), new Vector2f(directionX,directionY));

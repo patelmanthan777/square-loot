@@ -4,10 +4,12 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class Node {
 	protected Vector2f position;
-	protected Vector2f direction;
-	protected Vector2f tangent;
+	private Vector2f direction;
+	private Vector2f tangent;
 	protected String name = null;
-
+	private float angle;
+	
+	
 	public Node(Vector2f pos){
 		this(pos.x, pos.y);
 	}
@@ -17,9 +19,7 @@ public class Node {
 	}
 	
 	public Node(float posx, float posy){
-		position = new Vector2f(posx, posy);
-		direction = new Vector2f();
-		tangent = new Vector2f();
+		this(posx,posy,1,0);
 	}
 	
 	
@@ -27,6 +27,7 @@ public class Node {
 		position = new Vector2f(posx, posy);
 		direction = new Vector2f(dirx,diry);
 		tangent = new Vector2f(diry,-dirx);
+		angle = computeAngle(direction);
 	}
 	
 	public void setPosition(Vector2f pos){
@@ -45,21 +46,28 @@ public class Node {
 	public void setDirection(float orix, float oriy){
 		direction.x = orix;
 		direction.y = oriy;
-		tangent.x = oriy;
-		tangent.y = -orix;
+		direction.normalise(direction);
+		tangent.x = direction.y;
+		tangent.y = -direction.x;
+		angle = computeAngle(direction);
 	}
 	
 	public Vector2f getPosition(){
 		return position;
 	}
 	
-	public Vector2f getRotation(){
+	public Vector2f getDirection(){
 		return direction;
+	}
+	
+	public float getAngle(){
+		return angle;
 	}
 	
 	public float getX(){
 		return position.x;
 	}
+	
 	public float getY(){
 		return position.y;
 	}
@@ -67,6 +75,7 @@ public class Node {
 	public float getRotationX(){
 		return direction.x;
 	}
+	
 	public float getRotationY(){
 		return direction.y;
 	}
@@ -74,11 +83,23 @@ public class Node {
 	public void setX(float x){
 		position.x = x;
 	}
+	
 	public void setY(float y){
 		position.y = y;
 	}
 	
 	public void setName(String name){
 		this.name = name;
+	}
+	
+	public Vector2f getTangent(){
+		return tangent;
+	}
+	
+	public static float computeAngle(Vector2f dir){
+		float angle = 0;
+		angle = (float) Math.acos(dir.x);
+		angle = dir.y > 0 ? angle: -angle;
+		return angle;
 	}
 }

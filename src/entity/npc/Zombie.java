@@ -14,10 +14,6 @@ import environment.Map;
 
 public class Zombie extends Npc implements MiniMapDrawable{
 
-	
-	private static final int nbPoints = 4;
-	private Vector2f[] points = new Vector2f[nbPoints];
-	private Vector2f halfSize = new Vector2f(20, 20);
 	private static int scentDistanceBlk = 10;
 	private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
 	private ZombieState state;
@@ -48,9 +44,7 @@ public class Zombie extends Npc implements MiniMapDrawable{
 	
 	
 	private void init(){
-		for(int i = 0 ; i < nbPoints; i++){
-			points[i] = new Vector2f();
-		}
+		
 		Vector3f col = new Vector3f(0.5f, 0.7f, 0);
 		setColor(col);
 		this.updatePoints();
@@ -122,39 +116,11 @@ public class Zombie extends Npc implements MiniMapDrawable{
 		updatePoints();
 	}
 
-	
-	/**
-	 * Compute the coordinates of the 4 points
-	 * using the position the size and the orientation of the player
-	 * 
-	 * 0      1
-	 * +------+
-	 * |      |
-	 * |      |
-	 * +------+
-	 * 3	  2
-	 */
-	
-	private void updatePoints(){
-		this.direction.normalise(direction);
-		this.direction.scale(halfSize.y);
-		this.tangent.normalise(tangent);
-		this.tangent.scale(halfSize.x);
-		points[0].x = this.position.x - this.tangent.x - this.direction.x;
-		points[0].y = this.position.y - this.tangent.y - this.direction.y;
-		points[1].x = this.position.x + this.tangent.x - this.direction.x;
-		points[1].y = this.position.y + this.tangent.y - this.direction.y;
-		points[3].x = this.position.x - this.tangent.x + this.direction.x;
-		points[3].y = this.position.y - this.tangent.y + this.direction.y;
-		points[2].x = this.position.x + this.tangent.x + this.direction.x;
-		points[2].y = this.position.y + this.tangent.y + this.direction.y;
-	}
 
 	@Override
 	public void thinkAndAct(LinkedList<Player> players) {
 		float dst = scentDistancePx;
 		float length;
-		boolean waiting = true;
 		for(Player p : players){
 			Vector2f.sub(p.getPosition(),this.getPosition(),thisToPlayer);
 			length = thisToPlayer.length();
