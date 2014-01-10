@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import rendering.TextureManager;
 import entity.player.Player;
-import event.Timer;
 import game.GameLoop;
 import static org.lwjgl.opengl.GL11.*;
 
