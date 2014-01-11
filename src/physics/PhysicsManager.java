@@ -18,8 +18,8 @@ public class PhysicsManager {
 	
 	public static void update(float dt)
 	{
-		int velocityIterations = 6;
-	    int positionIterations = 2;
+		int velocityIterations = 8;
+	    int positionIterations = 3;
 	    world.step(dt, velocityIterations, positionIterations);
 	}
 }

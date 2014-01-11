@@ -184,7 +184,8 @@ public class Player extends LivingEntity implements MiniMapDrawable,
 
 	public void update() {
 		Vec2 position = body.getPosition();
-		setPosition(position.x, position.y);
+		setPosition(position.x, position.y)
+		;
 	}
 
 	@Override
@@ -194,15 +195,12 @@ public class Player extends LivingEntity implements MiniMapDrawable,
 			Vec2 vel = body.getLinearVelocity();
 			if (translation.length() != 0) {
 				translation.normalise(translation);
-				translation.scale(dt * 10);
+				translation.scale(dt * 100);
 				Vec2 impulse = new Vec2(translation.x, translation.y);
-				System.out.println(impulse.x + "  " + impulse.y);
 				body.applyLinearImpulse(impulse, point);
 			} else {
-				
 				float factor = (float) Math.max(0., 1 - dt / 1);
 				body.setLinearVelocity(new Vec2(vel.x * factor, vel.y * factor));
-				body.applyLinearImpulse(new Vec2(0, 0), point);
 			}
 		}
 		translation.x = 0;
