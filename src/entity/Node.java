@@ -45,12 +45,16 @@ public class Node {
 	}
 	
 	public void setDirection(float orix, float oriy){
+		setDirectionNoAngle(orix, oriy);
+		angle = computeAngle(direction);
+	}
+	
+	private void setDirectionNoAngle(float orix, float oriy){
 		direction.x = orix;
 		direction.y = oriy;
 		direction.normalise(direction);
 		tangent.x = direction.y;
 		tangent.y = -direction.x;
-		angle = computeAngle(direction);
 	}
 	
 	public Vector2f getPosition(){
@@ -100,7 +104,33 @@ public class Node {
 	public static float computeAngle(Vector2f dir){
 		float angle = 0;
 		angle = (float) Math.acos(dir.x);
-		angle = dir.y > 0 ? angle: -angle;
+		angle = dir.y < 0 ? angle: -angle;
 		return angle;
+	}
+	
+	public void rotateRadian(float deltaAngle){
+		setRadianAngle(angle + deltaAngle);
+	}
+	
+	public void rotateDegree(float deltaAngle){
+		float delta = (float) Math.toRadians(deltaAngle);
+		rotateRadian(delta);
+	}
+	
+	public void setRadianAngle(float angle){
+		this.angle = angle;
+		updateDirection();
+	}
+	
+	private void updateDirection(){
+		setDirectionNoAngle((float) Math.cos(angle),(float) Math.sin(angle));
+	}
+	
+	public float getRadianAngle(){
+		return angle;
+	}
+	
+	public float getDegreAngle(){
+		return (float) Math.toDegrees(angle);
 	}
 }

@@ -156,7 +156,6 @@ public class LightManager {
 		/* Set to 0 the pointer to the last shadow */
 		ShadowBuffer[] shadows = lightShadows.get(l);
 		for (int i = 0; i < Map.maxLayer; i++){
-			//System.out.println(shadows[i].lastShadow); // FIXME
 			shadows[i].lastShadow = 0;
 		}
 		for (ShadowCaster sc : shadowCasters) {

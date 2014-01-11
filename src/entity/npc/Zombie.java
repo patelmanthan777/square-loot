@@ -14,10 +14,14 @@ import environment.Map;
 
 public class Zombie extends Npc implements MiniMapDrawable{
 
-	private static int scentDistanceBlk = 10;
+	private static int scentDistanceBlk = 3;
 	private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
 	private ZombieState state;
 	private float orientationSpeed = 0;
+	private float idleSpeed;
+	private float orientationDesc = 0.00005f;
+	private float speedDesc = 0.00005f;
+	private boolean running = false;
 	/*** avoid dynamic allocation in thinkAndAct ***/
 	private Vector2f thisToPlayer = new Vector2f();
 	/**********************************************/
@@ -121,6 +125,7 @@ public class Zombie extends Npc implements MiniMapDrawable{
 	public void thinkAndAct(LinkedList<Player> players, long deltaT) {
 		float dst = scentDistancePx;
 		float length;
+		state = ZombieState.IDLE;
 		for(Player p : players){
 			Vector2f.sub(p.getPosition(),this.getPosition(),thisToPlayer);
 			length = thisToPlayer.length();
@@ -138,6 +143,18 @@ public class Zombie extends Npc implements MiniMapDrawable{
 		if(state == ZombieState.IDLE){
 			// randomly moves
 			
+			running = Math.random() > 0.999 ? !running : running;
+			
+			if(running)
+				this.translate(this.getDirection().x, this.getDirection().y);
+			
+			
+			float deltaOrientation = (float) ((Math.random() - 0.5f) * 0.005);
+			orientationSpeed += deltaOrientation;
+			orientationSpeed = orientationSpeed > 0 ? (float) Math.max(0,orientationSpeed - orientationDesc): (float) Math.min(0,orientationSpeed + orientationDesc);
+			orientationSpeed = (float) Math.min(3,orientationSpeed);
+			orientationSpeed = (float) Math.max(-3,orientationSpeed);
+			this.rotateDegree(orientationSpeed);
 		}
 	}
 
