@@ -86,49 +86,58 @@ public abstract class Block {
 	 * @param ix
 	 * @param iy
 	 */
-	public void nextBlock(Vector2f pos, Vector2f dir, int ix, int iy){
-		float x =  (ix * Map.blockPixelSize.x);
-		float y =  (iy * Map.blockPixelSize.y);
+	public void nextBlock(Vector2f pos, Vector2f dir, int x, int y){		
+		
 		Vector2f edge = new Vector2f();
 		Vector2f normal = new Vector2f();
-		Vector2f toVertex = new Vector2f();			
+		Vector2f toVertex = new Vector2f(0.0f,0.0f);			
+				
 		
 		initBlock(x, y);
 		
 		for (int i = 0; i < nb_points; i++){
 			Vector2f currentVertex = points[i];
 			Vector2f nextVertex = points[(i + 1) % 4];
-			Vector2f.sub(nextVertex,currentVertex, edge);
-			normal.x = edge.getY();
-			normal.y = -edge.getX();			
+			if(currentVertex.x == pos.x || currentVertex.y == pos.y){
+				toVertex.x = 0.1f * dir.x * Map.blockPixelSize.x;
+				toVertex.y = 0.1f * dir.y * Map.blockPixelSize.y;
+				break;
+			}
+			else{
+				Vector2f.sub(nextVertex,currentVertex, edge);
+				normal.x = edge.getY();
+				normal.y = -edge.getX();			
 	
-			Vector2f vert = new Vector2f(0f, 1.0f);
+				Vector2f vert = new Vector2f(0f, 1.0f);
 			
-			if (Vector2f.dot(normal, dir) > 0){
-				if (Vector2f.dot(vert, normal) > 0) {
-					toVertex.y = nextVertex.y - pos.y;					
+				if (Vector2f.dot(normal, dir) > 0){
+					if (Vector2f.dot(vert, normal) != 0) {
+						toVertex.y = nextVertex.y - pos.y;					
+					}
+					/*else if (Vector2f.dot(vert, normal) < 0) {
+						toVertex.y = pos.y - currentVertex.y;
+					}*/
+					else if (Vector2f.dot(vert, edge) != 0) {
+						toVertex.x = nextVertex.x - pos.x;
+					}
+					/*else if (Vector2f.dot(vert, edge) > 0) {
+						toVertex.x = px - currentVertex.x;
+					}*/
 				}
-				else if (Vector2f.dot(vert, normal) < 0) {
-					toVertex.y = pos.y - currentVertex.y;
-				}
-				else if (Vector2f.dot(vert, edge) < 0) {
-					toVertex.x = nextVertex.x - pos.x;
-				}
-				else if (Vector2f.dot(vert, edge) > 0) {
-					toVertex.x = pos.x - currentVertex.x;
-				}
-			}									
+			}
 		}
 		
-		if (toVertex.x / dir.x < toVertex.y / dir.y) {
+		if(dir.x == 0 || dir.y == 0){
 			pos.x += toVertex.x;
-			pos.y += toVertex.y * toVertex.x / dir.x;
-			pos.scale(1.01f);
+			pos.y += toVertex.y;
+		}
+		else if (toVertex.x / dir.x < toVertex.y / dir.y) {
+			pos.x += toVertex.x;
+			pos.y += toVertex.y * toVertex.x / dir.x;			
 		}
 		else{
 			pos.x += toVertex.x * toVertex.y / dir.y;
-			pos.y += toVertex.y;
-			pos.scale(1.01f);
+			pos.y += toVertex.y;			
 		}
 			
 	}

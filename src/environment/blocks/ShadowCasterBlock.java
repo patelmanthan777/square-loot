@@ -113,11 +113,12 @@ public abstract class ShadowCasterBlock extends Block{
 	 * @param iy
 	 * @param shadows
 	 */
-	public void laserShadow(Light l, int ix, int iy, ShadowBuffer shadows){
-		float x =  (ix * Map.blockPixelSize.x);
-		float y =  (iy * Map.blockPixelSize.y);
+	public void laserShadow(Light l, int x, int y, ShadowBuffer shadows){
+
 		int shadowInd = shadows.lastShadow+1;
 		initBlock(x, y);				
+		
+		//LivingEntityManager.createZombie(x, y);
 		
 		for (int i = 0; i < nb_points; i++){
 			Vector2f currentVertex = points[i];
@@ -126,7 +127,7 @@ public abstract class ShadowCasterBlock extends Block{
 			normal.x = edge.getY();
 			normal.y = -edge.getX();			
 			Shadow[] shade = (shadows.getShadows());
-			if (Vector2f.dot(normal, l.getRotation()) < 0 ) {
+			if (Vector2f.dot(normal, l.getDirection()) < 0 ) {
 				
 				point1.x = l.getRotationX();
 				point1.y = l.getRotationY();

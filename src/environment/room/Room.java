@@ -14,6 +14,7 @@ import userInterface.MiniMap;
 import environment.Map;
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
+import environment.blocks.ShadowCasterBlock;
 
 public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;
@@ -368,14 +369,22 @@ public abstract class Room implements Drawable, ShadowCaster {
 		boolean addShadow = false;
 		
 		while( !addShadow &&
-			   (((int) cpos.x / Map.roomBlockSize.x) == ((int) this.x / Map.roomBlockSize.x) &&
-				((int) cpos.y / Map.roomBlockSize.y) == ((int) this.y / Map.roomBlockSize.y))) {
+			   (((int) (cpos.x / Map.roomPixelSize.x)) == 
+			   	((int) (this.x / Map.roomPixelSize.x)) &&
+				((int) (cpos.y / Map.roomPixelSize.y)) ==
+				((int) (this.y / Map.roomPixelSize.y)))) {
 			if (grid[i][j] instanceof ShadowCasterBlock){
-				((ShadowCasterBlock) grid[i][j]).laserShadow(l, i, j, shadows[0]);
+				((ShadowCasterBlock) grid[i][j]).
+					laserShadow(l,
+							    (int) (this.x + i * Map.blockPixelSize.x),
+							    (int) (this.y + j * Map.blockPixelSize.y),
+							    shadows[0]);
 				addShadow = true;
 			}
 			else {				
-				grid[i][j].nextBlock(cpos, l.getRotation(), i, j);
+				grid[i][j].nextBlock(cpos, l.getDirection(), 
+					    (int)(this.x + i * Map.blockPixelSize.x),
+					    (int)(this.y + j * Map.blockPixelSize.y));
 						
 				i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
 				j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
