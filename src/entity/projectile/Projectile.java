@@ -25,7 +25,7 @@ public abstract class Projectile extends Entity implements Drawable{
 	public void reset(Vector2f pos, Vector2f rot)
 	{
 		this.setPosition(pos);
-		this.setOrientation(rot);
+		this.setDirection(rot);
 		destroyed = false;
 	}
 	

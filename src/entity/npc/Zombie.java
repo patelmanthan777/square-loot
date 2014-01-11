@@ -11,20 +11,21 @@ import rendering.MiniMapDrawable;
 import userInterface.MiniMap;
 import entity.player.Player;
 import environment.Map;
+import event.Timer;
 
-public class Zombie extends Npc implements MiniMapDrawable{
+public class Zombie extends Npc implements MiniMapDrawable {
 
-	
-	private static final int nbPoints = 4;
-	private Vector2f[] points = new Vector2f[nbPoints];
-	private Vector2f halfSize = new Vector2f(20, 20);
-	private static int scentDistanceBlk = 10;
+	private static int scentDistanceBlk = 3;
 	private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
-	
+	private ZombieState state;
+	private float orientationSpeed = 0;
+	private float orientationDesc = 0.00001f;
+	private boolean running = false;
 	/*** avoid dynamic allocation in thinkAndAct ***/
 	private Vector2f thisToPlayer = new Vector2f();
+
 	/**********************************************/
-	
+
 	public Zombie(Vector2f pos) {
 		super(pos);
 		init();
@@ -44,27 +45,19 @@ public class Zombie extends Npc implements MiniMapDrawable{
 		super(posx, posy);
 		init();
 	}
-	
-	
-	private void init(){
-		for(int i = 0 ; i < nbPoints; i++){
-			points[i] = new Vector2f();
-		}
+
+	private void init() {
+
 		Vector3f col = new Vector3f(0.5f, 0.7f, 0);
 		setColor(col);
 		this.updatePoints();
 		this.setMaxHealth(20);
-		this.setHealth(10); 
+		this.setHealth(10);
 		this.accFactor = 0.010f;
 		this.descFactor = 30f;
-		//		protected float descFactor = 50;
-		//protected float accFactor = 0.025f;
+		state = ZombieState.IDLE;
 	}
-	
-	
 
-	
-	
 	@Override
 	public boolean isInCollision(float x, float y, Map m) {
 		if (m.testCollision(x - halfSize.x, y - halfSize.y)
@@ -76,17 +69,16 @@ public class Zombie extends Npc implements MiniMapDrawable{
 		return false;
 	}
 
-
 	@Override
 	public void draw() {
-		glColor3f(1,1,1);
-		glTexCoord2f(1,1);
+		glColor3f(1, 1, 1);
+		glTexCoord2f(1, 1);
 		glVertex2f(points[0].x, points[0].y);
-		glTexCoord2f(1,0);
+		glTexCoord2f(1, 0);
 		glVertex2f(points[3].x, points[3].y);
-		glTexCoord2f(0,0);
+		glTexCoord2f(0, 0);
 		glVertex2f(points[2].x, points[2].y);
-		glTexCoord2f(0,1);
+		glTexCoord2f(0, 1);
 		glVertex2f(points[1].x, points[1].y);
 	}
 
@@ -103,16 +95,15 @@ public class Zombie extends Npc implements MiniMapDrawable{
 		glBegin(GL_TRIANGLE_STRIP);
 		glVertex2f(posx + persoRatio * MiniMap.roomSize.x, posy);
 		glVertex2f(posx, posy);
-		glVertex2f(posx + persoRatio * MiniMap.roomSize.x, posy
-				+ persoRatio * MiniMap.roomSize.y);
+		glVertex2f(posx + persoRatio * MiniMap.roomSize.x, posy + persoRatio
+				* MiniMap.roomSize.y);
 		glVertex2f(posx, posy + persoRatio * MiniMap.roomSize.y);
 		glEnd();
 	}
 
-
 	@Override
-	public void setOrientation(float orix, float oriy) {
-		super.setOrientation(orix, oriy);
+	public void setDirection(float orix, float oriy) {
+		super.setDirection(orix, oriy);
 		updatePoints();
 	}
 
@@ -122,56 +113,43 @@ public class Zombie extends Npc implements MiniMapDrawable{
 		updatePoints();
 	}
 
-	
-	/**
-	 * Compute the coordinates of the 4 points
-	 * using the position the size and the orientation of the player
-	 * 
-	 * 0      1
-	 * +------+
-	 * |      |
-	 * |      |
-	 * +------+
-	 * 3	  2
-	 */
-	
-	private void updatePoints(){
-		this.direction.normalise(direction);
-		this.direction.scale(halfSize.y);
-		this.tangent.normalise(tangent);
-		this.tangent.scale(halfSize.x);
-		points[0].x = this.position.x - this.tangent.x - this.direction.x;
-		points[0].y = this.position.y - this.tangent.y - this.direction.y;
-		points[1].x = this.position.x + this.tangent.x - this.direction.x;
-		points[1].y = this.position.y + this.tangent.y - this.direction.y;
-		points[3].x = this.position.x - this.tangent.x + this.direction.x;
-		points[3].y = this.position.y - this.tangent.y + this.direction.y;
-		points[2].x = this.position.x + this.tangent.x + this.direction.x;
-		points[2].y = this.position.y + this.tangent.y + this.direction.y;
-	}
-
 	@Override
-	public void thinkAndAct(LinkedList<Player> players) {
+	public void thinkAndAct(LinkedList<Player> players, long deltaT) {
 		float dst = scentDistancePx;
 		float length;
-		boolean waiting = true;
-		for(Player p : players){
-			Vector2f.sub(p.getPosition(),this.getPosition(),thisToPlayer);
+		state = ZombieState.IDLE;
+		for (Player p : players) {
+			Vector2f.sub(p.getPosition(), this.getPosition(), thisToPlayer);
 			length = thisToPlayer.length();
 			thisToPlayer.normalise(thisToPlayer);
-			if(length < dst || dst == -1){
+			if (length < dst || dst == -1) {
 				// chase the nearest player
-				waiting = false;
+				state = ZombieState.CHASING;
 				dst = length;
-				this.setOrientation(thisToPlayer);
+				this.setDirection(thisToPlayer);
 				this.translate(thisToPlayer.x, thisToPlayer.y);
 				updatePoints();
 			}
-			if(waiting){
-				// randomly moves
+
+		}
+		if (state == ZombieState.IDLE) {
+			// randomly moves
+
+			for (int i = 0; i < deltaT; i++) {
+				running = (Math.random() < 0.001) ? !running : running;
+
+				if (running)
+					this.translate(this.getDirection().x, this.getDirection().y);
+
+				float deltaOrientation = (float) ((Math.random() - 0.5f) * 0.005);
+				orientationSpeed += deltaOrientation;
+				orientationSpeed = orientationSpeed > 0 ? (float) Math.max(0,
+						orientationSpeed - orientationDesc) : (float) Math.min(
+						0, orientationSpeed + orientationDesc);
+				orientationSpeed = (float) Math.min(3, orientationSpeed);
+				orientationSpeed = (float) Math.max(-3, orientationSpeed);
+				this.rotateDegree(orientationSpeed);
 			}
 		}
 	}
-
-
 }
