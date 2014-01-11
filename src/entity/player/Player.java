@@ -11,7 +11,6 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
@@ -24,29 +23,17 @@ import userInterface.MiniMap;
 import entity.LivingEntity;
 import environment.Map;
 
-public class Player extends LivingEntity implements MiniMapDrawable,
-		PhysicsEntity {
-	private static final int nbPoints = 4;
-	private Vector2f[] points = new Vector2f[nbPoints];
-	private Vector2f halfSize = new Vector2f(20, 20);
+public class Player extends LivingEntity implements MiniMapDrawable, PhysicsEntity {
 	private Laser laser;
 	private Light light;
 	private Body body;
-	private Fixture fixure;
 
 	private Weapon weapon = new LaserRifle(250);
 
 	public Player(Vector2f pos) {
 		super(pos);
 		Vector3f col = new Vector3f(0, 0, 0);
-		for (int i = 0; i < nbPoints; i++) {
-			points[i] = new Vector2f();
-		}
 		setColor(col);
-		position.x = pos.x;
-		position.y = pos.y;
-		this.direction.x = 1;
-		this.direction.y = 1;
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
@@ -70,7 +57,7 @@ public class Player extends LivingEntity implements MiniMapDrawable,
 
 	public void setLaser(Laser l) {
 		laser = l;
-		l.setOrientation(direction);
+		l.setDirection(getDirection());
 		l.setPosition(position);
 	}
 
@@ -115,10 +102,10 @@ public class Player extends LivingEntity implements MiniMapDrawable,
 	}
 
 	@Override
-	public void setOrientation(float orix, float oriy) {
-		super.setOrientation(orix, oriy);
+	public void setDirection(float orix, float oriy) {
+		super.setDirection(orix, oriy);
 		if (laser != null) {
-			laser.setOrientation(orix, oriy);
+			laser.setDirection(orix, oriy);
 		}
 		updatePoints();
 	}
@@ -139,28 +126,6 @@ public class Player extends LivingEntity implements MiniMapDrawable,
 		return light;
 	}
 
-	/**
-	 * Compute the coordinates of the 4 points using the position the size and
-	 * the orientation of the player
-	 * 
-	 * 0 1 +------+ | | | | +------+ 3 2
-	 */
-
-	private void updatePoints() {
-		this.direction.normalise(direction);
-		this.direction.scale(halfSize.y);
-		this.tangent.normalise(tangent);
-		this.tangent.scale(halfSize.x);
-		points[0].x = this.position.x - this.tangent.x - this.direction.x;
-		points[0].y = this.position.y - this.tangent.y - this.direction.y;
-		points[1].x = this.position.x + this.tangent.x - this.direction.x;
-		points[1].y = this.position.y + this.tangent.y - this.direction.y;
-		points[3].x = this.position.x - this.tangent.x + this.direction.x;
-		points[3].y = this.position.y - this.tangent.y + this.direction.y;
-		points[2].x = this.position.x + this.tangent.x + this.direction.x;
-		points[2].y = this.position.y + this.tangent.y + this.direction.y;
-	}
-
 	public void primaryWeapon(float directionX, float directionY) {
 		weapon.Fire(new Vector2f(position),
 				new Vector2f(directionX, directionY));
@@ -178,14 +143,13 @@ public class Player extends LivingEntity implements MiniMapDrawable,
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicBox;
 		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0.2f;
-		fixure = body.createFixture(fixtureDef);
+		fixtureDef.friction = 0.1f;
+		body.createFixture(fixtureDef);
 	}
 
 	public void update() {
 		Vec2 position = body.getPosition();
-		setPosition(position.x, position.y)
-		;
+		setPosition(position.x, position.y);
 	}
 
 	@Override

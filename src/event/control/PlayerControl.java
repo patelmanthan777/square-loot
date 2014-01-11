@@ -73,7 +73,7 @@ public class PlayerControl {
 	public void update() {
 		LinkedList<Integer> l;
 
-		p.setOrientation(mouse.direction.x,mouse.direction.y);
+		p.setDirection(mouse.direction.x,mouse.direction.y);
 		
 		for (playerActions a : actions) {
 			l = keyBinding.get(a);
