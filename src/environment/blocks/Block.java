@@ -76,15 +76,102 @@ public abstract class Block {
 		glVertex2f(posX+Map.blockPixelSize.x,posY);
         
 	}
+	
+	/**
+	 * Compute the intersection point between an horizontal or vertical segment
+	 * and half line define by a point and a direction, in a non degenerated
+	 * case.
+	 * 
+	 * @param p1 coordinate of a segment extremity
+	 * @param p2 coordinate of a segment extremity
+	 * @param pos point position
+	 * @param dir direction
+	 * @return intersection point <b>null</b> if none
+	 */
+	private Vector2f regularIntersect(Vector2f p1,
+									  Vector2f p2,
+									  Vector2f pos,
+									  Vector2f dir){
+		Vector2f inter = new Vector2f();
+		
+		if(p1.x == p2.x){
+			inter.x = p1.x;
+			inter.y = pos.y + dir.y * Math.abs(p1.x - pos.x)/dir.x;
+			
+			if (p1.y >= inter.y && inter.y >= p2.y ||
+				p1.y <= inter.y && inter.y <= p2.y)
+				return inter;
+		}
+		else if (p1.y == p2.y){
+			inter.y = p1.y;
+			inter.x = pos.x + dir.x * Math.abs(p1.y - pos.y)/dir.y;
+			
+			if (p1.x >= inter.x && inter.x >= p2.x ||
+				p1.x <= inter.x && inter.x <= p2.x)
+					return inter;
+		}
+		
+		return null;
+	}
+	
+	
+	/**
+	 * Compute the intersection point between an horizontal or vertical segment
+	 * and half line define by a point and a direction. 
+	 * 
+	 * @param p1 coordinate of a segment extremity
+	 * @param p2 coordinate of a segment extremity
+	 * @param pos point position
+	 * @param dir direction
+	 * @return intersection point <b>null</b> if none
+	 */
+	private Vector2f intersect(Vector2f p1,
+								Vector2f p2,
+								Vector2f pos,
+								Vector2f dir){
+		//if on the segment and moving in the direction of the segment
+		if(p1.x == p2.x && p1.x == pos.x && dir.y == 0 && 
+		   (p1.y >= pos.y && pos.y >= p2.y ||
+		    p1.y <= pos.y && pos.y <= p2.y)||
+		   p1.y == p2.y && p1.y == pos.y && dir.x == 0 &&
+		   (p1.x >= pos.x && pos.x >= p2.x ||
+		    p1.x <= pos.x && pos.x <= p2.x)){			
+			Vector2f inter = new Vector2f(pos.x, pos.y);
+			return inter;
+		}
+		//else if moving in the direction of the segment
+		else if(p1.x == p2.x && p1.x == pos.x && dir.y == 0 ||
+				p1.y == p2.y && p1.y == pos.y && dir.x == 0){
+			if((p1.x > p2.x && p2.x > pos.x && dir.x > 0 ||
+				p1.x < p2.x && p2.x < pos.x && dir.x < 0) ||
+			   (p1.y > p2.y && p2.y > pos.y && dir.y > 0 ||
+			    p1.y < p2.y && p2.y < pos.y && dir.y < 0)){
+				Vector2f inter = new Vector2f(p2.x, p2.y);
+				return inter;				
+			}
+			else if((p2.x > p1.x && p1.x > pos.x && dir.x > 0 ||
+					 p2.x < p1.x && p1.x < pos.x && dir.x < 0) ||
+					(p2.y > p1.y && p1.y > pos.y && dir.y > 0 ||
+					 p2.y < p1.y && p1.y < pos.y && dir.y < 0)){
+				Vector2f inter = new Vector2f(p1.x, p1.y);
+				return inter;				
+			}
+			else
+				return null;
+		}
+		else 			
+			return regularIntersect(p1, p2, pos, dir);		
+	}
 
 	/**
 	 * Modify <b>pos</b> so that it is located in the next block in
 	 * the direction <b>dir</b>.  
 	 * 
-	 * @param pos
-	 * @param dir
-	 * @param ix
-	 * @param iy
+	 * @param pos current position in the block to change into
+	 * a position into the next block in the direction of <b>dir</b>
+	 * @param dir direction in which to find the next block
+	 * @param ix is the horizontal coordinate in pixel in the map
+	 * @param iy is the vertical coordinate in pixel in the map
 	 */
 	public void nextBlock(Vector2f pos, Vector2f dir, int x, int y){		
 		
@@ -99,8 +186,8 @@ public abstract class Block {
 			Vector2f currentVertex = points[i];
 			Vector2f nextVertex = points[(i + 1) % 4];
 			if(currentVertex.x == pos.x || currentVertex.y == pos.y){
-				toVertex.x = 0.1f * dir.x * Map.blockPixelSize.x;
-				toVertex.y = 0.1f * dir.y * Map.blockPixelSize.y;
+				pos.x = 0.1f * dir.x * Map.blockPixelSize.x;
+				pos.y = 0.1f * dir.y * Map.blockPixelSize.y;
 				break;
 			}
 			else{
@@ -111,34 +198,29 @@ public abstract class Block {
 				Vector2f vert = new Vector2f(0f, 1.0f);
 			
 				if (Vector2f.dot(normal, dir) > 0){
-					if (Vector2f.dot(vert, normal) != 0) {
+					if (Vector2f.dot(vert, normal) != 0)
 						toVertex.y = nextVertex.y - pos.y;					
-					}
-					/*else if (Vector2f.dot(vert, normal) < 0) {
-						toVertex.y = pos.y - currentVertex.y;
-					}*/
-					else if (Vector2f.dot(vert, edge) != 0) {
-						toVertex.x = nextVertex.x - pos.x;
-					}
-					/*else if (Vector2f.dot(vert, edge) > 0) {
-						toVertex.x = px - currentVertex.x;
-					}*/
+					else if (Vector2f.dot(vert, edge) != 0)
+						toVertex.x = nextVertex.x - pos.x;										
+				}
+				
+				
+				if(dir.x == 0 || dir.y == 0){
+					pos.x += toVertex.x;
+					pos.y += toVertex.y;
+				}
+				else if (toVertex.x / dir.x < toVertex.y / dir.y) {
+					pos.x += toVertex.x;
+					pos.y += toVertex.y * toVertex.x / dir.x;			
+				}
+				else{
+					pos.x += toVertex.x * toVertex.y / dir.y;
+					pos.y += toVertex.y;			
 				}
 			}
 		}
 		
-		if(dir.x == 0 || dir.y == 0){
-			pos.x += toVertex.x;
-			pos.y += toVertex.y;
-		}
-		else if (toVertex.x / dir.x < toVertex.y / dir.y) {
-			pos.x += toVertex.x;
-			pos.y += toVertex.y * toVertex.x / dir.x;			
-		}
-		else{
-			pos.x += toVertex.x * toVertex.y / dir.y;
-			pos.y += toVertex.y;			
-		}
+
 			
 	}
 	

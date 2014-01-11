@@ -366,20 +366,15 @@ public abstract class Room implements Drawable, ShadowCaster {
 		int i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
 		int j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
 		
-		boolean addShadow = false;
+
 		
-		while( !addShadow &&
-			   (((int) (cpos.x / Map.roomPixelSize.x)) == 
-			   	((int) (this.x / Map.roomPixelSize.x)) &&
-				((int) (cpos.y / Map.roomPixelSize.y)) ==
-				((int) (this.y / Map.roomPixelSize.y)))) {
+		while( shadows[0].lastShadow == 0 ) {
 			if (grid[i][j] instanceof ShadowCasterBlock){
 				((ShadowCasterBlock) grid[i][j]).
 					laserShadow(l,
 							    (int) (this.x + i * Map.blockPixelSize.x),
 							    (int) (this.y + j * Map.blockPixelSize.y),
 							    shadows[0]);
-				addShadow = true;
 			}
 			else {				
 				grid[i][j].nextBlock(cpos, l.getDirection(), 
