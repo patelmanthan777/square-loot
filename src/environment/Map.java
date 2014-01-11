@@ -63,7 +63,7 @@ public class Map implements ShadowCaster {
 
 
 	public static int textureSize;
-	public static final int textureNb = 5;
+	public static final int textureNb = 6;
 	public static Vector2f currentBufferPosition;
 	private static boolean shouldBeRendered[][] = new boolean[textureNb][textureNb];
 	private static int indx = 0;

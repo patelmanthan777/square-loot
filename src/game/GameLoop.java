@@ -17,16 +17,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GameLoop extends Game{
 	
-	
-
-	private static Player p;// = new Player(new Vector2f(0, 0));
+	private static Player p;
 	public static Map map ;
-
-
 	public static Camera cam = new Camera(new Vector2f(0, 0));
 	
 	
-
 	public static void main(String[] args) {
 		GameLoop loop = new GameLoop();
 		loop.start();

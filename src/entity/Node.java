@@ -26,7 +26,8 @@ public class Node {
 	public Node(float posx, float posy, float dirx, float diry){
 		position = new Vector2f(posx, posy);
 		direction = new Vector2f(dirx,diry);
-		tangent = new Vector2f(diry,-dirx);
+		direction.normalise(direction);
+		tangent = new Vector2f(direction.y,-direction.x);
 		angle = computeAngle(direction);
 	}
 	
