@@ -11,11 +11,10 @@ import rendering.MiniMapDrawable;
 import userInterface.MiniMap;
 import entity.player.Player;
 import environment.Map;
-import event.Timer;
 
 public class Zombie extends Npc implements MiniMapDrawable {
 
-	private static int scentDistanceBlk = (int) (Map.roomBlockSize.x / 2);
+	private static int scentDistanceBlk = 5;
 	private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
 	private ZombieState state;
 	private float orientationSpeed = 0;
