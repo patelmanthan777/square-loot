@@ -1,5 +1,7 @@
 package environment.blocks;
 
+import org.jbox2d.dynamics.World;
+
 public class EmptyBlock extends Block {
 	protected EmptyBlock(){
 		super();
@@ -9,6 +11,10 @@ public class EmptyBlock extends Block {
 	@Override
 	public boolean testCollision() {
 		return false;
+	}
+
+	@Override
+	public void initPhysics(World w, float x, float y) {
 	}
 	
 }

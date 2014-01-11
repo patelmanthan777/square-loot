@@ -2,6 +2,7 @@ package environment.blocks;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -21,7 +22,7 @@ public abstract class Block {
 	 */
 	protected int layer;
 	
-	
+	public abstract void initPhysics(World w, float x, float y);
 	
 	public abstract boolean testCollision();
 

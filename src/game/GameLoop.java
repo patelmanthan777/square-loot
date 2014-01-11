@@ -11,6 +11,7 @@ import org.lwjgl.opengl.PixelFormat;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import physics.PhysicsManager;
 import configuration.ConfigManager;
 import rendering.Camera;
 import rendering.TextureManager;
@@ -81,6 +82,9 @@ public class GameLoop {
 		BlockFactory.initBlocks();
 
 		map = new Map(new Vector2f(10,10), new Vector2f(12,10), new Vector2f(48,48));
+		
+		
+		
 		map.renderMapToFrameBuffers();
 		p.setPosition(map.getSpawnPixelPosition());
 		ProjectileManager.init();
@@ -107,7 +111,7 @@ public class GameLoop {
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		
-		
+		PhysicsManager.init(map, p);
 		isRunning = true;
 	}
 
@@ -217,8 +221,12 @@ public class GameLoop {
 	private void render(long elapsedTime) {
 		
 		/*** UPDATE ***/
+
+		
 		
 		p.updatePostion(elapsedTime, map);
+		PhysicsManager.update(elapsedTime);
+		p.update();
 		ProjectileManager.updateProjectiles(map);
 		cam.setPosition(p.getPosition());
 		LightManager.setCamPosition(p.getPosition());

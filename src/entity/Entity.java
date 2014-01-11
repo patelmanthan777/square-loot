@@ -10,7 +10,7 @@ public abstract class Entity extends Node implements Drawable {
 	/**
 	 * Represent the direction in which the entity moves
 	 */
-	private Vector2f translation = new Vector2f(0, 0);
+	protected Vector2f translation = new Vector2f(0, 0);
 	protected float minSpeed = 0.01f;
 	protected float maxSpeed = 20f;
 	protected float descFactor = 50;
