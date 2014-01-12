@@ -118,7 +118,7 @@ public abstract class ShadowCasterBlock extends Block{
 		int shadowInd = shadows.lastShadow+1;
 		initBlock(x, y);				
 		
-		//LivingEntityManager.createZombie(x, y);
+		LivingEntityManager.createZombie(x, y);
 		
 		for (int i = 0; i < nb_points; i++){
 			Vector2f currentVertex = points[i];
