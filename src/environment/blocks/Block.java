@@ -69,7 +69,7 @@ public abstract class Block {
 	 * @param posY
 	 */
 	public void drawAt(float posX, float posY) {
-		glColor3f(color.x,color.y,color.z);
+		glColor4f(color.x,color.y,color.z,1.0f);
 		glVertex2f(posX,posY);
 		glVertex2f(posX,posY+Map.blockPixelSize.y);
 		glVertex2f(posX+Map.blockPixelSize.x,posY+Map.blockPixelSize.y);

@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -171,13 +172,17 @@ public class LightManager {
 		renderStaticLights();
 		for (int i = 0; i < Map.textureNb; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
+				//glEnable(GL_BLEND); 
+				//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				//glEnable(GL_BLEND);
+				//glBlendFunc(GL_ONE, GL_ONE);
 				getFBO(i, j).use();
-				glClearColor(0.0f, 0.0f, 0.0f, 1f);
+				glClearColor(0.0f, 0.0f, 0.0f, 0f);
 				drawQuad(Map.currentBufferPosition.x + i * Map.textureSize,
 						Map.currentBufferPosition.y + j * Map.textureSize,
 						Map.textureSize, Map.textureSize);
 				getFBO(i, j).unUse();
-
+				//glDisable(GL_BLEND);
 			}
 		}
 		renderDynamicLights();
@@ -186,7 +191,7 @@ public class LightManager {
 	private static void drawMap(int i, int j, int textureId) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
-		glClearColor(0.0f, 0.0f, 0.0f, 1f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0f);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glActiveTexture(GL_TEXTURE0);
 		drawQuad(Map.currentBufferPosition.x + i * Map.textureSize,

@@ -2,9 +2,12 @@ package game;
 import light.Laser;
 import light.Light;
 import light.LightManager;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+
 import configuration.ConfigManager;
+import rendering.Background;
 import rendering.Camera;
 import userInterface.OverlayManager;
 import entity.npc.LivingEntityManager;
@@ -20,7 +23,7 @@ public class GameLoop extends Game{
 	private static Player p;
 	public static Map map ;
 	public static Camera cam = new Camera(new Vector2f(0, 0));
-	
+	private static Background background = new Background();
 	
 	public static void main(String[] args) {
 		GameLoop loop = new GameLoop();
@@ -89,6 +92,7 @@ public class GameLoop extends Game{
 		glClearColor(0,0,0,0);
 		glPushMatrix();
 		cam.draw();
+		background.draw();
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		p.draw();

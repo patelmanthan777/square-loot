@@ -65,7 +65,7 @@ public class FBO {
 		glViewport(0, 0, width, height);
 		glPushMatrix();
 		glLoadIdentity();
-		glClearColor(0.0f, 0.0f, 0.0f, 1f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 	
