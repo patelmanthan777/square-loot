@@ -5,7 +5,6 @@ import configuration.ConfigManager;
 
 public class Background implements Drawable{
 	
-	Shader background = new Shader("background");
 	
 	@Override
 	public void draw() {

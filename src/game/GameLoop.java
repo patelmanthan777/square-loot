@@ -91,6 +91,7 @@ public class GameLoop extends Game{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		glClearColor(0,0,0,0);
 		glPushMatrix();
+		glLoadIdentity();
 		cam.draw();
 		background.draw();
 		map.renderMapToFrameBuffers();
@@ -99,6 +100,7 @@ public class GameLoop extends Game{
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();
+		
 		glPopMatrix();
 	}
 }
