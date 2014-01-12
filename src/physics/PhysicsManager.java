@@ -4,7 +4,6 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
 import entity.EntityManager;
-import entity.player.Player;
 import environment.Map;
 
 public class PhysicsManager {
