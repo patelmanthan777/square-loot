@@ -17,7 +17,7 @@ public class TextureManager {
 	
 	public static void init(){
 		try {
-			textures[background] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/background_test.png"));
+			textures[background] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/background.png"));
 			textures[player] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/player.png"));
 			textures[zombie] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/zombie.png"));
 		} catch (IOException e) {

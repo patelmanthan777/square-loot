@@ -43,7 +43,7 @@ public class GameLoop extends Game{
 
 		map = new Map(new Vector2f(15,15), new Vector2f(16,12), new Vector2f(48,48));
 		map.renderMapToFrameBuffers();	
-		background = new Background(map);
+		background = new Background();
 		p.setPosition(map.getSpawnPixelPosition());
 		
 		ProjectileManager.init();
@@ -73,6 +73,7 @@ public class GameLoop extends Game{
 	 **/
 	@Override
 	public void update(long elapsedTime) {
+		background.update(elapsedTime);
 		p.updatePostion(elapsedTime, map);
 		ProjectileManager.updateProjectiles(map);
 		cam.setPosition(p.getPosition());
