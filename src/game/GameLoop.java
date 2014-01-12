@@ -23,7 +23,7 @@ public class GameLoop extends Game{
 	private static Player p;
 	public static Map map ;
 	public static Camera cam = new Camera(new Vector2f(0, 0));
-	private static Background background = new Background();
+	private static Background background;
 	
 	public static void main(String[] args) {
 		GameLoop loop = new GameLoop();
@@ -36,7 +36,7 @@ public class GameLoop extends Game{
 	 */
 	public void init() {
 		
-		
+		background = new Background();
 		p = LivingEntityManager.createPlayer();
 		controle = new Control(p);
 		BlockFactory.initBlocks();

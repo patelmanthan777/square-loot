@@ -3,7 +3,7 @@ package environment.blocks;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import environment.Map;
 
@@ -14,7 +14,7 @@ public abstract class Block {
 	protected int nb_points = 4;
 	
 	protected Vector2f[] points = new Vector2f[4];
-	protected Vector3f color = new Vector3f();
+	protected Vector4f color = new Vector4f();
 
 	/**
 	 * Indicates whether shadows should be drawn on this block.
@@ -69,7 +69,7 @@ public abstract class Block {
 	 * @param posY
 	 */
 	public void drawAt(float posX, float posY) {
-		glColor4f(color.x,color.y,color.z,1.0f);
+		glColor4f(color.x,color.y,color.z,color.w);
 		glVertex2f(posX,posY);
 		glVertex2f(posX,posY+Map.blockPixelSize.y);
 		glVertex2f(posX+Map.blockPixelSize.x,posY+Map.blockPixelSize.y);
@@ -81,10 +81,11 @@ public abstract class Block {
 		return false;
 	}
 
-	public void setColor(float r, float g, float b) {
+	public void setColor(float r, float g, float b, float a) {
 		this.color.x = r;
 		this.color.y = g;
 		this.color.z = b;
+		this.color.w = a;
 	}
 	
 	public int getLayer(){

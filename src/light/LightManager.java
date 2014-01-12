@@ -172,9 +172,9 @@ public class LightManager {
 		renderStaticLights();
 		for (int i = 0; i < Map.textureNb; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
-				//glEnable(GL_BLEND); 
-				//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				//glEnable(GL_BLEND);
+				glEnable(GL_BLEND); 
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				//glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
 				//glBlendFunc(GL_ONE, GL_ONE);
 				getFBO(i, j).use();
 				glClearColor(0.0f, 0.0f, 0.0f, 0f);
@@ -182,7 +182,7 @@ public class LightManager {
 						Map.currentBufferPosition.y + j * Map.textureSize,
 						Map.textureSize, Map.textureSize);
 				getFBO(i, j).unUse();
-				//glDisable(GL_BLEND);
+				glDisable(GL_BLEND);
 			}
 		}
 		renderDynamicLights();
@@ -191,7 +191,7 @@ public class LightManager {
 	private static void drawMap(int i, int j, int textureId) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
-		glClearColor(0.0f, 0.0f, 0.0f, 0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glActiveTexture(GL_TEXTURE0);
 		drawQuad(Map.currentBufferPosition.x + i * Map.textureSize,

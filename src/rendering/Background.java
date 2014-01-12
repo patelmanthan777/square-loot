@@ -4,13 +4,14 @@ import static org.lwjgl.opengl.GL11.*;
 import configuration.ConfigManager;
 
 public class Background implements Drawable{
-
+	
+	Shader background = new Shader("background");
+	
 	@Override
 	public void draw() {
 		glPushMatrix();
 		glLoadIdentity();
-		glTranslatef(0,0,0);
-		glColor3f(1,1,1);
+		glColor4f(1,1,1,1);
 		glBindTexture(GL_TEXTURE_2D, TextureManager.backgroundTexture().getTextureID());
 		glBegin(GL_QUADS);
 		glTexCoord2f(1,1);
