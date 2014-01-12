@@ -366,26 +366,59 @@ public abstract class Room implements Drawable, ShadowCaster {
 		int i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
 		int j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
 		
-
-		
-		while( shadows[0].lastShadow == 0 ) {
-			if (grid[i][j] instanceof ShadowCasterBlock){
-				((ShadowCasterBlock) grid[i][j]).
-					laserShadow(l,
-							    (int) (this.x + i * Map.blockPixelSize.x),
-							    (int) (this.y + j * Map.blockPixelSize.y),
-							    shadows[0]);
+		if (grid[i][j] instanceof ShadowCasterBlock){
+			((ShadowCasterBlock) grid[i][j]).
+				laserShadow(l,
+							(int) (this.x + i * Map.blockPixelSize.x),
+							(int) (this.y + j * Map.blockPixelSize.y),
+							shadows[0]);
+		}
+		else{
+			boolean inRoom = true;
+			while(shadows[0].lastShadow == 0 && inRoom) {
+				for(int k = 0; k < 2 && inRoom; k++){
+					for(int m = 0; m < 2 && inRoom; m++){
+						// i + 2*k -1 = 1 or -1 if k = 0 or 1
+						Vector2f inter = grid[i][j].
+								intersectBlock(cpos,
+										       l.getDirection(),
+										       (int) (this.x + (i+2*k-1) * Map.blockPixelSize.x),
+										       (int) (this.y + (j+2*m-1) * Map.blockPixelSize.y));
+					
+						if (inter != null){
+							if(i+2*k-1 < 0 &&
+							   i+2*k-1 >= Map.roomBlockSize.x &&
+							   j+2*m-1 < 0 &&
+							   j+2*m-1 >= Map.roomBlockSize.y &&
+							   grid[i+2*k-1][j+2*m-1] instanceof ShadowCasterBlock){
+								((ShadowCasterBlock) grid[i+2*k-1][j+2*m-1]).
+										laserShadow(l,
+													(int) (this.x + i+2*k-1 * Map.blockPixelSize.x),
+													(int) (this.y + j+2*k-1 * Map.blockPixelSize.y),
+													shadows[0]);
+							}
+							else {
+								i = i+2*k-1;
+								j = j+2*m-1;
+								cpos.x = inter.x;
+								cpos.y = inter.y;
+								
+								inRoom = i+2*k-1 > 0 &&
+										 i+2*k-1 <= Map.roomBlockSize.x &&
+										 j+2*m-1 > 0 &&
+										 j+2*m-1 <= Map.roomBlockSize.y;
+								
+								/*
+								inRoom = (int) (cpos.x / Map.roomPixelSize.x) == this.x &&
+										 (int) (cpos.y / Map.roomPixelSize.y) == this.y;
+								*/
+							}
+						}	
+					}
+				}					
 			}
-			else {				
-				grid[i][j].nextBlock(cpos, l.getDirection(), 
-					    (int)(this.x + i * Map.blockPixelSize.x),
-					    (int)(this.y + j * Map.blockPixelSize.y));
-						
-				i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
-				j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
-			}
-		}		
-	}
+		}
+	}		
 
 	/**
 	 * Draw the room on the minimap if discovered.
