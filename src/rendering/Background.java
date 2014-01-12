@@ -1,13 +1,23 @@
 package rendering;
 
 import static org.lwjgl.opengl.GL11.*;
+import light.LightManager;
+import light.Shadow;
+import light.ShadowBuffer;
 import configuration.ConfigManager;
+import environment.Map;
 
 public class Background implements Drawable{
 	
+	private Map map;
+	
+	public Background(Map map){
+		this.map = map;
+	}
 	
 	@Override
 	public void draw() {
+
 		glPushMatrix();
 		glLoadIdentity();
 		glColor4f(1,1,1,1);
