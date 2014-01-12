@@ -286,7 +286,7 @@ public class LightManager {
 					for (int layer = 0; layer < Map.maxLayer; layer++) {
 						ambiantShader.use();
 						ambiantShader.setUniform3f("color", 1.0f, 1.0f, 1.0f);
-						ambiantShader.setUniform1f("power", 0.1f);
+						ambiantShader.setUniform1f("power", 0.01f);
 						ambiantShader.setUniform1i("texture", 0);
 						
 						drawMap(i, j, Map.getTextureID(i, j, layer));

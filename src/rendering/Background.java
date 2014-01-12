@@ -8,7 +8,7 @@ import configuration.ConfigManager;
 
 public class Background implements Drawable{
 	
-	private Vector2f speed = new Vector2f(0.0001f,0.0001f);
+	private Vector2f speed = new Vector2f(0.00001f,0.00001f);
 	private Vector2f pos = new Vector2f(0,0);
 	
 	public Background(){
