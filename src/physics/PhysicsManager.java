@@ -3,23 +3,24 @@ package physics;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
+import entity.EntityManager;
 import entity.player.Player;
 import environment.Map;
 
 public class PhysicsManager {
-	public static World world;
+	private static World world;
+	private static int velocityIterations = 8;
+    private static int positionIterations = 3;
 	
-	public static void init(Map m, Player p)
+	public static void init(Map m)
 	{
 		 world = new World(new Vec2(0.0f, 0.0f));
 		 m.initPhysics(world);
-		 p.initPhysics(world);
+		 EntityManager.initPhysics(world);
 	}
 	
 	public static void update(float dt)
 	{
-		int velocityIterations = 8;
-	    int positionIterations = 3;
 	    world.step(dt, velocityIterations, positionIterations);
 	}
 }

@@ -1,13 +1,11 @@
 package entity.projectile;
 
 import static org.lwjgl.opengl.GL11.*;
-
+import org.jbox2d.dynamics.World;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-
 import rendering.Shader;
-import environment.Map;
 
 public class Bullet extends Projectile {
 
@@ -46,8 +44,7 @@ public class Bullet extends Projectile {
 		speed.scale(speedValue);
 		this.speedValue = speedValue;
 		this.size = new Vector2f(size);
-		this.setSpeed(speed);
-		this.setColor(new Vector3f(1,0,1));
+		color = new Vector3f(1,0,1);
 	}
 	
 	@Override
@@ -57,7 +54,6 @@ public class Bullet extends Projectile {
 		Vector2f speed = new Vector2f();
 		rot.normalise(speed);
 		speed.scale(speedValue);
-		this.setSpeed(speed);
 	}
 
 	/**
@@ -85,35 +81,22 @@ public class Bullet extends Projectile {
 		glEnable(GL_TEXTURE_2D);
 	}
 	
-
-	/**
-	 * Test whether the bullet is in collision.
-	 */
-	@Override
-	public boolean isInCollision(float x, float y, Map m) {
-		return m.testCollision(x,y);
-	}
-	
-	
 	/**
 	 * Update the position of the bullet.
 	 */
 	@Override
-	public void updatePostion(long dt, Map m){
-		float x_tmp = position.x + speed.x * dt;
-		float y_tmp = position.y + speed.y * dt;
+	public void updatePostion(){
 
-		if(!isInCollision(x_tmp, y_tmp, m)){
-			setPosition(x_tmp, y_tmp);
-		}
-		else
-		{
-			destroyed = true;
-		}
 	}
 
 	@Override
 	public Projectile Clone(Vector2f pos, Vector2f rot) {		
 		return new Bullet(pos, rot, this.speedValue, this.size);
+	}
+
+	@Override
+	public void initPhysics(World w) {
+		// TODO Auto-generated method stub
+		
 	}
 }

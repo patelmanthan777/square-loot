@@ -2,13 +2,15 @@ package game;
 import light.Laser;
 import light.Light;
 import light.LightManager;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+
 import physics.PhysicsManager;
 import configuration.ConfigManager;
 import rendering.Camera;
 import userInterface.OverlayManager;
-import entity.npc.LivingEntityManager;
+import entity.EntityManager;
 import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
@@ -35,17 +37,17 @@ public class GameLoop extends Game{
 	public void init() {
 		
 		
-		p = LivingEntityManager.createPlayer();
+		p = EntityManager.createPlayer();
 		controle = new Control(p);
 		BlockFactory.initBlocks();
-		map = new Map(new Vector2f(10,10), new Vector2f(12,10), new Vector2f(48,48));
+		map = new Map(new Vector2f(10,10), new Vector2f(32,32), new Vector2f(48,48));
 		map.renderMapToFrameBuffers();	
 
 		p.setPosition(map.getSpawnPixelPosition());
 		
 		ProjectileManager.init();
 			
-		LivingEntityManager.init();
+		EntityManager.init();
 		LightManager.init();
 		LightManager.initLightShaders();
 		LightManager.initLaserShader();
@@ -62,7 +64,7 @@ public class GameLoop extends Game{
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
 
-		PhysicsManager.init(map, p);
+		PhysicsManager.init(map);
 		isRunning = true;
 	}
 
@@ -73,14 +75,23 @@ public class GameLoop extends Game{
 	 **/
 	@Override
 	public void update(long elapsedTime) {
-		p.updatePostion(elapsedTime, map);
+		/* Input */
+		EntityManager.updateInput(elapsedTime);
+		
+		/* Physics */
+		EntityManager.updatePhysics(elapsedTime);
 		PhysicsManager.update(elapsedTime);
-		p.update();
+		
+		/* Position*/
+		EntityManager.updatePosition();
+		
 		ProjectileManager.updateProjectiles(map);
+		
+		/* Cam and light */
 		cam.setPosition(p.getPosition());
 		LightManager.setCamPosition(p.getPosition());
 		map.setDrawPosition(p.getPosition());
-		LivingEntityManager.update(elapsedTime);
+	
 	}
 	
 	/**
@@ -95,7 +106,7 @@ public class GameLoop extends Game{
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		p.draw();
-		LivingEntityManager.render();
+		EntityManager.render();
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();
 		glPopMatrix();

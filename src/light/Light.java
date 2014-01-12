@@ -3,10 +3,10 @@ package light;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import entity.Node;
+import entity.Entity;
 
 
-public class Light extends Node{
+public class Light extends Entity{
 	protected Vector3f color;
 	protected boolean active = true;
 	

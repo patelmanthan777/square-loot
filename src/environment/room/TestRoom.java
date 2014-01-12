@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import light.LightManager;
-import entity.npc.LivingEntityManager;
+import entity.EntityManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
 
@@ -49,10 +49,10 @@ public class TestRoom extends Room{
 
 		float dstMax = Map.roomPixelSize.x;
 		LightManager.addPointLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
-		LivingEntityManager.createZombie(pos.x, pos.y);
-		LivingEntityManager.createZombie(pos.x, pos.y);
-		LivingEntityManager.createZombie(pos.x, pos.y);
-		LivingEntityManager.createZombie(pos.x, pos.y);
-		LivingEntityManager.createZombie(pos.x, pos.y);
+		EntityManager.createZombie(pos.x, pos.y);
+		EntityManager.createZombie(pos.x, pos.y);
+		EntityManager.createZombie(pos.x, pos.y);
+		EntityManager.createZombie(pos.x, pos.y);
+		EntityManager.createZombie(pos.x, pos.y);
 	}
 }

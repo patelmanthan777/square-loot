@@ -4,8 +4,12 @@ import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.FixtureDef;
+import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 import rendering.MiniMapDrawable;
 import userInterface.MiniMap;
@@ -46,26 +50,12 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	}
 
 	private void init() {
-
-		Vector3f col = new Vector3f(0.5f, 0.7f, 0);
-		setColor(col);
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
 		this.accFactor = 0.015f;
 		this.descFactor = 40f;
 		state = ZombieState.IDLE;
-	}
-
-	@Override
-	public boolean isInCollision(float x, float y, Map m) {
-		if (m.testCollision(x - halfSize.x, y - halfSize.y)
-				|| m.testCollision(x + halfSize.x, y - halfSize.y)
-				|| m.testCollision(x - halfSize.x, y + halfSize.y)
-				|| m.testCollision(x + halfSize.x, y + halfSize.y)) {
-			return true;
-		}
-		return false;
 	}
 
 	@Override
@@ -151,4 +141,21 @@ public class Zombie extends Npc implements MiniMapDrawable {
 			}
 		}
 	}
+
+	@Override
+	public void initPhysics(World w) {
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DYNAMIC;
+		bodyDef.fixedRotation = true;
+		bodyDef.position.set(position.x, position.y);
+		body = w.createBody(bodyDef);
+		PolygonShape dynamicBox = new PolygonShape();
+		dynamicBox.setAsBox(halfSize.x, halfSize.y);
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = dynamicBox;
+		fixtureDef.density = 1.0f;
+		fixtureDef.friction = 0.1f;
+		body.createFixture(fixtureDef);
+	}
+
 }

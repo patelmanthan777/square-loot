@@ -3,7 +3,7 @@ package entity;
 
 import org.lwjgl.util.vector.Vector2f;
 
-public abstract class LivingEntity extends Entity {
+public abstract class LivingEntity extends DynamicEntity {
 
 	private static final int nbPoints = 4;
 	protected Vector2f[] points = new Vector2f[nbPoints];

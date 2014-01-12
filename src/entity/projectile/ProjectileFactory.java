@@ -2,9 +2,7 @@ package entity.projectile;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import org.lwjgl.util.vector.Vector2f;
-
 import environment.Map;
 import event.Timer;
 
@@ -69,7 +67,7 @@ public class ProjectileFactory{
 			}
 			else
 			{
-				project.updatePostion(dt,m);
+				project.updatePostion();
 			}
 			
 		}

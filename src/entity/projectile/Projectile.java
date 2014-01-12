@@ -1,12 +1,15 @@
 package entity.projectile;
 
 import org.lwjgl.util.vector.Vector2f;
-import rendering.Drawable;
-import entity.Entity;
+import org.lwjgl.util.vector.Vector3f;
 
-public abstract class Projectile extends Entity implements Drawable{
+import rendering.Drawable;
+import entity.DynamicEntity;
+
+public abstract class Projectile extends DynamicEntity implements Drawable{
 
 	protected boolean destroyed;
+	protected Vector3f color;
 
 	public Projectile(){
 		super(new Vector2f(),new Vector2f());

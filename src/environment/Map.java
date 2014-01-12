@@ -6,17 +6,14 @@ import light.PointLight;
 import light.Laser;
 import light.LightManager;
 import light.ShadowBuffer;
-
 import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
-
-import physics.PhysicsEntity;
 import configuration.ConfigManager;
 import environment.room.Room;
 import rendering.FBO;
 import rendering.ShadowCaster;
 
-public class Map implements ShadowCaster, PhysicsEntity {
+public class Map implements ShadowCaster{
 	public static final int maxLayer = 4;
 
 	/**
@@ -311,7 +308,7 @@ public class Map implements ShadowCaster, PhysicsEntity {
 		return getFBO(i, j, layer).getTextureID();
 	}
 
-	@Override
+
 	public void initPhysics(World w) {
 		for(Room[] roomArray : roomGrid)
 		{

@@ -4,9 +4,9 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 
-import entity.Node;
+import entity.Entity;
 
-public class Camera extends Node implements Drawable{
+public class Camera extends Entity implements Drawable{
 	
 	
 	
