@@ -53,8 +53,8 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
-		this.accFactor = 0.015f;
-		this.descFactor = 40f;
+		this.accFactor = 100f;
+		this.descFactor = 0.2f;
 		state = ZombieState.IDLE;
 	}
 

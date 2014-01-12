@@ -7,6 +7,7 @@ import light.Light;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
@@ -109,6 +110,8 @@ public class Player extends LivingEntity implements MiniMapDrawable{
 	}
 
 	public void primaryWeapon(float directionX, float directionY) {
+		Vec2 vel = body.getLinearVelocity();
+		System.out.println(vel);
 		weapon.Fire(new Vector2f(position),
 				new Vector2f(directionX, directionY));
 	}

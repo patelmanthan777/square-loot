@@ -12,10 +12,9 @@ public abstract class DynamicEntity extends Entity implements Drawable{
 	 * Represent the direction in which the entity moves
 	 */
 	protected Vector2f translation = new Vector2f(0, 0);
-	protected float minSpeed = 0.01f;
 	protected float maxSpeed = 20f;
-	protected float descFactor = 50;
-	protected float accFactor = 0.025f;
+	protected float descFactor = 0.5f;
+	protected float accFactor = 250f;
 	protected Body body;
 
 	public DynamicEntity(Vector2f pos) {
@@ -73,14 +72,12 @@ public abstract class DynamicEntity extends Entity implements Drawable{
 			Vec2 vel = body.getLinearVelocity();
 		
 			if (translation.length() != 0) {
-				System.out.println(vel);
 				translation.normalise(translation);
-				translation.scale(dt * 100);
+				translation.scale(dt * accFactor);
 				Vec2 impulse = new Vec2(translation.x, translation.y);
 				body.applyLinearImpulse(impulse, point);
 			} else {
-				float factor = (float) Math.max(0., 1 - dt / 1);
-				body.setLinearVelocity(new Vec2(vel.x * factor, vel.y * factor));
+				body.setLinearVelocity(new Vec2(vel.x * descFactor, vel.y * descFactor));
 			}
 		}
 		translation.x = 0;
