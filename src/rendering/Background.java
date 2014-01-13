@@ -27,9 +27,9 @@ public class Background implements Drawable{
 		glColor4f(1,1,1,1);
 		glBindTexture(GL_TEXTURE_2D, TextureManager.backgroundTexture().getTextureID());
 		glBegin(GL_QUADS);
-		glTexCoord2f(1 + pos.x,1 + pos.y);
+		glTexCoord2f(1 + ConfigManager.resolution.x/ConfigManager.resolution.y  + pos.x,1 + pos.y);
 		glVertex2f(0, 0);
-		glTexCoord2f(1 + pos.x,pos.y);
+		glTexCoord2f(1 + ConfigManager.resolution.x/ConfigManager.resolution.y + pos.x,pos.y);
 		glVertex2f(0, ConfigManager.resolution.y);
 		glTexCoord2f(pos.x,pos.y);
 		glVertex2f(ConfigManager.resolution.x, ConfigManager.resolution.y);
