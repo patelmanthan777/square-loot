@@ -1,10 +1,11 @@
 package environment.blocks;
 
-public class HoleBlock extends Block{
+public class HoleBlock extends EmptyBlock{
 
-	@Override
-	public boolean testCollision() {
-		return false;
+	public HoleBlock(){
+		super();
+		this.pressure = 0;
 	}
+
 
 }

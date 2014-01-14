@@ -41,10 +41,12 @@ public abstract class ShadowCasterBlock extends Block{
 	
 	public ShadowCasterBlock(){
 		super();
+		this.castShadows = true;
 	}
 	
 	protected ShadowCasterBlock(float x, float y){
 		super(x,y);
+		this.castShadows = true;
 	}
 	
 	/**
@@ -153,11 +155,4 @@ public abstract class ShadowCasterBlock extends Block{
 		}
 		shadows.lastShadow = shadowInd - 1;
 	}
-
-	
-	@Override
-	public boolean castShadows() {
-		return true;
-	}
-
 }

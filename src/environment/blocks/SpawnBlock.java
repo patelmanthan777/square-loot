@@ -5,8 +5,4 @@ public class SpawnBlock extends Block{
 		super();
 		layer = 0;
 	}
-	@Override
-	public boolean testCollision() {
-		return false;
-	}
 }

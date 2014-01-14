@@ -12,7 +12,9 @@ public abstract class Block {
 	 * The blocks are squared shaped.
 	 */
 	protected int nb_points = 4;
-	
+	protected boolean pressurized = false;
+	protected boolean castShadows = false;
+	protected boolean collidable = false;
 	protected Vector2f[] points = new Vector2f[4];
 	protected Vector4f color = new Vector4f();
 
@@ -23,7 +25,7 @@ public abstract class Block {
 	
 	
 	
-	public abstract boolean testCollision();
+	
 
 	public Block(){
 		points[0] = new Vector2f();
@@ -257,7 +259,7 @@ public abstract class Block {
 	
 	
 	public boolean castShadows(){
-		return false;
+		return castShadows;
 	}
 
 	public void setColor(float r, float g, float b, float a) {
@@ -269,5 +271,13 @@ public abstract class Block {
 	
 	public int getLayer(){
 		return layer;
+	}
+	
+	public boolean isPressurized(){
+		return pressurized;
+	}
+	
+	public  boolean testCollision(){
+		return collidable;
 	}
 }
