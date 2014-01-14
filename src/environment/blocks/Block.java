@@ -95,20 +95,26 @@ public abstract class Block {
 		Vector2f inter = new Vector2f();
 		
 		if(p1.x == p2.x){
-			inter.x = p1.x;
-			inter.y = pos.y + dir.y * Math.abs(p1.x - pos.x)/dir.x;
+			Vector2f norm = new Vector2f(pos.x - p1.x, 0);
+			if(Vector2f.dot(norm, dir) < 0){			
+				inter.x = p1.x;
+				inter.y = pos.y + dir.y * Math.abs((p1.x - pos.x)/dir.x);
 			
-			if (p1.y >= inter.y && inter.y >= p2.y ||
-				p1.y <= inter.y && inter.y <= p2.y)
-				return inter;
+				if (p1.y >= inter.y && inter.y >= p2.y ||
+					p1.y <= inter.y && inter.y <= p2.y)
+					return inter;
+			}
 		}
 		else if (p1.y == p2.y){
-			inter.y = p1.y;
-			inter.x = pos.x + dir.x * Math.abs(p1.y - pos.y)/dir.y;
+			Vector2f norm = new Vector2f(0, pos.y - p1.y);
+			if(Vector2f.dot(norm, dir) < 0){
+				inter.y = p1.y;
+				inter.x = pos.x + dir.x * Math.abs((p1.y - pos.y)/dir.y);
 			
-			if (p1.x >= inter.x && inter.x >= p2.x ||
-				p1.x <= inter.x && inter.x <= p2.x)
+				if (p1.x >= inter.x && inter.x >= p2.x ||
+					p1.x <= inter.x && inter.x <= p2.x)
 					return inter;
+			}
 		}
 		
 		return null;
@@ -194,12 +200,12 @@ public abstract class Block {
 	 * @return true if the position is in the block
 	 */
 	private boolean isInside(Vector2f pos, int x, int y){
-		return ((pos.x / Map.blockPixelSize.x == x / Map.blockPixelSize.x &&
-				 pos.y / Map.blockPixelSize.y == y / Map.blockPixelSize.y) ||
-				((pos.x-1 / Map.blockPixelSize.x == x / Map.blockPixelSize.x) &&
-				 (pos.y / Map.blockPixelSize.y == y / Map.blockPixelSize.y)) ||
-				((pos.x / Map.blockPixelSize.x == x / Map.blockPixelSize.x) &&
-				 (pos.y-1 / Map.blockPixelSize.y == y / Map.blockPixelSize.y)) ||
+		return (((int) (pos.x / Map.blockPixelSize.x) == (int) (x / Map.blockPixelSize.x) &&
+				 (int) (pos.y / Map.blockPixelSize.y) == (int) (y / Map.blockPixelSize.y)) ||
+				(((int)((pos.x-1) / Map.blockPixelSize.x) == (int) (x / Map.blockPixelSize.x)) &&
+				 ((int) (pos.y / Map.blockPixelSize.y) == (int) (y / Map.blockPixelSize.y))) ||
+				(((int) (pos.x / Map.blockPixelSize.x) == (int) (x / Map.blockPixelSize.x)) &&
+				 ((int) ((pos.y-1) / Map.blockPixelSize.y) == (int) (y / Map.blockPixelSize.y))) ||
 				((pos.x == x + Map.blockPixelSize.x) &&
 				 (pos.y == y + Map.blockPixelSize.y)));
 	}
@@ -228,9 +234,10 @@ public abstract class Block {
 			normal.x = edge.getY();
 			normal.y = -edge.getX();				
 					
-			if (isInside(pos, x, y) && Vector2f.dot(normal, dir) > 0 &&
+			if (isInside(pos, x, y) &&				
 				!((currentVertex.x == nextVertex.x && currentVertex.x == pos.x) ||
-				  (currentVertex.y == nextVertex.y && currentVertex.y == pos.y))){
+				  (currentVertex.y == nextVertex.y && currentVertex.y == pos.y)) &&
+				  Vector2f.dot(normal, dir) > 0){
 				Vector2f inter = intersect(currentVertex, nextVertex, pos, dir);
 				if (inter != null)
 					return inter;

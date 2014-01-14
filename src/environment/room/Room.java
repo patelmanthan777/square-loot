@@ -377,62 +377,59 @@ public abstract class Room implements Drawable, ShadowCaster {
 			boolean inRoom = true;
 			while(shadows[0].lastShadow == 0 && inRoom) {
 				boolean foundInter = false;
-				for(int k = 0; k < 2 && !foundInter; k++){
-					for(int m = 0; m < 2 && !foundInter; m++){
+				
+				int[] htab = new int[8];
+				htab[0] = 0;
+				htab[1] = 1;
+				htab[2] = 0;
+				htab[3] = -1;
+				htab[4] = -1;
+				htab[5] = 1;
+				htab[6] = 1;
+				htab[7] = -1;
+				int[] vtab = new int[8];
+				vtab[0] = -1;
+				vtab[1] = 0;
+				vtab[2] = 1;
+				vtab[3] = 0;
+				vtab[4] = -1;
+				vtab[5] = -1;
+				vtab[6] = 1;
+				vtab[7] = 1;
+				
+				for(int k = 0; k < 8 && !foundInter; k++){			
+					
+					Vector2f inter = grid[i][j].
+							intersectBlock(cpos,
+									       l.getDirection(),
+									       (int) (this.x + (i+htab[k]) * Map.blockPixelSize.x),
+									       (int) (this.y + (j+vtab[k]) * Map.blockPixelSize.y));
+				
+					if (inter != null) {
+						inRoom = i + htab[k] >= 0 &&
+								 i + htab[k] < Map.roomBlockSize.x &&
+								 j + vtab[k] >= 0 &&
+								 j + vtab[k] < Map.roomBlockSize.y;
 						
-						int o, p;
-						if( k == 0 && m == 0){
-							o = 0;
-							p = 1;
-						}
-						else if (k == 0 && m == 1){
-							o = 0;
-							p = -1;
-						}
-						else if (k == 1 && m == 0){
-							o = 1;
-							p = 0;
+						foundInter = true;
+								
+						if( inRoom && grid[i+htab[k]][j+vtab[k]] instanceof ShadowCasterBlock) {
+							((ShadowCasterBlock) grid[i+htab[k]][j+vtab[k]]).
+									laserShadow(l,
+												(int) (this.x + (i+htab[k]) * Map.blockPixelSize.x),
+												(int) (this.y + (j+vtab[k]) * Map.blockPixelSize.y),
+												shadows[0]);							
 						}
 						else {
-							o = -1;
-							p = 0;
+							i = i+htab[k];
+							j = j+vtab[k];
+							cpos.x = inter.x;
+							cpos.y = inter.y;																
 						}
-						
-						Vector2f inter = grid[i][j].
-								intersectBlock(cpos,
-										       l.getDirection(),
-										       (int) (this.x + (i+o) * Map.blockPixelSize.x),
-										       (int) (this.y + (j+p) * Map.blockPixelSize.y));
-					
-						if (inter != null) {
-							/*inRoom = (int) (cpos.x / Map.roomPixelSize.x) == (int) this.x / Map.roomPixelSize.x &&
-									 (int) (cpos.y / Map.roomPixelSize.y) == (int) this.y / Map.roomPixelSize.y;*/
-							inRoom = i+o >= 0 &&
-									i+o < Map.roomBlockSize.x &&
-									j+p >= 0 &&
-									j + p < Map.roomBlockSize.y;
-							
-							if( inRoom && grid[i+o][j+p] instanceof ShadowCasterBlock) {
-								((ShadowCasterBlock) grid[i+o][j+p]).
-										laserShadow(l,
-													(int) (this.x + (i+o) * Map.blockPixelSize.x),
-													(int) (this.y + (j+p) * Map.blockPixelSize.y),
-													shadows[0]);
-								foundInter = true;
-							}
-							else {
-								i = i+o;
-								j = j+p;
-								cpos.x = inter.x;
-								cpos.y = inter.y;
-								
-								foundInter = true;
-							}
-						}	
-					}
-				}					
-			}
-		}
+					}	
+				}
+			}								
+		}		
 	}		
 
 	/**
