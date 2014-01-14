@@ -74,6 +74,7 @@ public class GameLoop extends Game{
 	@Override
 	public void update(long elapsedTime) {
 		background.update(elapsedTime);
+		map.update(elapsedTime);
 		p.updatePostion(elapsedTime, map);
 		ProjectileManager.updateProjectiles(map);
 		cam.setPosition(p.getPosition());

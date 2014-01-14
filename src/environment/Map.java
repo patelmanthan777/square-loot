@@ -290,7 +290,13 @@ public class Map implements ShadowCaster {
 		}				
 	}
 
-	
+	public void update(long delta){
+		for(int i = 0 ; i < Map.mapRoomSize.x; i++){
+			for(int j = 0 ; j < Map.mapRoomSize.y; j++){
+				
+			}
+		}
+	}
 	
 	public Room[][] getRooms() {
 		return roomGrid;
