@@ -152,18 +152,22 @@ public class LightManager {
 		return laser;
 	}
 
+	
+	static public void updateLaserIntersect(Laser l){
+		for (ShadowCaster sc : shadowCasters) {
+			if(sc instanceof Map)
+				((Map) sc).laserIntersect(l);
+		}
+	}
+	
 	static public void updateLightShadows(Light l, boolean dynamic) {
 		/* Set to 0 the pointer to the last shadow */
 		ShadowBuffer[] shadows = lightShadows.get(l);
 		for (int i = 0; i < Map.maxLayer; i++){
 			shadows[i].lastShadow = 0;
 		}
-		for (ShadowCaster sc : shadowCasters) {
-			if (sc instanceof Map && !dynamic) {
-				sc.computeShadow(l, lightShadows.get(l));
-			} else {
-				sc.computeShadow(l, lightShadows.get(l));
-			}
+		for (ShadowCaster sc : shadowCasters) {			
+			sc.computeShadow(l, lightShadows.get(l));			
 		}
 	}
 
@@ -230,6 +234,10 @@ public class LightManager {
 				laserShaderProgram.setUniform2f("laser.position", posx, posy);
 				laserShaderProgram.setUniform3f("laser.color", l.getColor().x,
 						l.getColor().y, l.getColor().z);
+				Vector2f inter = ((Laser) l).getIntersection();
+				Vector2f pos = l.getPosition();
+				laserShaderProgram.setUniform1f("threshold",
+						(float) Math.sqrt((inter.x-pos.x)*(inter.x-pos.x) + (inter.y-pos.y)*(inter.y-pos.y)));				
 			}
 		}
 	}

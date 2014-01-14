@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import light.Light;
+import light.Laser;
 import light.Shadow;
 import light.ShadowBuffer;
 import rendering.Drawable;
@@ -362,20 +363,16 @@ public abstract class Room implements Drawable, ShadowCaster {
 	 * @param cpos represents a fictional position of the laser source.
 	 * It is modified by the algorithm to follow the laser direction. 
 	 */
-	public void laserShadow(Light l, ShadowBuffer[] shadows, Vector2f cpos){		
+	public void laserIntersect(Laser l, Vector2f cpos){		
 		int i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
 		int j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
 		
-		if (grid[i][j] instanceof ShadowCasterBlock){
-			((ShadowCasterBlock) grid[i][j]).
-				laserShadow(l,
-							(int) (this.x + i * Map.blockPixelSize.x),
-							(int) (this.y + j * Map.blockPixelSize.y),
-							shadows[0]);
+		if (grid[i][j] instanceof ShadowCasterBlock){			
+			l.setIntersection(cpos);			
 		}
 		else{
 			boolean inRoom = true;
-			while(shadows[0].lastShadow == 0 && inRoom) {
+			while(l.getIntersection() == null && inRoom) {
 				boolean foundInter = false;
 				
 				int[] htab = new int[8];
@@ -414,11 +411,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 						foundInter = true;
 								
 						if( inRoom && grid[i+htab[k]][j+vtab[k]] instanceof ShadowCasterBlock) {
-							((ShadowCasterBlock) grid[i+htab[k]][j+vtab[k]]).
-									laserShadow(l,
-												(int) (this.x + (i+htab[k]) * Map.blockPixelSize.x),
-												(int) (this.y + (j+vtab[k]) * Map.blockPixelSize.y),
-												shadows[0]);							
+							l.setIntersection(inter);						
 						}
 						else {
 							i = i+htab[k];

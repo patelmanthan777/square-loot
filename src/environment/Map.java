@@ -248,7 +248,18 @@ public class Map implements ShadowCaster {
 		LightManager.needStaticUpdate(translateMapFBOx, translateMapFBOy);
 
 	}
-
+	
+	public void laserIntersect(Laser l) {
+		l.setIntersection(null);
+		Vector2f cpos = new Vector2f(l.getX(), l.getY());
+		while(l.getIntersection() == null){
+			int idxX = (int) (cpos.x / Map.roomPixelSize.x);
+			int idxY = (int) (cpos.y / Map.roomPixelSize.y);
+			if(roomGrid[idxX][idxY] != null)
+				roomGrid[idxX][idxY].laserIntersect(l, cpos);							
+		}
+	}
+	
 	/**
 	 * Compute the shadows casted by the map
 	 */
@@ -276,18 +287,11 @@ public class Map implements ShadowCaster {
 					roomGrid[roomPosiX][j].computeShadow(l, shadows);
 				}
 			}
-		}		
-		else if(l instanceof Laser){				
-			Vector2f cpos = new Vector2f(l.getX(), l.getY());
-			while(shadows[0].lastShadow == 0){
-				int idxX = (int) (cpos.x / Map.roomPixelSize.x);
-				int idxY = (int) (cpos.y / Map.roomPixelSize.y);
-				if(roomGrid[idxX][idxY] != null)
-					roomGrid[idxX][idxY].laserShadow(l, shadows, cpos);							
-			}
-		}		
+		}				
 	}
 
+	
+	
 	public Room[][] getRooms() {
 		return roomGrid;
 	}

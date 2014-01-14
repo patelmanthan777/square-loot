@@ -118,7 +118,7 @@ public abstract class ShadowCasterBlock extends Block{
 		int shadowInd = shadows.lastShadow+1;
 		initBlock(x, y);				
 		
-		LivingEntityManager.createZombie(x, y);
+		//LivingEntityManager.createZombie(x, y);
 		
 		for (int i = 0; i < nb_points; i++){
 			Vector2f currentVertex = points[i];
@@ -127,7 +127,7 @@ public abstract class ShadowCasterBlock extends Block{
 			normal.x = edge.getY();
 			normal.y = -edge.getX();			
 			Shadow[] shade = (shadows.getShadows());
-			if (Vector2f.dot(normal, l.getDirection()) < 0 ) {
+			//if (Vector2f.dot(normal, l.getDirection()) < 0 ) {
 				
 				point1.x = l.getRotationX();
 				point1.y = l.getRotationY();
@@ -149,7 +149,7 @@ public abstract class ShadowCasterBlock extends Block{
 				shade[shadowInd].points[3].x = point2.x;
 				shade[shadowInd].points[3].y = point2.y;
 				shadowInd++;				
-			}
+			//}
 		}
 		shadows.lastShadow = shadowInd - 1;
 	}
