@@ -11,6 +11,7 @@ public class SpawnRoom extends Room{
 		miniMapColor.y = 1;
 		miniMapColor.z = 0;
 		discovered = true;
+		construct();
 	}
 
 	@Override

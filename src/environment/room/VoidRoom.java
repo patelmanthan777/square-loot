@@ -6,6 +6,7 @@ import environment.blocks.BlockFactory;
 public class VoidRoom extends Room{
 	public VoidRoom(int posX, int posY){
 		super(posX, posY);
+		construct();
 	}
 
 	@Override

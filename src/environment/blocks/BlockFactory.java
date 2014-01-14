@@ -21,11 +21,11 @@ public class BlockFactory {
 
 	
 	static public void initBlocks(){
-		emptyBlock.setColor(1f, 1f, 1f);				
-		borderBlock.setColor(0.2f, 0.2f, 0.2f);
-		solidBlock.setColor(0.2f, 0.2f, 0.2f);
-		spawnBlock.setColor(0f, 1f, 0f);
-		voidBlock.setColor(0f, 0f, 0f);
+		emptyBlock.setColor(1f, 1f, 1f,1f);				
+		borderBlock.setColor(0.2f, 0.2f, 0.2f,1f);
+		solidBlock.setColor(0.2f, 0.2f, 0.2f,1f);
+		spawnBlock.setColor(0f, 1f, 0f,1f);
+		voidBlock.setColor(0f, 0f, 0f, 0f);
 	}
 	
 	static public Block createEmptyBlock(){

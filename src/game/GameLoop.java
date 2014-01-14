@@ -2,9 +2,12 @@ package game;
 import light.Laser;
 import light.Light;
 import light.LightManager;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+
 import configuration.ConfigManager;
+import rendering.Background;
 import rendering.Camera;
 import userInterface.OverlayManager;
 import entity.npc.LivingEntityManager;
@@ -20,7 +23,7 @@ public class GameLoop extends Game{
 	private static Player p;
 	public static Map map ;
 	public static Camera cam = new Camera(new Vector2f(0, 0));
-	
+	private static Background background;
 	
 	public static void main(String[] args) {
 		GameLoop loop = new GameLoop();
@@ -38,17 +41,15 @@ public class GameLoop extends Game{
 		controle = new Control(p);
 		BlockFactory.initBlocks();
 
-		map = new Map(new Vector2f(10,10), new Vector2f(12,10), new Vector2f(48,48));
+		map = new Map(new Vector2f(15,15), new Vector2f(16,12), new Vector2f(48,48));
 		map.renderMapToFrameBuffers();	
-		
+		background = new Background();
 		p.setPosition(map.getSpawnPixelPosition());
 		
 		ProjectileManager.init();
 			
 		LivingEntityManager.init();
 		LightManager.init();
-		LightManager.initLightShaders();
-		LightManager.initLaserShader();
 		
 		Light playerLight = LightManager.addPointLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
 		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getDirection());
@@ -72,6 +73,7 @@ public class GameLoop extends Game{
 	 **/
 	@Override
 	public void update(long elapsedTime) {
+		background.update(elapsedTime);
 		p.updatePostion(elapsedTime, map);
 		ProjectileManager.updateProjectiles(map);
 		cam.setPosition(p.getPosition());
@@ -88,13 +90,16 @@ public class GameLoop extends Game{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		glClearColor(0,0,0,0);
 		glPushMatrix();
+		glLoadIdentity();
 		cam.draw();
+		background.draw();
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		p.draw();
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();
+		
 		glPopMatrix();
 	}
 }

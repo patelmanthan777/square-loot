@@ -106,7 +106,7 @@ public class Map implements ShadowCaster {
 		currentBufferPosition = new Vector2f((int)(spawnPixelPosition.x - (Map.textureNb / 2.0f) * textureSize), (int)(spawnPixelPosition.y - (Map.textureNb / 2.0f) * textureSize));
 	}
 
-	private void render(int i, int j, int layer) {
+	public void render(int i, int j, int layer) {
 		int minX = (int) Math.max(0, ((Map.currentBufferPosition.x + i
 				* Map.textureSize) / Map.roomPixelSize.x));
 		int maxX = (int) Math
