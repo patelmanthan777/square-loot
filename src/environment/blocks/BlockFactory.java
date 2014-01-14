@@ -29,6 +29,8 @@ public class BlockFactory {
 	}
 	
 	static public Block createEmptyBlock(){
+		EmptyBlock emptyBlock = new EmptyBlock();
+		emptyBlock.setColor(1f, 1f, 1f,1f);	
 		return emptyBlock;
 	}
 	

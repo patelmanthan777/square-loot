@@ -8,4 +8,8 @@ public class EmptyBlock extends Block {
 		this.pressurized = true;
 		this.pressure = 100;
 	}
+	
+	public void setPressure(int pressure){
+		this.pressure = pressure;
+	}
 }
