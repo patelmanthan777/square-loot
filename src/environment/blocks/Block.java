@@ -169,24 +169,6 @@ public abstract class Block {
 			else
 				return null;
 				
-		/*if(p1.x == p2.x && p1.x == pos.x && dir.y == 0 ||
-		   p1.y == p2.y && p1.y == pos.y && dir.x == 0){
-			if((p1.x > p2.x && p1.x > pos.x && dir.x > 0 ||
-				p1.x < p2.x && p1.x < pos.x && dir.x < 0) ||
-			   (p1.y > p2.y && p1.y > pos.y && dir.y > 0 ||
-			    p1.y < p2.y && p1.y < pos.y && dir.y < 0)){
-				Vector2f inter = new Vector2f(p1.x, p1.y);
-				return inter;				
-			}
-			else if((p2.x > p1.x && p2.x > pos.x && dir.x > 0 ||
-					 p2.x < p1.x && p2.x < pos.x && dir.x < 0) ||
-					(p2.y > p1.y && p2.y > pos.y && dir.y > 0 ||
-					 p2.y < p1.y && p2.y < pos.y && dir.y < 0)){
-				Vector2f inter = new Vector2f(p2.x, p2.y);
-				return inter;				
-			}
-			else
-				return null;*/
 		}
 		else 			
 			return regularIntersect(p1, p2, pos, dir);		
@@ -201,7 +183,7 @@ public abstract class Block {
 	 * @param y vertical block coordinate
 	 * @return true if the position is in the block
 	 */
-	private boolean isInside(Vector2f pos, int x, int y){
+	public boolean isInside(Vector2f pos, int x, int y){
 		return (((int) (pos.x / Map.blockPixelSize.x) == (int) (x / Map.blockPixelSize.x) &&
 				 (int) (pos.y / Map.blockPixelSize.y) == (int) (y / Map.blockPixelSize.y)) ||
 				(((int)((pos.x-1) / Map.blockPixelSize.x) == (int) (x / Map.blockPixelSize.x)) &&

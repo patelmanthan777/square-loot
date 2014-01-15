@@ -413,7 +413,13 @@ public abstract class Room implements Drawable, ShadowCaster {
 						foundInter = true;
 								
 						if( inRoom && grid[i+htab[k]][j+vtab[k]] instanceof ShadowCasterBlock) {
-							l.setIntersection(inter);						
+							if (grid[i+htab[k]][j+vtab[k]].isInside(cpos,
+																	(int) (this.x + (i+htab[k]) * Map.blockPixelSize.x),
+																	(int) (this.y + (j+vtab[k]) * Map.blockPixelSize.y)))
+								l.setIntersection(cpos);
+							
+							else
+								l.setIntersection(inter);
 						}
 						else {
 							i = i+htab[k];
