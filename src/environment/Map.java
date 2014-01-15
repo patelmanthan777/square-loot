@@ -10,8 +10,6 @@ import light.ShadowBuffer;
 import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
-import environment.blocks.Block;
-import environment.blocks.EmptyBlock;
 import environment.room.Room;
 import rendering.FBO;
 import rendering.ShadowCaster;
@@ -214,7 +212,7 @@ public class Map implements ShadowCaster {
 		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
-		System.out.println(roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].getPressure());// FIXME
+		
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
 		if (pos.x - ConfigManager.resolution.x / 2 < currentBufferPosition.x)

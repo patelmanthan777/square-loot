@@ -2,9 +2,7 @@ package environment.blocks;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import entity.npc.LivingEntityManager;
 import environment.Map;
-import light.Laser;
 import light.Light;
 import light.Shadow;
 import light.ShadowBuffer;
