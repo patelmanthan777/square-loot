@@ -208,10 +208,13 @@ public class Map implements ShadowCaster {
 	 *            the position
 	 */
 	public void setDrawPosition(Vector2f pos) {
+
+		
+		
 		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
-
+		System.out.println(roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].getPressure());// FIXME
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
 		if (pos.x - ConfigManager.resolution.x / 2 < currentBufferPosition.x)
@@ -307,28 +310,17 @@ public class Map implements ShadowCaster {
 		for (int i = 0; i < Map.mapRoomSize.x; i++) {
 			for (int j = 0; j < Map.mapRoomSize.y; j++) {
 				if (roomGrid[i][j] != null) {
-					for (int k = 0; k < Map.roomBlockSize.x; k++) {
-						for (int l = 0; l < Map.roomBlockSize.y; l++) {
-							int m = (int) (i * Map.roomBlockSize.x + k);
-							int n = (int) (j * Map.roomBlockSize.y + l);
-							updatePressure(m, n);
-						}
-					}
+					updatePressure(i, j);
 				}
 			}
 		}
-		
+
 		// REPLACE OLD PRESSURES WITH THE NEW PRESSURES
 		for (int i = 0; i < Map.mapRoomSize.x; i++) {
 			for (int j = 0; j < Map.mapRoomSize.y; j++) {
 				if (roomGrid[i][j] != null) {
-					for (int k = 0; k < Map.roomBlockSize.x; k++) {
-						for (int l = 0; l < Map.roomBlockSize.y; l++) {
-							if (getBlock(i, j) != null
-									&& getBlock(i, j).isPressurized()) {
-								((EmptyBlock) getBlock(i, j)).update();
-							}
-						}
+					if (roomGrid[i][j] != null) {
+						roomGrid[i][j].update();
 					}
 				}
 			}
@@ -344,22 +336,20 @@ public class Map implements ShadowCaster {
 	 *            ordinate in blocks
 	 */
 	public void updatePressure(int i, int j) {
-		if (getBlock(i, j) != null && getBlock(i, j).isPressurized()) {
-			int pressure = 0; // FIXME
-			int coef = 0;
-			for(int k = 0; k < 3 ; k++){
-				for(int l = 0; l < 3 ; l++){
-					Block block = getBlock(i + k - 1, j + l -1);
-					if(block != null && block.isPressurized()){
-						coef += this.pressureFilter[k][l];
-						pressure += ((EmptyBlock)block).getPressure()*this.pressureFilter[k][l];
+		if (roomGrid[i][j] != null) {
+			float pressure = 0;
+			float coef = 0;
+			for (int k = 0; k < 3; k++) {
+				for (int l = 0; l < 3; l++) {
+					if(i+k-1 >= 0 && i+k-1 <Map.mapRoomSize.x && j+l-1>=0 && j+l-1 <Map.mapRoomSize.y && roomGrid[i + k - 1][j + l - 1]!=null){
+						Room room = roomGrid[i + k - 1][j + l - 1];
+						coef += Map.pressureFilter[k][l];
+						pressure += room.getPressure()* Map.pressureFilter[k][l];
 					}
 				}
 			}
 			pressure /= coef;
-			((EmptyBlock) getBlock(i, j)).setNewPressure(pressure);
-			//System.out.println(pressure);
-			System.out.println(coef);
+			roomGrid[i][j].setNewPressure(pressure);
 		}
 	}
 
@@ -379,18 +369,11 @@ public class Map implements ShadowCaster {
 		return getFBO(i, j, layer).getTextureID();
 	}
 
-	public Block getBlock(int i, int j) {
-		if(i < 0 || j < 0){
-			return null;
-		}
-		int k = (int) (i / Map.roomBlockSize.x);
-		int l = (int) (j / Map.roomBlockSize.y);
-		if (roomGrid[k][l] != null) {
-			int m = (int) (i - k * Map.roomBlockSize.x);
-			int n = (int) (j - l * Map.roomBlockSize.y);
-			return roomGrid[k][l].getBlock(m, n);
-		} else {
-			return null;
-		}
-	}
+	/*
+	 * public Block getBlock(int i, int j) { if(i < 0 || j < 0){ return null; }
+	 * int k = (int) (i / Map.roomBlockSize.x); int l = (int) (j /
+	 * Map.roomBlockSize.y); if (roomGrid[k][l] != null) { int m = (int) (i - k
+	 * * Map.roomBlockSize.x); int n = (int) (j - l * Map.roomBlockSize.y);
+	 * return roomGrid[k][l].getBlock(m, n); } else { return null; } }
+	 */
 }

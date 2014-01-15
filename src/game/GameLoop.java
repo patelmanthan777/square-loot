@@ -15,6 +15,7 @@ import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
+import environment.room.Room;
 import event.control.Control;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -42,7 +43,16 @@ public class GameLoop extends Game{
 		BlockFactory.initBlocks();
 
 		map = new Map(new Vector2f(15,15), new Vector2f(16,12), new Vector2f(48,48));
-		map.renderMapToFrameBuffers();	
+		map.renderMapToFrameBuffers();
+		for(int i = 0 ; i < Map.mapRoomSize.x ; i++){
+			for(int j = 0 ; j < Map.mapRoomSize.y ; j++){
+				Room room = map.getRooms()[i][j];
+				if(room!= null){
+					room.setNewPressure((float) (Math.random()*1000));
+					room.update();
+				}
+			}
+		}
 		background = new Background();
 		p.setPosition(map.getSpawnPixelPosition());
 		

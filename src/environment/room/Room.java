@@ -31,6 +31,8 @@ public abstract class Room implements Drawable, ShadowCaster {
 	protected Vector3f miniMapColor = new Vector3f(1, 1, 1);
 	protected boolean[] doors = new boolean[4];
 	protected boolean discovered = false;
+	protected float pressure;
+	protected float newPressure;
 	/* avoid dynamic allocation in computeShadow */
 	boolean[] neighbours = new boolean[4];
 	private Vector2f shadowPoints[] = new Vector2f[4];
@@ -551,5 +553,21 @@ public abstract class Room implements Drawable, ShadowCaster {
 	
 	public Block getBlock(int i,int j){
 		return grid[i][j];
+	}
+	
+	public float getPressure(){
+		return pressure;
+	}
+	
+	public float getNewPressure(){
+		return newPressure;
+	}
+	
+	public void setNewPressure(float pressure){
+		this.newPressure = pressure;
+	}
+	
+	public void update(){
+		this.pressure = this.newPressure;
 	}
 }
