@@ -48,8 +48,8 @@ public class GameLoop extends Game{
 			for(int j = 0 ; j < Map.mapRoomSize.y ; j++){
 				Room room = map.getRooms()[i][j];
 				if(room!= null){
-					room.setNewPressure((float) (Math.random()*1000));
-					room.update();
+					//room.setNewPressure((float) (Math.random()*1000)); //FIXME
+					//room.update();
 				}
 			}
 		}

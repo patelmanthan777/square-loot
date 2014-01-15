@@ -11,6 +11,7 @@ public class SpawnRoom extends Room{
 		miniMapColor.y = 1;
 		miniMapColor.z = 0;
 		discovered = true;
+		pressure = 0;
 		construct();
 	}
 
@@ -43,6 +44,10 @@ public class SpawnRoom extends Room{
 		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
 		
+		
+	}
+	@Override 
+	public void setNewPressure(float pressure) {
 		
 	}
 	

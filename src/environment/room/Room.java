@@ -431,14 +431,14 @@ public abstract class Room implements Drawable, ShadowCaster {
 	 * Draw the room on the minimap if discovered.
 	 */
 	public void drawOnMiniMap() {
-		if (discovered) {
+		if (true/*discovered*/) {
 			int minix = (int) (MiniMap.position.x + (x / Map.roomPixelSize.x)
 					* MiniMap.roomSize.x);
 			int miniy = (int) (MiniMap.position.y + (y / Map.roomPixelSize.y)
 					* MiniMap.roomSize.y);
 			float doorRatio = 0.1f;
 			glDisable(GL_BLEND);
-			glColor3f(miniMapColor.x, miniMapColor.y, miniMapColor.z);
+			glColor3f(miniMapColor.x, miniMapColor.y*pressure/100, miniMapColor.z*pressure/100);
 			glLoadIdentity();
 			if (doors[0]) {
 				glBegin(GL_LINE_STRIP);

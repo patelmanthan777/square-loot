@@ -61,8 +61,8 @@ public class Map implements ShadowCaster {
 	 */
 	private Vector2f drawRoomPosition;
 
-	private static int[][] pressureFilter = { { 1, 2, 1 }, { 2, 4, 2 },
-			{ 1, 2, 1 } };
+	private static int[][] pressureFilter = { { 0, 2, 0 }, { 2, 1000, 2 },
+			{ 0, 2, 0 } };
 
 	public static int textureSize;
 	public static final int textureNb = 6;
@@ -212,7 +212,7 @@ public class Map implements ShadowCaster {
 		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
-		
+		//System.out.println(roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].getPressure());
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
 		if (pos.x - ConfigManager.resolution.x / 2 < currentBufferPosition.x)
@@ -304,6 +304,7 @@ public class Map implements ShadowCaster {
 	}
 
 	public void update(long delta) {
+		for(int frame = 0; frame < delta ; frame++){
 		// COMPUTE THE NEW PRESSURES
 		for (int i = 0; i < Map.mapRoomSize.x; i++) {
 			for (int j = 0; j < Map.mapRoomSize.y; j++) {
@@ -322,6 +323,7 @@ public class Map implements ShadowCaster {
 					}
 				}
 			}
+		}
 		}
 	}
 
