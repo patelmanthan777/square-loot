@@ -19,10 +19,7 @@ import environment.blocks.ShadowCasterBlock;
 
 public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;
-	/** 
-	 * Pressure in the room between 0 and 100
-	 **/
-	protected int pressure;
+
 	/**
 	 * Horizontal index of the room on the map, in pixels.
 	 */
@@ -550,5 +547,9 @@ public abstract class Room implements Drawable, ShadowCaster {
 
 	public void discover() {
 		discovered = true;
+	}
+	
+	public Block getBlock(int i,int j){
+		return grid[i][j];
 	}
 }

@@ -10,6 +10,8 @@ import light.ShadowBuffer;
 import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
+import environment.blocks.Block;
+import environment.blocks.EmptyBlock;
 import environment.room.Room;
 import rendering.FBO;
 import rendering.ShadowCaster;
@@ -61,6 +63,8 @@ public class Map implements ShadowCaster {
 	 */
 	private Vector2f drawRoomPosition;
 
+	private static int[][] pressureFilter = { { 1, 2, 1 }, { 2, 4, 2 },
+			{ 1, 2, 1 } };
 
 	public static int textureSize;
 	public static final int textureNb = 6;
@@ -103,7 +107,11 @@ public class Map implements ShadowCaster {
 			}
 		}
 		generate();
-		currentBufferPosition = new Vector2f((int)(spawnPixelPosition.x - (Map.textureNb / 2.0f) * textureSize), (int)(spawnPixelPosition.y - (Map.textureNb / 2.0f) * textureSize));
+		currentBufferPosition = new Vector2f(
+				(int) (spawnPixelPosition.x - (Map.textureNb / 2.0f)
+						* textureSize),
+				(int) (spawnPixelPosition.y - (Map.textureNb / 2.0f)
+						* textureSize));
 	}
 
 	public void render(int i, int j, int layer) {
@@ -248,32 +256,36 @@ public class Map implements ShadowCaster {
 		LightManager.needStaticUpdate(translateMapFBOx, translateMapFBOy);
 
 	}
-	
+
 	public void laserIntersect(Laser l) {
 		l.setIntersection(null);
 		Vector2f cpos = new Vector2f(l.getX(), l.getY());
-		while(l.getIntersection() == null){
+		while (l.getIntersection() == null) {
 			int idxX = (int) (cpos.x / Map.roomPixelSize.x);
 			int idxY = (int) (cpos.y / Map.roomPixelSize.y);
-			if(roomGrid[idxX][idxY] != null)
-				roomGrid[idxX][idxY].laserIntersect(l, cpos);							
+			if (roomGrid[idxX][idxY] != null)
+				roomGrid[idxX][idxY].laserIntersect(l, cpos);
 		}
 	}
-	
+
 	/**
 	 * Compute the shadows casted by the map
 	 */
 	@Override
 	public void computeShadow(Light l, ShadowBuffer[] shadows) {
-		if(l instanceof PointLight){
-			PointLight light = (PointLight) l; 
+		if (l instanceof PointLight) {
+			PointLight light = (PointLight) l;
 			int roomPosiX = (int) (l.getX() / Map.roomPixelSize.x);
 			int roomPosiY = (int) (l.getY() / Map.roomPixelSize.y);
-		
-			int minX = (int) Math.max(0, (light.getX() - light.getMaxDst())/Map.roomPixelSize.x);
-			int maxX = (int) Math.min(Map.mapRoomSize.x-1, (light.getX() + light.getMaxDst())/Map.roomPixelSize.x);
-			int minY = (int) Math.max(0, (light.getY() - light.getMaxDst())/Map.roomPixelSize.y);
-			int maxY = (int) Math.min(Map.mapRoomSize.y-1, (light.getY() + light.getMaxDst())/Map.roomPixelSize.y);
+
+			int minX = (int) Math.max(0, (light.getX() - light.getMaxDst())
+					/ Map.roomPixelSize.x);
+			int maxX = (int) Math.min(Map.mapRoomSize.x - 1,
+					(light.getX() + light.getMaxDst()) / Map.roomPixelSize.x);
+			int minY = (int) Math.max(0, (light.getY() - light.getMaxDst())
+					/ Map.roomPixelSize.y);
+			int maxY = (int) Math.min(Map.mapRoomSize.y - 1,
+					(light.getY() + light.getMaxDst()) / Map.roomPixelSize.y);
 
 			int i;
 			int j;
@@ -287,17 +299,70 @@ public class Map implements ShadowCaster {
 					roomGrid[roomPosiX][j].computeShadow(l, shadows);
 				}
 			}
-		}				
+		}
 	}
 
-	public void update(long delta){
-		for(int i = 0 ; i < Map.mapRoomSize.x; i++){
-			for(int j = 0 ; j < Map.mapRoomSize.y; j++){
-				
+	public void update(long delta) {
+		// COMPUTE THE NEW PRESSURES
+		for (int i = 0; i < Map.mapRoomSize.x; i++) {
+			for (int j = 0; j < Map.mapRoomSize.y; j++) {
+				if (roomGrid[i][j] != null) {
+					for (int k = 0; k < Map.roomBlockSize.x; k++) {
+						for (int l = 0; l < Map.roomBlockSize.y; l++) {
+							int m = (int) (i * Map.roomBlockSize.x + k);
+							int n = (int) (j * Map.roomBlockSize.y + l);
+							updatePressure(m, n);
+						}
+					}
+				}
+			}
+		}
+		
+		// REPLACE OLD PRESSURES WITH THE NEW PRESSURES
+		for (int i = 0; i < Map.mapRoomSize.x; i++) {
+			for (int j = 0; j < Map.mapRoomSize.y; j++) {
+				if (roomGrid[i][j] != null) {
+					for (int k = 0; k < Map.roomBlockSize.x; k++) {
+						for (int l = 0; l < Map.roomBlockSize.y; l++) {
+							if (getBlock(i, j) != null
+									&& getBlock(i, j).isPressurized()) {
+								((EmptyBlock) getBlock(i, j)).update();
+							}
+						}
+					}
+				}
 			}
 		}
 	}
-	
+
+	/**
+	 * Update the pressure of the block of index (i,j) in the map
+	 * 
+	 * @param i
+	 *            abcisse in blocks
+	 * @param j
+	 *            ordinate in blocks
+	 */
+	public void updatePressure(int i, int j) {
+		if (getBlock(i, j) != null && getBlock(i, j).isPressurized()) {
+			int pressure = 0; // FIXME
+			int coef = 0;
+			for(int k = 0; k < 3 ; k++){
+				for(int l = 0; l < 3 ; l++){
+					Block block = getBlock(i + k - 1, j + l -1);
+					if(block != null && block.isPressurized()){
+						coef += this.pressureFilter[k][l];
+						pressure += ((EmptyBlock)block).getPressure()*this.pressureFilter[k][l];
+					}
+				}
+			}
+			pressure /= coef;
+			((EmptyBlock) getBlock(i, j)).setNewPressure(pressure);
+			//System.out.println(pressure);
+			System.out.println(coef);
+		}
+	}
+
 	public Room[][] getRooms() {
 		return roomGrid;
 	}
@@ -312,5 +377,20 @@ public class Map implements ShadowCaster {
 
 	public static int getTextureID(int i, int j, int layer) {
 		return getFBO(i, j, layer).getTextureID();
+	}
+
+	public Block getBlock(int i, int j) {
+		if(i < 0 || j < 0){
+			return null;
+		}
+		int k = (int) (i / Map.roomBlockSize.x);
+		int l = (int) (j / Map.roomBlockSize.y);
+		if (roomGrid[k][l] != null) {
+			int m = (int) (i - k * Map.roomBlockSize.x);
+			int n = (int) (j - l * Map.roomBlockSize.y);
+			return roomGrid[k][l].getBlock(m, n);
+		} else {
+			return null;
+		}
 	}
 }

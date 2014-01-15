@@ -2,6 +2,7 @@ package environment.blocks;
 
 public class EmptyBlock extends Block {
 	protected int pressure;
+	protected int newPressure;
 	protected EmptyBlock(){
 		super();
 		layer = 0;
@@ -9,7 +10,14 @@ public class EmptyBlock extends Block {
 		this.pressure = 100;
 	}
 	
-	public void setPressure(int pressure){
-		this.pressure = pressure;
+	public int getPressure(){
+		return pressure;
+	}
+	public void setNewPressure(int pressure){
+		this.newPressure = pressure;
+	}
+	
+	public void update(){
+		this.pressure = this.newPressure;
 	}
 }
