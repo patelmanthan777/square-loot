@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -32,9 +33,12 @@ public class LightManager {
 
 	static Shader lightShaderProgram;
 	static Shader laserShaderProgram;
+	static Shader ambiantShader;
 	static FBO[][] staticLightsFBO = new FBO[Map.textureNb][Map.textureNb];
+	static FBO shadows = new FBO(Map.textureSize * Map.textureNb,
+			Map.textureSize * Map.textureNb);
 	private static boolean shouldBeRendered[][] = new boolean[Map.textureNb][Map.textureNb];
-	
+
 	static boolean refreshStaticFBO = true;
 	/* Avoid dynamic allocation in rendering methods */
 	private static Vector2f bufferToLight = new Vector2f();
@@ -54,6 +58,9 @@ public class LightManager {
 			}
 		}
 		computeTextureDiagonal();
+		lightShaderProgram = new Shader("light");
+		laserShaderProgram = new Shader("laser");
+		ambiantShader = new Shader("ambiant");
 	}
 
 	static public void addShadowCaster(ShadowCaster sc) {
@@ -129,14 +136,6 @@ public class LightManager {
 			lightShadows.remove(l);
 	}
 
-	static public void initLightShaders() {
-		lightShaderProgram = new Shader("light");
-	}
-
-	static public void initLaserShader() {
-		laserShaderProgram = new Shader("laser");
-	}
-
 	static public Laser addLaser(String name, Vector2f p, Vector3f color,
 			Vector2f dir) {
 		Laser laser = new Laser(p, color, dir);
@@ -152,32 +151,40 @@ public class LightManager {
 		return laser;
 	}
 
+	
+	static public void updateLaserIntersect(Laser l){
+		for (ShadowCaster sc : shadowCasters) {
+			if(sc instanceof Map)
+				((Map) sc).laserIntersect(l);
+		}
+	}
+	
 	static public void updateLightShadows(Light l, boolean dynamic) {
 		/* Set to 0 the pointer to the last shadow */
 		ShadowBuffer[] shadows = lightShadows.get(l);
-		for (int i = 0; i < Map.maxLayer; i++){
+		for (int i = 0; i < Map.maxLayer; i++) {
 			shadows[i].lastShadow = 0;
 		}
-		for (ShadowCaster sc : shadowCasters) {
-			if (sc instanceof Map && !dynamic) {
-				sc.computeShadow(l, lightShadows.get(l));
-			} else {
-				sc.computeShadow(l, lightShadows.get(l));
-			}
+		for (ShadowCaster sc : shadowCasters) {			
+			sc.computeShadow(l, lightShadows.get(l));			
 		}
 	}
 
 	static public void render() {
+		renderAmbiantLight();
 		renderStaticLights();
+		
 		for (int i = 0; i < Map.textureNb; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				getFBO(i, j).use();
-				glClearColor(0.0f, 0.0f, 0.0f, 1f);
+				glClearColor(0.0f, 0.0f, 0.0f, 0f);
 				drawQuad(Map.currentBufferPosition.x + i * Map.textureSize,
 						Map.currentBufferPosition.y + j * Map.textureSize,
 						Map.textureSize, Map.textureSize);
 				getFBO(i, j).unUse();
-
+				glDisable(GL_BLEND);
 			}
 		}
 		renderDynamicLights();
@@ -186,7 +193,7 @@ public class LightManager {
 	private static void drawMap(int i, int j, int textureId) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE);
-		glClearColor(0.0f, 0.0f, 0.0f, 1f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glBindTexture(GL_TEXTURE_2D, textureId);
 		glActiveTexture(GL_TEXTURE0);
 		drawQuad(Map.currentBufferPosition.x + i * Map.textureSize,
@@ -230,10 +237,13 @@ public class LightManager {
 				laserShaderProgram.setUniform2f("laser.position", posx, posy);
 				laserShaderProgram.setUniform3f("laser.color", l.getColor().x,
 						l.getColor().y, l.getColor().z);
+				Vector2f inter = ((Laser) l).getIntersection();
+				Vector2f pos = l.getPosition();
+				laserShaderProgram.setUniform1f("threshold",
+						(float) Math.sqrt((inter.x-pos.x)*(inter.x-pos.x) + (inter.y-pos.y)*(inter.y-pos.y)));				
 			}
 		}
 	}
-
 
 	private static void drawShadows(Light l, int layer) {
 		glColorMask(false, false, false, false);
@@ -255,6 +265,18 @@ public class LightManager {
 		glColorMask(true, true, true, true);
 	}
 
+	private static void renderAmbiantLight(){
+		for (int i = 0; i < Map.textureNb; i++) {
+			for (int j = 0; j < Map.textureNb; j++) {
+				if (shouldBeRendered[i][j]) {
+					//shouldBeRendered[i][j] = false;
+					getFBO(i, j).bind();
+					
+					getFBO(i, j).unbind();
+				}
+			}
+		}
+	}
 	
 	private static void renderStaticLights() {
 		for (int i = 0; i < Map.textureNb; i++) {
@@ -270,7 +292,15 @@ public class LightManager {
 							0);
 
 					for (int layer = 0; layer < Map.maxLayer; layer++) {
+						ambiantShader.use();
+						ambiantShader.setUniform3f("color", 1.0f, 1.0f, 1.0f);
+						ambiantShader.setUniform1f("power", 0.01f);
+						ambiantShader.setUniform1i("texture", 0);
+						
+						drawMap(i, j, Map.getTextureID(i, j, layer));
+						
 						for (Light l : activatedStaticLights.values()) {
+						
 							bufferToLight.x = (Map.currentBufferPosition.x + i
 									* Map.textureSize + Map.textureSize / 2)
 									- l.getX();
@@ -278,13 +308,15 @@ public class LightManager {
 									* Map.textureSize + Map.textureSize / 2)
 									- l.getY();
 
-							if ((l instanceof Laser || bufferToLight.length() - ((PointLight) l).getMaxDst() < diagonal)) {
-								
+							if ((l instanceof Laser || bufferToLight.length()
+									- ((PointLight) l).getMaxDst() < diagonal)) {
+
 								drawShadows(l, layer);
-							
+
 								setUniforms(l, false, i, j);
 								drawMap(i, j, Map.getTextureID(i, j, layer));
 								glClear(GL_STENCIL_BUFFER_BIT);
+								
 							}
 						}
 					}
@@ -309,9 +341,9 @@ public class LightManager {
 
 			if (l instanceof Laser
 					|| bufferToLight.length() - ((PointLight) l).getMaxDst() < diagonal) {
-			
+
 				drawShadows(l, layer);
-				
+
 				for (int i = 0; i < Map.textureNb; i++) {
 					for (int j = 0; j < Map.textureNb; j++) {
 						setUniforms(l, true, 0, 0);
