@@ -437,7 +437,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	 * Draw the room on the minimap if discovered.
 	 */
 	public void drawOnMiniMap() {
-		if (discovered) {
+		if (true/*discovered*/) {
 			int minix = (int) (MiniMap.position.x + (x / Map.roomPixelSize.x)
 					* MiniMap.roomSize.x);
 			int miniy = (int) (MiniMap.position.y + (y / Map.roomPixelSize.y)

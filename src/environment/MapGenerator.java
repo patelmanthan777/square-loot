@@ -1,7 +1,10 @@
 package environment;
 
 import java.util.LinkedList;
+
 import org.lwjgl.util.vector.Vector2f;
+
+import environment.room.OxygenRoom;
 import environment.room.Room;
 import environment.room.SpawnRoom;
 import environment.room.TestRoom;
@@ -63,7 +66,7 @@ public class MapGenerator {
 				int rand2 = (int) (Math.random() * (4 - surround));
 				if (y != 0 && canBeRoom(x, y - 1)) {
 					if (rand2 == 0) {
-						r2 = new TestRoom(x * Map.roomPixelSize.x, (y - 1) * Map.roomPixelSize.y);
+						r2 = randRoom(x * Map.roomPixelSize.x, (y - 1) * Map.roomPixelSize.y);
 						roomsGrid[x][y - 1] = r2;
 						rooms.add(r2);
 					} else {
@@ -72,7 +75,7 @@ public class MapGenerator {
 				}
 				if (x != Map.mapRoomSize.x - 1 && canBeRoom(x + 1, y)) {
 					if (rand2 == 0) {
-						r2 = new TestRoom((x + 1) * Map.roomPixelSize.x, y * Map.roomPixelSize.y);
+						r2 =randRoom((x + 1) * Map.roomPixelSize.x, y * Map.roomPixelSize.y);
 						roomsGrid[x + 1][y] = r2;
 						rooms.add(r2);
 					} else {
@@ -81,7 +84,7 @@ public class MapGenerator {
 				}
 				if (y != Map.mapRoomSize.y - 1 && canBeRoom(x, y + 1)) {
 					if (rand2 == 0) {
-						r2 = new TestRoom(x * Map.roomPixelSize.x, (y + 1) * Map.roomPixelSize.y);
+						r2 = randRoom(x * Map.roomPixelSize.x, (y + 1) * Map.roomPixelSize.y);
 						roomsGrid[x][y + 1] = r2;
 						rooms.add(r2);
 					} else {
@@ -91,7 +94,7 @@ public class MapGenerator {
 				if (x != 0 && roomsGrid[x - 1][y] == null
 						&& canBeRoom(x - 1, y)) {
 					if (rand2 == 0) {
-						r2 = new TestRoom((x - 1) * Map.roomPixelSize.x,y * Map.roomPixelSize.y);
+						r2 = randRoom((x - 1) * Map.roomPixelSize.x,y * Map.roomPixelSize.y);
 						roomsGrid[x - 1][y] = r2;
 						rooms.add(r2);
 					} else {
@@ -173,5 +176,16 @@ public class MapGenerator {
 				i, j + 1) < 3);
 		bool &= (i - 1 < 0 || roomsGrid[i - 1][j] == null || surround(i - 1, j) < 3);
 		return bool;
+	}
+	
+	private static Room randRoom(float x, float y){
+		Room room;
+		Double rand = Math.random();
+		if(rand > 0.01){
+			room = new TestRoom(x,y);
+		}else{
+			room = new OxygenRoom(x,y);
+		}
+		return room;
 	}
 }
