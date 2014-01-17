@@ -26,7 +26,7 @@ public class Inventory extends Overlay{
 	
 	private int[] cursor = new int[2];
 	
-	private int[] drawingCurs = new int[2];
+	private int rowIndex;
 	
 	
 	public Inventory(int size){
@@ -58,8 +58,7 @@ public class Inventory extends Overlay{
 		cursor[0] = -1;
 		cursor[1] = -1;
 		
-		drawingCurs[0] = 0;
-		drawingCurs[1] = 0;		
+		rowIndex = 0;	
 	}
 	
 	/**
@@ -191,31 +190,38 @@ public class Inventory extends Overlay{
 			glVertex2f(coord[0], coord[1]);
 			glVertex2f(coord[0]+inventoryPixelSize[0],
 						coord[1]+inventoryPixelSize[1]);
-			glVertex2f(coord[0], coord[1]+inventoryPixelSize[1]);
-			
-			glColor3f(0.00f, 0.00f, 0.24f);
+			glVertex2f(coord[0], coord[1]+inventoryPixelSize[1]);					
 			
 			for(int i = 0; i< dispRowNb; i++){
 				for(int j = 0; j < colNb; j++){
 				
-				
-					glVertex2f(coord[0] +
-							(j+1) * (borderPixelSize + itemPixelSize[0]),
-							coord[1]+ borderPixelSize +
-							i * (borderPixelSize + itemPixelSize[1]));
-					glVertex2f(coord[0] + borderPixelSize +
-							j * (borderPixelSize + itemPixelSize[0]),
-							coord[1]+ borderPixelSize +
-							i * (borderPixelSize + itemPixelSize[1]));
-					glVertex2f(coord[0] + 
-							(j+1) * (borderPixelSize + itemPixelSize[0]),
-							coord[1] +
-							(i+1) * (borderPixelSize + itemPixelSize[1]));
-					glVertex2f(coord[0] + borderPixelSize +
-							j * (borderPixelSize + itemPixelSize[0]),
-							coord[1] +
-							(i+1) * (borderPixelSize + itemPixelSize[1]));
-											
+					if(items[rowIndex+i][j] != null)
+						items[rowIndex+i][j].drawInventory(coord[0]+ borderPixelSize +
+								i * (borderPixelSize + itemPixelSize[0]),
+								coord[1]+ borderPixelSize +
+								i * (borderPixelSize + itemPixelSize[1]),
+								itemPixelSize[0],
+								itemPixelSize[1]);
+					else{
+						glColor3f(0.00f, 0.00f, 0.24f);
+						
+						glVertex2f(coord[0] +
+								(j+1) * (borderPixelSize + itemPixelSize[0]),
+								coord[1]+ borderPixelSize +
+								i * (borderPixelSize + itemPixelSize[1]));
+						glVertex2f(coord[0] + borderPixelSize +
+								j * (borderPixelSize + itemPixelSize[0]),
+								coord[1]+ borderPixelSize +
+								i * (borderPixelSize + itemPixelSize[1]));
+						glVertex2f(coord[0] + 
+								(j+1) * (borderPixelSize + itemPixelSize[0]),
+								coord[1] +
+								(i+1) * (borderPixelSize + itemPixelSize[1]));
+						glVertex2f(coord[0] + borderPixelSize +
+								j * (borderPixelSize + itemPixelSize[0]),
+								coord[1] +
+								(i+1) * (borderPixelSize + itemPixelSize[1]));
+					}											
 				}
 			}
 								

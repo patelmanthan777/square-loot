@@ -1,4 +1,5 @@
 package game;
+import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
 import light.LightManager;
@@ -66,6 +67,7 @@ public class GameLoop extends Game{
 		
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);
+		p.pickUp(new LaserRifle(250));
 		LightManager.addShadowCaster(map);
 		
 		OverlayManager.init();

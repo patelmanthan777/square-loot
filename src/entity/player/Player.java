@@ -1,5 +1,6 @@
 package entity.player;
 
+import item.Item;
 import item.weapon.LaserRifle;
 import item.weapon.Weapon;
 import light.Laser;
@@ -122,8 +123,11 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return light;
 	}
 	
+	public void pickUp(Item i){
+		inventory.add(i);
+	}
 
-
+	
 	public void primaryWeapon(float directionX, float directionY){
 		weapon.Fire(new Vector2f(position), new Vector2f(directionX,directionY));
 	}

@@ -6,5 +6,10 @@ public abstract class Item {
 	public float getWeight(){
 		return weight;
 	}
+	
+	public abstract void drawInventory(float x,
+									   float y,
+									   float width,
+									   float height); 
 
 }
