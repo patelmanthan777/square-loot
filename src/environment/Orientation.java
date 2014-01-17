@@ -1,4 +1,4 @@
-package environment.blocks;
+package environment;
 
 public enum Orientation {
 	VERTICAL,HORIZONTAL;

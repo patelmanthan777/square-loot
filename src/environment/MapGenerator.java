@@ -4,7 +4,6 @@ import java.util.LinkedList;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import environment.blocks.Orientation;
 import environment.room.OxygenRoom;
 import environment.room.Room;
 import environment.room.SpawnRoom;
@@ -115,11 +114,15 @@ public class MapGenerator {
 				if (roomsGrid[i][j] != null) {
 					if (j > 0 && roomsGrid[i][j - 1] != null) {
 						Door door = new Door(roomsGrid[i][j], roomsGrid[i][j-1], Orientation.HORIZONTAL);
+						if(Math.random()> 0.5)
+							door.open();
 						roomsGrid[i][j].createDoor(0,door);
 						roomsGrid[i][j-1].createDoor(2, door);
 					}
 					if (i > 0 && roomsGrid[i - 1][j] != null) {
 						Door door = new Door(roomsGrid[i][j], roomsGrid[i-1][j], Orientation.VERTICAL);
+						if(Math.random()> 0.5)
+							door.open();
 						roomsGrid[i][j].createDoor(3,door);
 						roomsGrid[i-1][j].createDoor(1, door);
 					}

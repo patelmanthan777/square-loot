@@ -175,6 +175,15 @@ public abstract class Room implements Drawable, ShadowCaster {
 			}
 		}
 	}
+	
+	public void drawDoors(){
+		if(doors[0]!=null){
+			doors[0].draw();
+		}
+		if(doors[1]!=null){
+			doors[1].draw();
+		}
+	}
 
 	@Override
 	public void computeShadow(Light light, ShadowBuffer[] shadows) {
@@ -561,6 +570,10 @@ public abstract class Room implements Drawable, ShadowCaster {
 	
 	public Block getBlock(int i,int j){
 		return grid[i][j];
+	}
+	
+	public Door[] getDoors(){
+		return doors;
 	}
 	
 	public float getPressure(){

@@ -62,9 +62,8 @@ public class Map implements ShadowCaster {
 	 */
 	private Vector2f drawRoomPosition;
 
-	private static int[][] pressureFilter = { { 0, 2, 0 }, { 2, 1000, 2 },
-			{ 0, 2, 0 } };
-
+	private static int neighboorPressureCoef = 1;
+	private static int ownPressureCoef = 500;
 	public static int textureSize;
 	public static final int textureNb = 6;
 	public static Vector2f currentBufferPosition;
@@ -105,7 +104,7 @@ public class Map implements ShadowCaster {
 				shouldBeRendered[i][j] = true;
 			}
 		}
-		roomGrid  = new Room[(int)Map.mapRoomSize.x][(int)Map.mapRoomSize.y];
+		roomGrid = new Room[(int) Map.mapRoomSize.x][(int) Map.mapRoomSize.y];
 		generate();
 		currentBufferPosition = new Vector2f(
 				(int) (spawnPixelPosition.x - (Map.textureNb / 2.0f)
@@ -135,6 +134,15 @@ public class Map implements ShadowCaster {
 			}
 		}
 		glEnd();
+	}
+
+	public void drawDoors() {
+		for (int i = 0; i < Map.mapRoomSize.x; i++) {
+			for (int j = 0; j < Map.mapRoomSize.y; j++) {
+				if (roomGrid[i][j] != null)
+					roomGrid[i][j].drawDoors();
+			}
+		}
 	}
 
 	/**
@@ -212,8 +220,6 @@ public class Map implements ShadowCaster {
 		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
-		// System.out.println(roomGrid[(int) drawRoomPosition.x][(int)
-		// drawRoomPosition.y].getPressure());
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
 		if (pos.x - ConfigManager.resolution.x / 2 < currentBufferPosition.x)
@@ -340,18 +346,40 @@ public class Map implements ShadowCaster {
 		if (roomGrid[i][j] != null) {
 			float pressure = 0;
 			float coef = 0;
-			for (int k = 0; k < 3; k++) {
-				for (int l = 0; l < 3; l++) {
-					if (i + k - 1 >= 0 && i + k - 1 < Map.mapRoomSize.x
-							&& j + l - 1 >= 0 && j + l - 1 < Map.mapRoomSize.y
-							&& roomGrid[i + k - 1][j + l - 1] != null) {
-						Room room = roomGrid[i + k - 1][j + l - 1];
-						coef += Map.pressureFilter[k][l];
-						pressure += room.getPressure()
-								* Map.pressureFilter[k][l];
-					}
+			Room room;
+			Room mainRoom = roomGrid[i][j];
+			coef += ownPressureCoef;
+			pressure += mainRoom.getPressure() * ownPressureCoef;
+
+			if (i - 1 >= 0 && mainRoom.getDoors()[3]!= null && mainRoom.getDoors()[3].isOpened()) {
+				room = roomGrid[i - 1][j];
+				if (room != null) {
+					coef += neighboorPressureCoef;
+					pressure += room.getPressure() * neighboorPressureCoef;
 				}
 			}
+			if (j - 1 >= 0  && mainRoom.getDoors()[0]!= null && mainRoom.getDoors()[0].isOpened()) {
+				room = roomGrid[i][j - 1];
+				if (room != null) {
+					coef += neighboorPressureCoef;
+					pressure += room.getPressure() * neighboorPressureCoef;
+				}
+			}
+			if (i + 1 < Map.mapRoomSize.x  && mainRoom.getDoors()[1]!= null&& mainRoom.getDoors()[1].isOpened()) {
+				room = roomGrid[i + 1][j];
+				if (room != null) {
+					coef += neighboorPressureCoef;
+					pressure += room.getPressure() * neighboorPressureCoef;
+				}
+			}
+			if (j + 1 > Map.mapRoomSize.y  && mainRoom.getDoors()[2]!= null&& mainRoom.getDoors()[2].isOpened()) {
+				room = roomGrid[i][j + 1];
+				if (room != null) {
+					coef += neighboorPressureCoef;
+					pressure += room.getPressure() * neighboorPressureCoef;
+				}
+			}
+
 			pressure /= coef;
 			roomGrid[i][j].setNewPressure(pressure);
 		}

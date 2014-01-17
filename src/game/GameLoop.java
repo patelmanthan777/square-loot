@@ -98,6 +98,7 @@ public class GameLoop extends Game{
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		p.draw();
+		map.drawDoors();
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();
