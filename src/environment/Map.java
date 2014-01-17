@@ -365,14 +365,14 @@ public class Map implements ShadowCaster {
 					pressure += room.getPressure() * neighboorPressureCoef;
 				}
 			}
-			if (i + 1 < Map.mapRoomSize.x  && mainRoom.getDoors()[1]!= null&& mainRoom.getDoors()[1].isOpened()) {
+			if (i + 1 < Map.mapRoomSize.x  && mainRoom.getDoors()[1]!= null && mainRoom.getDoors()[1].isOpened()) {
 				room = roomGrid[i + 1][j];
 				if (room != null) {
 					coef += neighboorPressureCoef;
 					pressure += room.getPressure() * neighboorPressureCoef;
 				}
 			}
-			if (j + 1 > Map.mapRoomSize.y  && mainRoom.getDoors()[2]!= null&& mainRoom.getDoors()[2].isOpened()) {
+			if (j + 1 < Map.mapRoomSize.y  && mainRoom.getDoors()[2]!= null && mainRoom.getDoors()[2].isOpened()) {
 				room = roomGrid[i][j + 1];
 				if (room != null) {
 					coef += neighboorPressureCoef;
