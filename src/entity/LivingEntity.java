@@ -3,7 +3,7 @@ package entity;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import inventory.Inventory;
+import userInterface.Inventory;
 
 public abstract class LivingEntity extends Entity {
 
