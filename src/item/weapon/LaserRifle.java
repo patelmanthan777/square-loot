@@ -27,10 +27,13 @@ public class LaserRifle extends Weapon {
 			                  float height){
 		glColor3f(1f, 0.00f, 0.00f);
 		
+		
+		glVertex2f(x, y + height);
+		glVertex2f(x + width, y + height);
 		glVertex2f(x + width, y);
 		glVertex2f(x, y);
-		glVertex2f(x + width, y + height);
-		glVertex2f(x, y + height);		
+		
+				
 	}
 	
 }
