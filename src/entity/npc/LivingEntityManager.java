@@ -19,7 +19,7 @@ public class LivingEntityManager {
 	}
 	
 	public static  void createZombie(float posx, float posy){
-		npcs.add(new Zombie(posx,posy,1,1));
+		npcs.add(new Zombie(posx,posy,1,1,0));
 	}
 	
 	public static void update(long deltaT){
@@ -43,7 +43,7 @@ public class LivingEntityManager {
 	}
 	
 	public static Player createPlayer(){
-		Player player = new Player(new Vector2f(0,0));
+		Player player = new Player(new Vector2f(0,0), 5);
 		players.add(player);
 		return player;
 	}

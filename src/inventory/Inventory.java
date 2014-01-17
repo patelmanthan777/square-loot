@@ -1,10 +1,14 @@
 package inventory;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import item.Item;
-import rendering.Drawable;
+import userInterface.Overlay;
 
 
-public class Inventory implements Drawable{
+public class Inventory extends Overlay{
+	private boolean open = false;
+	
 	private int[] coord = new int[2];
 	private int[] pxSize = new int[2];	
 	private int colNb = 5;
@@ -17,6 +21,9 @@ public class Inventory implements Drawable{
 	private int sizeMax;
 	
 	private int[] cursor = new int[2];
+	
+	private int[] drawingCurs = new int[2];
+	
 	
 	public Inventory(int size){
 		coord[0] = 200;
@@ -41,6 +48,9 @@ public class Inventory implements Drawable{
 		
 		cursor[0] = -1;
 		cursor[1] = -1;
+		
+		drawingCurs[0] = 0;
+		drawingCurs[1] = 0;		
 	}
 	
 	/**
@@ -78,6 +88,19 @@ public class Inventory implements Drawable{
 	}
 	
 	/**
+	 * Return the item displayed at (<b>x</b>, <b>y</b>).
+	 * 
+	 * @param x
+	 * @param y
+	 * @return the considered item
+	 */
+	public Item access(float x, float y){
+		getIdx((int) x, (int) y);
+		
+		return items[cursor[0]][cursor[1]];
+	}
+	
+	/**
 	 * Remove the object displayed at (<b>x</b>, <b>y</b>) from the inventory.
 	 * 
 	 * @param x
@@ -104,17 +127,67 @@ public class Inventory implements Drawable{
 		
 		return null;
 	}
+	 
 	
 	public float getWeight(){
 		return weight;
 	}
 	
-
+	/**
+	 * Triggers the drawing of the inventory and capture the relevant
+	 * mouse events.
+	 * 
+	 */
+	public void open(){
+		open = true;
+	}
+	
+	/**
+	 * Return the inventory in its hiding state.
+	 */
+	public void close(){
+		open = false;
+	}
+	
+	/**
+	 * Test whether the inventory should be displayed.
+	 * @return <b>true</b> if the inventory is expected
+	 * to be displayed.
+	 */
+	public boolean isOpen(){
+		return open;
+	}
+	
+	/**
+	 * Obtain the indices in the inventory corresponding to
+	 * the coordinates (<b>x</b>,<b>y</b>).
+	 * @param x
+	 * @param y
+	 */
 	private void getIdx(int x, int y){
 		
 	}
 	
-	public void draw(){
+	public void draw(){		
+		if(isOpen()){
+			glPushMatrix();		
+			glLoadIdentity();
+			glDisable(GL_BLEND);
+			glDisable(GL_TEXTURE_2D);
 		
+			glBegin(GL_TRIANGLE_STRIP);
+			glColor3f(0.03f, 0.04f, 0.29f);
+			
+			glVertex2f(coord[0]+pxSize[0], coord[1]);
+			glVertex2f(coord[0], coord[1]);
+			glVertex2f(coord[0]+pxSize[0], coord[1]+pxSize[1]);
+			glVertex2f(coord[0], coord[1]+pxSize[1]);
+								
+			glEnd();
+			glEnable(GL_TEXTURE_2D);
+			glEnable(GL_BLEND);
+		
+			glPopMatrix();
+		}
 	}
 }

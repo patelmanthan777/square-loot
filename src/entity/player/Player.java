@@ -24,8 +24,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	
 	private Weapon weapon = new LaserRifle(250);
 	
-	public Player(Vector2f pos) {
-		super(pos);
+	public Player(Vector2f pos, int inventorySize) {
+		super(pos, inventorySize);
 		Vector3f col = new Vector3f(0, 0, 0);
 		setColor(col);
 		this.updatePoints();
@@ -38,9 +38,9 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	@Override
 	public boolean isInCollision(float x, float y, Map m) {
 		if (m.testCollision(x - halfSize.x, y - halfSize.y)
-				|| m.testCollision(x + halfSize.x, y - halfSize.y)
-				|| m.testCollision(x - halfSize.x, y + halfSize.y)
-				|| m.testCollision(x + halfSize.x, y + halfSize.y)) {
+			|| m.testCollision(x + halfSize.x, y - halfSize.y)
+			|| m.testCollision(x - halfSize.x, y + halfSize.y)
+			|| m.testCollision(x + halfSize.x, y + halfSize.y)) {
 			return true;
 		}
 		return false;

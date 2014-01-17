@@ -50,4 +50,8 @@ public  class OverlayManager {
 		PlayerStatsOverlay pso = new PlayerStatsOverlay(p);
 		addOverlay(pso);
 	}
+	
+	static public void createPlayerInventory(Player p){
+		addOverlay(p.getInventory());
+	}
 }
