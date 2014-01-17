@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import environment.blocks.Orientation;
 import environment.room.OxygenRoom;
 import environment.room.Room;
 import environment.room.SpawnRoom;
@@ -21,12 +22,11 @@ public class MapGenerator {
 	 * Generate the rooms maze.
 	 * @return The class attribute roomsGrid initialized to form a room maze.
 	 */
-	static Room[][] generate() {
-		roomsGrid = new Room[(int)Map.mapRoomSize.x][(int)Map.mapRoomSize.y];
+	static void generate(Map map) {
+		roomsGrid = map.getRooms();
 		rooms = new LinkedList<Room>();
 		surroundedRooms = new LinkedList<Room>();
 		createRooms();
-		return roomsGrid;
 	}
 
 	
@@ -114,16 +114,14 @@ public class MapGenerator {
 
 				if (roomsGrid[i][j] != null) {
 					if (j > 0 && roomsGrid[i][j - 1] != null) {
-						roomsGrid[i][j].createDoor(0);
-					}
-					if (i < Map.mapRoomSize.x - 1 && roomsGrid[i + 1][j] != null) {
-						roomsGrid[i][j].createDoor(1);
-					}
-					if (j < Map.mapRoomSize.y - 1 && roomsGrid[i][j + 1] != null) {
-						roomsGrid[i][j].createDoor(2);
+						Door door = new Door(roomsGrid[i][j], roomsGrid[i][j-1], Orientation.HORIZONTAL);
+						roomsGrid[i][j].createDoor(0,door);
+						roomsGrid[i][j-1].createDoor(2, door);
 					}
 					if (i > 0 && roomsGrid[i - 1][j] != null) {
-						roomsGrid[i][j].createDoor(3);
+						Door door = new Door(roomsGrid[i][j], roomsGrid[i-1][j], Orientation.VERTICAL);
+						roomsGrid[i][j].createDoor(3,door);
+						roomsGrid[i-1][j].createDoor(1, door);
 					}
 				}
 			}

@@ -12,6 +12,7 @@ import light.ShadowBuffer;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import userInterface.MiniMap;
+import environment.Door;
 import environment.Map;
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
@@ -29,10 +30,11 @@ public abstract class Room implements Drawable, ShadowCaster {
 	 */
 	protected float y;
 	protected Vector3f miniMapColor = new Vector3f(1, 1, 1);
-	protected boolean[] doors = new boolean[4];
+	//protected boolean[] doors = new boolean[4];
 	protected boolean discovered = false;
 	protected float pressure;
 	protected float newPressure;
+	protected Door[] doors = new Door[4];
 	/* avoid dynamic allocation in computeShadow */
 	boolean[] neighbours = new boolean[4];
 	private Vector2f shadowPoints[] = new Vector2f[4];
@@ -46,7 +48,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 		int gridSizeY = (int) Map.roomBlockSize.y;
 		grid = new Block[gridSizeX][gridSizeY];
 		for (int i = 0; i < 4; i++) {
-			doors[i] = false;
+			doors[i] = null;
 		}
 		for (int i = 0; i < 4; i++) {
 			shadowPoints[i] = new Vector2f();
@@ -69,8 +71,8 @@ public abstract class Room implements Drawable, ShadowCaster {
 	 * @param wall
 	 *            is the index of the wall
 	 */
-	public void createDoor(int wall) {
-		doors[wall] = true;
+	public void createDoor(int wall, Door door) {
+		doors[wall] = door;
 		if (wall == 0) {
 			grid[(int) Map.roomBlockSize.x / 2 - 2][0] = BlockFactory
 					.createBorderBlock();
@@ -446,7 +448,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			glDisable(GL_BLEND);
 			glColor3f(miniMapColor.x, miniMapColor.y*pressure/100, miniMapColor.z*pressure/100);
 			glLoadIdentity();
-			if (doors[0]) {
+			if (doors[0]!=null) {
 				glBegin(GL_LINE_STRIP);
 				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
 						+ doorRatio * MiniMap.roomSize.y);
@@ -473,7 +475,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 						+ doorRatio * MiniMap.roomSize.y);
 				glEnd();
 			}
-			if (doors[1]) {
+			if (doors[1]!=null) {
 				glBegin(GL_LINE_STRIP);
 				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
 						+ doorRatio * MiniMap.roomSize.y);
@@ -498,7 +500,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 						+ (1 - doorRatio) * MiniMap.roomSize.y);
 				glEnd();
 			}
-			if (doors[2]) {
+			if (doors[2]!=null) {
 				glBegin(GL_LINE_STRIP);
 				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
 						+ (1 - doorRatio) * MiniMap.roomSize.y);
@@ -525,7 +527,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 						+ (1 - doorRatio) * MiniMap.roomSize.y);
 				glEnd();
 			}
-			if (doors[3]) {
+			if (doors[3]!=null) {
 				glBegin(GL_LINE_STRIP);
 				glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy
 						+ doorRatio * MiniMap.roomSize.y);

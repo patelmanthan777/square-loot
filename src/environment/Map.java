@@ -10,6 +10,7 @@ import light.ShadowBuffer;
 import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
+import environment.blocks.Block;
 import environment.room.Room;
 import rendering.FBO;
 import rendering.ShadowCaster;
@@ -104,6 +105,7 @@ public class Map implements ShadowCaster {
 				shouldBeRendered[i][j] = true;
 			}
 		}
+		roomGrid  = new Room[(int)Map.mapRoomSize.x][(int)Map.mapRoomSize.y];
 		generate();
 		currentBufferPosition = new Vector2f(
 				(int) (spawnPixelPosition.x - (Map.textureNb / 2.0f)
@@ -196,7 +198,7 @@ public class Map implements ShadowCaster {
 	 * Generate the map
 	 */
 	public void generate() {
-		roomGrid = MapGenerator.generate();
+		MapGenerator.generate(this);
 	}
 
 	/**
@@ -207,12 +209,11 @@ public class Map implements ShadowCaster {
 	 */
 	public void setDrawPosition(Vector2f pos) {
 
-		
-		
 		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
-		//System.out.println(roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].getPressure());
+		// System.out.println(roomGrid[(int) drawRoomPosition.x][(int)
+		// drawRoomPosition.y].getPressure());
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
 		if (pos.x - ConfigManager.resolution.x / 2 < currentBufferPosition.x)
@@ -304,26 +305,26 @@ public class Map implements ShadowCaster {
 	}
 
 	public void update(long delta) {
-		for(int frame = 0; frame < delta ; frame++){
-		// COMPUTE THE NEW PRESSURES
-		for (int i = 0; i < Map.mapRoomSize.x; i++) {
-			for (int j = 0; j < Map.mapRoomSize.y; j++) {
-				if (roomGrid[i][j] != null) {
-					updatePressure(i, j);
-				}
-			}
-		}
-
-		// REPLACE OLD PRESSURES WITH THE NEW PRESSURES
-		for (int i = 0; i < Map.mapRoomSize.x; i++) {
-			for (int j = 0; j < Map.mapRoomSize.y; j++) {
-				if (roomGrid[i][j] != null) {
+		for (int frame = 0; frame < delta; frame++) {
+			// COMPUTE THE NEW PRESSURES
+			for (int i = 0; i < Map.mapRoomSize.x; i++) {
+				for (int j = 0; j < Map.mapRoomSize.y; j++) {
 					if (roomGrid[i][j] != null) {
-						roomGrid[i][j].update();
+						updatePressure(i, j);
 					}
 				}
 			}
-		}
+
+			// REPLACE OLD PRESSURES WITH THE NEW PRESSURES
+			for (int i = 0; i < Map.mapRoomSize.x; i++) {
+				for (int j = 0; j < Map.mapRoomSize.y; j++) {
+					if (roomGrid[i][j] != null) {
+						if (roomGrid[i][j] != null) {
+							roomGrid[i][j].update();
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -341,10 +342,13 @@ public class Map implements ShadowCaster {
 			float coef = 0;
 			for (int k = 0; k < 3; k++) {
 				for (int l = 0; l < 3; l++) {
-					if(i+k-1 >= 0 && i+k-1 <Map.mapRoomSize.x && j+l-1>=0 && j+l-1 <Map.mapRoomSize.y && roomGrid[i + k - 1][j + l - 1]!=null){
+					if (i + k - 1 >= 0 && i + k - 1 < Map.mapRoomSize.x
+							&& j + l - 1 >= 0 && j + l - 1 < Map.mapRoomSize.y
+							&& roomGrid[i + k - 1][j + l - 1] != null) {
 						Room room = roomGrid[i + k - 1][j + l - 1];
 						coef += Map.pressureFilter[k][l];
-						pressure += room.getPressure()* Map.pressureFilter[k][l];
+						pressure += room.getPressure()
+								* Map.pressureFilter[k][l];
 					}
 				}
 			}
@@ -369,11 +373,18 @@ public class Map implements ShadowCaster {
 		return getFBO(i, j, layer).getTextureID();
 	}
 
-	/*
-	 * public Block getBlock(int i, int j) { if(i < 0 || j < 0){ return null; }
-	 * int k = (int) (i / Map.roomBlockSize.x); int l = (int) (j /
-	 * Map.roomBlockSize.y); if (roomGrid[k][l] != null) { int m = (int) (i - k
-	 * * Map.roomBlockSize.x); int n = (int) (j - l * Map.roomBlockSize.y);
-	 * return roomGrid[k][l].getBlock(m, n); } else { return null; } }
-	 */
+	public Block getBlock(int i, int j) {
+		if (i < 0 || j < 0) {
+			return null;
+		}
+		int k = (int) (i / Map.roomBlockSize.x);
+		int l = (int) (j / Map.roomBlockSize.y);
+		if (roomGrid[k][l] != null) {
+			int m = (int) (i - k * Map.roomBlockSize.x);
+			int n = (int) (j - l * Map.roomBlockSize.y);
+			return roomGrid[k][l].getBlock(m, n);
+		} else {
+			return null;
+		}
+	}
 }
