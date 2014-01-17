@@ -198,13 +198,16 @@ public class Inventory extends Overlay{
 			for(int i = 0; i< dispRowNb; i++){
 				for(int j = 0; j < colNb; j++){
 				
-					if(items[rowIndex+i][j] != null)
+					if(items[rowIndex+i][j] != null){
+						glEnd();
 						items[rowIndex+i][j].drawInventory(coord[0]+ borderPixelSize +
 								i * (borderPixelSize + itemPixelSize[0]),
 								coord[1]+ borderPixelSize +
 								i * (borderPixelSize + itemPixelSize[1]),
 								itemPixelSize[0],
 								itemPixelSize[1]);
+						glBegin(GL_QUADS);
+					}
 					else{
 						glColor3f(0.00f, 0.00f, 0.24f);
 						glVertex2f(coord[0] + borderPixelSize +

@@ -23,6 +23,9 @@ public class LaserRifle extends Weapon {
 		}		
 	}
 
+	/**
+	 * Draw a representation of the weapon in the inventory.
+	 */
 	public void drawInventory(float x,
 			   				  float y,
 			   				  float width,
@@ -31,8 +34,8 @@ public class LaserRifle extends Weapon {
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1,1,1);
-		glBindTexture(GL_TEXTURE_2D, TextureManager.playerTexture().getTextureID());
-		
+		glBindTexture(GL_TEXTURE_2D, TextureManager.laserRifleTexture().getTextureID());
+		glBegin(GL_QUADS);
 		glTexCoord2f(1,1);
 		glVertex2f(x, y + height);		
 		glTexCoord2f(1,0);
@@ -41,7 +44,7 @@ public class LaserRifle extends Weapon {
 		glVertex2f(x + width, y);
 		glTexCoord2f(0,1);
 		glVertex2f(x, y);
-		
+		glEnd();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_BLEND);
 		glDisable(GL_TEXTURE_2D);				

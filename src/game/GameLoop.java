@@ -66,8 +66,9 @@ public class GameLoop extends Game{
 		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getDirection());
 		
 		p.setLight(playerLight);
-		p.setLaser(playerLaser);
+		p.setLaser(playerLaser);		
 		p.pickUp(new LaserRifle(250));
+		
 		LightManager.addShadowCaster(map);
 		
 		OverlayManager.init();
