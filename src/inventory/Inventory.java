@@ -10,8 +10,12 @@ public class Inventory extends Overlay{
 	private boolean open = false;
 	
 	private int[] coord = new int[2];
-	private int[] pxSize = new int[2];	
+	private int[] inventoryPixelSize = new int[2];
+	private int[] itemPixelSize = new int[2];
+	private int borderPixelSize;
+	
 	private int colNb = 5;
+	private int dispRowNb = 2;
 	
 	private float weight;
 	
@@ -29,8 +33,13 @@ public class Inventory extends Overlay{
 		coord[0] = 200;
 		coord[1] = 200;
 		
-		pxSize[0] = 200;
-		pxSize[1] = 50;
+		itemPixelSize[0] = 100;
+		itemPixelSize[1] = 100;
+		
+		borderPixelSize = 5;
+		
+		inventoryPixelSize[0] = colNb * (itemPixelSize[0] + borderPixelSize) + borderPixelSize;
+		inventoryPixelSize[1] = dispRowNb * (itemPixelSize[1] + borderPixelSize) + borderPixelSize;
 		
 		weight = 0f;		
 				
@@ -178,10 +187,37 @@ public class Inventory extends Overlay{
 			glBegin(GL_TRIANGLE_STRIP);
 			glColor3f(0.03f, 0.04f, 0.29f);
 			
-			glVertex2f(coord[0]+pxSize[0], coord[1]);
+			glVertex2f(coord[0]+inventoryPixelSize[0], coord[1]);
 			glVertex2f(coord[0], coord[1]);
-			glVertex2f(coord[0]+pxSize[0], coord[1]+pxSize[1]);
-			glVertex2f(coord[0], coord[1]+pxSize[1]);
+			glVertex2f(coord[0]+inventoryPixelSize[0],
+						coord[1]+inventoryPixelSize[1]);
+			glVertex2f(coord[0], coord[1]+inventoryPixelSize[1]);
+			
+			glColor3f(0.00f, 0.00f, 0.24f);
+			
+			for(int i = 0; i< dispRowNb; i++){
+				for(int j = 0; j < colNb; j++){
+				
+				
+					glVertex2f(coord[0] +
+							(j+1) * (borderPixelSize + itemPixelSize[0]),
+							coord[1]+ borderPixelSize +
+							i * (borderPixelSize + itemPixelSize[1]));
+					glVertex2f(coord[0] + borderPixelSize +
+							j * (borderPixelSize + itemPixelSize[0]),
+							coord[1]+ borderPixelSize +
+							i * (borderPixelSize + itemPixelSize[1]));
+					glVertex2f(coord[0] + 
+							(j+1) * (borderPixelSize + itemPixelSize[0]),
+							coord[1] +
+							(i+1) * (borderPixelSize + itemPixelSize[1]));
+					glVertex2f(coord[0] + borderPixelSize +
+							j * (borderPixelSize + itemPixelSize[0]),
+							coord[1] +
+							(i+1) * (borderPixelSize + itemPixelSize[1]));
+											
+				}
+			}
 								
 			glEnd();
 			glEnable(GL_TEXTURE_2D);
