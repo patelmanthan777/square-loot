@@ -22,15 +22,25 @@ public class Inventory extends Overlay{
 	
 	private float weight;
 	
+	private enum itemState {
+		EQUIPPED,
+		STORED
+	}
+	
+	/*Stored*/
 	private Item[][] items;
 	private	int[] itemCurs = new int[2];
 	private int size;
 	private int sizeMax;
 	
+	/*Equipped*/
+	private Weapon primaryWeapon;
+	
+	private itemState selectedItem;
 	private int[] cursor = new int[2];
 	
 	private int rowIndex;
-	private Weapon primaryWeapon;
+	
 	
 	public Inventory(int size){
 		coord[0] = 200;
@@ -58,6 +68,7 @@ public class Inventory extends Overlay{
 		this.size = 0;
 		sizeMax  = size;
 		
+		selectedItem = null;
 		cursor[0] = -1;
 		cursor[1] = -1;
 		
@@ -72,8 +83,10 @@ public class Inventory extends Overlay{
 	 * @return null if the item was added successfully, <b>i</b> otherwise.
 	 */		
 	public Item add(Item i){
-		if(primaryWeapon == null && i instanceof Weapon)
+		if(primaryWeapon == null && i instanceof Weapon){
 			primaryWeapon = (Weapon) i;
+			weight += i.getWeight();
+		}
 		else if (size < sizeMax){
 			items[itemCurs[0]][itemCurs[1]] = i;			
 			size ++;
@@ -109,9 +122,14 @@ public class Inventory extends Overlay{
 	 * @return the considered item
 	 */
 	public Item access(float x, float y){
-		getIdx((int) x, (int) y);
+		getItem((int) x, (int) y);
 		
-		return items[cursor[0]][cursor[1]];
+		switch (selectedItem){
+		case EQUIPPED:
+		case STORED:
+			return items[cursor[0]][cursor[1]];
+		}
+		return null;
 	}
 	
 	/**
@@ -121,23 +139,27 @@ public class Inventory extends Overlay{
 	 * @param y
 	 */
 	public Item remove(float x, float y){
-		getIdx((int) x, (int) y);
+		getItem((int) x, (int) y);
 		
-		if(cursor[0] != -1 && cursor[1] != -1){
-			Item i = items[cursor[0]][cursor[1]];
+		if(cursor[0] != -1 && cursor[1] != -1)
+			
+			switch (selectedItem){
+			case EQUIPPED:
+			case STORED:				
+				Item i = items[cursor[0]][cursor[1]];
 				
-			weight -= i.getWeight();
-			size--;
+				weight -= i.getWeight();
+				size--;
+				
+				if(itemCurs[0] >= cursor[0] && itemCurs[1] >= cursor[1]){
+					itemCurs[0] = cursor[0];
+					itemCurs[1] = cursor[1];
+				}
+				
+				items[cursor[0]][cursor[1]] = null;
 			
-			if(itemCurs[0] >= cursor[0] && itemCurs[1] >= cursor[1]){
-				itemCurs[0] = cursor[0];
-				itemCurs[1] = cursor[1];
+				return i;
 			}
-			
-			items[cursor[0]][cursor[1]] = null;
-		
-			return i;
-		}
 		
 		return null;
 	}
@@ -173,12 +195,12 @@ public class Inventory extends Overlay{
 	}
 	
 	/**
-	 * Obtain the indices in the inventory corresponding to
-	 * the coordinates (<b>x</b>,<b>y</b>).
+	 * Obtain the item corresponding to the coordinates
+	 * (<b>x</b>,<b>y</b>).
 	 * @param x
 	 * @param y
 	 */
-	private void getIdx(int x, int y){
+	private void getItem(int x, int y){
 		
 	}
 	
