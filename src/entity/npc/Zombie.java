@@ -70,6 +70,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 
 	@Override
 	public void draw() {
+		
 		glColor3f(1, 1, 1);
 		glTexCoord2f(1, 1);
 		glVertex2f(points[0].x, points[0].y);
@@ -79,6 +80,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		glVertex2f(points[2].x, points[2].y);
 		glTexCoord2f(0, 1);
 		glVertex2f(points[1].x, points[1].y);
+		glDisable(GL_TEXTURE_2D);	
 	}
 
 	@Override

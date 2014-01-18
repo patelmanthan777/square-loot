@@ -10,7 +10,7 @@ import game.GameLoop;
 import static org.lwjgl.opengl.GL11.*;
 
 public class LivingEntityManager {
-	/** Per room management in the future ? **/
+
 	private static LinkedList <Npc> npcs = new LinkedList<Npc>();
 	private static LinkedList <Player> players = new LinkedList<Player>();
 	
@@ -30,6 +30,7 @@ public class LivingEntityManager {
 	}
 	
 	public static void render(){
+		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindTexture(GL_TEXTURE_2D, TextureManager.zombieTexture().getTextureID());
@@ -40,6 +41,7 @@ public class LivingEntityManager {
 		glEnd();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_BLEND);
+		glDisable(GL_TEXTURE_2D);
 	}
 	
 	public static Player createPlayer(){
