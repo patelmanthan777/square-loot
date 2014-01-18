@@ -130,31 +130,23 @@ public class Map implements ShadowCaster {
 			for (int l = minY; l < maxY; l++) {
 				if (roomGrid[k][l] != null) {
 					roomGrid[k][l].draw(layer);
+					roomGrid[k][l].setRenderUpdated(true);
 				}
 			}
 		}
 		glEnd();
 	}
 
-	public void drawDoors() {
-		for (int i = 0; i < Map.mapRoomSize.x; i++) {
-			for (int j = 0; j < Map.mapRoomSize.y; j++) {
-				if (roomGrid[i][j] != null)
-					roomGrid[i][j].drawDoors();
-			}
-		}
-	}
-
 	/**
 	 * Compute a full map render and stores it in mapFBO
 	 */
 	public void renderMapToFrameBuffers() {
+		checkRoomsUpdate();
 		for (int i = 0; i < textureNb; i++) {
 			for (int j = 0; j < textureNb; j++) {
 				if (shouldBeRendered[i][j]) {
 					shouldBeRendered[i][j] = false;
 					for (int layer = 0; layer < maxLayer; layer++) {
-
 						getFBO(i, j, layer).bind();
 						glPushMatrix();
 						glLoadIdentity();
@@ -166,6 +158,40 @@ public class Map implements ShadowCaster {
 						glPopMatrix();
 
 						getFBO(i, j, layer).unbind();
+					}
+
+				}
+			}
+		}
+	}
+
+	private void checkRoomsUpdate() {
+		int minX;
+		int maxX;
+		int minY;
+		int maxY;
+		for (int i = 0; i < textureNb; i++) {
+			for (int j = 0; j < textureNb; j++) {
+
+				minX = (int) Math.max(0, ((Map.currentBufferPosition.x + i
+						* Map.textureSize) / Map.roomPixelSize.x));
+				maxX = (int) Math.min(Map.mapRoomSize.x,
+						((Map.currentBufferPosition.x + (i + 1)
+								* Map.textureSize) / Map.roomPixelSize.x) + 1);
+				minY = (int) Math.max(0, ((Map.currentBufferPosition.y + j
+						* Map.textureSize) / Map.roomPixelSize.y));
+				maxY = (int) Math.min(Map.mapRoomSize.y,
+						((Map.currentBufferPosition.y + (j + 1)
+								* Map.textureSize) / Map.roomPixelSize.y) + 1);
+
+				for (int k = minX; k < maxX; k++) {
+					for (int l = minY; l < maxY; l++) {
+						if (roomGrid[k][l] != null) {
+							if (!roomGrid[k][l].renderIsUpdated()) {
+								shouldBeRendered[i][j] = true;
+								LightManager.needFBOUpdate(i, j);
+							}
+						}
 					}
 				}
 			}
@@ -220,6 +246,12 @@ public class Map implements ShadowCaster {
 		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
+		Sas[] doors = roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y]
+				.getSas();
+		for (int i = 0; i < 4; i++) {
+			if (doors[i] != null)
+				doors[i].open();
+		}
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
 		if (pos.x - ConfigManager.resolution.x / 2 < currentBufferPosition.x)
@@ -261,7 +293,7 @@ public class Map implements ShadowCaster {
 			}
 			indy = (indy + 1 + textureNb) % textureNb;
 		}
-		LightManager.needStaticUpdate(translateMapFBOx, translateMapFBOy);
+		LightManager.needUpdate(translateMapFBOx, translateMapFBOy);
 
 	}
 
@@ -351,28 +383,32 @@ public class Map implements ShadowCaster {
 			coef += ownPressureCoef;
 			pressure += mainRoom.getPressure() * ownPressureCoef;
 
-			if (i - 1 >= 0 && mainRoom.getDoors()[3]!= null && mainRoom.getDoors()[3].isOpened()) {
+			if (i - 1 >= 0 && mainRoom.getDoors()[3] != null
+					&& mainRoom.getSas()[3].isOpened()) {
 				room = roomGrid[i - 1][j];
 				if (room != null) {
 					coef += neighboorPressureCoef;
 					pressure += room.getPressure() * neighboorPressureCoef;
 				}
 			}
-			if (j - 1 >= 0  && mainRoom.getDoors()[0]!= null && mainRoom.getDoors()[0].isOpened()) {
+			if (j - 1 >= 0 && mainRoom.getDoors()[0] != null
+					&& mainRoom.getSas()[0].isOpened()) {
 				room = roomGrid[i][j - 1];
 				if (room != null) {
 					coef += neighboorPressureCoef;
 					pressure += room.getPressure() * neighboorPressureCoef;
 				}
 			}
-			if (i + 1 < Map.mapRoomSize.x  && mainRoom.getDoors()[1]!= null && mainRoom.getDoors()[1].isOpened()) {
+			if (i + 1 < Map.mapRoomSize.x && mainRoom.getDoors()[1] != null
+					&& mainRoom.getSas()[1].isOpened()) {
 				room = roomGrid[i + 1][j];
 				if (room != null) {
 					coef += neighboorPressureCoef;
 					pressure += room.getPressure() * neighboorPressureCoef;
 				}
 			}
-			if (j + 1 < Map.mapRoomSize.y  && mainRoom.getDoors()[2]!= null && mainRoom.getDoors()[2].isOpened()) {
+			if (j + 1 < Map.mapRoomSize.y && mainRoom.getDoors()[2] != null
+					&& mainRoom.getSas()[2].isOpened()) {
 				room = roomGrid[i][j + 1];
 				if (room != null) {
 					coef += neighboorPressureCoef;

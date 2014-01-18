@@ -48,4 +48,8 @@ public class BlockFactory {
 	static public Block createSpawnBlock(){
 		return spawnBlock;
 	}
+	
+	static public Block createDoorBlock(Block underBlock, int i, int j){
+		return new DoorBlock(underBlock, i, j);
+	}
 }

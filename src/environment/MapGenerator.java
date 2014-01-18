@@ -113,18 +113,18 @@ public class MapGenerator {
 
 				if (roomsGrid[i][j] != null) {
 					if (j > 0 && roomsGrid[i][j - 1] != null) {
-						Door door = new Door(roomsGrid[i][j], roomsGrid[i][j-1], Orientation.HORIZONTAL);
-						if(Math.random()> 0.2)
-							door.open();
-						roomsGrid[i][j].createDoor(0,door);
-						roomsGrid[i][j-1].createDoor(2, door);
+						Door door1 = roomsGrid[i][j].createDoor(0);
+						Door door2 = roomsGrid[i][j-1].createDoor(2);
+						Sas sas = new Sas(roomsGrid[i][j], roomsGrid[i][j-1], door1, door2);
+						roomsGrid[i][j].setSas(sas,0);
+						roomsGrid[i][j-1].setSas(sas,2);
 					}
 					if (i > 0 && roomsGrid[i - 1][j] != null) {
-						Door door = new Door(roomsGrid[i][j], roomsGrid[i-1][j], Orientation.VERTICAL);
-						if(Math.random()> 0.5)
-							door.open();
-						roomsGrid[i][j].createDoor(3,door);
-						roomsGrid[i-1][j].createDoor(1, door);
+						Door door1 = roomsGrid[i][j].createDoor(3);
+						Door door2 = roomsGrid[i-1][j].createDoor(1);
+						Sas sas = new Sas(roomsGrid[i][j], roomsGrid[i-1][j], door1, door2);
+						roomsGrid[i][j].setSas(sas,3);
+						roomsGrid[i-1][j].setSas(sas,1);
 					}
 				}
 			}
