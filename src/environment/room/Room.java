@@ -35,6 +35,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	protected float pressure;
 	protected float newPressure;
 	protected Door[] doors = new Door[4];
+	protected int doorLayer = 1;
 	/* avoid dynamic allocation in computeShadow */
 	boolean[] neighbours = new boolean[4];
 	private Vector2f shadowPoints[] = new Vector2f[4];

@@ -15,7 +15,6 @@ import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
-import environment.room.Room;
 import event.control.Control;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -98,7 +97,7 @@ public class GameLoop extends Game{
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		p.draw();
-		map.drawDoors();
+		//map.drawDoors();
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();

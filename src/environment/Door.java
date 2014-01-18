@@ -3,6 +3,7 @@ package environment;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import rendering.Drawable;
 import environment.room.Room;
@@ -17,7 +18,7 @@ public class Door implements Drawable {
 	private int width = (int) (Map.blockPixelSize.x * 2);
 	private int posx;
 	private int posy;
-	private static Vector3f color = new Vector3f(1,0,1);
+	private static Vector4f color = new Vector4f(0.1f,0.1f,0.1f,1f);
 
 	public Door(Room r1, Room r2, Orientation orientation) {
 		this.r1 = r1;
@@ -58,7 +59,7 @@ public class Door implements Drawable {
 	
 	@Override
 	public void draw() {
-		glColor3f(color.x,color.y,color.z);
+		glColor4f(color.x,color.y,color.z,color.w);
 		if (!opened) {
 			if (orientation == Orientation.HORIZONTAL) {
 				glBegin(GL_QUADS);
@@ -73,7 +74,6 @@ public class Door implements Drawable {
 				glVertex2f(posx + thickness, posy + width);
 				glVertex2f(posx + thickness, posy);
 				glVertex2f(posx, posy);
-				
 				glEnd();
 			}
 		}

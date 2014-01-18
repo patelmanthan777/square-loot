@@ -114,7 +114,7 @@ public class MapGenerator {
 				if (roomsGrid[i][j] != null) {
 					if (j > 0 && roomsGrid[i][j - 1] != null) {
 						Door door = new Door(roomsGrid[i][j], roomsGrid[i][j-1], Orientation.HORIZONTAL);
-						if(Math.random()> 0.5)
+						if(Math.random()> 0.2)
 							door.open();
 						roomsGrid[i][j].createDoor(0,door);
 						roomsGrid[i][j-1].createDoor(2, door);
