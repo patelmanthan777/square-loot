@@ -23,7 +23,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private Laser laser;
 	private Light light;
 	
-	private Weapon weapon = new LaserRifle(250);
+	private Weapon weapon;
 	
 	public Player(Vector2f pos, int inventorySize) {
 		super(pos, inventorySize);
@@ -32,6 +32,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
+		weapon = new LaserRifle(250, pos.x, pos.y);
 	}
 
 	

@@ -67,7 +67,7 @@ public class GameLoop extends Game{
 		
 		p.setLight(playerLight);
 		p.setLaser(playerLaser);		
-		p.pickUp(new LaserRifle(250));
+		//p.pickUp(new LaserRifle(250,200,200));
 		
 		LightManager.addShadowCaster(map);
 		
@@ -110,11 +110,11 @@ public class GameLoop extends Game{
 		background.draw();
 		map.renderMapToFrameBuffers();
 		LightManager.render();
+		map.drawItems();
 		p.draw();
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
-		OverlayManager.render();
-		
+		OverlayManager.render();		
 		glPopMatrix();
 	}
 }

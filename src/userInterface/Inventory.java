@@ -217,7 +217,7 @@ public class Inventory extends Overlay{
 								coord[1]+ borderPixelSize +
 								i * (borderPixelSize + itemPixelSize[1]));
 						glEnd();
-						items[rowIndex+i][j].drawInventory(coord[0]+ borderPixelSize +
+						items[rowIndex+i][j].draw(coord[0]+ borderPixelSize +
 								j * (borderPixelSize + itemPixelSize[0]),
 								coord[1]+ borderPixelSize +
 								i * (borderPixelSize + itemPixelSize[1]),

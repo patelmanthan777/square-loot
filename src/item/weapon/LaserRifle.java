@@ -9,9 +9,13 @@ import entity.projectile.ProjectileManager;
 
 public class LaserRifle extends Weapon {
 
-	public LaserRifle(long fireRate)
+	
+
+	public LaserRifle(long fireRate, float x ,float y)
 	{
-		super(fireRate);
+		super(fireRate, x, y);
+		position.x = x;
+		position.y = y;	
 	}
 
 	@Override
@@ -22,14 +26,18 @@ public class LaserRifle extends Weapon {
 			this.updateLastShot();
 		}		
 	}
+	
+	public void draw(){
+		draw(position.x, position.y, drawSize[0], drawSize[1]);
+	}
 
 	/**
 	 * Draw a representation of the weapon in the inventory.
 	 */
-	public void drawInventory(float x,
-			   				  float y,
-			   				  float width,
-			                  float height){
+	public void draw(float x,
+			   		 float y,
+			   		 float width,
+			         float height){
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
