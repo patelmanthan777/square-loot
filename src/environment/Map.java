@@ -366,6 +366,15 @@ public class Map implements ShadowCaster {
 		}
 	}
 
+	public void drawItems(){
+		for (int i = 0 ; i < mapRoomSize.x; i++){
+			for (int j = 0 ; j < mapRoomSize.y; j++){
+				if(roomGrid[i][j] != null)
+					roomGrid[i][j].drawItems();
+			}
+		}		
+	}
+
 	/**
 	 * Update the pressure of the block of index (i,j) in the map
 	 * 

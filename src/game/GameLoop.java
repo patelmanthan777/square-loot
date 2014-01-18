@@ -1,4 +1,5 @@
 package game;
+import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
 import light.LightManager;
@@ -55,7 +56,9 @@ public class GameLoop extends Game{
 		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getDirection());
 		
 		p.setLight(playerLight);
-		p.setLaser(playerLaser);
+
+		p.setLaser(playerLaser);		
+		//p.pickUp(new LaserRifle(250,200,200));
 		
 		LightManager.addShadowCaster(map);
 		
@@ -63,6 +66,7 @@ public class GameLoop extends Game{
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
+		OverlayManager.createPlayerInventory(p);
 		
 		isRunning = true;
 	}
@@ -97,12 +101,12 @@ public class GameLoop extends Game{
 		background.draw();
 		map.renderMapToFrameBuffers();
 		LightManager.render();
+		map.drawItems();
 		p.draw();
 		//map.drawDoors();
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
-		OverlayManager.render();
-		
+		OverlayManager.render();		
 		glPopMatrix();
 	}
 }

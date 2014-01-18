@@ -1,5 +1,6 @@
 package entity.player;
 
+import item.Item;
 import item.weapon.LaserRifle;
 import item.weapon.Weapon;
 import light.Laser;
@@ -22,15 +23,16 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private Laser laser;
 	private Light light;
 	
-	private Weapon weapon = new LaserRifle(250);
+	private Weapon weapon;
 	
-	public Player(Vector2f pos) {
-		super(pos);
+	public Player(Vector2f pos, int inventorySize) {
+		super(pos, inventorySize);
 		Vector3f col = new Vector3f(0, 0, 0);
 		setColor(col);
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
+		weapon = new LaserRifle(250, pos.x, pos.y);
 	}
 
 	
@@ -38,9 +40,9 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	@Override
 	public boolean isInCollision(float x, float y, Map m) {
 		if (m.testCollision(x - halfSize.x, y - halfSize.y)
-				|| m.testCollision(x + halfSize.x, y - halfSize.y)
-				|| m.testCollision(x - halfSize.x, y + halfSize.y)
-				|| m.testCollision(x + halfSize.x, y + halfSize.y)) {
+			|| m.testCollision(x + halfSize.x, y - halfSize.y)
+			|| m.testCollision(x - halfSize.x, y + halfSize.y)
+			|| m.testCollision(x + halfSize.x, y + halfSize.y)) {
 			return true;
 		}
 		return false;
@@ -59,6 +61,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	@Override
 	public void draw() {
+		
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1,1,1);
@@ -75,6 +78,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		glEnd();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_BLEND);
+		
 	}
 
 	@Override
@@ -122,8 +126,11 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return light;
 	}
 	
+	public void pickUp(Item i){
+		inventory.add(i);
+	}
 
-
+	
 	public void primaryWeapon(float directionX, float directionY){
 		weapon.Fire(new Vector2f(position), new Vector2f(directionX,directionY));
 	}

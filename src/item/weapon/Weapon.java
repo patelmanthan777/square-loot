@@ -13,8 +13,9 @@ public abstract class Weapon extends Item {
 	 */
 	protected long lastShot;
 	
-	public Weapon(long fireRate)
+	public Weapon(long fireRate, float x, float y)
 	{
+		super(x,y);
 		this.fireRate = fireRate;
 		this.lastShot = 0;
 	}
