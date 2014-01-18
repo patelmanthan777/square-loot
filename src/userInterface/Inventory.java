@@ -2,7 +2,10 @@ package userInterface;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import item.Item;
+import item.weapon.Weapon;
 import userInterface.Overlay;
 
 
@@ -27,19 +30,19 @@ public class Inventory extends Overlay{
 	private int[] cursor = new int[2];
 	
 	private int rowIndex;
-	
+	private Weapon primaryWeapon;
 	
 	public Inventory(int size){
 		coord[0] = 200;
 		coord[1] = 200;
 		
-		itemPixelSize[0] = 100;
-		itemPixelSize[1] = 100;
+		itemPixelSize[0] = 50;
+		itemPixelSize[1] = 50;
 		
 		borderPixelSize = 5;
 		
 		inventoryPixelSize[0] = colNb * (itemPixelSize[0] + borderPixelSize) + borderPixelSize;
-		inventoryPixelSize[1] = dispRowNb * (itemPixelSize[1] + borderPixelSize) + borderPixelSize;
+		inventoryPixelSize[1] = (dispRowNb+1) * (itemPixelSize[1] + borderPixelSize) + borderPixelSize;
 		
 		weight = 0f;		
 				
@@ -58,7 +61,8 @@ public class Inventory extends Overlay{
 		cursor[0] = -1;
 		cursor[1] = -1;
 		
-		rowIndex = 0;	
+		rowIndex = 0;
+		primaryWeapon = null;
 	}
 	
 	/**
@@ -68,10 +72,12 @@ public class Inventory extends Overlay{
 	 * @return null if the item was added successfully, <b>i</b> otherwise.
 	 */		
 	public Item add(Item i){
-		if (size < sizeMax){
+		if(primaryWeapon == null && i instanceof Weapon)
+			primaryWeapon = (Weapon) i;
+		else if (size < sizeMax){
 			items[itemCurs[0]][itemCurs[1]] = i;			
 			size ++;
-			weight += i.getWeight();
+			weight += i.getWeight();			
 			
 			if (size < sizeMax){
 				boolean update = false;
@@ -176,8 +182,14 @@ public class Inventory extends Overlay{
 		
 	}
 	
+	public void firePrimaryWeapon(float x, float y, float dirx, float diry){
+		if(primaryWeapon != null)
+			primaryWeapon.Fire(new Vector2f(x,y), new Vector2f(dirx,diry));
+	}
+	
 	public void draw(){		
 		if(isOpen()){
+			/*Background*/
 			glPushMatrix();		
 			glLoadIdentity();
 			glDisable(GL_BLEND);
@@ -193,8 +205,37 @@ public class Inventory extends Overlay{
 			glVertex2f(coord[0]+inventoryPixelSize[0], coord[1]);
 			glVertex2f(coord[0], coord[1]);
 			
-								
-						
+			/*Equipped items (weapons, ...)*/
+			if(primaryWeapon != null){
+				glColor3f(0.00f, 0.00f, 0.18f);
+				glVertex2f(coord[0] + borderPixelSize,						
+						coord[1] + (borderPixelSize + itemPixelSize[1]));
+				glVertex2f(coord[0] + borderPixelSize + itemPixelSize[0],
+						coord[1] + borderPixelSize + itemPixelSize[1]);												
+				glVertex2f(coord[0] + borderPixelSize + itemPixelSize[0],
+						coord[1]+ borderPixelSize);
+				glVertex2f(coord[0] + borderPixelSize,
+						coord[1]+ borderPixelSize);
+				glEnd();
+				primaryWeapon.draw(coord[0]+ borderPixelSize,
+								   coord[1]+ borderPixelSize,
+						           itemPixelSize[0],
+						           itemPixelSize[1]);
+				glBegin(GL_QUADS);
+			}
+			else{
+				glColor3f(0.00f, 0.00f, 0.24f);
+				glVertex2f(coord[0] + borderPixelSize,						
+						coord[1] + (borderPixelSize + itemPixelSize[1]));
+				glVertex2f(coord[0] + borderPixelSize + itemPixelSize[0],
+						coord[1] + borderPixelSize + itemPixelSize[1]);												
+				glVertex2f(coord[0] + borderPixelSize + itemPixelSize[0],
+						coord[1]+ borderPixelSize);
+				glVertex2f(coord[0] + borderPixelSize,
+						coord[1]+ borderPixelSize);				
+			}
+				
+			/*Other items*/
 			for(int i = 0; i< dispRowNb; i++){
 				for(int j = 0; j < colNb; j++){
 				
@@ -203,24 +244,24 @@ public class Inventory extends Overlay{
 						glVertex2f(coord[0] + borderPixelSize +
 								j * (borderPixelSize + itemPixelSize[0]),
 								coord[1] +
-								(i+1) * (borderPixelSize + itemPixelSize[1]));
+								(i+2) * (borderPixelSize + itemPixelSize[1]));
 						glVertex2f(coord[0] + 
 								(j+1) * (borderPixelSize + itemPixelSize[0]),
 								coord[1] +
-								(i+1) * (borderPixelSize + itemPixelSize[1]));												
+								(i+2) * (borderPixelSize + itemPixelSize[1]));												
 						glVertex2f(coord[0] +
 								(j+1) * (borderPixelSize + itemPixelSize[0]),
 								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]));
+								(i+1) * (borderPixelSize + itemPixelSize[1]));
 						glVertex2f(coord[0] + borderPixelSize +
 								j * (borderPixelSize + itemPixelSize[0]),
 								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]));
+								(i+1) * (borderPixelSize + itemPixelSize[1]));
 						glEnd();
 						items[rowIndex+i][j].draw(coord[0]+ borderPixelSize +
 								j * (borderPixelSize + itemPixelSize[0]),
 								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]),
+								(i+1) * (borderPixelSize + itemPixelSize[1]),
 								itemPixelSize[0],
 								itemPixelSize[1]);
 						glBegin(GL_QUADS);
@@ -230,20 +271,19 @@ public class Inventory extends Overlay{
 						glVertex2f(coord[0] + borderPixelSize +
 								j * (borderPixelSize + itemPixelSize[0]),
 								coord[1] +
-								(i+1) * (borderPixelSize + itemPixelSize[1]));
+								(i+2) * (borderPixelSize + itemPixelSize[1]));
 						glVertex2f(coord[0] + 
 								(j+1) * (borderPixelSize + itemPixelSize[0]),
 								coord[1] +
-								(i+1) * (borderPixelSize + itemPixelSize[1]));												
+								(i+2) * (borderPixelSize + itemPixelSize[1]));												
 						glVertex2f(coord[0] +
 								(j+1) * (borderPixelSize + itemPixelSize[0]),
 								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]));
+								(i+1) * (borderPixelSize + itemPixelSize[1]));
 						glVertex2f(coord[0] + borderPixelSize +
 								j * (borderPixelSize + itemPixelSize[0]),
 								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]));
-
+								(i+1) * (borderPixelSize + itemPixelSize[1]));
 					}											
 				}
 			}

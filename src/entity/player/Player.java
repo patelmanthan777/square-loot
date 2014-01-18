@@ -1,8 +1,6 @@
 package entity.player;
 
 import item.Item;
-import item.weapon.LaserRifle;
-import item.weapon.Weapon;
 import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
@@ -23,7 +21,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private Laser laser;
 	private Light light;
 	
-	private Weapon weapon;
 	
 	public Player(Vector2f pos, int inventorySize) {
 		super(pos, inventorySize);
@@ -32,7 +29,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
-		weapon = new LaserRifle(250, pos.x, pos.y);
 	}
 
 	
@@ -132,7 +128,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	
 	public void primaryWeapon(float directionX, float directionY){
-		weapon.Fire(new Vector2f(position), new Vector2f(directionX,directionY));
+		inventory.firePrimaryWeapon(position.x, position.y,
+									directionX, directionY);
 	}
 
 }
