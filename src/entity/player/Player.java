@@ -61,7 +61,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	@Override
 	public void draw() {
-		glEnable(GL_TEXTURE_2D);
+		
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1,1,1);
@@ -78,7 +78,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		glEnd();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);	
+		
 	}
 
 	@Override

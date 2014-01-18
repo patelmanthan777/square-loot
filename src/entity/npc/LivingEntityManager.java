@@ -29,8 +29,7 @@ public class LivingEntityManager {
 		}
 	}
 	
-	public static void render(){
-		glEnable(GL_TEXTURE_2D);
+	public static void render(){	
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindTexture(GL_TEXTURE_2D, TextureManager.zombieTexture().getTextureID());
@@ -41,7 +40,6 @@ public class LivingEntityManager {
 		glEnd();
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);
 	}
 	
 	public static Player createPlayer(){

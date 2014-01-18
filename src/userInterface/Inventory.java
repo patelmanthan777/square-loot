@@ -217,12 +217,14 @@ public class Inventory extends Overlay{
 								coord[1]+ borderPixelSize +
 								i * (borderPixelSize + itemPixelSize[1]));
 						glEnd();
+						glEnable(GL_TEXTURE_2D);	
 						items[rowIndex+i][j].draw(coord[0]+ borderPixelSize +
 								j * (borderPixelSize + itemPixelSize[0]),
 								coord[1]+ borderPixelSize +
 								i * (borderPixelSize + itemPixelSize[1]),
 								itemPixelSize[0],
 								itemPixelSize[1]);
+						glDisable(GL_TEXTURE_2D);	
 						glBegin(GL_QUADS);
 					}
 					else{
