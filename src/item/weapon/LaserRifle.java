@@ -19,7 +19,7 @@ public class LaserRifle extends Weapon {
 	}
 
 	@Override
-	public void Fire(Vector2f pos, Vector2f target) {	
+	public void fire(Vector2f pos, Vector2f target) {	
 		if(this.readyToFire())
 		{
 			ProjectileManager.createBullet(pos, target);

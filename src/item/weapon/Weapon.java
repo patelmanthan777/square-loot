@@ -41,6 +41,9 @@ public abstract class Weapon extends Equipment {
 	 * @param pos the position where the weapon has been fire
 	 * @param target the target area
 	 */
-	abstract public void Fire(Vector2f pos, Vector2f target);
+	abstract public void fire(Vector2f pos, Vector2f target);
 	
+	public void action(Vector2f pos, Vector2f target){
+		fire(pos,target);
+	}
 }
