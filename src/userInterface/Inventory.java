@@ -185,7 +185,7 @@ public class Inventory extends Overlay{
 	}
 	
 	public void equippedItemAction(int idx, float x, float y, float dirx, float diry){
-		if(idx < equippedNbMax)		
+		if(idx < equippedNbMax && equippedItems.access(idx) != null)		
 			equippedItems.access(idx).action(new Vector2f(x   , y   ),
 											 new Vector2f(dirx, diry));
 	}
