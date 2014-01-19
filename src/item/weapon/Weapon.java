@@ -3,9 +3,9 @@ package item.weapon;
 import org.lwjgl.util.vector.Vector2f;
 
 import event.Timer;
-import item.Item;
+import item.Equipment;
 
-public abstract class Weapon extends Item {
+public abstract class Weapon extends Equipment {
 	protected long fireRate;
 	/**
 	 * Last shot timestamp, allow the handling of the

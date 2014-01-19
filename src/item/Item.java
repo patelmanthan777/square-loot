@@ -6,7 +6,7 @@ import rendering.Drawable;
 import entity.Node;
 
 public abstract class Item extends Node implements Drawable{
-	float weight = 0;
+	protected float weight = 0;	
 	
 	protected int [] drawSize = new int[2];	
 	
