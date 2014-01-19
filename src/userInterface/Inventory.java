@@ -217,11 +217,13 @@ public class Inventory extends Overlay{
 										itemPixelSize[0],
 										itemPixelSize[1]);				
 					glEnd();
+					glEnable(GL_TEXTURE_2D);
 					equippedItems.access(i).draw(coord[0]+ borderPixelSize +
 												 i * (borderPixelSize + itemPixelSize[0]),
 									   			 coord[1]+ borderPixelSize,
 									   			 itemPixelSize[0],
 									   			 itemPixelSize[1]);
+					glDisable(GL_TEXTURE_2D);
 					glBegin(GL_QUADS);
 				}
 				else{
@@ -247,13 +249,16 @@ public class Inventory extends Overlay{
 												itemPixelSize[0],
 												itemPixelSize[1]);
 							glEnd();
+							glEnable(GL_TEXTURE_2D);
 							items.access(colNb*(rowIndex+i)+j).draw(coord[0]+ borderPixelSize +
 									j * (borderPixelSize + itemPixelSize[0]),
 									coord[1]+ borderPixelSize +
 									(i+1) * (borderPixelSize + itemPixelSize[1]),
 									itemPixelSize[0],
 									itemPixelSize[1]);
+							glDisable(GL_TEXTURE_2D);
 							glBegin(GL_QUADS);
+							
 						}
 						else{
 							glColor3f(0.00f, 0.00f, 0.24f);
@@ -262,8 +267,7 @@ public class Inventory extends Overlay{
 												coord[1]+ borderPixelSize +
 												(i+1) * (borderPixelSize + itemPixelSize[1]),
 												itemPixelSize[0],
-												itemPixelSize[1]);
-				
+												itemPixelSize[1]);				
 						}					
 						else{
 							glColor3f(0.00f, 0.00f, 0.10f);
@@ -274,6 +278,7 @@ public class Inventory extends Overlay{
 												itemPixelSize[0],
 												itemPixelSize[1]);
 						}
+
 				}
 			}
 								

@@ -37,8 +37,7 @@ public class LaserRifle extends Weapon {
 	public void draw(float x,
 			   		 float y,
 			   		 float width,
-			         float height){
-		glEnable(GL_TEXTURE_2D);
+			         float height){	
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1,1,1);
@@ -54,8 +53,7 @@ public class LaserRifle extends Weapon {
 		glVertex2f(x, y);
 		glEnd();
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glDisable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);				
+		glDisable(GL_BLEND);					
 	}
 	
 }
