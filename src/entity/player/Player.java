@@ -128,8 +128,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	
 	public void primaryWeapon(float directionX, float directionY){
-		inventory.firePrimaryWeapon(position.x, position.y,
-									directionX, directionY);
+		inventory.equippedItemAction(0, position.x, position.y,
+									    directionX, directionY);
 	}
 
 }
