@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import item.Item;
 import item.Equipment;
-import item.weapon.Weapon;
 import userInterface.Overlay;
 import utils.GraphicsAL;
 import utils.NonContinuousTable;
@@ -144,6 +143,50 @@ public class Inventory extends Overlay{
 		return tmp;
 	}
 	 
+	public void move(float srcx, float srcy, float destx, float desty){
+		setCursor((int) srcx, (int)srcy);
+		
+		itemState srcitem = selectedItem;
+		int srcCurs = cursor;
+		
+		setCursor((int) destx, (int) desty);
+		
+		if(srcCurs != -1 && cursor != -1)
+			if(srcitem == itemState.EQUIPPED &&
+			   selectedItem == itemState.EQUIPPED)
+				equippedItems.move(srcCurs, cursor);
+			else if(srcitem == itemState.STORED &&
+				    selectedItem == itemState.STORED)
+				items.move(srcCurs, cursor);
+			else if(srcitem == itemState.EQUIPPED &&
+				    selectedItem == itemState.STORED){
+				Item tmp = equippedItems.remove(srcCurs);
+				tmp = items.add(tmp, cursor);
+								
+				if(tmp instanceof Equipment)
+					equippedItems.add((Equipment) tmp, srcCurs);
+				else{
+					tmp = items.add(tmp);
+					
+					/*if there is no size left return to the original state*/
+					if(tmp != null){
+						equippedItems.add((Equipment)
+										   items.remove(cursor), srcCurs);
+						items.add(tmp, cursor);
+					}						
+				}				
+			}
+			else{
+				Item tmp = items.remove(srcCurs);
+				
+				if(tmp instanceof Equipment)
+					tmp = equippedItems.add((Equipment) tmp, cursor);
+
+				items.add(tmp, srcCurs);
+					
+			}
+				
+	}
 	
 	public float getWeight(){
 		return weight;
@@ -175,15 +218,77 @@ public class Inventory extends Overlay{
 	}
 	
 	/**
+	 * Test whether the cursor is inside the inventory window
+	 * 
+	 * @param x
+	 * @param y
+	 * @return <b>true</b> if the cursor is inside the inventory window.
+	 */
+	public boolean isInsideWindow(float x, float y){
+		return coord[0] <= x && x <= coord[0] + inventoryPixelSize[0] &&
+			   coord[1] <= y && y <= coord[1] + inventoryPixelSize[1];
+	}
+	
+	/**
+	 * Test whether the cursor is inside the item cell whose upper
+	 * left corner is locater at 
+	 * 
+	 * @param cx is the cursor horizontal coordinate
+	 * @param cy is the cursor vertical coordinate
+	 * @param ix is the item horizontal coordinate
+	 * @param iy is the item vertical coordinate
+	 * @return <b>true</b> if the cursor is inside the item cell.
+	 */
+	private boolean isInsideItem(float cx, float cy, float ix, float iy){
+		return ix <= cx && cx <= ix + itemPixelSize[0] &&
+			   iy <= cy && cy <= iy + itemPixelSize[1];
+	}
+	
+	/**
 	 * Set <b>cursor</b> and <b>selectedItem</b> to the values
 	 * corresponding to the item displayed at (<b>x</b>,<b>y</b>).
 	 * @param x
 	 * @param y
 	 */
 	private void setCursor(int x, int y){
-		
+		if(isInsideWindow(x, y)){
+			for(int i = 0; i < equippedNbMax; i++){
+				if(isInsideItem(x,
+						  		y,
+						  		coord[0]+ borderPixelSize +
+								(borderPixelSize + itemPixelSize[0])/2 +
+								i * (borderPixelSize + itemPixelSize[0]),
+								coord[1]+ borderPixelSize)){
+					selectedItem = itemState.EQUIPPED;
+					cursor = i; 
+				}					
+			}
+			
+			for(int i = 0; i< dispRowNb; i++){
+				for(int j = 0; j < colNb; j++){
+					if(isInsideItem(x,
+					  		y,
+					  		coord[0] + borderPixelSize +
+							j * (borderPixelSize + itemPixelSize[0]),
+							coord[1]+ borderPixelSize +
+							(i+1) * (borderPixelSize + itemPixelSize[1]))){
+						selectedItem = itemState.EQUIPPED;
+						cursor = colNb*(rowIndex+i)+j; 
+					}
+				}				
+			}			
+		}
 	}
 	
+	/**
+	 * Triggers the action of the item equipped in the <b>idx</b> cell.
+	 * 
+	 * @param idx
+	 * @param x
+	 * @param y
+	 * @param dirx
+	 * @param diry
+	 */
 	public void equippedItemAction(int idx, float x, float y, float dirx, float diry){
 		if(idx < equippedNbMax && equippedItems.access(idx) != null)		
 			equippedItems.access(idx).action(new Vector2f(x   , y   ),
@@ -212,6 +317,7 @@ public class Inventory extends Overlay{
 				if(equippedItems.access(i) != null){
 					glColor3f(0.00f, 0.00f, 0.18f);
 					GraphicsAL.drawQuad(coord[0] + borderPixelSize +
+										(borderPixelSize + itemPixelSize[0])/2 +
 										i * (borderPixelSize + itemPixelSize[0]), 
 										coord[1] + borderPixelSize,
 										itemPixelSize[0],
@@ -219,6 +325,7 @@ public class Inventory extends Overlay{
 					glEnd();
 					glEnable(GL_TEXTURE_2D);
 					equippedItems.access(i).draw(coord[0]+ borderPixelSize +
+												 (borderPixelSize + itemPixelSize[0])/2 +
 												 i * (borderPixelSize + itemPixelSize[0]),
 									   			 coord[1]+ borderPixelSize,
 									   			 itemPixelSize[0],
@@ -229,6 +336,7 @@ public class Inventory extends Overlay{
 				else{
 					glColor3f(0.00f, 0.00f, 0.24f);
 					GraphicsAL.drawQuad(coord[0] + borderPixelSize +
+										(borderPixelSize + itemPixelSize[0])/2 +
 										i * (borderPixelSize + itemPixelSize[0]), 
 										coord[1] + borderPixelSize,
 										itemPixelSize[0],

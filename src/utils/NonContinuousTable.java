@@ -15,7 +15,7 @@ public class NonContinuousTable<T> {
 		dataCurs = 0;
 	}
 	
-	private T add(T t, int idx){
+	public T add(T t, int idx){
 		if(size < sizeMax){
 			if(data[idx] == null){
 				data[idx] = t;
