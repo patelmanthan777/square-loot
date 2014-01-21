@@ -29,6 +29,8 @@ public class PlayerControl {
 	private playerActions[] actions;
 	private Player p;
 
+	private float[] savedMouseCoordinates;
+	
 	public PlayerControl(KeyboardControler keys, MouseControler mouse, Player p) {
 
 		this.keys = keys;
@@ -38,6 +40,10 @@ public class PlayerControl {
 		buttonBinding = new HashMap<playerActions, LinkedList<Integer>>();
 		actions = playerActions.values();
 
+		savedMouseCoordinates= new float[2];
+		savedMouseCoordinates[0]=-1;
+		savedMouseCoordinates[1]=-1;
+		
 		// MOVE_FORWARD
 		LinkedList<Integer> l = new LinkedList<Integer>();
 		l.add(Keyboard.KEY_W);
@@ -178,7 +184,22 @@ public class PlayerControl {
 		}
 	}
 	private void primaryWeaponAction(KeyState state) {
-		if (state == KeyState.HELD || state == KeyState.PRESSED) {
+		if (p.getInventory().isOpen() &&
+			p.getInventory().isInsideWindow(mouse.position.x,
+											mouse.position.y)){
+			if(state == KeyState.PRESSED){
+				savedMouseCoordinates[0] = mouse.position.x;
+				savedMouseCoordinates[1] = mouse.position.y;
+			}
+			else if(state == KeyState.RELEASED &&
+					savedMouseCoordinates[0] != -1 &&
+					savedMouseCoordinates[1] != -1)
+				p.getInventory().move(savedMouseCoordinates[0],
+									  savedMouseCoordinates[1],
+									  mouse.position.x,
+									  mouse.position.y);
+		}
+		else if (state == KeyState.HELD || state == KeyState.PRESSED) {
 			p.primaryWeapon(mouse.direction.x,mouse.direction.y);
 		}
 	}

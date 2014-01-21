@@ -163,7 +163,7 @@ public class Inventory extends Overlay{
 				Item tmp = equippedItems.remove(srcCurs);
 				tmp = items.add(tmp, cursor);
 								
-				if(tmp instanceof Equipment)
+				if(tmp instanceof Equipment || tmp == null)
 					equippedItems.add((Equipment) tmp, srcCurs);
 				else{
 					tmp = items.add(tmp);
@@ -272,7 +272,7 @@ public class Inventory extends Overlay{
 							j * (borderPixelSize + itemPixelSize[0]),
 							coord[1]+ borderPixelSize +
 							(i+1) * (borderPixelSize + itemPixelSize[1]))){
-						selectedItem = itemState.EQUIPPED;
+						selectedItem = itemState.STORED;
 						cursor = colNb*(rowIndex+i)+j; 
 					}
 				}				
