@@ -26,7 +26,8 @@ public class Inventory extends Overlay{
 	
 	private enum itemState {
 		EQUIPPED,
-		STORED
+		STORED,
+		NOITEM
 	}
 	
 	/*Stored*/
@@ -37,10 +38,13 @@ public class Inventory extends Overlay{
 	private static final int equippedNbMax = 4;
 	private NonContinuousTable<Equipment> equippedItems;
 	
+	
 	private itemState selectedItem;
 	private int cursor;
 	
 	private int rowIndex;
+	
+	/*Moving feature*/
 	
 	
 	public Inventory(int size){
@@ -64,7 +68,7 @@ public class Inventory extends Overlay{
 				new NonContinuousTable<Equipment>(4, new Equipment[equippedNbMax]);
 								
 		
-		selectedItem = null;
+		selectedItem = itemState.NOITEM;
 		cursor = -1;
 		
 		rowIndex = 0;		
@@ -110,10 +114,12 @@ public class Inventory extends Overlay{
 			return equippedItems.access(cursor);
 		case STORED:
 			return items.access(cursor);
+		case NOITEM:
 		}
 		
+		unselect();
 		return null;
-	}
+	}		
 	
 	/**
 	 * Remove the object displayed at (<b>x</b>, <b>y</b>) from the inventory.
@@ -125,33 +131,41 @@ public class Inventory extends Overlay{
 		setCursor((int) x, (int) y);
 		
 		Item tmp = null;
-		
-		if(cursor != -1)
+				
 			
-			switch (selectedItem){
-			case EQUIPPED:
-				tmp = equippedItems.remove(cursor);
-				break;
-			case STORED:
-				tmp = items.remove(cursor);
-				break;
-			}
+		switch (selectedItem){
+		case EQUIPPED:
+			tmp = equippedItems.remove(cursor);
+			break;
+		case STORED:
+			tmp = items.remove(cursor);
+			break;
+		case NOITEM:
+		}
 		
 		if(tmp != null)
 			weight -= tmp.getWeight();
-		
+	
+		unselect();
 		return tmp;
 	}
 	 
-	public void move(float srcx, float srcy, float destx, float desty){
-		setCursor((int) srcx, (int)srcy);
-		
+	public void select(float x, float y){
+		setCursor((int) x, (int)y);
+	}
+	
+	public void unselect(){
+		selectedItem = itemState.NOITEM;
+	}
+	
+	public void move(float destx, float desty){				
 		itemState srcitem = selectedItem;
 		int srcCurs = cursor;
 		
 		setCursor((int) destx, (int) desty);
 		
-		if(srcCurs != -1 && cursor != -1)
+		if(srcitem != itemState.NOITEM &&
+		   selectedItem != itemState.NOITEM)
 			if(srcitem == itemState.EQUIPPED &&
 			   selectedItem == itemState.EQUIPPED)
 				equippedItems.move(srcCurs, cursor);
@@ -185,6 +199,8 @@ public class Inventory extends Overlay{
 				items.add(tmp, srcCurs);
 					
 			}
+		else
+			unselect();
 				
 	}
 	
@@ -251,6 +267,7 @@ public class Inventory extends Overlay{
 	 * @param y
 	 */
 	private void setCursor(int x, int y){
+		unselect();
 		if(isInsideWindow(x, y)){
 			for(int i = 0; i < equippedNbMax; i++){
 				if(isInsideItem(x,
