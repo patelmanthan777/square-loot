@@ -2,8 +2,14 @@ package userInterface;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import item.Item;
+import item.Equipment;
+import item.weapon.Weapon;
 import userInterface.Overlay;
+import utils.GraphicsAL;
+import utils.NonContinuousTable;
 
 
 public class Inventory extends Overlay{
@@ -19,12 +25,21 @@ public class Inventory extends Overlay{
 	
 	private float weight;
 	
-	private Item[][] items;
-	private	int[] itemCurs = new int[2];
-	private int size;
-	private int sizeMax;
+	private enum itemState {
+		EQUIPPED,
+		STORED
+	}
 	
-	private int[] cursor = new int[2];
+	/*Stored*/
+	private int size;
+	private NonContinuousTable<Item> items;	
+	
+	/*Equipped*/
+	private static final int equippedNbMax = 4;
+	private NonContinuousTable<Equipment> equippedItems;
+	
+	private itemState selectedItem;
+	private int cursor;
 	
 	private int rowIndex;
 	
@@ -33,66 +48,52 @@ public class Inventory extends Overlay{
 		coord[0] = 200;
 		coord[1] = 200;
 		
-		itemPixelSize[0] = 100;
-		itemPixelSize[1] = 100;
+		itemPixelSize[0] = 50;
+		itemPixelSize[1] = 50;
 		
 		borderPixelSize = 5;
 		
 		inventoryPixelSize[0] = colNb * (itemPixelSize[0] + borderPixelSize) + borderPixelSize;
-		inventoryPixelSize[1] = dispRowNb * (itemPixelSize[1] + borderPixelSize) + borderPixelSize;
+		inventoryPixelSize[1] = (dispRowNb+1) * (itemPixelSize[1] + borderPixelSize) + borderPixelSize;
 		
 		weight = 0f;		
-				
-		items = new Item[(int)(size / colNb)+1][colNb];
-		for (int i = 0; i < (int)(size / colNb)+1; i++){
-			for (int j = 0; j < colNb; j++){
-				items[i][j] = null;
-			}
-		}
+			
+		this.size = size;
+		items = new NonContinuousTable<Item>(size, new Item[size]);
 		
-		itemCurs[0] = 0;
-		itemCurs[1] = 0;
-		this.size = 0;
-		sizeMax  = size;
+		equippedItems =
+				new NonContinuousTable<Equipment>(4, new Equipment[equippedNbMax]);
+								
 		
-		cursor[0] = -1;
-		cursor[1] = -1;
+		selectedItem = null;
+		cursor = -1;
 		
-		rowIndex = 0;	
+		rowIndex = 0;		
 	}
 	
 	/**
-	 * Add an item to the inventory.
+	 * Add an item to the inventory, and automatically equip it
+	 * if it is possible.
 	 * 
 	 * @param i is the item to added
 	 * @return null if the item was added successfully, <b>i</b> otherwise.
 	 */		
 	public Item add(Item i){
-		if (size < sizeMax){
-			items[itemCurs[0]][itemCurs[1]] = i;			
-			size ++;
-			weight += i.getWeight();
-			
-			if (size < sizeMax){
-				boolean update = false;
-				while(!update){					 
-					itemCurs[1] = (itemCurs[1] + 1) % colNb;
-					if(itemCurs[1] == 0)
-						itemCurs[0]++;
-					
-					if(items[itemCurs[0]][itemCurs[1]] == null)
-						update = true;
-				}
-			}
-			else{
-				itemCurs[0] = 4;
-				itemCurs[1] = (int)(size / colNb)+1;
-			}
-			
-			return null;
+		Item tmp = i;
+		
+		if(i instanceof Equipment){
+			tmp = equippedItems.add((Equipment) i);
 		}
 		
-		return i;
+		if(tmp != null){
+			tmp = items.add(tmp);								
+		}						
+		
+		if(tmp == null){
+			weight += i.getWeight();
+		}
+		
+		return tmp;		
 	}
 	
 	/**
@@ -103,9 +104,16 @@ public class Inventory extends Overlay{
 	 * @return the considered item
 	 */
 	public Item access(float x, float y){
-		getIdx((int) x, (int) y);
+		setCursor((int) x, (int) y);
 		
-		return items[cursor[0]][cursor[1]];
+		switch (selectedItem){
+		case EQUIPPED:
+			return equippedItems.access(cursor);
+		case STORED:
+			return items.access(cursor);
+		}
+		
+		return null;
 	}
 	
 	/**
@@ -115,25 +123,25 @@ public class Inventory extends Overlay{
 	 * @param y
 	 */
 	public Item remove(float x, float y){
-		getIdx((int) x, (int) y);
+		setCursor((int) x, (int) y);
 		
-		if(cursor[0] != -1 && cursor[1] != -1){
-			Item i = items[cursor[0]][cursor[1]];
-				
-			weight -= i.getWeight();
-			size--;
+		Item tmp = null;
+		
+		if(cursor != -1)
 			
-			if(itemCurs[0] >= cursor[0] && itemCurs[1] >= cursor[1]){
-				itemCurs[0] = cursor[0];
-				itemCurs[1] = cursor[1];
+			switch (selectedItem){
+			case EQUIPPED:
+				tmp = equippedItems.remove(cursor);
+				break;
+			case STORED:
+				tmp = items.remove(cursor);
+				break;
 			}
-			
-			items[cursor[0]][cursor[1]] = null;
 		
-			return i;
-		}
+		if(tmp != null)
+			weight -= tmp.getWeight();
 		
-		return null;
+		return tmp;
 	}
 	 
 	
@@ -167,17 +175,24 @@ public class Inventory extends Overlay{
 	}
 	
 	/**
-	 * Obtain the indices in the inventory corresponding to
-	 * the coordinates (<b>x</b>,<b>y</b>).
+	 * Set <b>cursor</b> and <b>selectedItem</b> to the values
+	 * corresponding to the item displayed at (<b>x</b>,<b>y</b>).
 	 * @param x
 	 * @param y
 	 */
-	private void getIdx(int x, int y){
+	private void setCursor(int x, int y){
 		
+	}
+	
+	public void equippedItemAction(int idx, float x, float y, float dirx, float diry){
+		if(idx < equippedNbMax && equippedItems.access(idx) != null)		
+			equippedItems.access(idx).action(new Vector2f(x   , y   ),
+											 new Vector2f(dirx, diry));
 	}
 	
 	public void draw(){		
 		if(isOpen()){
+			/*Background*/
 			glPushMatrix();		
 			glLoadIdentity();
 			glDisable(GL_BLEND);
@@ -186,67 +201,84 @@ public class Inventory extends Overlay{
 			glBegin(GL_QUADS);
 			glColor3f(0.03f, 0.04f, 0.29f);
 			
-
-			glVertex2f(coord[0], coord[1]+inventoryPixelSize[1]);
-			glVertex2f(coord[0]+inventoryPixelSize[0],
-					coord[1]+inventoryPixelSize[1]);
-			glVertex2f(coord[0]+inventoryPixelSize[0], coord[1]);
-			glVertex2f(coord[0], coord[1]);
+			GraphicsAL.drawQuad(coord[0],
+								coord[1],
+								inventoryPixelSize[0],
+								inventoryPixelSize[1]);				
+		
 			
-								
-						
+			/*Equipped items (weapons, ...)*/
+			for(int i = 0; i < equippedNbMax; i++){
+				if(equippedItems.access(i) != null){
+					glColor3f(0.00f, 0.00f, 0.18f);
+					GraphicsAL.drawQuad(coord[0] + borderPixelSize +
+										i * (borderPixelSize + itemPixelSize[0]), 
+										coord[1] + borderPixelSize,
+										itemPixelSize[0],
+										itemPixelSize[1]);				
+					glEnd();
+					glEnable(GL_TEXTURE_2D);
+					equippedItems.access(i).draw(coord[0]+ borderPixelSize +
+												 i * (borderPixelSize + itemPixelSize[0]),
+									   			 coord[1]+ borderPixelSize,
+									   			 itemPixelSize[0],
+									   			 itemPixelSize[1]);
+					glDisable(GL_TEXTURE_2D);
+					glBegin(GL_QUADS);
+				}
+				else{
+					glColor3f(0.00f, 0.00f, 0.24f);
+					GraphicsAL.drawQuad(coord[0] + borderPixelSize +
+										i * (borderPixelSize + itemPixelSize[0]), 
+										coord[1] + borderPixelSize,
+										itemPixelSize[0],
+										itemPixelSize[1]);								
+				}
+			}
+				
+			/*Other items*/
 			for(int i = 0; i< dispRowNb; i++){
 				for(int j = 0; j < colNb; j++){
-				
-					if(items[rowIndex+i][j] != null){
-						glColor3f(0.00f, 0.00f, 0.18f);
-						glVertex2f(coord[0] + borderPixelSize +
-								j * (borderPixelSize + itemPixelSize[0]),
-								coord[1] +
-								(i+1) * (borderPixelSize + itemPixelSize[1]));
-						glVertex2f(coord[0] + 
-								(j+1) * (borderPixelSize + itemPixelSize[0]),
-								coord[1] +
-								(i+1) * (borderPixelSize + itemPixelSize[1]));												
-						glVertex2f(coord[0] +
-								(j+1) * (borderPixelSize + itemPixelSize[0]),
-								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]));
-						glVertex2f(coord[0] + borderPixelSize +
-								j * (borderPixelSize + itemPixelSize[0]),
-								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]));
-						glEnd();
-						glEnable(GL_TEXTURE_2D);	
-						items[rowIndex+i][j].draw(coord[0]+ borderPixelSize +
-								j * (borderPixelSize + itemPixelSize[0]),
-								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]),
-								itemPixelSize[0],
-								itemPixelSize[1]);
-						glDisable(GL_TEXTURE_2D);	
-						glBegin(GL_QUADS);
-					}
-					else{
-						glColor3f(0.00f, 0.00f, 0.24f);
-						glVertex2f(coord[0] + borderPixelSize +
-								j * (borderPixelSize + itemPixelSize[0]),
-								coord[1] +
-								(i+1) * (borderPixelSize + itemPixelSize[1]));
-						glVertex2f(coord[0] + 
-								(j+1) * (borderPixelSize + itemPixelSize[0]),
-								coord[1] +
-								(i+1) * (borderPixelSize + itemPixelSize[1]));												
-						glVertex2f(coord[0] +
-								(j+1) * (borderPixelSize + itemPixelSize[0]),
-								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]));
-						glVertex2f(coord[0] + borderPixelSize +
-								j * (borderPixelSize + itemPixelSize[0]),
-								coord[1]+ borderPixelSize +
-								i * (borderPixelSize + itemPixelSize[1]));
+					if(colNb*(rowIndex+i)+j < size)
+						if(items.access(colNb*(rowIndex+i)+j) != null){
+							glColor3f(0.00f, 0.00f, 0.18f);
+							GraphicsAL.drawQuad(coord[0] + borderPixelSize +
+												j * (borderPixelSize + itemPixelSize[0]),
+												coord[1]+ borderPixelSize +
+												(i+1) * (borderPixelSize + itemPixelSize[1]),
+												itemPixelSize[0],
+												itemPixelSize[1]);
+							glEnd();
+							glEnable(GL_TEXTURE_2D);
+							items.access(colNb*(rowIndex+i)+j).draw(coord[0]+ borderPixelSize +
+									j * (borderPixelSize + itemPixelSize[0]),
+									coord[1]+ borderPixelSize +
+									(i+1) * (borderPixelSize + itemPixelSize[1]),
+									itemPixelSize[0],
+									itemPixelSize[1]);
+							glDisable(GL_TEXTURE_2D);
+							glBegin(GL_QUADS);
+							
+						}
+						else{
+							glColor3f(0.00f, 0.00f, 0.24f);
+							GraphicsAL.drawQuad(coord[0] + borderPixelSize +
+												j * (borderPixelSize + itemPixelSize[0]),
+												coord[1]+ borderPixelSize +
+												(i+1) * (borderPixelSize + itemPixelSize[1]),
+												itemPixelSize[0],
+												itemPixelSize[1]);				
+						}					
+						else{
+							glColor3f(0.00f, 0.00f, 0.10f);
+							GraphicsAL.drawQuad(coord[0] + borderPixelSize +
+												j * (borderPixelSize + itemPixelSize[0]),
+												coord[1]+ borderPixelSize +
+												(i+1) * (borderPixelSize + itemPixelSize[1]),
+												itemPixelSize[0],
+												itemPixelSize[1]);
+						}
 
-					}											
 				}
 			}
 								

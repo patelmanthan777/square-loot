@@ -1,8 +1,11 @@
 package game;
+import item.MetalJunk;
 import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
 import light.LightManager;
+
+import utils.GraphicsAL;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -42,6 +45,7 @@ public class GameLoop extends Game{
 		controle = new Control(p);
 		BlockFactory.initBlocks();
 		
+		GraphicsAL.init();
 		map = new Map(new Vector2f(15,15), new Vector2f(16,12), new Vector2f(48,48));
 		map.renderMapToFrameBuffers();
 		background = new Background();
@@ -58,7 +62,8 @@ public class GameLoop extends Game{
 		p.setLight(playerLight);
 
 		p.setLaser(playerLaser);		
-		//p.pickUp(new LaserRifle(250,200,200));
+		p.pickUp(new LaserRifle(250,200,200));
+		p.pickUp(new MetalJunk(200,200));
 		
 		LightManager.addShadowCaster(map);
 		

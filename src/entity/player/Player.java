@@ -1,8 +1,6 @@
 package entity.player;
 
 import item.Item;
-import item.weapon.LaserRifle;
-import item.weapon.Weapon;
 import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
@@ -13,6 +11,7 @@ import org.lwjgl.util.vector.Vector3f;
 import rendering.MiniMapDrawable;
 import rendering.TextureManager;
 import userInterface.MiniMap;
+import utils.GraphicsAL;
 import entity.LivingEntity;
 import environment.Map;
 
@@ -23,7 +22,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private Laser laser;
 	private Light light;
 	
-	private Weapon weapon;
 	
 	public Player(Vector2f pos, int inventorySize) {
 		super(pos, inventorySize);
@@ -32,7 +30,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
-		weapon = new LaserRifle(250, pos.x, pos.y);
 	}
 
 	
@@ -61,24 +58,13 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	@Override
 	public void draw() {
-		
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1,1,1);
-		glBindTexture(GL_TEXTURE_2D, TextureManager.playerTexture().getTextureID());
-		glBegin(GL_QUADS);
-		glTexCoord2f(1,1);
-		glVertex2f(points[0].x, points[0].y);
-		glTexCoord2f(1,0);
-		glVertex2f(points[3].x, points[3].y);
-		glTexCoord2f(0,0);
-		glVertex2f(points[2].x, points[2].y);
-		glTexCoord2f(0,1);
-		glVertex2f(points[1].x, points[1].y);
-		glEnd();
-		glBindTexture(GL_TEXTURE_2D, 0);
+		GraphicsAL.drawQuadTexture(points,
+				   				   GraphicsAL.fullTexPoints,
+				   				   TextureManager.playerTexture().getTextureID());	
 		glDisable(GL_BLEND);
-		
 	}
 
 	@Override
@@ -132,7 +118,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	
 	public void primaryWeapon(float directionX, float directionY){
-		weapon.Fire(new Vector2f(position), new Vector2f(directionX,directionY));
+		inventory.equippedItemAction(0, position.x, position.y,
+									    directionX, directionY);
 	}
 
 }

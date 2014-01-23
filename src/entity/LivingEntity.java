@@ -137,14 +137,14 @@ public abstract class LivingEntity extends Entity {
 		t.y = getTangent().y;
 		d.scale(halfSize.y);
 		t.scale(halfSize.x);
-		points[0].x = this.position.x - t.x - d.x;
-		points[0].y = this.position.y - t.y - d.y;
-		points[1].x = this.position.x + t.x - d.x;
-		points[1].y = this.position.y + t.y - d.y;
-		points[3].x = this.position.x - t.x + d.x;
-		points[3].y = this.position.y - t.y + d.y;
-		points[2].x = this.position.x + t.x + d.x;
-		points[2].y = this.position.y + t.y + d.y;
+		points[0].x = this.position.x + t.x - d.x;
+		points[0].y = this.position.y + t.y - d.y;
+		points[1].x = this.position.x - t.x - d.x;
+		points[1].y = this.position.y - t.y - d.y;
+		points[2].x = this.position.x - t.x + d.x;
+		points[2].y = this.position.y - t.y + d.y;
+		points[3].x = this.position.x + t.x + d.x;
+		points[3].y = this.position.y + t.y + d.y;
 	}
 	
 	public Inventory getInventory(){
