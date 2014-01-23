@@ -19,6 +19,7 @@ import entity.Node;
 
 public abstract class Item extends Node implements Drawable{
 	protected float weight = 0;	
+	Vector2f [] points = new Vector2f[4];
 	
 	protected int [] drawSize = new int[2];	
 	
@@ -26,6 +27,10 @@ public abstract class Item extends Node implements Drawable{
 		super(x, y);
 		drawSize[0] = 30;
 		drawSize[1] = 30;
+		
+		for(int i = 0 ; i < 4 ; i++){
+			points[i] = new Vector2f();
+		}
 	}
 	
 	public float getWeight(){
@@ -34,14 +39,15 @@ public abstract class Item extends Node implements Drawable{
 	
 	
 	public void draw(){
-		Vector2f [] points = new Vector2f[4];
-		points[0] = new Vector2f(position.x,
-				 				 position.y + drawSize[1]);
-		points[1] = new Vector2f(position.x + drawSize[0],
-                				 position.y + drawSize[1]);
-		points[2] = new Vector2f(position.x + drawSize[0],
-				   				 position.y);
-		points[3] = new Vector2f(position.x, position.y);				
+		
+		points[0].x = position.x;
+		points[0].y = position.y + drawSize[1];
+		points[1].x = position.x + drawSize[0];
+		points[1].y = position.y + drawSize[1];
+		points[2].x = position.x + drawSize[0];
+		points[2].y = position.y;
+		points[3].x = position.x;
+		points[3].y = position.y;				
 		
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		
@@ -58,14 +64,16 @@ public abstract class Item extends Node implements Drawable{
 			         float y,
 					 float width,
 					 float height){
-		Vector2f [] points = new Vector2f[4];
 		
-		points[0] = new Vector2f(x + (width - width*drawSize[0]/drawSize[1])/2,
-				 				 y + height);
-		points[1] = new Vector2f(x + (width - width*drawSize[0]/drawSize[1])/2 + width*drawSize[0]/drawSize[1],
-				 				 y + height);
-		points[2] = new Vector2f(x + (width - width*drawSize[0]/drawSize[1])/2 + width*drawSize[0]/drawSize[1], y);
-		points[3] = new Vector2f(x + (width - width*drawSize[0]/drawSize[1])/2, y);			
+		
+		points[0].x = x + (width - width*drawSize[0]/drawSize[1])/2;
+		points[0].y = y + height;
+		points[1].x = x + (width - width*drawSize[0]/drawSize[1])/2 + width*drawSize[0]/drawSize[1];
+		points[1].y = y + height;
+		points[2].x = x + (width - width*drawSize[0]/drawSize[1])/2 + width*drawSize[0]/drawSize[1];
+		points[2].y = y;
+		points[3].x = x + (width - width*drawSize[0]/drawSize[1])/2;
+		points[3].y = y;		
 		
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

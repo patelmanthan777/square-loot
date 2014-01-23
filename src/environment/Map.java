@@ -62,6 +62,9 @@ public class Map implements ShadowCaster {
 	 */
 	private Vector2f drawRoomPosition;
 
+	/* Avoid dynamic allocation */
+	Vector2f cpos = new Vector2f();
+	/* ************************* */
 	private static int neighboorPressureCoef = 1;
 	private static int ownPressureCoef = 500;
 	public static int textureSize;
@@ -299,7 +302,8 @@ public class Map implements ShadowCaster {
 
 	public void laserIntersect(Laser l) {
 		l.setIntersection(null);
-		Vector2f cpos = new Vector2f(l.getX(), l.getY());
+		cpos.x = l.getX();
+		cpos.y = l.getY();
 		while (l.getIntersection() == null) {
 			int idxX = (int) (cpos.x / Map.roomPixelSize.x);
 			int idxY = (int) (cpos.y / Map.roomPixelSize.y);

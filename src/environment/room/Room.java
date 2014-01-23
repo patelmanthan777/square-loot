@@ -45,7 +45,9 @@ public abstract class Room implements Drawable, ShadowCaster {
 	/* avoid dynamic allocation in computeShadow */
 	boolean[] neighbours = new boolean[4];
 	private Vector2f shadowPoints[] = new Vector2f[4];
-
+	/* avoid dynamic allocation in laserIntersect */
+	int[] htab = new int[8];
+	int[] vtab = new int[8];
 	/* ------------------------------------------ */
 
 	public Room(float posX, float posY) {
@@ -388,7 +390,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 		int i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
 		int j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
 		
-		if (grid[i][j] instanceof ShadowCasterBlock){			
+		if (grid[i][j].castShadows()){			
 			l.setIntersection(cpos);			
 		}
 		else{
@@ -396,7 +398,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			while(l.getIntersection() == null && inRoom) {
 				boolean foundInter = false;
 				
-				int[] htab = new int[8];
+				
 				htab[0] = 0;
 				htab[1] = 1;
 				htab[2] = 0;
@@ -405,7 +407,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 				htab[5] = 1;
 				htab[6] = 1;
 				htab[7] = -1;
-				int[] vtab = new int[8];
+				
 				vtab[0] = -1;
 				vtab[1] = 0;
 				vtab[2] = 1;
