@@ -44,14 +44,14 @@ public class PointLight extends Light {
 	public void setPosition(Vector2f position){
 		this.position.x = position.x;
 		this.position.y = position.y;
-		LightManager.updateLightShadows(this,dynamic);
+		LightManager.updateLightShadows(this);
 	}
 	
 	@Override
 	public void setPosition(float posx, float posy){
 		this.position.x = posx;
 		this.position.y = posy;
-		LightManager.updateLightShadows(this,dynamic);
+		LightManager.updateLightShadows(this);
 	}
 	
 	@Override

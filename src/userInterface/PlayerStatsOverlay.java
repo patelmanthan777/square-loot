@@ -26,7 +26,6 @@ public class PlayerStatsOverlay extends Overlay{
 		glDisable(GL_BLEND);
 		glDisable(GL_TEXTURE_2D);
 		glLoadIdentity();
-
 		glBegin(GL_TRIANGLE_STRIP);
 		glColor3f(1,0,0.1f);
 		glVertex2f(position.x+((float)health/(float)maxHealth)*(size.x-1),

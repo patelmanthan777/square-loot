@@ -89,10 +89,10 @@ public class LightManager {
 		lightShadows.put(l, shadows);
 		if (dynamic) {
 			activatedDynamicLights.put(name, l);
-			updateLightShadows(l, true);
+			updateLightShadows(l);
 		} else {
 			activatedStaticLights.put(name, l);
-			updateLightShadows(l, false);
+			updateLightShadows(l);
 		}
 
 		return l;
@@ -103,10 +103,10 @@ public class LightManager {
 		if (l != null) {
 			if (dynamic) {
 				activatedDynamicLights.put(name, l);
-				updateLightShadows(l, true);
+				updateLightShadows(l);
 			} else {
 				activatedStaticLights.put(name, l);
-				updateLightShadows(l, false);
+				updateLightShadows(l);
 			}
 		}
 	}
@@ -147,33 +147,38 @@ public class LightManager {
 
 		lightShadows.put(laser, shadows);
 		activatedDynamicLights.put(name, laser);
-		updateLightShadows(laser, true);
+		updateLightShadows(laser);
 		return laser;
 	}
 
-	
-	static public void updateLaserIntersect(Laser l){
+	static public void updateLaserIntersect(Laser l) {
 		for (ShadowCaster sc : shadowCasters) {
-			if(sc instanceof Map)
+			if (sc instanceof Map)
 				((Map) sc).laserIntersect(l);
 		}
 	}
-	
-	static public void updateLightShadows(Light l, boolean dynamic) {
+
+	static public void updateAllShadows() {
+		for (Light l : activatedStaticLights.values()) {
+			updateLightShadows(l);
+		}
+	}
+
+	static public void updateLightShadows(Light l) {
 		/* Set to 0 the pointer to the last shadow */
 		ShadowBuffer[] shadows = lightShadows.get(l);
 		for (int i = 0; i < Map.maxLayer; i++) {
 			shadows[i].lastShadow = 0;
 		}
-		for (ShadowCaster sc : shadowCasters) {			
-			sc.computeShadow(l, lightShadows.get(l));			
+		for (ShadowCaster sc : shadowCasters) {
+			sc.computeShadow(l, lightShadows.get(l));
 		}
 	}
 
 	static public void render() {
 		renderAmbiantLight();
 		renderStaticLights();
-		
+
 		for (int i = 0; i < Map.textureNb; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
 				glEnable(GL_BLEND);
@@ -239,8 +244,10 @@ public class LightManager {
 						l.getColor().y, l.getColor().z);
 				Vector2f inter = ((Laser) l).getIntersection();
 				Vector2f pos = l.getPosition();
-				laserShaderProgram.setUniform1f("threshold",
-						(float) Math.sqrt((inter.x-pos.x)*(inter.x-pos.x) + (inter.y-pos.y)*(inter.y-pos.y)));				
+				laserShaderProgram.setUniform1f(
+						"threshold",
+						(float) Math.sqrt((inter.x - pos.x) * (inter.x - pos.x)
+								+ (inter.y - pos.y) * (inter.y - pos.y)));
 			}
 		}
 	}
@@ -265,19 +272,19 @@ public class LightManager {
 		glColorMask(true, true, true, true);
 	}
 
-	private static void renderAmbiantLight(){
+	private static void renderAmbiantLight() {
 		for (int i = 0; i < Map.textureNb; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
 				if (shouldBeRendered[i][j]) {
-					//shouldBeRendered[i][j] = false;
+					// shouldBeRendered[i][j] = false;
 					getFBO(i, j).bind();
-					
+
 					getFBO(i, j).unbind();
 				}
 			}
 		}
 	}
-	
+
 	private static void renderStaticLights() {
 		for (int i = 0; i < Map.textureNb; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
@@ -294,13 +301,13 @@ public class LightManager {
 					for (int layer = 0; layer < Map.maxLayer; layer++) {
 						ambiantShader.use();
 						ambiantShader.setUniform3f("color", 1.0f, 1.0f, 1.0f);
-						ambiantShader.setUniform1f("power", 0.01f);
+						ambiantShader.setUniform1f("power", 0.05f);
 						ambiantShader.setUniform1i("texture", 0);
-						
+
 						drawMap(i, j, Map.getTextureID(i, j, layer));
-						
+
 						for (Light l : activatedStaticLights.values()) {
-						
+
 							bufferToLight.x = (Map.currentBufferPosition.x + i
 									* Map.textureSize + Map.textureSize / 2)
 									- l.getX();
@@ -316,7 +323,7 @@ public class LightManager {
 								setUniforms(l, false, i, j);
 								drawMap(i, j, Map.getTextureID(i, j, layer));
 								glClear(GL_STENCIL_BUFFER_BIT);
-								
+
 							}
 						}
 					}
@@ -365,7 +372,7 @@ public class LightManager {
 		diagonal = (float) Math.sqrt(2 * Map.textureSize * Map.textureSize);
 	}
 
-	public static void needStaticUpdate(int dx, int dy) {
+	public static void needUpdate(int dx, int dy) {
 		if (dx == -1) {
 			indx = (indx - 1 + Map.textureNb) % Map.textureNb;
 			for (int i = 0; i < Map.textureNb; i++) {
@@ -408,6 +415,10 @@ public class LightManager {
 	public static FBO getFBO(int i, int j) {
 		return staticLightsFBO[(i + indx) % Map.textureNb][(j + indy)
 				% Map.textureNb];
+	}
+
+	public static void needFBOUpdate(int i, int j) {
+		shouldBeRendered[i][j] = true;
 	}
 
 }

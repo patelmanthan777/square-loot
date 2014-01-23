@@ -10,6 +10,7 @@ import light.ShadowBuffer;
 import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
+import environment.blocks.Block;
 import environment.room.Room;
 import rendering.FBO;
 import rendering.ShadowCaster;
@@ -61,9 +62,11 @@ public class Map implements ShadowCaster {
 	 */
 	private Vector2f drawRoomPosition;
 
-	private static int[][] pressureFilter = { { 0, 2, 0 }, { 2, 1000, 2 },
-			{ 0, 2, 0 } };
-
+	/* Avoid dynamic allocation */
+	Vector2f cpos = new Vector2f();
+	/* ************************* */
+	private static int neighboorPressureCoef = 1;
+	private static int ownPressureCoef = 500;
 	public static int textureSize;
 	public static final int textureNb = 6;
 	public static Vector2f currentBufferPosition;
@@ -104,6 +107,7 @@ public class Map implements ShadowCaster {
 				shouldBeRendered[i][j] = true;
 			}
 		}
+		roomGrid = new Room[(int) Map.mapRoomSize.x][(int) Map.mapRoomSize.y];
 		generate();
 		currentBufferPosition = new Vector2f(
 				(int) (spawnPixelPosition.x - (Map.textureNb / 2.0f)
@@ -129,6 +133,7 @@ public class Map implements ShadowCaster {
 			for (int l = minY; l < maxY; l++) {
 				if (roomGrid[k][l] != null) {
 					roomGrid[k][l].draw(layer);
+					roomGrid[k][l].setRenderUpdated(true);
 				}
 			}
 		}
@@ -139,12 +144,12 @@ public class Map implements ShadowCaster {
 	 * Compute a full map render and stores it in mapFBO
 	 */
 	public void renderMapToFrameBuffers() {
+		checkRoomsUpdate();
 		for (int i = 0; i < textureNb; i++) {
 			for (int j = 0; j < textureNb; j++) {
 				if (shouldBeRendered[i][j]) {
 					shouldBeRendered[i][j] = false;
 					for (int layer = 0; layer < maxLayer; layer++) {
-
 						getFBO(i, j, layer).bind();
 						glPushMatrix();
 						glLoadIdentity();
@@ -156,6 +161,40 @@ public class Map implements ShadowCaster {
 						glPopMatrix();
 
 						getFBO(i, j, layer).unbind();
+					}
+
+				}
+			}
+		}
+	}
+
+	private void checkRoomsUpdate() {
+		int minX;
+		int maxX;
+		int minY;
+		int maxY;
+		for (int i = 0; i < textureNb; i++) {
+			for (int j = 0; j < textureNb; j++) {
+
+				minX = (int) Math.max(0, ((Map.currentBufferPosition.x + i
+						* Map.textureSize) / Map.roomPixelSize.x));
+				maxX = (int) Math.min(Map.mapRoomSize.x,
+						((Map.currentBufferPosition.x + (i + 1)
+								* Map.textureSize) / Map.roomPixelSize.x) + 1);
+				minY = (int) Math.max(0, ((Map.currentBufferPosition.y + j
+						* Map.textureSize) / Map.roomPixelSize.y));
+				maxY = (int) Math.min(Map.mapRoomSize.y,
+						((Map.currentBufferPosition.y + (j + 1)
+								* Map.textureSize) / Map.roomPixelSize.y) + 1);
+
+				for (int k = minX; k < maxX; k++) {
+					for (int l = minY; l < maxY; l++) {
+						if (roomGrid[k][l] != null) {
+							if (!roomGrid[k][l].renderIsUpdated()) {
+								shouldBeRendered[i][j] = true;
+								LightManager.needFBOUpdate(i, j);
+							}
+						}
 					}
 				}
 			}
@@ -196,7 +235,7 @@ public class Map implements ShadowCaster {
 	 * Generate the map
 	 */
 	public void generate() {
-		roomGrid = MapGenerator.generate();
+		MapGenerator.generate(this);
 	}
 
 	/**
@@ -207,12 +246,15 @@ public class Map implements ShadowCaster {
 	 */
 	public void setDrawPosition(Vector2f pos) {
 
-		
-		
 		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
-		//System.out.println(roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].getPressure());
+		Sas[] doors = roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y]
+				.getSas();
+		for (int i = 0; i < 4; i++) {
+			if (doors[i] != null)
+				doors[i].open();
+		}
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
 		if (pos.x - ConfigManager.resolution.x / 2 < currentBufferPosition.x)
@@ -254,13 +296,14 @@ public class Map implements ShadowCaster {
 			}
 			indy = (indy + 1 + textureNb) % textureNb;
 		}
-		LightManager.needStaticUpdate(translateMapFBOx, translateMapFBOy);
+		LightManager.needUpdate(translateMapFBOx, translateMapFBOy);
 
 	}
 
 	public void laserIntersect(Laser l) {
 		l.setIntersection(null);
-		Vector2f cpos = new Vector2f(l.getX(), l.getY());
+		cpos.x = l.getX();
+		cpos.y = l.getY();
 		while (l.getIntersection() == null) {
 			int idxX = (int) (cpos.x / Map.roomPixelSize.x);
 			int idxY = (int) (cpos.y / Map.roomPixelSize.y);
@@ -304,26 +347,26 @@ public class Map implements ShadowCaster {
 	}
 
 	public void update(long delta) {
-		for(int frame = 0; frame < delta ; frame++){
-		// COMPUTE THE NEW PRESSURES
-		for (int i = 0; i < Map.mapRoomSize.x; i++) {
-			for (int j = 0; j < Map.mapRoomSize.y; j++) {
-				if (roomGrid[i][j] != null) {
-					updatePressure(i, j);
-				}
-			}
-		}
-
-		// REPLACE OLD PRESSURES WITH THE NEW PRESSURES
-		for (int i = 0; i < Map.mapRoomSize.x; i++) {
-			for (int j = 0; j < Map.mapRoomSize.y; j++) {
-				if (roomGrid[i][j] != null) {
+		for (int frame = 0; frame < delta; frame++) {
+			// COMPUTE THE NEW PRESSURES
+			for (int i = 0; i < Map.mapRoomSize.x; i++) {
+				for (int j = 0; j < Map.mapRoomSize.y; j++) {
 					if (roomGrid[i][j] != null) {
-						roomGrid[i][j].update();
+						updatePressure(i, j);
 					}
 				}
 			}
-		}
+
+			// REPLACE OLD PRESSURES WITH THE NEW PRESSURES
+			for (int i = 0; i < Map.mapRoomSize.x; i++) {
+				for (int j = 0; j < Map.mapRoomSize.y; j++) {
+					if (roomGrid[i][j] != null) {
+						if (roomGrid[i][j] != null) {
+							roomGrid[i][j].update();
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -348,15 +391,44 @@ public class Map implements ShadowCaster {
 		if (roomGrid[i][j] != null) {
 			float pressure = 0;
 			float coef = 0;
-			for (int k = 0; k < 3; k++) {
-				for (int l = 0; l < 3; l++) {
-					if(i+k-1 >= 0 && i+k-1 <Map.mapRoomSize.x && j+l-1>=0 && j+l-1 <Map.mapRoomSize.y && roomGrid[i + k - 1][j + l - 1]!=null){
-						Room room = roomGrid[i + k - 1][j + l - 1];
-						coef += Map.pressureFilter[k][l];
-						pressure += room.getPressure()* Map.pressureFilter[k][l];
-					}
+			Room room;
+			Room mainRoom = roomGrid[i][j];
+			coef += ownPressureCoef;
+			pressure += mainRoom.getPressure() * ownPressureCoef;
+
+			if (i - 1 >= 0 && mainRoom.getDoors()[3] != null
+					&& mainRoom.getSas()[3].isOpened()) {
+				room = roomGrid[i - 1][j];
+				if (room != null) {
+					coef += neighboorPressureCoef;
+					pressure += room.getPressure() * neighboorPressureCoef;
 				}
 			}
+			if (j - 1 >= 0 && mainRoom.getDoors()[0] != null
+					&& mainRoom.getSas()[0].isOpened()) {
+				room = roomGrid[i][j - 1];
+				if (room != null) {
+					coef += neighboorPressureCoef;
+					pressure += room.getPressure() * neighboorPressureCoef;
+				}
+			}
+			if (i + 1 < Map.mapRoomSize.x && mainRoom.getDoors()[1] != null
+					&& mainRoom.getSas()[1].isOpened()) {
+				room = roomGrid[i + 1][j];
+				if (room != null) {
+					coef += neighboorPressureCoef;
+					pressure += room.getPressure() * neighboorPressureCoef;
+				}
+			}
+			if (j + 1 < Map.mapRoomSize.y && mainRoom.getDoors()[2] != null
+					&& mainRoom.getSas()[2].isOpened()) {
+				room = roomGrid[i][j + 1];
+				if (room != null) {
+					coef += neighboorPressureCoef;
+					pressure += room.getPressure() * neighboorPressureCoef;
+				}
+			}
+
 			pressure /= coef;
 			roomGrid[i][j].setNewPressure(pressure);
 		}
@@ -378,11 +450,18 @@ public class Map implements ShadowCaster {
 		return getFBO(i, j, layer).getTextureID();
 	}
 
-	/*
-	 * public Block getBlock(int i, int j) { if(i < 0 || j < 0){ return null; }
-	 * int k = (int) (i / Map.roomBlockSize.x); int l = (int) (j /
-	 * Map.roomBlockSize.y); if (roomGrid[k][l] != null) { int m = (int) (i - k
-	 * * Map.roomBlockSize.x); int n = (int) (j - l * Map.roomBlockSize.y);
-	 * return roomGrid[k][l].getBlock(m, n); } else { return null; } }
-	 */
+	public Block getBlock(int i, int j) {
+		if (i < 0 || j < 0) {
+			return null;
+		}
+		int k = (int) (i / Map.roomBlockSize.x);
+		int l = (int) (j / Map.roomBlockSize.y);
+		if (roomGrid[k][l] != null) {
+			int m = (int) (i - k * Map.roomBlockSize.x);
+			int n = (int) (j - l * Map.roomBlockSize.y);
+			return roomGrid[k][l].getBlock(m, n);
+		} else {
+			return null;
+		}
+	}
 }

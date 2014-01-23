@@ -15,7 +15,9 @@ import item.Item;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import userInterface.MiniMap;
+import environment.Door;
 import environment.Map;
+import environment.Sas;
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
 import environment.blocks.ShadowCasterBlock;
@@ -32,14 +34,20 @@ public abstract class Room implements Drawable, ShadowCaster {
 	 */
 	protected float y;
 	protected Vector3f miniMapColor = new Vector3f(1, 1, 1);
-	protected boolean[] doors = new boolean[4];
+	//protected boolean[] doors = new boolean[4];
 	protected boolean discovered = false;
 	protected float pressure;
 	protected float newPressure;
+	protected Door[] doors = new Door[4];
+	protected Sas[] sas = new Sas[4];
+	protected int doorLayer = 1;
+	protected boolean renderIsUpdated = true;
 	/* avoid dynamic allocation in computeShadow */
 	boolean[] neighbours = new boolean[4];
 	private Vector2f shadowPoints[] = new Vector2f[4];
-
+	/* avoid dynamic allocation in laserIntersect */
+	int[] htab = new int[8];
+	int[] vtab = new int[8];
 	/* ------------------------------------------ */
 
 	public Room(float posX, float posY) {
@@ -49,7 +57,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 		int gridSizeY = (int) Map.roomBlockSize.y;
 		grid = new Block[gridSizeX][gridSizeY];
 		for (int i = 0; i < 4; i++) {
-			doors[i] = false;
+			doors[i] = null;
 		}
 		for (int i = 0; i < 4; i++) {
 			shadowPoints[i] = new Vector2f();
@@ -72,8 +80,8 @@ public abstract class Room implements Drawable, ShadowCaster {
 	 * @param wall
 	 *            is the index of the wall
 	 */
-	public void createDoor(int wall) {
-		doors[wall] = true;
+	public Door createDoor(int wall) {
+		
 		if (wall == 0) {
 			grid[(int) Map.roomBlockSize.x / 2 - 2][0] = BlockFactory
 					.createBorderBlock();
@@ -92,7 +100,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			grid[(int) Map.roomBlockSize.x / 2 + 1][1] = BlockFactory
 					.createBorderBlock();
 		}
-		if (wall == 1) {
+		else if (wall == 1) {
 			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
 					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
@@ -110,7 +118,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			grid[(int) Map.roomBlockSize.x - 2][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
 					.createBorderBlock();
 		}
-		if (wall == 2) {
+		else if (wall == 2) {
 			grid[(int) Map.roomBlockSize.x / 2 - 2][(int) Map.roomBlockSize.y - 1] = BlockFactory
 					.createBorderBlock();
 			grid[(int) Map.roomBlockSize.x / 2 - 1][(int) Map.roomBlockSize.y - 1] = BlockFactory
@@ -128,7 +136,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			grid[(int) Map.roomBlockSize.x / 2 + 1][(int) Map.roomBlockSize.y - 2] = BlockFactory
 					.createBorderBlock();
 		}
-		if (wall == 3) {
+		else if (wall == 3) {
 			grid[0][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
 					.createBorderBlock();
 			grid[0][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
@@ -146,6 +154,10 @@ public abstract class Room implements Drawable, ShadowCaster {
 			grid[1][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
 					.createBorderBlock();
 		}
+		Door door = new Door(this, wall);
+		doors[wall] = door;
+		return door;
+		
 	}
 
 	public boolean testCollision(float x, float y) {
@@ -378,7 +390,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 		int i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
 		int j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
 		
-		if (grid[i][j] instanceof ShadowCasterBlock){			
+		if (grid[i][j].castShadows()){			
 			l.setIntersection(cpos);			
 		}
 		else{
@@ -386,7 +398,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			while(l.getIntersection() == null && inRoom) {
 				boolean foundInter = false;
 				
-				int[] htab = new int[8];
+				
 				htab[0] = 0;
 				htab[1] = 1;
 				htab[2] = 0;
@@ -395,7 +407,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 				htab[5] = 1;
 				htab[6] = 1;
 				htab[7] = -1;
-				int[] vtab = new int[8];
+				
 				vtab[0] = -1;
 				vtab[1] = 0;
 				vtab[2] = 1;
@@ -421,7 +433,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 						
 						foundInter = true;
 								
-						if( inRoom && grid[i+htab[k]][j+vtab[k]] instanceof ShadowCasterBlock) {
+						if( inRoom && grid[i+htab[k]][j+vtab[k]].castShadows()) {
 							if (grid[i+htab[k]][j+vtab[k]].isInside(cpos,
 																	(int) (this.x + (i+htab[k]) * Map.blockPixelSize.x),
 																	(int) (this.y + (j+vtab[k]) * Map.blockPixelSize.y)))
@@ -455,7 +467,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			glDisable(GL_BLEND);
 			glColor3f(miniMapColor.x, miniMapColor.y*pressure/100, miniMapColor.z*pressure/100);
 			glLoadIdentity();
-			if (doors[0]) {
+			if (doors[0]!=null) {
 				glBegin(GL_LINE_STRIP);
 				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
 						+ doorRatio * MiniMap.roomSize.y);
@@ -482,7 +494,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 						+ doorRatio * MiniMap.roomSize.y);
 				glEnd();
 			}
-			if (doors[1]) {
+			if (doors[1]!=null) {
 				glBegin(GL_LINE_STRIP);
 				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
 						+ doorRatio * MiniMap.roomSize.y);
@@ -507,7 +519,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 						+ (1 - doorRatio) * MiniMap.roomSize.y);
 				glEnd();
 			}
-			if (doors[2]) {
+			if (doors[2]!=null) {
 				glBegin(GL_LINE_STRIP);
 				glVertex2f(minix + (1 - doorRatio) * MiniMap.roomSize.x, miniy
 						+ (1 - doorRatio) * MiniMap.roomSize.y);
@@ -534,7 +546,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 						+ (1 - doorRatio) * MiniMap.roomSize.y);
 				glEnd();
 			}
-			if (doors[3]) {
+			if (doors[3]!=null) {
 				glBegin(GL_LINE_STRIP);
 				glVertex2f(minix + (doorRatio) * MiniMap.roomSize.x, miniy
 						+ doorRatio * MiniMap.roomSize.y);
@@ -570,6 +582,14 @@ public abstract class Room implements Drawable, ShadowCaster {
 		return grid[i][j];
 	}
 	
+	public void putBlock(Block block, int i,int j){
+		grid[i][j] = block;
+	}
+	
+	public Door[] getDoors(){
+		return doors;
+	}
+	
 	public float getPressure(){
 		return pressure;
 	}
@@ -584,5 +604,18 @@ public abstract class Room implements Drawable, ShadowCaster {
 	
 	public void update(){
 		this.pressure = this.newPressure;
+	}
+	public void setSas(Sas sas, int wall){
+		this.sas[wall] = sas;
+	}
+	public Sas[] getSas(){
+		return sas;
+	}
+	
+	public void setRenderUpdated(boolean bool){
+		renderIsUpdated = bool;
+	}
+	public boolean renderIsUpdated(){
+		return renderIsUpdated;
 	}
 }

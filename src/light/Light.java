@@ -49,13 +49,13 @@ public class Light extends Node{
 	@Override
 	public void setPosition(Vector2f position){
 		super.setPosition(position);
-		LightManager.updateLightShadows(this,dynamic);
+		LightManager.updateLightShadows(this);
 	}
 	
 	@Override
 	public void setPosition(float posx, float posy){
 		super.setPosition(posx,posy);
-		LightManager.updateLightShadows(this,dynamic);
+		LightManager.updateLightShadows(this);
 	}
 	
 	@Override
