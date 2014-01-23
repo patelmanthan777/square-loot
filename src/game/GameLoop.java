@@ -42,7 +42,7 @@ public class GameLoop extends Game{
 		controle = new Control(p);
 		BlockFactory.initBlocks();
 		
-		map = new Map(new Vector2f(6,4), new Vector2f(16,12), new Vector2f(48,48));
+		map = new Map(new Vector2f(15,15), new Vector2f(16,12), new Vector2f(48,48));
 		map.renderMapToFrameBuffers();
 		background = new Background();
 		p.setPosition(map.getSpawnPixelPosition());

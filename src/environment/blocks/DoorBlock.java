@@ -1,6 +1,6 @@
 package environment.blocks;
 
-public class DoorBlock extends ShadowCasterBlock{
+public class DoorBlock extends Block{
 	private Block underBlock;
 	private boolean opened;
 	/* blocks position in the map */
@@ -10,9 +10,9 @@ public class DoorBlock extends ShadowCasterBlock{
 	public DoorBlock(Block underBlock, int i, int j){
 		this.underBlock = underBlock;
 		this.opened = false;
-		this.color.x = 0.5f;
-		this.color.y = 0.5f;
-		this.color.z = 0.5f;
+		this.color.x = 0.3f;
+		this.color.y = 0.3f;
+		this.color.z = 0.3f;
 		this.color.w = 1;
 		this.layer = 1;
 		this.i = i;
@@ -41,10 +41,7 @@ public class DoorBlock extends ShadowCasterBlock{
 	public  boolean testCollision(){
 		return !opened;
 	}
-	@Override
-	public boolean castShadows(){
-		return !opened;
-	}
+
 	@Override
 	public void drawAt(float posX, float posY) {
 		if(opened)

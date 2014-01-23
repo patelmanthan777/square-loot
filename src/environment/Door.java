@@ -9,7 +9,7 @@ import environment.blocks.BlockFactory;
 import environment.blocks.DoorBlock;
 import environment.room.Room;
 
-public class Door implements ShadowCaster{
+public class Door{
 	private boolean opened = false;
 	private Room r;
 	private DoorBlock[] blocks = new DoorBlock[2];
@@ -76,7 +76,6 @@ public class Door implements ShadowCaster{
 			opened = true;
 			blocks[0].open();
 			blocks[1].open();
-			LightManager.updateAllShadows();
 			r.setRenderUpdated(false);
 		}
 	}
@@ -86,7 +85,6 @@ public class Door implements ShadowCaster{
 			opened = false;
 			blocks[0].close();
 			blocks[1].close();
-			LightManager.updateAllShadows();
 			r.setRenderUpdated(false);
 		}
 	}
@@ -96,13 +94,5 @@ public class Door implements ShadowCaster{
 			close();
 		else
 			open();
-	}
-
-	@Override
-	public void computeShadow(Light light, ShadowBuffer[] shadows) {
-		if(!opened){
-			blocks[0].computeShadow(light, blocks[0].getI(), blocks[0].getJ(), shadows[1]);
-			blocks[1].computeShadow(light, blocks[1].getI(), blocks[1].getJ(), shadows[1]);
-		}
 	}
 }
