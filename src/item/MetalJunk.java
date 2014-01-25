@@ -1,7 +1,6 @@
 package item;
 
 import rendering.TextureManager;
-
 import item.Item;
 
 
