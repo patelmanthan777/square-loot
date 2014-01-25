@@ -41,7 +41,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	protected Door[] doors = new Door[4];
 	protected Sas[] sas = new Sas[4];
 	protected int doorLayer = 1;
-	protected boolean renderIsUpdated = true;
+	protected boolean renderIsUpdated[] = new  boolean[4];
 	/* avoid dynamic allocation in computeShadow */
 	boolean[] neighbours = new boolean[4];
 	private Vector2f shadowPoints[] = new Vector2f[4];
@@ -612,10 +612,10 @@ public abstract class Room implements Drawable, ShadowCaster {
 		return sas;
 	}
 	
-	public void setRenderUpdated(boolean bool){
-		renderIsUpdated = bool;
+	public void setRenderUpdated(boolean bool, int layer){
+		renderIsUpdated[layer] = bool;
 	}
-	public boolean renderIsUpdated(){
-		return renderIsUpdated;
+	public boolean renderIsUpdated(int layer){
+		return renderIsUpdated[layer];
 	}
 }

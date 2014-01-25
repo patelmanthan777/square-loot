@@ -1,5 +1,7 @@
 package environment.blocks;
 
+import environment.Map;
+
 public class DoorBlock extends Block{
 	private Block underBlock;
 	private boolean opened;
@@ -17,6 +19,7 @@ public class DoorBlock extends Block{
 		this.layer = 1;
 		this.i = i;
 		this.j = j;
+		this.layer = Map.doorLayer;
 	}
 	
 	public boolean isOpened(){
@@ -49,10 +52,6 @@ public class DoorBlock extends Block{
 		else
 			super.drawAt(posX, posY);
 			
-	}
-	@Override
-	public int getLayer(){
-		return opened?underBlock.getLayer():this.layer;
 	}
 	
 	public int getI(){

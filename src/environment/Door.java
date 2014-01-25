@@ -76,7 +76,7 @@ public class Door{
 			opened = true;
 			blocks[0].open();
 			blocks[1].open();
-			r.setRenderUpdated(false);
+			r.setRenderUpdated(false,Map.doorLayer);
 		}
 	}
 
@@ -85,7 +85,7 @@ public class Door{
 			opened = false;
 			blocks[0].close();
 			blocks[1].close();
-			r.setRenderUpdated(false);
+			r.setRenderUpdated(false,Map.doorLayer);
 		}
 	}
 
