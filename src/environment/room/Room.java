@@ -20,7 +20,6 @@ import environment.Map;
 import environment.Sas;
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
-import environment.blocks.ShadowCasterBlock;
 
 public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;

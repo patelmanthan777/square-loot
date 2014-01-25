@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import item.Item;
 import item.Equipment;
-import item.weapon.Weapon;
 import userInterface.Overlay;
 import utils.GraphicsAL;
 import utils.NonContinuousTable;

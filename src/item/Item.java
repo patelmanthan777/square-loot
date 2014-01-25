@@ -13,7 +13,6 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import org.lwjgl.util.vector.Vector2f;
 
 import rendering.Drawable;
-import rendering.TextureManager;
 import utils.GraphicsAL;
 import entity.Node;
 
