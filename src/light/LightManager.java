@@ -81,8 +81,8 @@ public class LightManager {
 		Light l = new PointLight(p, color, radius, maxDst, dynamic);
 		l.setName(name);
 
-		ShadowBuffer[] shadows = new ShadowBuffer[Map.maxLayer-1];
-		for (int i = 0; i < Map.maxLayer-1; i++) {
+		ShadowBuffer[] shadows = new ShadowBuffer[Map.maxLayer];
+		for (int i = 0; i < Map.maxLayer; i++) {
 			shadows[i] = new ShadowBuffer();
 		}
 
@@ -140,8 +140,8 @@ public class LightManager {
 			Vector2f dir) {
 		Laser laser = new Laser(p, color, dir);
 
-		ShadowBuffer[] shadows = new ShadowBuffer[Map.maxLayer-1];
-		for (int i = 0; i < Map.maxLayer-1; i++) {
+		ShadowBuffer[] shadows = new ShadowBuffer[Map.maxLayer];
+		for (int i = 0; i < Map.maxLayer; i++) {
 			shadows[i] = new ShadowBuffer();
 		}
 
@@ -167,7 +167,7 @@ public class LightManager {
 	static public void updateLightShadows(Light l) {
 		/* Set to 0 the pointer to the last shadow */
 		ShadowBuffer[] shadows = lightShadows.get(l);
-		for (int i = 0; i < Map.maxLayer-1; i++) {
+		for (int i = 0; i < Map.maxLayer; i++) {
 			shadows[i].lastShadow = 0;
 		}
 		for (ShadowCaster sc : shadowCasters) {
@@ -258,7 +258,7 @@ public class LightManager {
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glBegin(GL_QUADS);
 		ShadowBuffer[] shadows = lightShadows.get(l);
-		for (int shadowLayer = layer; shadowLayer < Map.maxLayer - 1; shadowLayer++) {
+		for (int shadowLayer = layer; shadowLayer < Map.maxLayer; shadowLayer++) {
 			if (shadows[shadowLayer] != null) {
 				for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
 					Shadow s = shadows[shadowLayer].get(i);
@@ -298,7 +298,7 @@ public class LightManager {
 							-(Map.currentBufferPosition.y + j * Map.textureSize),
 							0);
 
-					for (int layer = 0; layer < Map.maxLayer-1; layer++) {
+					for (int layer = 0; layer < Map.maxLayer; layer++) {
 						ambiantShader.use();
 						ambiantShader.setUniform3f("color", 1.0f, 1.0f, 1.0f);
 						ambiantShader.setUniform1f("power", 0.05f);
