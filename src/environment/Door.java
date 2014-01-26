@@ -1,9 +1,5 @@
 package environment;
 
-import rendering.ShadowCaster;
-import light.Light;
-import light.LightManager;
-import light.ShadowBuffer;
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
 import environment.blocks.DoorBlock;
@@ -13,7 +9,6 @@ public class Door{
 	private boolean opened = false;
 	private Room r;
 	private DoorBlock[] blocks = new DoorBlock[2];
-	private static int cpt = 0;
 
 	public Door(Room r, int wall) {
 		this.r = r;
@@ -76,7 +71,7 @@ public class Door{
 			opened = true;
 			blocks[0].open();
 			blocks[1].open();
-			r.setRenderUpdated(false);
+			r.setRenderUpdated(false,Map.doorLayer);
 		}
 	}
 
@@ -85,7 +80,7 @@ public class Door{
 			opened = false;
 			blocks[0].close();
 			blocks[1].close();
-			r.setRenderUpdated(false);
+			r.setRenderUpdated(false,Map.doorLayer);
 		}
 	}
 

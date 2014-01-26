@@ -258,7 +258,7 @@ public class LightManager {
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glBegin(GL_QUADS);
 		ShadowBuffer[] shadows = lightShadows.get(l);
-		for (int shadowLayer = layer; shadowLayer < Map.maxLayer - 1; shadowLayer++) {
+		for (int shadowLayer = layer; shadowLayer < Map.maxLayer; shadowLayer++) {
 			if (shadows[shadowLayer] != null) {
 				for (int i = 0; i < shadows[shadowLayer].lastShadow; i++) {
 					Shadow s = shadows[shadowLayer].get(i);

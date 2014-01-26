@@ -16,7 +16,7 @@ import rendering.FBO;
 import rendering.ShadowCaster;
 
 public class Map implements ShadowCaster {
-	public static final int maxLayer = 4;
+	public static final int maxLayer = 2;
 
 	/**
 	 * Block size in number of pixels.
@@ -68,9 +68,10 @@ public class Map implements ShadowCaster {
 	private static int neighboorPressureCoef = 1;
 	private static int ownPressureCoef = 500;
 	public static int textureSize;
-	public static final int textureNb = 6;
+	public static final int textureNb = 5;
+	public static int doorLayer = 0;
 	public static Vector2f currentBufferPosition;
-	private static boolean shouldBeRendered[][] = new boolean[textureNb][textureNb];
+	private static boolean shouldBeRendered[][][] = new boolean[textureNb][textureNb][maxLayer];
 	private static int indx = 0;
 	private static int indy = 0;
 	/**
@@ -104,7 +105,9 @@ public class Map implements ShadowCaster {
 		}
 		for (int i = 0; i < textureNb; i++) {
 			for (int j = 0; j < textureNb; j++) {
-				shouldBeRendered[i][j] = true;
+				for (int layer = 0; layer < maxLayer; layer++) {
+					shouldBeRendered[i][j][layer] = true;
+				}
 			}
 		}
 		roomGrid = new Room[(int) Map.mapRoomSize.x][(int) Map.mapRoomSize.y];
@@ -133,7 +136,7 @@ public class Map implements ShadowCaster {
 			for (int l = minY; l < maxY; l++) {
 				if (roomGrid[k][l] != null) {
 					roomGrid[k][l].draw(layer);
-					roomGrid[k][l].setRenderUpdated(true);
+					roomGrid[k][l].setRenderUpdated(true, layer);
 				}
 			}
 		}
@@ -147,9 +150,9 @@ public class Map implements ShadowCaster {
 		checkRoomsUpdate();
 		for (int i = 0; i < textureNb; i++) {
 			for (int j = 0; j < textureNb; j++) {
-				if (shouldBeRendered[i][j]) {
-					shouldBeRendered[i][j] = false;
-					for (int layer = 0; layer < maxLayer; layer++) {
+				for (int layer = 0; layer < maxLayer; layer++) {
+					if (shouldBeRendered[i][j][layer]) {
+						shouldBeRendered[i][j][layer] = false;
 						getFBO(i, j, layer).bind();
 						glPushMatrix();
 						glLoadIdentity();
@@ -159,10 +162,9 @@ public class Map implements ShadowCaster {
 								0);
 						render(i, j, layer);
 						glPopMatrix();
-
 						getFBO(i, j, layer).unbind();
+						LightManager.needFBOUpdate(i, j);
 					}
-
 				}
 			}
 		}
@@ -190,9 +192,11 @@ public class Map implements ShadowCaster {
 				for (int k = minX; k < maxX; k++) {
 					for (int l = minY; l < maxY; l++) {
 						if (roomGrid[k][l] != null) {
-							if (!roomGrid[k][l].renderIsUpdated()) {
-								shouldBeRendered[i][j] = true;
-								LightManager.needFBOUpdate(i, j);
+							for (int layer = 0; layer < maxLayer; layer++) {
+								if (!roomGrid[k][l].renderIsUpdated(layer)) {
+									shouldBeRendered[i][j][layer] = true;
+									
+								}
 							}
 						}
 					}
@@ -273,13 +277,17 @@ public class Map implements ShadowCaster {
 			currentBufferPosition.x -= Map.textureSize;
 			indx = (indx - 1 + textureNb) % textureNb;
 			for (int i = 0; i < textureNb; i++) {
-				shouldBeRendered[0][i] = true;
+				for (int layer = 0; layer < maxLayer; layer++) {
+				shouldBeRendered[0][i][layer] = true;
+				}
 			}
 		} else if (translateMapFBOx == 1) {
 			currentBufferPosition.x += Map.textureSize;
 
 			for (int i = 0; i < textureNb; i++) {
-				shouldBeRendered[textureNb - 1][i] = true;
+				for (int layer = 0; layer < maxLayer; layer++) {
+				shouldBeRendered[textureNb - 1][i][layer] = true;
+				}
 			}
 			indx = (indx + 1 + textureNb) % textureNb;
 		}
@@ -287,12 +295,16 @@ public class Map implements ShadowCaster {
 			currentBufferPosition.y -= Map.textureSize;
 			indy = (indy - 1 + textureNb) % textureNb;
 			for (int i = 0; i < textureNb; i++) {
-				shouldBeRendered[i][0] = true;
-			}
+				for (int layer = 0; layer < maxLayer; layer++) {
+				shouldBeRendered[i][0][layer] = true;
+			}}
+				
 		} else if (translateMapFBOy == 1) {
 			currentBufferPosition.y += Map.textureSize;
 			for (int i = 0; i < textureNb; i++) {
-				shouldBeRendered[i][textureNb - 1] = true;
+				for (int layer = 0; layer < maxLayer; layer++) {
+				shouldBeRendered[i][textureNb - 1][layer] = true;
+				}
 			}
 			indy = (indy + 1 + textureNb) % textureNb;
 		}
@@ -370,13 +382,13 @@ public class Map implements ShadowCaster {
 		}
 	}
 
-	public void drawItems(){
-		for (int i = 0 ; i < mapRoomSize.x; i++){
-			for (int j = 0 ; j < mapRoomSize.y; j++){
-				if(roomGrid[i][j] != null)
+	public void drawItems() {
+		for (int i = 0; i < mapRoomSize.x; i++) {
+			for (int j = 0; j < mapRoomSize.y; j++) {
+				if (roomGrid[i][j] != null)
 					roomGrid[i][j].drawItems();
 			}
-		}		
+		}
 	}
 
 	/**
@@ -436,10 +448,6 @@ public class Map implements ShadowCaster {
 
 	public Room[][] getRooms() {
 		return roomGrid;
-	}
-
-	public boolean isUpdated(int i, int j) {
-		return (shouldBeRendered[i][j]);
 	}
 
 	public static FBO getFBO(int i, int j, int layer) {

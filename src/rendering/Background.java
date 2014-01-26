@@ -30,7 +30,14 @@ public class Background implements Drawable{
 	public void update(long delta){
 		pos.x = pos.x + speed.x * delta;
 		pos.y = pos.y + speed.y * delta;
-		//FIXME Need to update texcoords !!!
+		texPoints[0].x = 1 + ConfigManager.resolution.x/ConfigManager.resolution.y  + pos.x;
+		texPoints[0].y = 1 + pos.y;
+		texPoints[1].x = 1 + ConfigManager.resolution.x/ConfigManager.resolution.y + pos.x;
+		texPoints[1].y = pos.y;
+		texPoints[2].x = pos.x;
+		texPoints[2].y = pos.y;
+		texPoints[3].x = pos.x;
+		texPoints[3].y = 1 + pos.y;	
 	}
 	
 	@Override

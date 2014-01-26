@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import org.lwjgl.util.vector.Vector2f;
 
 import environment.room.OxygenRoom;
+import environment.room.RandomBlockRoom;
 import environment.room.Room;
 import environment.room.SpawnRoom;
-import environment.room.TestRoom;
 
 public class MapGenerator {
 	private static LinkedList<Room> rooms;
@@ -183,7 +183,7 @@ public class MapGenerator {
 		Room room;
 		Double rand = Math.random();
 		if(rand > 0.01){
-			room = new TestRoom(x,y);
+			room = new RandomBlockRoom(x,y);
 		}else{
 			room = new OxygenRoom(x,y);
 		}

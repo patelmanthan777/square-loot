@@ -20,7 +20,6 @@ import environment.Map;
 import environment.Sas;
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
-import environment.blocks.ShadowCasterBlock;
 
 public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;
@@ -41,7 +40,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	protected Door[] doors = new Door[4];
 	protected Sas[] sas = new Sas[4];
 	protected int doorLayer = 1;
-	protected boolean renderIsUpdated = true;
+	protected boolean renderIsUpdated[] = new  boolean[4];
 	/* avoid dynamic allocation in computeShadow */
 	boolean[] neighbours = new boolean[4];
 	private Vector2f shadowPoints[] = new Vector2f[4];
@@ -203,7 +202,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	
 	private void computeHorizontalEdgeShadows(Light light, ShadowBuffer[] shadowBuffer) {
 		/* NORTH */
-		for (int layer = 0; layer < Map.maxLayer; layer++) {
+		for (int layer = 0; layer < Map.maxLayer+1; layer++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				int first = -1;
 				for (int i = 0; i < Map.roomBlockSize.x; i++) {
@@ -228,7 +227,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			}
 		}
 		/* SOUTH */
-		for (int layer = 0; layer < Map.maxLayer; layer++) {
+		for (int layer = 0; layer < Map.maxLayer+1; layer++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				int first = -1;
 				for (int i = (int) (Map.roomBlockSize.x-1); i >=0; i--) {
@@ -255,7 +254,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	}
 	private void computeVerticalEdgeShadows(Light light, ShadowBuffer[] shadowBuffer) {
 		/* EAST */
-		for (int layer = 0; layer < Map.maxLayer; layer++) {
+		for (int layer = 0; layer < Map.maxLayer+1; layer++) {
 			for (int i = 0; i < Map.roomBlockSize.x; i++) {
 				int first = -1;
 				for (int j = 0; j < Map.roomBlockSize.y; j++) {
@@ -280,7 +279,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			}
 		}
 		/* WEST */
-		for (int layer = 0; layer < Map.maxLayer; layer++) {
+		for (int layer = 0; layer < Map.maxLayer+1; layer++) {
 			for (int i = 0; i < Map.roomBlockSize.x; i++) {
 				int first = -1;
 				for (int j = (int) (Map.roomBlockSize.y-1); j >= 0; j--) {
@@ -612,10 +611,10 @@ public abstract class Room implements Drawable, ShadowCaster {
 		return sas;
 	}
 	
-	public void setRenderUpdated(boolean bool){
-		renderIsUpdated = bool;
+	public void setRenderUpdated(boolean bool, int layer){
+		renderIsUpdated[layer] = bool;
 	}
-	public boolean renderIsUpdated(){
-		return renderIsUpdated;
+	public boolean renderIsUpdated(int layer){
+		return renderIsUpdated[layer];
 	}
 }
