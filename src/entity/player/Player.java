@@ -6,13 +6,9 @@ import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
 
-import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.FixtureDef;
-import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 
+import configuration.ConfigManager;
 import rendering.MiniMapDrawable;
 import rendering.TextureManager;
 import userInterface.MiniMap;
@@ -34,13 +30,17 @@ public class Player extends LivingEntity implements MiniMapDrawable{
 
 	public void setLight(Light l) {
 		light = l;
-		l.setPosition(position);
+		Vector2f p = new Vector2f(position.x * ConfigManager.unitPixelSize,
+				position.y * ConfigManager.unitPixelSize);
+		l.setPosition(p);
 	}
 
 	public void setLaser(Laser l) {
 		laser = l;
 		l.setDirection(getDirection());
-		l.setPosition(position);
+		Vector2f p = new Vector2f(position.x * ConfigManager.unitPixelSize,
+				position.y * ConfigManager.unitPixelSize);
+		l.setPosition(p);
 	}
 
 	@Override
@@ -96,10 +96,12 @@ public class Player extends LivingEntity implements MiniMapDrawable{
 	public void setPosition(float posx, float posy) {
 		super.setPosition(posx, posy);
 		if (light != null) {
-			light.setPosition(posx, posy);
+			light.setPosition(posx * ConfigManager.unitPixelSize,
+					posy * ConfigManager.unitPixelSize);
 		}
 		if (laser != null) {
-			laser.setPosition(posx, posy);
+			laser.setPosition(posx * ConfigManager.unitPixelSize,
+					posy * ConfigManager.unitPixelSize);
 		}
 		updatePoints();
 	}
@@ -113,20 +115,6 @@ public class Player extends LivingEntity implements MiniMapDrawable{
 				new Vector2f(directionX, directionY));
 	}
 
-	@Override
-	public void initPhysics(World w) {
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.fixedRotation = true;
-		bodyDef.position.set(position.x, position.y);
-		body = w.createBody(bodyDef);
-		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(halfSize.x, halfSize.y);
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = dynamicBox;
-		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0.1f;
-		body.createFixture(fixtureDef);
-	}
+
 
 }

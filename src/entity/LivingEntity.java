@@ -3,6 +3,8 @@ package entity;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import configuration.ConfigManager;
+
 public abstract class LivingEntity extends DynamicEntity {
 
 	private static final int nbPoints = 4;
@@ -125,13 +127,13 @@ public abstract class LivingEntity extends DynamicEntity {
 		t.y = getTangent().y;
 		d.scale(halfSize.y);
 		t.scale(halfSize.x);
-		points[0].x = this.position.x - t.x - d.x;
-		points[0].y = this.position.y - t.y - d.y;
-		points[1].x = this.position.x + t.x - d.x;
-		points[1].y = this.position.y + t.y - d.y;
-		points[3].x = this.position.x - t.x + d.x;
-		points[3].y = this.position.y - t.y + d.y;
-		points[2].x = this.position.x + t.x + d.x;
-		points[2].y = this.position.y + t.y + d.y;
+		points[0].x = this.position.x * ConfigManager.unitPixelSize - t.x - d.x;
+		points[0].y = this.position.y * ConfigManager.unitPixelSize - t.y - d.y;
+		points[1].x = this.position.x * ConfigManager.unitPixelSize  + t.x - d.x;
+		points[1].y = this.position.y * ConfigManager.unitPixelSize  + t.y - d.y;
+		points[3].x = this.position.x * ConfigManager.unitPixelSize  - t.x + d.x;
+		points[3].y = this.position.y * ConfigManager.unitPixelSize  - t.y + d.y;
+		points[2].x = this.position.x * ConfigManager.unitPixelSize  + t.x + d.x;
+		points[2].y = this.position.y * ConfigManager.unitPixelSize  + t.y + d.y;
 	}
 }

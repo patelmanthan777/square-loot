@@ -13,6 +13,7 @@ public class ConfigManager {
 	public static boolean fullScreen = false;
 	public static Vector2f resolution = new Vector2f(1280,720);
 	public static int maxFps = 120;
+	public static int unitPixelSize = 48;
 	
 	/**
 	 * Initialize the ConfigManager class by reading from the "options.txt"

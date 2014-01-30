@@ -3,6 +3,7 @@ package environment.room;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import configuration.ConfigManager;
 import light.LightManager;
 import entity.EntityManager;
 import environment.Map;
@@ -49,10 +50,10 @@ public class TestRoom extends Room{
 
 		float dstMax = Map.roomPixelSize.x;
 		LightManager.addPointLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
-		EntityManager.createZombie(pos.x, pos.y);
-		EntityManager.createZombie(pos.x, pos.y);
-		EntityManager.createZombie(pos.x, pos.y);
-		EntityManager.createZombie(pos.x, pos.y);
-		EntityManager.createZombie(pos.x, pos.y);
+		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
+		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
+		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
+		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
+		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
 	}
 }

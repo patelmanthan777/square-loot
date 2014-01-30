@@ -3,12 +3,6 @@ package entity.npc;
 import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
-
-import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.BodyType;
-import org.jbox2d.dynamics.FixtureDef;
-import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 
 import rendering.MiniMapDrawable;
@@ -19,7 +13,7 @@ import environment.Map;
 public class Zombie extends Npc implements MiniMapDrawable {
 
 	private static int scentDistanceBlk = 5;
-	private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
+	//private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
 	private ZombieState state;
 	private float orientationSpeed = 0;
 	private float orientationDesc = 0.00001f;
@@ -53,7 +47,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
-		this.accFactor = 100f;
+		this.accFactor = 0.001f;
 		this.descFactor = 0.2f;
 		state = ZombieState.IDLE;
 	}
@@ -104,7 +98,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 
 	@Override
 	public void thinkAndAct(LinkedList<Player> players, long deltaT) {
-		float dst = scentDistancePx;
+		float dst = scentDistanceBlk;
 		float length;
 		state = ZombieState.IDLE;
 		for (Player p : players) {
@@ -141,21 +135,4 @@ public class Zombie extends Npc implements MiniMapDrawable {
 			}
 		}
 	}
-
-	@Override
-	public void initPhysics(World w) {
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.fixedRotation = true;
-		bodyDef.position.set(position.x, position.y);
-		body = w.createBody(bodyDef);
-		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(halfSize.x, halfSize.y);
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = dynamicBox;
-		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0.1f;
-		body.createFixture(fixtureDef);
-	}
-
 }

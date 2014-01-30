@@ -35,15 +35,13 @@ public class GameLoop extends Game{
 	 * window manager and openGL.
 	 */
 	public void init() {
-		
-		
 		p = EntityManager.createPlayer();
 		controle = new Control(p);
 		BlockFactory.initBlocks();
-		map = new Map(new Vector2f(10,10), new Vector2f(32,32), new Vector2f(48,48));
+		map = new Map(new Vector2f(10,10), new Vector2f(32,32), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
 		map.renderMapToFrameBuffers();	
 
-		p.setPosition(map.getSpawnPixelPosition());
+		p.setPosition(map.getSpawnPosition());
 		
 		ProjectileManager.init();
 			
@@ -88,9 +86,11 @@ public class GameLoop extends Game{
 		ProjectileManager.updateProjectiles(map);
 		
 		/* Cam and light */
-		cam.setPosition(p.getPosition());
-		LightManager.setCamPosition(p.getPosition());
-		map.setDrawPosition(p.getPosition());
+		Vector2f pos = new Vector2f(p.getPosition().x * ConfigManager.unitPixelSize,
+				p.getPosition().y * ConfigManager.unitPixelSize);
+		cam.setPosition(pos);
+		LightManager.setCamPosition(pos);
+		map.setDrawPosition(pos);
 	
 	}
 	

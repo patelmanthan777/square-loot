@@ -184,6 +184,11 @@ public class Map implements ShadowCaster{
 	public Vector2f getSpawnPixelPosition() {
 		return spawnPixelPosition;
 	}
+	
+	public Vector2f getSpawnPosition() {
+		return  new Vector2f(spawnPixelPosition.x / ConfigManager.unitPixelSize,
+				spawnPixelPosition.y / ConfigManager.unitPixelSize );
+	}
 
 	/**
 	 * Generate the map
@@ -199,8 +204,8 @@ public class Map implements ShadowCaster{
 	 *            the position
 	 */
 	public void setDrawPosition(Vector2f pos) {
-		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
-		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
+		drawRoomPosition.x = pos.x  / Map.roomPixelSize.x;
+		drawRoomPosition.y = pos.y  / Map.roomPixelSize.y;
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
 
 		int translateMapFBOx = 0;
