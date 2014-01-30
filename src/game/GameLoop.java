@@ -7,6 +7,8 @@ import light.LightManager;
 
 import utils.GraphicsAL;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -67,6 +69,9 @@ public class GameLoop extends Game{
 		
 		LightManager.addShadowCaster(map);
 		
+
+
+		
 		OverlayManager.init();
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
@@ -83,6 +88,9 @@ public class GameLoop extends Game{
 	 **/
 	@Override
 	public void update(long elapsedTime) {
+		//nifty handling				
+		isRunning &= !nifty.update();
+		
 		background.update(elapsedTime);
 		map.update(elapsedTime);
 		p.updatePostion(elapsedTime, map);
@@ -109,8 +117,15 @@ public class GameLoop extends Game{
 		map.drawItems();
 		p.draw();
 		LivingEntityManager.render();
-		ProjectileManager.drawProjectiles();
-		OverlayManager.render();		
-		glPopMatrix();
+		ProjectileManager.drawProjectiles();						
+		OverlayManager.render();
+		
+		
+		nifty.render(false);
+		glEnable(GL_TEXTURE_2D);		
+		
+		glPopMatrix();		
+
+
 	}
 }

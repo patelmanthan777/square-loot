@@ -20,6 +20,19 @@ import org.lwjgl.opengl.PixelFormat;
 
 import rendering.TextureManager;
 import configuration.ConfigManager;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.builder.ElementBuilder;
+import de.lessvoid.nifty.builder.LayerBuilder;
+import de.lessvoid.nifty.builder.TextBuilder;
+import de.lessvoid.nifty.builder.PanelBuilder;
+import de.lessvoid.nifty.builder.ScreenBuilder;
+import de.lessvoid.nifty.controls.textfield.builder.TextFieldBuilder;
+import de.lessvoid.nifty.nulldevice.NullSoundDevice;
+import de.lessvoid.nifty.renderer.lwjgl.input.LwjglInputSystem;
+import de.lessvoid.nifty.renderer.lwjgl.render.LwjglRenderDevice;
+import de.lessvoid.nifty.spi.time.impl.AccurateTimeProvider;
+
 import event.Timer;
 import event.control.Control;
 
@@ -29,7 +42,7 @@ public abstract class Game {
 	static public boolean isRunning; //false means that the game is closing
 	protected Control controle;
 	
-	
+	protected Nifty nifty;
 	/**
 	 * Enter the game loop, the function exit only when the variable isRunning
 	 * is set to 'false', meaning that the game is shutting down.
@@ -39,15 +52,23 @@ public abstract class Game {
 		try {
 			firstInit();
 			init();
+			
+			
+			
 			while (isRunning) {
 				Timer.tick();
 				elapsedTime = Timer.getDelta();
-				controle.update();
+				controle.update();								
+				
 				update(elapsedTime);
-				render(); // render graphics
+						
 
+			
+				render(); // render graphics
+				
+				
 				Display.sync(ConfigManager.maxFps); // sync to fps
-				Display.update(); // update the view/screen
+				Display.update(); // update the view/screen					
 
 			}
 		} catch (Exception e) {
@@ -137,6 +158,50 @@ public abstract class Game {
 		initGL();
 		TextureManager.init();
 		
+		
+		LwjglInputSystem inputSystem = new LwjglInputSystem();
+		
+		try {
+			inputSystem.startup();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		nifty = new Nifty(
+				new LwjglRenderDevice(),
+				new NullSoundDevice(),
+				inputSystem,
+				new AccurateTimeProvider());
+	
+		
+		nifty.loadStyleFile("nifty-default-styles.xml");
+		nifty.loadControlFile("nifty-default-controls.xml");
+		nifty.setDebugOptionPanelColors(true);
+		
+       
+       new ScreenBuilder("start") {{     
+    	   layer(new LayerBuilder(){{
+    		   childLayoutHorizontal();	   						    	   					    		       	   					    	   					    	   					    	   					
+    	   					
+    		   panel( new PanelBuilder(){{    
+    			   backgroundColor("#ff0f");
+    			   childLayoutCenter();
+
+    			   text(new TextBuilder(){{
+  						font("aurulent-sans-16.fnt");
+  						color("#ffff");
+  						text("Hello World!");
+  					}});
+    		   }});
+    		   
+    		   panel( new PanelBuilder(){{
+    			   backgroundColor("#f00f");
+    		   }});
+    	   					
+    	   }});
+    	   				
+       }}.build(nifty);
+       nifty.gotoScreen("start");
 	}
 	
 	/**
