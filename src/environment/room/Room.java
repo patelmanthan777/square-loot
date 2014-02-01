@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import light.Light;
+import light.Laser;
 import light.Shadow;
 import light.ShadowBuffer;
 import rendering.Drawable;
@@ -15,6 +16,7 @@ import userInterface.MiniMap;
 import environment.Map;
 import environment.blocks.Block;
 import environment.blocks.BlockFactory;
+import environment.blocks.ShadowCasterBlock;
 
 public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;
@@ -344,11 +346,84 @@ public abstract class Room implements Drawable, ShadowCaster {
 		shadowBuffer.lastShadow++;
 	}
 	
-	
 
-	public void laserShadow(Light l, ShadowBuffer[] shadows, Vector2f cpos) {
-
-	}
+	/**
+	 * Draws the shadow in the case of a laser. Starts by determining which
+	 * block will cast it and return having only modified <b>cpos</b> if it is not
+	 * in the room.
+	 * 
+	 * @param l is the laser source
+	 * @param shadows is the shadow storage system
+	 * @param cpos represents a fictional position of the laser source.
+	 * It is modified by the algorithm to follow the laser direction. 
+	 */
+	public void laserIntersect(Laser l, Vector2f cpos){		
+		int i = (int) (cpos.x / Map.blockPixelSize.x) % ((int) Map.roomBlockSize.x);
+		int j = (int) (cpos.y / Map.blockPixelSize.y) % ((int) Map.roomBlockSize.y);
+		
+		if (grid[i][j] instanceof ShadowCasterBlock){			
+			l.setIntersection(cpos);			
+		}
+		else{
+			boolean inRoom = true;
+			while(l.getIntersection() == null && inRoom) {
+				boolean foundInter = false;
+				
+				int[] htab = new int[8];
+				htab[0] = 0;
+				htab[1] = 1;
+				htab[2] = 0;
+				htab[3] = -1;
+				htab[4] = -1;
+				htab[5] = 1;
+				htab[6] = 1;
+				htab[7] = -1;
+				int[] vtab = new int[8];
+				vtab[0] = -1;
+				vtab[1] = 0;
+				vtab[2] = 1;
+				vtab[3] = 0;
+				vtab[4] = -1;
+				vtab[5] = -1;
+				vtab[6] = 1;
+				vtab[7] = 1;
+				
+				for(int k = 0; k < 8 && !foundInter; k++){			
+					
+					Vector2f inter = grid[i][j].
+							intersectBlock(cpos,
+									       l.getDirection(),
+									       (int) (this.x + (i+htab[k]) * Map.blockPixelSize.x),
+									       (int) (this.y + (j+vtab[k]) * Map.blockPixelSize.y));
+				
+					if (inter != null) {
+						inRoom = i + htab[k] >= 0 &&
+								 i + htab[k] < Map.roomBlockSize.x &&
+								 j + vtab[k] >= 0 &&
+								 j + vtab[k] < Map.roomBlockSize.y;
+						
+						foundInter = true;
+								
+						if( inRoom && grid[i+htab[k]][j+vtab[k]] instanceof ShadowCasterBlock) {
+							if (grid[i+htab[k]][j+vtab[k]].isInside(cpos,
+																	(int) (this.x + (i+htab[k]) * Map.blockPixelSize.x),
+																	(int) (this.y + (j+vtab[k]) * Map.blockPixelSize.y)))
+								l.setIntersection(cpos);
+							
+							else
+								l.setIntersection(inter);
+						}
+						else {
+							i = i+htab[k];
+							j = j+vtab[k];
+							cpos.x = inter.x;
+							cpos.y = inter.y;																
+						}
+					}	
+				}
+			}								
+		}		
+	}		
 
 	/**
 	 * Draw the room on the minimap if discovered.

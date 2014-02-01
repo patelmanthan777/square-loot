@@ -105,7 +105,7 @@ public class Map implements ShadowCaster{
 		currentBufferPosition = new Vector2f((int)(spawnPixelPosition.x - (Map.textureNb / 2.0f) * textureSize), (int)(spawnPixelPosition.y - (Map.textureNb / 2.0f) * textureSize));
 	}
 
-	private void render(int i, int j, int layer) {
+	public void render(int i, int j, int layer) {
 		int minX = (int) Math.max(0, ((Map.currentBufferPosition.x + i
 				* Map.textureSize) / Map.roomPixelSize.x));
 		int maxX = (int) Math
@@ -226,7 +226,18 @@ public class Map implements ShadowCaster{
 		LightManager.needStaticUpdate(translateMapFBOx, translateMapFBOy);
 
 	}
-
+	
+	public void laserIntersect(Laser l) {
+		l.setIntersection(null);
+		Vector2f cpos = new Vector2f(l.getX(), l.getY());
+		while(l.getIntersection() == null){
+			int idxX = (int) (cpos.x / Map.roomPixelSize.x);
+			int idxY = (int) (cpos.y / Map.roomPixelSize.y);
+			if(roomGrid[idxX][idxY] != null)
+				roomGrid[idxX][idxY].laserIntersect(l, cpos);							
+		}
+	}
+	
 	/**
 	 * Compute the shadows casted by the map
 	 */
@@ -254,23 +265,11 @@ public class Map implements ShadowCaster{
 					roomGrid[roomPosiX][j].computeShadow(l, shadows);
 				}
 			}
-		}		
-		else if(l instanceof Laser){
-			boolean shadowAdded = false;	
-			Vector2f cpos = new Vector2f(l.getX(), l.getY());
-			while(!shadowAdded){
-				int idxX = (int) (cpos.x / Map.roomPixelSize.x);
-				int idxY = (int) (cpos.y / Map.roomPixelSize.y);
-				
-				roomGrid[idxX][idxY].laserShadow(l, shadows, cpos);
-				if((int) (cpos.x / Map.roomPixelSize.x) == idxX ||
-				   (int) (cpos.y / Map.roomPixelSize.y) == idxY)
-					shadowAdded = true;
-			
-			}
-		}		
+		}				
 	}
 
+	
+	
 	public Room[][] getRooms() {
 		return roomGrid;
 	}

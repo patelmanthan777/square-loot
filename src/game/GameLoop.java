@@ -6,8 +6,10 @@ import light.LightManager;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+
 import physics.PhysicsManager;
 import configuration.ConfigManager;
+import rendering.Background;
 import rendering.Camera;
 import userInterface.OverlayManager;
 import entity.EntityManager;
@@ -23,7 +25,7 @@ public class GameLoop extends Game{
 	private static Player p;
 	public static Map map ;
 	public static Camera cam = new Camera(new Vector2f(0, 0));
-	
+	private static Background background;
 	
 	public static void main(String[] args) {
 		GameLoop loop = new GameLoop();
@@ -42,13 +44,12 @@ public class GameLoop extends Game{
 		map.renderMapToFrameBuffers();	
 
 		p.setPosition(map.getSpawnPosition());
+		background = new Background();
 		
 		ProjectileManager.init();
 			
 		EntityManager.init();
 		LightManager.init();
-		LightManager.initLightShaders();
-		LightManager.initLaserShader();
 		
 		Light playerLight = LightManager.addPointLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
 		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getDirection());
@@ -73,6 +74,7 @@ public class GameLoop extends Game{
 	 **/
 	@Override
 	public void update(long elapsedTime) {
+
 		/* Input */
 		EntityManager.updateInput(elapsedTime);
 		
@@ -84,6 +86,7 @@ public class GameLoop extends Game{
 		EntityManager.updatePosition();
 		
 		ProjectileManager.updateProjectiles();
+		background.update(elapsedTime);
 		
 		/* Cam and light */
 		Vector2f pos = new Vector2f(p.getPosition().x * ConfigManager.unitPixelSize,
@@ -102,13 +105,16 @@ public class GameLoop extends Game{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		glClearColor(0,0,0,0);
 		glPushMatrix();
+		glLoadIdentity();
 		cam.draw();
+		background.draw();
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		p.draw();
 		EntityManager.render();
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();
+		
 		glPopMatrix();
 	}
 }
