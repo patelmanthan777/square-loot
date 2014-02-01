@@ -19,7 +19,7 @@ public class Player extends LivingEntity implements MiniMapDrawable{
 	private Laser laser;
 	private Light light;
 
-	private Weapon weapon = new LaserRifle(250);
+	private Weapon weapon = new LaserRifle(250, 0.01f, 10);
 
 	public Player(Vector2f pos) {
 		super(pos);

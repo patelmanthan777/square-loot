@@ -83,7 +83,7 @@ public class GameLoop extends Game{
 		/* Position*/
 		EntityManager.updatePosition();
 		
-		ProjectileManager.updateProjectiles(map);
+		ProjectileManager.updateProjectiles();
 		
 		/* Cam and light */
 		Vector2f pos = new Vector2f(p.getPosition().x * ConfigManager.unitPixelSize,

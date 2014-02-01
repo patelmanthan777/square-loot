@@ -1,6 +1,8 @@
 package physics;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.World;
 
 import entity.EntityManager;
@@ -21,5 +23,11 @@ public class PhysicsManager {
 	public static void update(float dt)
 	{
 	    world.step(dt, velocityIterations, positionIterations);
+	}
+	
+	public static Body createBody(BodyDef bodyDef)
+	{
+		Body b = world.createBody(bodyDef);
+		return b;
 	}
 }

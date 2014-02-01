@@ -86,6 +86,7 @@ public abstract class DynamicEntity extends Entity implements Drawable {
 	public void updatePhysics(long dt) {
 
 		Vec2 vel = body.getLinearVelocity();
+
 		if (translation.length() != 0) {
 			Vec2 point = new Vec2(position.x, position.y);
 			translation.normalise(translation);
@@ -93,6 +94,7 @@ public abstract class DynamicEntity extends Entity implements Drawable {
 			Vec2 impulse = new Vec2(translation.x, translation.y);
 			body.applyLinearImpulse(impulse, point);
 		} else {
+
 			body.setLinearVelocity(new Vec2(vel.x * descFactor, vel.y
 					* descFactor));
 		}
@@ -103,7 +105,7 @@ public abstract class DynamicEntity extends Entity implements Drawable {
 			body.setLinearVelocity(new Vec2(vel.x * normFactor, vel.y
 					* normFactor));
 		}
-
+		
 		translation.x = 0;
 		translation.y = 0;
 	}

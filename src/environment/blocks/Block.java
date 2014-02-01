@@ -24,8 +24,6 @@ public abstract class Block {
 	
 	public abstract void initPhysics(World w, float x, float y);
 	
-	public abstract boolean testCollision();
-
 	public Block(){
 		points[0] = new Vector2f();
 		points[1] = new Vector2f();

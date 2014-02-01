@@ -8,10 +8,7 @@ public class SpawnBlock extends Block{
 		super();
 		layer = 0;
 	}
-	@Override
-	public boolean testCollision() {
-		return false;
-	}
+
 	@Override
 	public void initPhysics(World w, float x, float y) {
 	}

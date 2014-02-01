@@ -141,12 +141,6 @@ public abstract class Room implements Drawable, ShadowCaster {
 		}
 	}
 
-	public boolean testCollision(float x, float y) {
-		int blockI = (int) (x / Map.blockPixelSize.x);
-		int blockJ = (int) (y / Map.blockPixelSize.y);
-		return grid[blockI][blockJ].testCollision();
-	}
-
 	@Override
 	public void draw() {
 		for (int i = 0; i < Map.roomBlockSize.x; i++) {

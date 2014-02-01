@@ -26,10 +26,4 @@ public class PhysicalBlock extends ShadowCasterBlock{
 	    box.setAsBox(0.5f, 0.5f);
 	    body.createFixture(box, 0.0f);
 	}
-
-	@Override
-	public boolean testCollision() {
-		return true;
-	}
-
 }

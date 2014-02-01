@@ -12,11 +12,15 @@ public abstract class Weapon extends Item {
 	 * fire cooldown.
 	 */
 	protected long lastShot;
+	protected float projectileSpeed;
+	protected float projectileSize;
 	
-	public Weapon(long fireRate)
+	public Weapon(long fireRate, float projectileSpeed, float projectileSize)
 	{
 		this.fireRate = fireRate;
 		this.lastShot = 0;
+		this.projectileSpeed = projectileSpeed;
+		this.projectileSize = projectileSize;
 	}
 	
 	/**

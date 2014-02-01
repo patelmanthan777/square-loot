@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class Entity {
 	protected Vector2f position;
-	private Vector2f direction;
+	protected Vector2f direction;
 	private Vector2f tangent;
 	protected String name = null;
 	private float angle;

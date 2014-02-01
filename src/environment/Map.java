@@ -155,32 +155,6 @@ public class Map implements ShadowCaster{
 		}
 	}
 
-	/**
-	 * Test whether the coordinates are inside the map boundaries.
-	 * 
-	 * @param x
-	 *            the horizontal position
-	 * @param y
-	 *            the vertical position
-	 * @return <b>true</b> if the position is in collision, <b>false</b>
-	 *         otherwise
-	 */
-	public boolean testCollision(float x, float y) {
-		int roomI = (int) Math.floor(x / (roomPixelSize.x));
-		int roomJ = (int) Math.floor(y / (roomPixelSize.y));
-		if (roomI < 0 || roomJ < 0 || roomI > Map.mapRoomSize.x - 1
-				|| roomJ > Map.mapRoomSize.y - 1) {
-			return true;
-		} else {
-			if (roomGrid[roomI][roomJ] != null) {
-				return roomGrid[roomI][roomJ].testCollision(x - roomPixelSize.x
-						* roomI, y - roomPixelSize.y * roomJ);
-			} else {
-				return true;
-			}
-		}
-	}
-
 	public Vector2f getSpawnPixelPosition() {
 		return spawnPixelPosition;
 	}

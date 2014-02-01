@@ -8,11 +8,6 @@ public class VoidBlock extends ShadowCasterBlock{
 		super();
 		layer = 2;
 	}
-	
-	@Override
-	public boolean testCollision() {
-		return true;
-	}
 
 	@Override
 	public void initPhysics(World w, float x, float y) {

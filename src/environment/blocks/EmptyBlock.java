@@ -9,11 +9,6 @@ public class EmptyBlock extends Block {
 	}
 
 	@Override
-	public boolean testCollision() {
-		return false;
-	}
-
-	@Override
 	public void initPhysics(World w, float x, float y) {
 	}
 	

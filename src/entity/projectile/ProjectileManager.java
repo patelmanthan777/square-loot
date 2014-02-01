@@ -1,8 +1,6 @@
 package entity.projectile;
 
 import org.lwjgl.util.vector.Vector2f;
-import environment.Map;
-
 
 public final class ProjectileManager {
 	/** ProjectileFactory */
@@ -28,8 +26,8 @@ public final class ProjectileManager {
 	 * @param pos the bullet position
 	 * @param rot the bullet direction
 	 */
-	static public void createBullet(Vector2f pos, Vector2f rot){
-		bulletFactory.createProjectile(pos, rot);
+	static public void createBullet(Vector2f pos, Vector2f rot, float speedValue, float size){
+		bulletFactory.createProjectile(pos, rot, speedValue,size);
 	}
 	
 		
@@ -37,8 +35,8 @@ public final class ProjectileManager {
 	 * Update all projectiles
 	 * @param m the map
 	 */
-	static public void updateProjectiles(Map m) {
-		bulletFactory.updateProjectiles(m);	
+	static public void updateProjectiles() {
+		bulletFactory.updateProjectiles();	
 	}
 	
 	
