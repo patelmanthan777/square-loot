@@ -7,6 +7,7 @@ import light.LightManager;
 
 import utils.GraphicsAL;
 
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
@@ -32,6 +33,7 @@ public class GameLoop extends Game{
 	private static Background background;
 	
 	public static void main(String[] args) {
+		
 		GameLoop loop = new GameLoop();
 		loop.start();
 	}
@@ -106,6 +108,7 @@ public class GameLoop extends Game{
 	 */
 	@Override
 	public void render() {
+        
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		glClearColor(0,0,0,0);
 		glPushMatrix();
@@ -120,12 +123,16 @@ public class GameLoop extends Game{
 		ProjectileManager.drawProjectiles();						
 		OverlayManager.render();
 		
-		
+        glPushMatrix();
+        glPushAttrib(GL_ALL_ATTRIB_BITS);		
 		nifty.render(false);
-		glEnable(GL_TEXTURE_2D);		
+        glPopAttrib();
+        glPopMatrix();
+        
+		glEnable(GL_TEXTURE_2D);	
 		
-		glPopMatrix();		
-
+		glPopMatrix();	
+							
 
 	}
 }

@@ -179,16 +179,16 @@ public abstract class Game {
 		nifty.setDebugOptionPanelColors(true);
 		
        
-       new ScreenBuilder("start") {{     
-    	   layer(new LayerBuilder(){{
-    		   childLayoutHorizontal();	   						    	   					    		       	   					    	   					    	   					    	   					
-    	   					
-    		   panel( new PanelBuilder(){{    
-    			   backgroundColor("#ff0f");
-    			   childLayoutCenter();
+		new ScreenBuilder("start") {{     
+			layer(new LayerBuilder(){{
+				childLayoutHorizontal();	   						    	   					    		       	   					    	   					    	   					    	   					
+    		   
+				panel( new PanelBuilder(){{    
+					backgroundColor("#ff0f");
+					childLayoutCenter();
 
-    			   text(new TextBuilder(){{
-  						font("aurulent-sans-16.fnt");
+					text(new TextBuilder(){{
+						font("aurulent-sans-16.fnt");
   						color("#ffff");
   						text("Hello World!");
   					}});
