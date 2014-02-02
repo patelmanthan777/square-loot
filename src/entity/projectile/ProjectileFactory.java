@@ -47,6 +47,7 @@ public class ProjectileFactory{
 	public void destroyProjectile(Projectile project)
 	{
 		deadList.add(project);
+		project.destroy();
 	}
 	
 	/**

@@ -108,4 +108,8 @@ public abstract class Projectile extends Entity implements Drawable{
 		Vec2 vel = new Vec2(direction.x * speedValue, direction.y * speedValue);
 		body.setLinearVelocity(vel);
 	}
+
+	public void destroy() {
+		body.getWorld().destroyBody(body);
+	}
 }
