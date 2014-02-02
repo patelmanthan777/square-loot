@@ -1,5 +1,6 @@
 package userInterface.inventory;
 
+
 public enum InventoryItemEnum {
 	PWEAPON,
 	SWEAPON,

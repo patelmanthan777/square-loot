@@ -11,6 +11,7 @@ import org.lwjgl.util.vector.Vector3f;
 import rendering.MiniMapDrawable;
 import rendering.TextureManager;
 import userInterface.MiniMap;
+import userInterface.inventory.InventoryItemEnum;
 import utils.GraphicsAL;
 import entity.LivingEntity;
 import environment.Map;
@@ -120,8 +121,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	
 	public void primaryWeapon(float directionX, float directionY){
-		inventory.equippedItemAction(0, position.x, position.y,
-									    directionX, directionY);
+		inventory.equippedItemAction(InventoryItemEnum.PWEAPON, position.x, position.y,
+									  							directionX, directionY);
 	}
 
 }

@@ -1,13 +1,20 @@
 package userInterface.inventory;
 
+
 import org.lwjgl.util.vector.Vector2f;
 
 import item.Item;
-import item.Equipment;
+
+import item.weapon.PrimaryWeapon;
+import item.weapon.SecondaryWeapon;
+import item.shield.Shield;
+import item.motionGear.MotionGear;
+import item.accessory.Accessory;
+
 import userInterface.Overlay;
 import userInterface.inventory.InventoryItemEnum;
 
-import utils.NonContinuousTable;
+
 
 
 public class Inventory extends Overlay{		
@@ -16,18 +23,46 @@ public class Inventory extends Overlay{
 	/*Carried*/
 	
 	/*Active Equipment*/
-	private static final int equippedNbMax = 5;
-	private NonContinuousTable<Equipment> equippedItems;	
+	class InventorySlot<A> {
+		A slot = null;
+				
+		
+		public A add(A a){
+			A tmp = slot; 
+			slot = a;
+			return tmp;
+		}
+		
+		public A access(){
+			return slot;
+		}
+		
+		public A remove(){
+			return add(null);
+		}
+	}	
 	
-
+	private InventorySlot<PrimaryWeapon> pweapon;
+	private InventorySlot<SecondaryWeapon> sweapon;
+	private InventorySlot<Shield> shield;
+	private InventorySlot<Accessory> accessory;
+	private InventorySlot<MotionGear> mgear;
+	
+	
+	
 
 	
 	
 	public Inventory(int size){	
 		weight = 0f;					
-		
-		equippedItems =
-				new NonContinuousTable<Equipment>(4, new Equipment[equippedNbMax]);
+			
+		pweapon = new InventorySlot<PrimaryWeapon>();
+		sweapon = new InventorySlot<SecondaryWeapon>();
+		shield = new InventorySlot<Shield>();
+		accessory = new InventorySlot<Accessory>();
+		mgear = new InventorySlot<MotionGear>();
+
+	
 											
 	}
 	
@@ -41,9 +76,16 @@ public class Inventory extends Overlay{
 	public Item add(Item i){
 		Item tmp = i;
 		
-		if(i instanceof Equipment){
-			tmp = equippedItems.add((Equipment) i);
-		}				
+		if(i instanceof PrimaryWeapon)
+			tmp = pweapon.add((PrimaryWeapon) i);		
+		else if (i instanceof SecondaryWeapon)
+			tmp = sweapon.add((SecondaryWeapon) i);
+		else if (i instanceof Shield)
+			tmp = shield.add((Shield) i);
+		else if (i instanceof SecondaryWeapon)
+			tmp = accessory.add((Accessory) i);
+		else if (i instanceof SecondaryWeapon)
+			tmp = mgear.add((MotionGear) i);
 		
 		if(tmp == null){
 			weight += i.getWeight();
@@ -63,15 +105,15 @@ public class Inventory extends Overlay{
 		
 		switch (i){
 		case PWEAPON:
-			return equippedItems.access(0);
+			return pweapon.access();
 		case SWEAPON:
-			return equippedItems.access(1);
+			return sweapon.access();
 		case SHIELD:
-			return equippedItems.access(2);
+			return shield.access();
 		case ACCESSORY:
-			return equippedItems.access(3);
+			return accessory.access();
 		case MGEAR:
-			return equippedItems.access(4);
+			return mgear.access();
 		case NOITEM:
 		}
 		
@@ -90,19 +132,19 @@ public class Inventory extends Overlay{
 		
 		switch (i){
 		case PWEAPON:
-			tmp = equippedItems.remove(0);
+			tmp = pweapon.remove();
 			break;
 		case SWEAPON:			
-			tmp = equippedItems.remove(1);
+			tmp = sweapon.remove();
 			break;
 		case SHIELD:			
-			tmp = equippedItems.remove(2);
+			tmp = shield.remove();
 			break;
 		case ACCESSORY:			
-			tmp = equippedItems.remove(3);
+			tmp = accessory.remove();
 			break;
 		case MGEAR:			
-			tmp = equippedItems.remove(4);
+			tmp = mgear.remove();
 			break;
 		case NOITEM:
 		}
@@ -128,11 +170,36 @@ public class Inventory extends Overlay{
 	 * @param dirx
 	 * @param diry
 	 */
-	public void equippedItemAction(int idx, float x, float y, float dirx, float diry){
-		if(idx < equippedNbMax && equippedItems.access(idx) != null){		
-			equippedItems.access(idx).action(new Vector2f(x   , y   ),
-											 new Vector2f(dirx, diry));
-		}
+	public void equippedItemAction(InventoryItemEnum i, float x, float y, float dirx, float diry){
+		switch (i){
+		case PWEAPON:
+			if(pweapon.access() != null)
+				pweapon.access().action(new Vector2f(x   , y   ),
+						                new Vector2f(dirx, diry));			
+			break;
+		case SWEAPON:
+			if(pweapon.access() != null)
+				sweapon.access().action(new Vector2f(x   , y   ),
+                                        new Vector2f(dirx, diry));			
+			break;
+		case SHIELD:			
+			if(pweapon.access() != null)
+				shield.access().action(new Vector2f(x   , y   ),
+									   new Vector2f(dirx, diry));			
+			break;
+		case ACCESSORY:			
+			if(pweapon.access() != null)
+				accessory.access().action(new Vector2f(x   , y   ),
+                                          new Vector2f(dirx, diry));			
+			break;
+		case MGEAR:			
+			if(pweapon.access() != null)
+				mgear.access().action(new Vector2f(x   , y   ),
+									  new Vector2f(dirx, diry));			
+			break;
+		case NOITEM:
+		}	
+		
 	}
 
 	public void draw(){}
