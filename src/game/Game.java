@@ -1,16 +1,6 @@
 package game;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_STENCIL_TEST;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
+import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Mouse;
@@ -171,6 +161,7 @@ public abstract class Game {
 
 		glClearColor(0, 0, 0, 0);
 		glEnable(GL_TEXTURE_2D);
+		
 	}
 	public abstract void init();
 	
