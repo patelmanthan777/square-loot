@@ -7,6 +7,7 @@ public class VoidBlock extends ShadowCasterBlock{
 	protected VoidBlock(){
 		super();
 		layer = 2;
+		this.collidable = true;
 	}
 
 	@Override

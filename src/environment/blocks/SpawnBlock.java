@@ -2,8 +2,7 @@ package environment.blocks;
 
 import org.jbox2d.dynamics.World;
 
-
-public class SpawnBlock extends Block{
+public class SpawnBlock extends EmptyBlock{
 	public SpawnBlock(){
 		super();
 		layer = 0;

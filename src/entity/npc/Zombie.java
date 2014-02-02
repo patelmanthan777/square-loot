@@ -6,7 +6,9 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
 
 import rendering.MiniMapDrawable;
+import rendering.TextureManager;
 import userInterface.MiniMap;
+import utils.GraphicsAL;
 import entity.player.Player;
 import environment.Map;
 
@@ -23,23 +25,23 @@ public class Zombie extends Npc implements MiniMapDrawable {
 
 	/**********************************************/
 
-	public Zombie(Vector2f pos) {
-		super(pos);
+	public Zombie(Vector2f pos, int inventorySize) {
+		super(pos, inventorySize);
 		init();
 	}
 
-	public Zombie(Vector2f pos, Vector2f rot) {
-		super(pos, rot);
+	public Zombie(Vector2f pos, Vector2f rot, int inventorySize) {
+		super(pos, rot, inventorySize);
 		init();
 	}
 
-	public Zombie(float posx, float posy, float dirx, float diry) {
-		super(posx, posy, dirx, diry);
+	public Zombie(float posx, float posy, float dirx, float diry, int inventorySize) {
+		super(posx, posy, dirx, diry, inventorySize);
 		init();
 	}
 
-	public Zombie(float posx, float posy) {
-		super(posx, posy);
+	public Zombie(float posx, float posy, int inventorySize) {
+		super(posx, posy, inventorySize);
 		init();
 	}
 
@@ -54,15 +56,13 @@ public class Zombie extends Npc implements MiniMapDrawable {
 
 	@Override
 	public void draw() {
-		glColor3f(1, 1, 1);
-		glTexCoord2f(1, 1);
-		glVertex2f(points[0].x, points[0].y);
-		glTexCoord2f(1, 0);
-		glVertex2f(points[3].x, points[3].y);
-		glTexCoord2f(0, 0);
-		glVertex2f(points[2].x, points[2].y);
-		glTexCoord2f(0, 1);
-		glVertex2f(points[1].x, points[1].y);
+		glEnable(GL_BLEND); 
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glColor3f(1,1,1);
+		GraphicsAL.drawQuadTexture(points,
+				   				   GraphicsAL.fullTexPoints,
+				   				   TextureManager.zombieTexture().getTextureID());			
+		glDisable(GL_BLEND);
 	}
 
 	@Override

@@ -9,10 +9,11 @@ import entity.EntityManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
 
-public class TestRoom extends Room{
+public class RandomBlockRoom extends Room{
 	private float proba = 0.01f;
-	public TestRoom(float posX, float posY){
+	public RandomBlockRoom(float posX, float posY){
 		super(posX, posY);
+		pressure = 100;
 		construct();
 	}
 
@@ -50,10 +51,7 @@ public class TestRoom extends Room{
 
 		float dstMax = Map.roomPixelSize.x;
 		LightManager.addPointLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
-		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
-		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
-		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
-		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
-		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y /ConfigManager.unitPixelSize);
+		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y / ConfigManager.unitPixelSize);
 	}
+	
 }

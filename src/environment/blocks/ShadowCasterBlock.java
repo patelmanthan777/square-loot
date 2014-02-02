@@ -1,10 +1,7 @@
 package environment.blocks;
 
 import org.lwjgl.util.vector.Vector2f;
-
-import entity.EntityManager;
 import environment.Map;
-import light.Laser;
 import light.Light;
 import light.Shadow;
 import light.ShadowBuffer;
@@ -41,10 +38,12 @@ public abstract class ShadowCasterBlock extends Block{
 	
 	public ShadowCasterBlock(){
 		super();
+		this.castShadows = true;
 	}
 	
 	protected ShadowCasterBlock(float x, float y){
 		super(x,y);
+		this.castShadows = true;
 	}
 	
 	/**
@@ -64,7 +63,7 @@ public abstract class ShadowCasterBlock extends Block{
 	 * 
 	 * @param shadowBuffer are the resulting shadows quadrilaterals
 	 */
-	public void computeShadow(Light light, int ix, int iy,boolean [] neighbour, ShadowBuffer shadowBuffer){
+	public void computeShadow(Light light, int ix, int iy, ShadowBuffer shadowBuffer){
 		float x =  (ix * Map.blockPixelSize.x);
 		float y =  (iy * Map.blockPixelSize.y);
 		int shadowInd = shadowBuffer.lastShadow+1;
@@ -79,7 +78,7 @@ public abstract class ShadowCasterBlock extends Block{
 			Vector2f.sub(currentVertex, light.getPosition(), lightToCurrent);
 			Shadow[] shadows = (shadowBuffer.getShadows());
 			if (Vector2f.dot(normal, lightToCurrent) > 0 ) {
-				if((light instanceof Light && !neighbour[i]) ||
+				if((light instanceof Light) ||
 					this instanceof VoidBlock){
 					Vector2f.sub(currentVertex,light.getPosition(), point1);
 					point1.normalise(point1);
@@ -153,11 +152,4 @@ public abstract class ShadowCasterBlock extends Block{
 		}
 		shadows.lastShadow = shadowInd - 1;
 	}
-
-	
-	@Override
-	public boolean castShadows() {
-		return true;
-	}
-
 }

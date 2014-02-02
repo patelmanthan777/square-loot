@@ -13,7 +13,13 @@ import event.MouseControler;
 public class PlayerControl {
 
 	enum playerActions {
-		MOVE_FORWARD, MOVE_LEFT, MOVE_RIGHT, MOVE_BACKWARD, PRIMARY_WEAPON, LIGHT
+		MOVE_FORWARD,
+		MOVE_LEFT,
+		MOVE_RIGHT,
+		MOVE_BACKWARD,
+		PRIMARY_WEAPON,
+		BATTERY,
+		LIGHT
 	}
 
 	private HashMap<playerActions, LinkedList<Integer>> keyBinding;
@@ -22,7 +28,7 @@ public class PlayerControl {
 	private MouseControler mouse;
 	private playerActions[] actions;
 	private Player p;
-
+	
 	public PlayerControl(KeyboardControler keys, MouseControler mouse, Player p) {
 
 		this.keys = keys;
@@ -31,7 +37,7 @@ public class PlayerControl {
 		keyBinding = new HashMap<playerActions, LinkedList<Integer>>();
 		buttonBinding = new HashMap<playerActions, LinkedList<Integer>>();
 		actions = playerActions.values();
-
+		
 		// MOVE_FORWARD
 		LinkedList<Integer> l = new LinkedList<Integer>();
 		l.add(Keyboard.KEY_W);
@@ -59,12 +65,15 @@ public class PlayerControl {
 		l.add(Keyboard.KEY_E);
 		keyBinding.put(playerActions.LIGHT, l);
 
-		// PRIMARY_WEAPON
-		
+		// PRIMARY_WEAPON		
 		 l = new LinkedList<Integer>(); 
 		 l.add(0);
-		 buttonBinding.put(playerActions.PRIMARY_WEAPON,l);
-		 
+		 buttonBinding.put(playerActions.PRIMARY_WEAPON,l);		 
+
+		// BATTERY
+		l = new LinkedList<Integer>();
+		l.add(Keyboard.KEY_F);
+		keyBinding.put(playerActions.BATTERY, l);
 	}
 
 	/**
@@ -119,6 +128,9 @@ public class PlayerControl {
 		case PRIMARY_WEAPON:
 			primaryWeaponAction(state);
 			break;
+		case BATTERY:
+			batteryAction(state);
+			break;
 		}
 	}
 
@@ -155,6 +167,13 @@ public class PlayerControl {
 		}
 	}
 	
+	private void batteryAction(KeyState state) {
+		if (state == KeyState.PRESSED) {			
+			p.dropBattery();			
+		}
+	}
+	
+
 	private void primaryWeaponAction(KeyState state) {
 		if (state == KeyState.HELD || state == KeyState.PRESSED) {
 			p.primaryWeapon(mouse.direction.x,mouse.direction.y);

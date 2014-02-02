@@ -13,10 +13,20 @@ public abstract class Block {
 	 * The blocks are squared shaped.
 	 */
 	protected int nb_points = 4;
-	
+	protected boolean pressurized = false;
+	protected boolean castShadows = false;
+	protected boolean collidable = false;
 	protected Vector2f[] points = new Vector2f[4];
 	protected Vector4f color = new Vector4f();
-
+	
+	/*  Avoid memory leak */
+	Vector2f edge = new Vector2f();
+	Vector2f normal = new Vector2f();	
+	Vector2f inter = new Vector2f();
+	Vector2f norm = new Vector2f();
+	
+	/* ******************************* */
+	
 	/**
 	 * Indicates whether shadows should be drawn on this block.
 	 */
@@ -91,10 +101,11 @@ public abstract class Block {
 									  Vector2f p2,
 									  Vector2f pos,
 									  Vector2f dir){
-		Vector2f inter = new Vector2f();
+		
 		
 		if(p1.x == p2.x){
-			Vector2f norm = new Vector2f(pos.x - p1.x, 0);
+			norm.x = pos.x - p1.x;
+			norm.y = 0;
 			if(Vector2f.dot(norm, dir) < 0){			
 				inter.x = p1.x;
 				inter.y = pos.y + dir.y * Math.abs((p1.x - pos.x)/dir.x);
@@ -105,7 +116,8 @@ public abstract class Block {
 			}
 		}
 		else if (p1.y == p2.y){
-			Vector2f norm = new Vector2f(0, pos.y - p1.y);
+			norm.x = 0;
+			norm.y = pos.y - p1.y;
 			if(Vector2f.dot(norm, dir) < 0){
 				inter.y = p1.y;
 				inter.x = pos.x + dir.x * Math.abs((p1.y - pos.y)/dir.y);
@@ -142,7 +154,8 @@ public abstract class Block {
 		   p1.y == p2.y && p1.y == pos.y && dir.y == 0 &&
 		   (p1.x >= pos.x && pos.x >= p2.x ||
 		    p1.x <= pos.x && pos.x <= p2.x)){			
-			Vector2f inter = new Vector2f(pos.x, pos.y);
+			inter.x = pos.x;
+			inter.y = pos.y;
 			return inter;
 		}
 		//else if moving in the direction of the segment
@@ -153,14 +166,16 @@ public abstract class Block {
 				p1.y < p2.y && p2.y < pos.y && dir.y < 0) ||
 			   (p1.x > p2.x && p2.x > pos.x && dir.x > 0 ||
 			    p1.x < p2.x && p2.x < pos.x && dir.x < 0)){
-				Vector2f inter = new Vector2f(p2.x, p2.y);
+				inter.x = p2.x;
+				inter.y = p2.y;
 				return inter;				
 			}
 			else if((p2.y > p1.y && p1.y > pos.y && dir.y > 0 ||
 					 p2.y < p1.y && p1.y < pos.y && dir.y < 0) ||
 					(p2.x > p1.x && p1.x > pos.x && dir.x > 0 ||
 					 p2.x < p1.x && p1.x < pos.x && dir.x < 0)){
-				Vector2f inter = new Vector2f(p1.x, p1.y);
+				inter.x = p1.x;
+				inter.y = p1.y;
 				return inter;				
 			}
 			else
@@ -203,8 +218,7 @@ public abstract class Block {
 	 */
 	public Vector2f intersectBlock(Vector2f pos, Vector2f dir, int x, int y){		
 		
-		Vector2f edge = new Vector2f();
-		Vector2f normal = new Vector2f();				
+		
 		
 		initBlock(x, y);
 		
@@ -238,7 +252,7 @@ public abstract class Block {
 	
 	
 	public boolean castShadows(){
-		return false;
+		return castShadows;
 	}
 
 	public void setColor(float r, float g, float b, float a) {
@@ -250,5 +264,13 @@ public abstract class Block {
 	
 	public int getLayer(){
 		return layer;
+	}
+	
+	public boolean isPressurized(){
+		return pressurized;
+	}
+	
+	public  boolean testCollision(){
+		return collidable;
 	}
 }

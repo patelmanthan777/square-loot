@@ -1,19 +1,25 @@
 package item.weapon;
 
+
 import org.lwjgl.util.vector.Vector2f;
 
 import configuration.ConfigManager;
+
+import rendering.TextureManager;
+
 import entity.projectile.ProjectileManager;
 
-public class LaserRifle extends Weapon {
+public class LaserRifle extends PrimaryWeapon {
 
-	public LaserRifle(long fireRate, float projectileSpeed, float projectileSize, int damage)
+	public LaserRifle(long fireRate, float x, float y, float projectileSpeed, float projectileSize, int damage)
 	{
-		super(fireRate, projectileSpeed, projectileSize, damage);
+		super(fireRate, x, y, projectileSpeed, projectileSize, damage);
+		position.x = x;
+		position.y = y;	
 	}
 
 	@Override
-	public void Fire(Vector2f pos, Vector2f target) {	
+	public void fire(Vector2f pos, Vector2f target) {	
 		if(this.readyToFire())
 		{
 			Vector2f direct = new Vector2f();
@@ -23,5 +29,9 @@ public class LaserRifle extends Weapon {
 			ProjectileManager.createBullet(position, target, projectileSpeed, projectileSize, damage);
 			this.updateLastShot();
 		}		
-	}	
+	}
+	
+	public int getTextureID(){
+		return TextureManager.laserRifleTexture().getTextureID();
+	}
 }

@@ -3,9 +3,9 @@ package item.weapon;
 import org.lwjgl.util.vector.Vector2f;
 
 import event.Timer;
-import item.Item;
+import item.Equipment;
 
-public abstract class Weapon extends Item {
+public abstract class Weapon extends Equipment {
 	protected long fireRate;
 	/**
 	 * Last shot timestamp, allow the handling of the
@@ -16,8 +16,9 @@ public abstract class Weapon extends Item {
 	protected float projectileSize;
 	protected int damage;
 	
-	public Weapon(long fireRate, float projectileSpeed, float projectileSize, int damage)
+	public Weapon(long fireRate, float x, float y, float projectileSpeed, float projectileSize, int damage)
 	{
+		super(x,y);
 		this.fireRate = fireRate;
 		this.lastShot = 0;
 		this.projectileSpeed = projectileSpeed;
@@ -46,6 +47,9 @@ public abstract class Weapon extends Item {
 	 * @param pos the position where the weapon has been fire
 	 * @param target the target area
 	 */
-	abstract public void Fire(Vector2f pos, Vector2f target);
+	abstract public void fire(Vector2f pos, Vector2f target);
 	
+	public void action(Vector2f pos, Vector2f target){
+		fire(pos,target);
+	}
 }

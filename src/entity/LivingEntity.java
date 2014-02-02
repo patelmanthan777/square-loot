@@ -2,12 +2,13 @@ package entity;
 
 
 import org.lwjgl.util.vector.Vector2f;
-
 import physics.PhysicsDataStructure;
 import configuration.ConfigManager;
 import entity.projectile.Projectile;
+import userInterface.inventory.Inventory;
 
 public abstract class LivingEntity extends DynamicEntity {
+
 
 	private static final int nbPoints = 4;
 	protected Vector2f[] points = new Vector2f[nbPoints];
@@ -18,23 +19,33 @@ public abstract class LivingEntity extends DynamicEntity {
 	protected Vector2f d = new Vector2f();
 	protected Vector2f halfSize = new Vector2f(20, 20);
 	
-	public LivingEntity(Vector2f pos) {
+	protected Inventory inventory = null;
+	
+	public LivingEntity(Vector2f pos, int inventorySize) {
 		super(pos);
 		init();
+		if (inventorySize > 0)
+			inventory = new Inventory(inventorySize);
 	}
 	
-	public LivingEntity(Vector2f pos,Vector2f dir) {
+	public LivingEntity(Vector2f pos,Vector2f dir, int inventorySize) {
 		super(pos,dir);
 		init();
+		if (inventorySize > 0)
+			inventory = new Inventory(inventorySize);
 	}
-	public LivingEntity(float posx, float posy, float dirx, float diry) {
+	public LivingEntity(float posx, float posy, float dirx, float diry, int inventorySize) {
 		super(posx,posy,dirx,diry);
 		init();
+		if (inventorySize > 0)
+			inventory = new Inventory(inventorySize);
 	}
-	public LivingEntity(float posx, float posy) {
+	public LivingEntity(float posx, float posy, int inventorySize) {
 		super(posx,posy);
 		init();
-	}
+		if (inventorySize > 0)
+			inventory = new Inventory(inventorySize);
+	}	
 	
 	public int getHealth(){
 		return health;
@@ -133,10 +144,10 @@ public abstract class LivingEntity extends DynamicEntity {
 		points[0].y = this.position.y * ConfigManager.unitPixelSize - t.y - d.y;
 		points[1].x = this.position.x * ConfigManager.unitPixelSize  + t.x - d.x;
 		points[1].y = this.position.y * ConfigManager.unitPixelSize  + t.y - d.y;
-		points[3].x = this.position.x * ConfigManager.unitPixelSize  - t.x + d.x;
-		points[3].y = this.position.y * ConfigManager.unitPixelSize  - t.y + d.y;
 		points[2].x = this.position.x * ConfigManager.unitPixelSize  + t.x + d.x;
 		points[2].y = this.position.y * ConfigManager.unitPixelSize  + t.y + d.y;
+		points[3].x = this.position.x * ConfigManager.unitPixelSize  - t.x + d.x;
+		points[3].y = this.position.y * ConfigManager.unitPixelSize  - t.y + d.y;
 	}
 	
 	@Override
@@ -156,5 +167,10 @@ public abstract class LivingEntity extends DynamicEntity {
 		default:
 			break;
 		}
+	}
+
+	
+	public Inventory getInventory(){
+		return inventory;
 	}
 }

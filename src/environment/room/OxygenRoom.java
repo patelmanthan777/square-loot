@@ -1,26 +1,23 @@
 package environment.room;
 
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
+
+import light.LightManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
 
-import item.ItemManager;
-import item.weapon.LaserRifle;
+public class OxygenRoom extends Room{
 
-public class SpawnRoom extends Room{
-
-	public SpawnRoom(float posX,float posY) {
-		super(posX,posY);
-		miniMapColor.x = 0;
-		miniMapColor.y = 1;
-		miniMapColor.z = 0;
-		discovered = true;
-		pressure = 0;
-		ItemManager.add(new LaserRifle(250,
-									   posX + Map.roomPixelSize.x/2,
-				                       posY + Map.roomPixelSize.y/2,
-				                       0.5f,
-				                       10,
-				                       1));
+	private float load;
+	public OxygenRoom(float posX, float posY) {
+		super(posX, posY);
+		this.load = 10000;
+		this.pressure = 1000;
+		this.newPressure = 1000;
+		this.miniMapColor.x = 0;
+		this.miniMapColor.y = 0;
+		this.miniMapColor.z = 1;
 		construct();
 	}
 
@@ -48,15 +45,28 @@ public class SpawnRoom extends Room{
 			grid[1][i] = BlockFactory.createBorderBlock();
 			grid[(int)Map.roomBlockSize.x-2][i] = BlockFactory.createBorderBlock();
 		}
-		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2] = BlockFactory.createSpawnBlock();
-		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2] = BlockFactory.createSpawnBlock();
-		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
-		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
-		
-		
+		Vector2f pos = new Vector2f(x+5*Map.roomPixelSize.x/11,y+Map.roomPixelSize.y/2);
+		Vector3f color = new Vector3f(1,0.1f,0.1f);
+		float radius = 50;
+		float dstMax = Map.roomPixelSize.x;
+		LightManager.addPointLight("room "+x+"0 " + y, pos, color, radius, dstMax ,false);
+		pos.x += Map.roomPixelSize.x/11;
+		LightManager.addPointLight("room "+x+"1 " + y, pos, color, radius, dstMax ,false);
 	}
-	@Override 
-	public void setNewPressure(float pressure) {
-		
+
+	public void setNewPressure(float pressure){
+		this.newPressure = pressure;
 	}
+	
+	public void update(){
+		if(load > 0){
+			load -= (this.pressure - this.newPressure);
+			if(load < 0){
+				this.pressure += load;
+			}
+		}else{
+			this.pressure = this.newPressure;
+		}
+	}
+	
 }

@@ -5,8 +5,6 @@ import java.util.LinkedList;
 
 import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
-
-import rendering.TextureManager;
 import entity.npc.Npc;
 import entity.npc.Zombie;
 import entity.player.Player;
@@ -22,7 +20,7 @@ public class EntityManager {
 	}
 
 	public static void createZombie(float posx, float posy) {
-		npcs.add(new Zombie(posx, posy, 1, 1));
+		npcs.add(new Zombie(posx, posy, 1, 1, 0));
 	}
 
 	public static void updateInput(long elapsedTime) {
@@ -62,21 +60,20 @@ public class EntityManager {
 	}
 
 	public static void render() {
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBindTexture(GL_TEXTURE_2D, TextureManager.zombieTexture()
-				.getTextureID());
-		glBegin(GL_QUADS);
-		for (Npc npc : npcs) {
+		glEnable(GL_BLEND); 
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);				
+		for(Npc npc : npcs){
 			npc.draw();
+		}		
+	
+		for (Player p : players) {
+			p.draw();
 		}
-		glEnd();
-		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_BLEND);
 	}
 
 	public static Player createPlayer() {
-		Player player = new Player(new Vector2f(0, 0));
+		Player player = new Player(new Vector2f(0, 0), 10);
 		players.add(player);
 		return player;
 	}

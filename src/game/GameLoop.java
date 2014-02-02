@@ -1,7 +1,14 @@
 package game;
+
+import item.Battery;
+import item.ItemManager;
+import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
 import light.LightManager;
+
+import utils.GraphicsAL;
+
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -28,6 +35,7 @@ public class GameLoop extends Game{
 	private static Background background;
 	
 	public static void main(String[] args) {
+		
 		GameLoop loop = new GameLoop();
 		loop.start();
 	}
@@ -40,22 +48,29 @@ public class GameLoop extends Game{
 		p = EntityManager.createPlayer();
 		controle = new Control(p);
 		BlockFactory.initBlocks();
+
+		GraphicsAL.init();
 		map = new Map(new Vector2f(10,10), new Vector2f(32,32), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
 		map.renderMapToFrameBuffers();	
 
 		p.setPosition(map.getSpawnPosition());
+
 		background = new Background();
 		
 		ProjectileManager.init();
-			
+
 		EntityManager.init();
+	
 		LightManager.init();
-		
 		Light playerLight = LightManager.addPointLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
 		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getDirection());
 		
 		p.setLight(playerLight);
-		p.setLaser(playerLaser);
+
+		p.setLaser(playerLaser);		
+		p.pickUp(new LaserRifle(250,200,200,0.05f,10,1));
+		p.pickUp(new Battery(200,200));
+		
 		LightManager.addShadowCaster(map);
 
 		OverlayManager.init();
@@ -64,6 +79,9 @@ public class GameLoop extends Game{
 		OverlayManager.createPlayerStatsOverlay(p);
 
 		PhysicsManager.init(map);
+
+		OverlayManager.createPlayerInventory(p);
+
 		isRunning = true;
 	}
 
@@ -94,7 +112,7 @@ public class GameLoop extends Game{
 		cam.setPosition(pos);
 		LightManager.setCamPosition(pos);
 		map.setDrawPosition(pos);
-	
+		map.update(elapsedTime);
 	}
 	
 	/**
@@ -102,6 +120,7 @@ public class GameLoop extends Game{
 	 */
 	@Override
 	public void render() {
+        
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		glClearColor(0,0,0,0);
 		glPushMatrix();
@@ -110,11 +129,12 @@ public class GameLoop extends Game{
 		background.draw();
 		map.renderMapToFrameBuffers();
 		LightManager.render();
-		p.draw();
+		ItemManager.render();
 		EntityManager.render();
 		ProjectileManager.drawProjectiles();
-		OverlayManager.render();
-		
+		OverlayManager.render();		
 		glPopMatrix();
+
+
 	}
 }

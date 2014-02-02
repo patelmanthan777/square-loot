@@ -20,6 +20,9 @@ import org.lwjgl.opengl.PixelFormat;
 
 import rendering.TextureManager;
 import configuration.ConfigManager;
+import de.lessvoid.nifty.Nifty;
+
+
 import event.Timer;
 import event.control.Control;
 
@@ -29,7 +32,7 @@ public abstract class Game {
 	static public boolean isRunning; //false means that the game is closing
 	protected Control controle;
 	
-	
+	protected Nifty nifty;
 	/**
 	 * Enter the game loop, the function exit only when the variable isRunning
 	 * is set to 'false', meaning that the game is shutting down.
@@ -39,15 +42,23 @@ public abstract class Game {
 		try {
 			firstInit();
 			init();
+			
+			
+			
 			while (isRunning) {
 				Timer.tick();
 				elapsedTime = Timer.getDelta();
-				controle.update();
+				controle.update();								
+				
 				update(elapsedTime);
-				render(); // render graphics
+						
 
+			
+				render(); // render graphics
+				
+				
 				Display.sync(ConfigManager.maxFps); // sync to fps
-				Display.update(); // update the view/screen
+				Display.update(); // update the view/screen					
 
 			}
 		} catch (Exception e) {
@@ -135,8 +146,8 @@ public abstract class Game {
 		ConfigManager.init();
 		createWindow();
 		initGL();
-		TextureManager.init();
-		
+		TextureManager.init();		
+
 	}
 	
 	/**
