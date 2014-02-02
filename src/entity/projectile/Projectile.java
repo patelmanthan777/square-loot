@@ -49,6 +49,11 @@ public abstract class Projectile extends Entity implements Drawable{
 		this.size = size;
 	}
 	
+	public void toDestroy()
+	{
+		destroyed = true;
+	}
+	
 	/**
 	 * Handle the case where the projectile should be destroyed.
 	 * @return true if the projectile should be destroyed, false otherwise
@@ -88,6 +93,7 @@ public abstract class Projectile extends Entity implements Drawable{
 		body.createFixture(fixtureDef);
 		Vec2 vel = new Vec2(direction.x * speedValue, direction.y * speedValue);
 		body.setLinearVelocity(vel);
+		body.setUserData(this);
 	}
 
 	/**
@@ -101,7 +107,5 @@ public abstract class Projectile extends Entity implements Drawable{
 		setPosition(position.x, position.y);
 		Vec2 vel = new Vec2(direction.x * speedValue, direction.y * speedValue);
 		body.setLinearVelocity(vel);
-		//System.out.println(vel);
-		//System.out.println(position);
 	}
 }

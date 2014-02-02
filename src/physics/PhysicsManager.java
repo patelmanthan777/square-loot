@@ -18,6 +18,8 @@ public class PhysicsManager {
 		 world = new World(new Vec2(0.0f, 0.0f));
 		 m.initPhysics(world);
 		 EntityManager.initPhysics(world);
+		 PhysicsContactListener listener =  new PhysicsContactListener();
+		 world.setContactListener(listener);
 	}
 	
 	public static void update(float dt)
