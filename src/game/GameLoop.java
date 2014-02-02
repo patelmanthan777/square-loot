@@ -87,9 +87,7 @@ public class GameLoop extends Game{
 	 * @param elapsedTime represents the time passed since last update.
 	 **/
 	@Override
-	public void update(long elapsedTime) {
-		//nifty handling				
-		isRunning &= !nifty.update();
+	public void update(long elapsedTime) {		
 		
 		background.update(elapsedTime);
 		map.update(elapsedTime);
