@@ -7,6 +7,7 @@ import light.LightManager;
 
 import utils.GraphicsAL;
 
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -119,8 +120,11 @@ public class GameLoop extends Game{
 		map.drawItems();
 		p.draw();
 		LivingEntityManager.render();
+
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();		
 		glPopMatrix();
+
+
 	}
 }

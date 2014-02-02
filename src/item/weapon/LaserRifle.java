@@ -8,7 +8,7 @@ import rendering.TextureManager;
 
 import entity.projectile.ProjectileManager;
 
-public class LaserRifle extends Weapon {
+public class LaserRifle extends PrimaryWeapon {
 
 	
 

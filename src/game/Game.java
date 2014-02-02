@@ -135,8 +135,7 @@ public abstract class Game {
 		ConfigManager.init();
 		createWindow();
 		initGL();
-		TextureManager.init();
-		
+		TextureManager.init();		
 	}
 	
 	/**
