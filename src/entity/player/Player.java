@@ -1,6 +1,7 @@
 package entity.player;
 
 import item.Item;
+import item.ItemManager;
 import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
@@ -115,8 +116,15 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return light;
 	}
 	
+	private void dropItem(Item i, float x, float y){
+		i.setPosition(x, y);
+		ItemManager.add(i);
+	}
+	
 	public void pickUp(Item i){
-		inventory.add(i);
+		Item tmp = inventory.add(i);
+		if(tmp != null)
+			dropItem(tmp, position.x, position.y);
 	}
 
 	
@@ -125,4 +133,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 									  							directionX, directionY);
 	}
 
+	public void dropBattery(){
+		Item tmp = inventory.remove(InventoryItemEnum.BATTERY);
+		if (tmp != null){
+			dropItem(tmp, position.x, position.y);			
+		}
+	}
 }

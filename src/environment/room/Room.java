@@ -2,7 +2,6 @@ package environment.room;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.LinkedList;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -11,7 +10,6 @@ import light.Light;
 import light.Laser;
 import light.Shadow;
 import light.ShadowBuffer;
-import item.Item;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import userInterface.MiniMap;
@@ -610,5 +608,5 @@ public abstract class Room implements Drawable, ShadowCaster {
 	}
 	public boolean renderIsUpdated(int layer){
 		return renderIsUpdated[layer];
-	}
+	}	
 }

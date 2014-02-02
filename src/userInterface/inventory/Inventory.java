@@ -3,6 +3,7 @@ package userInterface.inventory;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import item.Battery;
 import item.Item;
 
 import item.weapon.PrimaryWeapon;
@@ -20,12 +21,12 @@ import userInterface.inventory.InventoryItemEnum;
 public class Inventory extends Overlay{		
 	private float weight;
 		
-	/*Carried*/
-	
-	/*Active Equipment*/
 	class InventorySlot<A> {
 		A slot = null;
 				
+		public boolean isEmpty(){
+			return slot == null;
+		}
 		
 		public A add(A a){
 			A tmp = slot; 
@@ -42,6 +43,13 @@ public class Inventory extends Overlay{
 		}
 	}	
 	
+	
+	/*Carried*/
+	private InventorySlot<Battery> battery;
+	
+	/*Active Equipment*/
+	
+	
 	private InventorySlot<PrimaryWeapon> pweapon;
 	private InventorySlot<SecondaryWeapon> sweapon;
 	private InventorySlot<Shield> shield;
@@ -56,22 +64,22 @@ public class Inventory extends Overlay{
 	public Inventory(int size){	
 		weight = 0f;					
 			
+		battery = new InventorySlot<Battery>();
+		
 		pweapon = new InventorySlot<PrimaryWeapon>();
 		sweapon = new InventorySlot<SecondaryWeapon>();
 		shield = new InventorySlot<Shield>();
 		accessory = new InventorySlot<Accessory>();
-		mgear = new InventorySlot<MotionGear>();
-
-	
-											
+		mgear = new InventorySlot<MotionGear>();										
 	}
 	
 	/**
-	 * Add an item to the inventory, and automatically equip it
-	 * if it is possible.
+	 * Add an item to the inventory, and drop the relevant item
+	 * if any was already being carried or equipped.
 	 * 
-	 * @param i is the item to added
-	 * @return null if the item was added successfully, <b>i</b> otherwise.
+	 * @param i is the item to be added
+	 * @return <b>null</b> or the old item if the item was added
+	 * successfully, <b>i</b> otherwise.
 	 */		
 	public Item add(Item i){
 		Item tmp = i;
@@ -82,10 +90,12 @@ public class Inventory extends Overlay{
 			tmp = sweapon.add((SecondaryWeapon) i);
 		else if (i instanceof Shield)
 			tmp = shield.add((Shield) i);
-		else if (i instanceof SecondaryWeapon)
+		else if (i instanceof Accessory)
 			tmp = accessory.add((Accessory) i);
-		else if (i instanceof SecondaryWeapon)
+		else if (i instanceof MotionGear)
 			tmp = mgear.add((MotionGear) i);
+		else if (i instanceof Battery)
+			tmp = battery.add((Battery) i);
 		
 		if(tmp == null){
 			weight += i.getWeight();
@@ -95,11 +105,7 @@ public class Inventory extends Overlay{
 	}
 	
 	/**
-	 * Return the item displayed at (<b>x</b>, <b>y</b>).
-	 * 
-	 * @param x
-	 * @param y
-	 * @return the considered item
+	 * Return the item requested equipment.
 	 */
 	public Item access(InventoryItemEnum i){
 		
@@ -120,11 +126,11 @@ public class Inventory extends Overlay{
 		return null;
 	}		
 	
+	
+	
+	
 	/**
-	 * Remove the object displayed at (<b>x</b>, <b>y</b>) from the inventory.
-	 * 
-	 * @param x
-	 * @param y
+	 * Remove the requested equipment from the inventory.
 	 */
 	public Item remove(InventoryItemEnum i){		
 		
@@ -146,6 +152,9 @@ public class Inventory extends Overlay{
 		case MGEAR:			
 			tmp = mgear.remove();
 			break;
+		case BATTERY:				
+			tmp = battery.remove();
+			break;
 		case NOITEM:
 		}
 							
@@ -153,8 +162,7 @@ public class Inventory extends Overlay{
 			weight -= tmp.getWeight();
 			
 		return tmp;
-	}
-	
+	}	
 	
 	public float getWeight(){
 		return weight;
@@ -162,13 +170,7 @@ public class Inventory extends Overlay{
 		
 	
 	/**
-	 * Triggers the action of the item equipped in the <b>idx</b> cell.
-	 * 
-	 * @param idx
-	 * @param x
-	 * @param y
-	 * @param dirx
-	 * @param diry
+	 * Triggers the action of the requested equipment.
 	 */
 	public void equippedItemAction(InventoryItemEnum i, float x, float y, float dirx, float diry){
 		switch (i){
@@ -197,11 +199,19 @@ public class Inventory extends Overlay{
 				mgear.access().action(new Vector2f(x   , y   ),
 									  new Vector2f(dirx, diry));			
 			break;
+		case BATTERY:
 		case NOITEM:
 		}	
 		
 	}
 
+	/**
+	 * Test whether there is a battery in the inventory.
+	 */
+	public boolean isCarryingBattery(){
+		return !battery.isEmpty(); 
+	}
+	
 	public void draw(){}
 	
 }

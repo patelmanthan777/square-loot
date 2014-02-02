@@ -441,6 +441,11 @@ public class Map implements ShadowCaster {
 		return roomGrid;
 	}
 
+	public Room getRoom(float x, float y){
+		return roomGrid[(int) (x / roomPixelSize.x)]
+					   [(int) (y / roomPixelSize.y)];
+	}
+	
 	public static FBO getFBO(int i, int j, int layer) {
 		return mapFBO[(i + indx) % textureNb][(j + indy) % textureNb][layer];
 	}

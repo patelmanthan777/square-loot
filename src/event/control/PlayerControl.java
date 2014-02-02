@@ -18,6 +18,7 @@ public class PlayerControl {
 		MOVE_RIGHT,
 		MOVE_BACKWARD,
 		PRIMARY_WEAPON,
+		BATTERY,
 		LIGHT
 	}
 
@@ -69,7 +70,10 @@ public class PlayerControl {
 		 l.add(0);
 		 buttonBinding.put(playerActions.PRIMARY_WEAPON,l);		 
 
-		 
+		// BATTERY
+		l = new LinkedList<Integer>();
+		l.add(Keyboard.KEY_F);
+		keyBinding.put(playerActions.BATTERY, l);
 	}
 
 	/**
@@ -124,6 +128,9 @@ public class PlayerControl {
 		case PRIMARY_WEAPON:
 			primaryWeaponAction(state);
 			break;
+		case BATTERY:
+			batteryAction(state);
+			break;
 		}
 	}
 
@@ -157,6 +164,12 @@ public class PlayerControl {
 				p.getLight().deactivate();
 			else
 				p.getLight().activate();
+		}
+	}
+	
+	private void batteryAction(KeyState state) {
+		if (state == KeyState.PRESSED) {			
+			p.dropBattery();			
 		}
 	}
 	
