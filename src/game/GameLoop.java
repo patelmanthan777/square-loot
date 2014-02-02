@@ -1,5 +1,7 @@
 package game;
-import item.MetalJunk;
+
+import item.Battery;
+import item.ItemManager;
 import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
@@ -66,7 +68,7 @@ public class GameLoop extends Game{
 
 		p.setLaser(playerLaser);		
 		p.pickUp(new LaserRifle(250,200,200));
-		p.pickUp(new MetalJunk(200,200));
+		p.pickUp(new Battery(200,200));
 		
 		LightManager.addShadowCaster(map);
 		
@@ -88,9 +90,7 @@ public class GameLoop extends Game{
 	 * @param elapsedTime represents the time passed since last update.
 	 **/
 	@Override
-	public void update(long elapsedTime) {
-		//nifty handling				
-		isRunning &= !nifty.update();
+	public void update(long elapsedTime) {		
 		
 		background.update(elapsedTime);
 		map.update(elapsedTime);
@@ -116,7 +116,7 @@ public class GameLoop extends Game{
 		background.draw();
 		map.renderMapToFrameBuffers();
 		LightManager.render();
-		map.drawItems();
+		ItemManager.render();
 		p.draw();
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();

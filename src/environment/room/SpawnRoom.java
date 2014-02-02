@@ -3,6 +3,7 @@ package environment.room;
 import environment.Map;
 import environment.blocks.BlockFactory;
 
+import item.ItemManager;
 import item.weapon.LaserRifle;
 
 public class SpawnRoom extends Room{
@@ -14,9 +15,9 @@ public class SpawnRoom extends Room{
 		miniMapColor.z = 0;
 		discovered = true;
 		pressure = 0;
-		items.add(new LaserRifle(250,
-				                 posX + Map.roomPixelSize.x/2,
-				                 posY + Map.roomPixelSize.y/2));
+		ItemManager.add(new LaserRifle(250,
+									   posX + Map.roomPixelSize.x/2,
+				                       posY + Map.roomPixelSize.y/2));
 		construct();
 	}
 

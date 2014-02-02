@@ -1,6 +1,7 @@
 package entity.player;
 
 import item.Item;
+import item.ItemManager;
 import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
@@ -11,6 +12,7 @@ import org.lwjgl.util.vector.Vector3f;
 import rendering.MiniMapDrawable;
 import rendering.TextureManager;
 import userInterface.MiniMap;
+import userInterface.inventory.InventoryItemEnum;
 import utils.GraphicsAL;
 import entity.LivingEntity;
 import environment.Map;
@@ -114,14 +116,27 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return light;
 	}
 	
+	private void dropItem(Item i, float x, float y){
+		i.setPosition(x, y);
+		ItemManager.add(i);
+	}
+	
 	public void pickUp(Item i){
-		inventory.add(i);
+		Item tmp = inventory.add(i);
+		if(tmp != null)
+			dropItem(tmp, position.x, position.y);
 	}
 
 	
 	public void primaryWeapon(float directionX, float directionY){
-		inventory.equippedItemAction(0, position.x, position.y,
-									    directionX, directionY);
+		inventory.equippedItemAction(InventoryItemEnum.PWEAPON, position.x, position.y,
+									  							directionX, directionY);
 	}
 
+	public void dropBattery(){
+		Item tmp = inventory.remove(InventoryItemEnum.BATTERY);
+		if (tmp != null){
+			dropItem(tmp, position.x, position.y);			
+		}
+	}
 }

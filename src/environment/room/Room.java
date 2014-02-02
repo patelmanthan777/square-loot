@@ -2,7 +2,6 @@ package environment.room;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.LinkedList;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -11,7 +10,6 @@ import light.Light;
 import light.Laser;
 import light.Shadow;
 import light.ShadowBuffer;
-import item.Item;
 import rendering.Drawable;
 import rendering.ShadowCaster;
 import userInterface.MiniMap;
@@ -23,7 +21,7 @@ import environment.blocks.BlockFactory;
 
 public abstract class Room implements Drawable, ShadowCaster {
 	protected Block[][] grid;
-	protected LinkedList<Item> items = new LinkedList<Item>();
+
 	/**
 	 * Horizontal index of the room on the map, in pixels.
 	 */
@@ -186,13 +184,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 				}
 			}
 		}
-	}
-	
-	public void drawItems(){		
-		for(Item i : items){
-			i.draw();
-		}	
-	}
+	}	
 
 	@Override
 	public void computeShadow(Light light, ShadowBuffer[] shadows) {
@@ -616,5 +608,5 @@ public abstract class Room implements Drawable, ShadowCaster {
 	}
 	public boolean renderIsUpdated(int layer){
 		return renderIsUpdated[layer];
-	}
+	}	
 }

@@ -4,8 +4,8 @@ import rendering.TextureManager;
 import item.Item;
 
 
-public class MetalJunk extends Item {
-	public MetalJunk(float x, float y){
+public class Battery extends Item {
+	public Battery(float x, float y){
 		super(x,y);
 		weight = 100;
 		drawSize[0] = 15;
@@ -13,7 +13,7 @@ public class MetalJunk extends Item {
 	}
 	
 	public int getTextureID(){
-		return TextureManager.metalJunkTexture().getTextureID();
+		return TextureManager.batteryTexture().getTextureID();
 	}	
 	
 }

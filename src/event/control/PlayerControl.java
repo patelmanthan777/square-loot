@@ -18,8 +18,8 @@ public class PlayerControl {
 		MOVE_RIGHT,
 		MOVE_BACKWARD,
 		PRIMARY_WEAPON,
-		LIGHT,
-		INVENTORY
+		BATTERY,
+		LIGHT
 	}
 
 	private HashMap<playerActions, LinkedList<Integer>> keyBinding;
@@ -65,18 +65,15 @@ public class PlayerControl {
 		l.add(Keyboard.KEY_E);
 		keyBinding.put(playerActions.LIGHT, l);
 
-		// PRIMARY_WEAPON
-		
+		// PRIMARY_WEAPON		
 		 l = new LinkedList<Integer>(); 
 		 l.add(0);
-		 buttonBinding.put(playerActions.PRIMARY_WEAPON,l);
-		 
-		// LIGHT
-		l = new LinkedList<Integer>();
-		l.add(Keyboard.KEY_I);
-		keyBinding.put(playerActions.INVENTORY, l);
+		 buttonBinding.put(playerActions.PRIMARY_WEAPON,l);		 
 
-		 
+		// BATTERY
+		l = new LinkedList<Integer>();
+		l.add(Keyboard.KEY_F);
+		keyBinding.put(playerActions.BATTERY, l);
 	}
 
 	/**
@@ -131,8 +128,9 @@ public class PlayerControl {
 		case PRIMARY_WEAPON:
 			primaryWeaponAction(state);
 			break;
-		case INVENTORY:
-			inventoryAction(state);
+		case BATTERY:
+			batteryAction(state);
+			break;
 		}
 	}
 
@@ -169,27 +167,15 @@ public class PlayerControl {
 		}
 	}
 	
-	private void inventoryAction(KeyState state) {
-		if (state == KeyState.PRESSED) {
-			if (p.getInventory().isOpen())
-				p.getInventory().close();
-			else
-				p.getInventory().open();
+	private void batteryAction(KeyState state) {
+		if (state == KeyState.PRESSED) {			
+			p.dropBattery();			
 		}
 	}
+	
+
 	private void primaryWeaponAction(KeyState state) {
-		if (p.getInventory().isOpen() &&
-			p.getInventory().isInsideWindow(mouse.position.x,
-											mouse.position.y)){
-			if(state == KeyState.PRESSED){
-				p.getInventory().select(mouse.position.x,
-								  		mouse.position.y);
-			}
-			else if(state == KeyState.RELEASED)
-				p.getInventory().move(mouse.position.x,
-									  mouse.position.y);
-		}
-		else if (state == KeyState.HELD || state == KeyState.PRESSED) {
+		if (state == KeyState.HELD || state == KeyState.PRESSED) {
 			p.primaryWeapon(mouse.direction.x,mouse.direction.y);
 		}
 	}
