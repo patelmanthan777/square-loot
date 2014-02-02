@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector2f;
 
 import item.Item;
 import item.Equipment;
-import item.weapon.Weapon;
 import userInterface.Overlay;
 import utils.GraphicsAL;
 import utils.NonContinuousTable;
@@ -185,9 +184,10 @@ public class Inventory extends Overlay{
 	}
 	
 	public void equippedItemAction(int idx, float x, float y, float dirx, float diry){
-		if(idx < equippedNbMax && equippedItems.access(idx) != null)		
+		if(idx < equippedNbMax && equippedItems.access(idx) != null){		
 			equippedItems.access(idx).action(new Vector2f(x   , y   ),
 											 new Vector2f(dirx, diry));
+		}
 	}
 	
 	public void draw(){		

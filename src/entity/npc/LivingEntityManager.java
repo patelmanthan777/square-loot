@@ -31,14 +31,10 @@ public class LivingEntityManager {
 	
 	public static void render(){	
 		glEnable(GL_BLEND); 
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glBindTexture(GL_TEXTURE_2D, TextureManager.zombieTexture().getTextureID());
-		glBegin(GL_QUADS);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);				
 		for(Npc npc : npcs){
 			npc.draw();
-		}
-		glEnd();
-		glBindTexture(GL_TEXTURE_2D, 0);
+		}		
 		glDisable(GL_BLEND);
 	}
 	

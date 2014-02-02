@@ -54,7 +54,7 @@ public class Bullet extends Projectile {
 	public void reset(Vector2f pos, Vector2f rot)
 	{
 		super.reset(pos,rot);
-		Vector2f speed = new Vector2f();
+		Vector2f speed = new Vector2f(); // FIXME ???
 		rot.normalise(speed);
 		speed.scale(speedValue);
 		this.setSpeed(speed);
