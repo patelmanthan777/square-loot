@@ -21,7 +21,7 @@ public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 	}
 
 	@Override
-	public void initPhysics(World w, float x, float y) {
+	public Body initPhysics(World w, float x, float y) {
 		BodyDef bodyDef = new BodyDef();			    
 	    bodyDef.position.set(x/ConfigManager.unitPixelSize + 0.5f,
 	    		y/ConfigManager.unitPixelSize + 0.5f);
@@ -31,6 +31,7 @@ public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 	    body.createFixture(box, 0.0f);
 		PhysicsDataStructure s = new PhysicsDataStructure(this,bodyType.BLOCK); 
 		body.setUserData(s);
+		return body;
 	}
 
 	@Override

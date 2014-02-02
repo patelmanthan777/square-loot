@@ -1,5 +1,6 @@
 package environment.blocks;
 
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
 
 public class SpawnBlock extends EmptyBlock{
@@ -9,6 +10,7 @@ public class SpawnBlock extends EmptyBlock{
 	}
 
 	@Override
-	public void initPhysics(World w, float x, float y) {
+	public Body initPhysics(World w, float x, float y) {
+		return null;
 	}
 }

@@ -1,5 +1,8 @@
 package environment.blocks;
 
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.World;
+
 import environment.Map;
 
 public class DoorBlock extends PhysicalBlock{
@@ -8,6 +11,8 @@ public class DoorBlock extends PhysicalBlock{
 	/* blocks position in the map */
 	private int i;
 	private int j;
+	
+	private Body body;
 	
 	public DoorBlock(Block underBlock, int i, int j){
 		this.underBlock = underBlock;
@@ -60,5 +65,17 @@ public class DoorBlock extends PhysicalBlock{
 	
 	public int getJ(){
 		return j;
+	}
+	
+	@Override
+	public Body initPhysics(World w, float x, float y){
+		this.body = super.initPhysics(w, x, y);
+		return body;
+	}
+	public void disablePhysics(){
+		
+	}
+	public void enablePhysics(){
+		
 	}
 }
