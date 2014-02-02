@@ -8,6 +8,7 @@ import light.LightManager;
 import utils.GraphicsAL;
 
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -120,6 +121,15 @@ public class GameLoop extends Game{
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();		
+		
+		
+        GL11.glDisable(GL11.GL_CULL_FACE);       
+        
+		nifty.render(false);
+        
+        GL11.glEnable(GL11.GL_CULL_FACE); 
+		glEnable(GL_TEXTURE_2D);
+		
 		glPopMatrix();
 
 
