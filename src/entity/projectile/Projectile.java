@@ -9,44 +9,52 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
+import physics.PhysicsObject;
+import physics.bodyType;
 import rendering.Drawable;
 import entity.Entity;
 
-public abstract class Projectile extends Entity implements Drawable{
+public abstract class Projectile extends Entity implements Drawable, PhysicsObject{
 
 	protected boolean destroyed;
 	protected Vector3f color;
 	protected Body body;
 	protected float speedValue;
 	protected float size;
+	protected int damage;
 	
 	public Projectile() {
 		super(0.f,0.f);
 		size = 0.f;
 		speedValue = 0.f;
 		destroyed = false;
+		damage = 0;
 	}
 	
-	public Projectile(Vector2f pos, Vector2f rot, float speedValue, float size) {
+	public Projectile(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {
 		super(pos, rot);
 		destroyed = false;
 		this.speedValue = speedValue;
 		this.size = size;
+		this.damage = damage;
 	}
 	
 	/**
 	 * Reset a projectile according the method parameters.
 	 * @param pos is the new position
 	 * @param rot id the new orientation 
+	 * @param damage 
 	 */
-	public void reset(Vector2f pos, Vector2f rot,  float speedValue, float size)
+	public void reset(Vector2f pos, Vector2f rot,  float speedValue, float size, int damage)
 	{
 		this.setPosition(pos);
 		this.setDirection(rot);
 		destroyed = false;
 		this.speedValue = speedValue;
 		this.size = size;
+		this.damage = damage;
 	}
 	
 	public void toDestroy()
@@ -69,7 +77,7 @@ public abstract class Projectile extends Entity implements Drawable{
 	 * @param rot
 	 * @return 
 	 */ 
-	abstract public Projectile Clone(Vector2f pos, Vector2f rot, float speedValue, float size);
+	abstract public Projectile Clone(Vector2f pos, Vector2f rot, float speedValue, float size, int damage);
 	
 	/**
 	 * Initialize the physics body
@@ -93,7 +101,8 @@ public abstract class Projectile extends Entity implements Drawable{
 		body.createFixture(fixtureDef);
 		Vec2 vel = new Vec2(direction.x * speedValue, direction.y * speedValue);
 		body.setLinearVelocity(vel);
-		body.setUserData(this);
+		PhysicsDataStructure s = new PhysicsDataStructure(this,bodyType.PROJECTILE); 
+		body.setUserData(s);
 	}
 
 	/**
@@ -111,5 +120,27 @@ public abstract class Projectile extends Entity implements Drawable{
 
 	public void destroy() {
 		body.getWorld().destroyBody(body);
+	}
+	
+	public void ContactHandler(PhysicsDataStructure a)
+	{
+		this.toDestroy();
+		switch(a.getType())
+		{
+		case BLOCK:
+			break;
+		case ENTITY:
+			break;
+		case PROJECTILE:
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public int getDamage()
+	{
+		return damage;
+		
 	}
 }

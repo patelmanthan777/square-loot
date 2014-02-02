@@ -42,16 +42,9 @@ public class Bullet extends Projectile {
 	 * @param pos
 	 * @param rot
 	 */
-	public Bullet(Vector2f pos, Vector2f rot, float speedValue, float size) {
-		super(pos,rot,speedValue,size);
+	public Bullet(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {
+		super(pos,rot,speedValue,size,damage);
 		color = new Vector3f(1,0,1);
-	}
-	
-	@Override
-	public void reset(Vector2f pos, Vector2f rot, float speedValue, float size)
-	{
-		super.reset(pos,rot,speedValue,size);
-
 	}
 
 	/**
@@ -80,7 +73,7 @@ public class Bullet extends Projectile {
 	}
 
 	@Override
-	public Projectile Clone(Vector2f pos, Vector2f rot, float speedValue, float size) {		
-		return new Bullet(pos, rot, speedValue, size);
+	public Projectile Clone(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {		
+		return new Bullet(pos, rot, speedValue, size, damage);
 	}
 }

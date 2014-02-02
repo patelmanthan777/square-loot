@@ -26,8 +26,8 @@ public final class ProjectileManager {
 	 * @param pos the bullet position
 	 * @param rot the bullet direction
 	 */
-	static public void createBullet(Vector2f pos, Vector2f rot, float speedValue, float size){
-		bulletFactory.createProjectile(pos, rot, speedValue,size);
+	static public void createBullet(Vector2f pos, Vector2f rot, float speedValue, float size, int damage){
+		bulletFactory.createProjectile(pos, rot, speedValue,size,damage);
 	}
 	
 		

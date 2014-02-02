@@ -7,9 +7,9 @@ import entity.projectile.ProjectileManager;
 
 public class LaserRifle extends Weapon {
 
-	public LaserRifle(long fireRate, float projectileSpeed, float projectileSize)
+	public LaserRifle(long fireRate, float projectileSpeed, float projectileSize, int damage)
 	{
-		super(fireRate, projectileSpeed, projectileSize);
+		super(fireRate, projectileSpeed, projectileSize, damage);
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class LaserRifle extends Weapon {
 			target.normalise(direct);
 			Vector2f position = new Vector2f(pos.x +(0.5f+ projectileSize/ConfigManager.unitPixelSize)*direct.x,
 											 pos.y +(0.5f+ projectileSize/ConfigManager.unitPixelSize)*direct.y);
-			ProjectileManager.createBullet(position, target, projectileSpeed, projectileSize);
+			ProjectileManager.createBullet(position, target, projectileSpeed, projectileSize, damage);
 			this.updateLastShot();
 		}		
 	}	

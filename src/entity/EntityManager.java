@@ -1,5 +1,6 @@
 package entity;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.jbox2d.dynamics.World;
@@ -40,9 +41,21 @@ public class EntityManager {
 	}
 
 	public static void updatePosition() {
-		for (Npc npc : npcs) {
-			npc.updatePostion();
+		Iterator<Npc> ite = npcs.iterator();
+		while(ite.hasNext())
+		{
+			Npc npc = ite.next();
+			if(npc.getHealth() > 0)
+			{
+				npc.updatePostion();
+			}
+			else
+			{
+				ite.remove();
+				npc.destroy();
+			}
 		}
+		
 		for (Player p : players) {
 			p.updatePostion();
 		}

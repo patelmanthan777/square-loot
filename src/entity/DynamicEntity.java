@@ -9,9 +9,12 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 
+import physics.PhysicsDataStructure;
+import physics.PhysicsObject;
+import physics.bodyType;
 import rendering.Drawable;
 
-public abstract class DynamicEntity extends Entity implements Drawable {
+public abstract class DynamicEntity extends Entity implements Drawable, PhysicsObject{
 	/**
 	 * Represent the direction in which the entity moves
 	 */
@@ -70,6 +73,8 @@ public abstract class DynamicEntity extends Entity implements Drawable {
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.1f;
 		body.createFixture(fixtureDef);
+		PhysicsDataStructure s = new PhysicsDataStructure(this,bodyType.ENTITY); 
+		body.setUserData(s);
 	}
 
 	/**
@@ -108,5 +113,25 @@ public abstract class DynamicEntity extends Entity implements Drawable {
 		
 		translation.x = 0;
 		translation.y = 0;
+	}
+	
+	@Override
+	public void ContactHandler(PhysicsDataStructure a) {
+		switch(a.getType())
+		{
+		case BLOCK:
+			break;
+		case ENTITY:
+			break;
+		case PROJECTILE:
+			break;
+		default:
+			break;
+		}
+	}
+	
+	public void destroy()
+	{
+		body.getWorld().destroyBody(body);
 	}
 }

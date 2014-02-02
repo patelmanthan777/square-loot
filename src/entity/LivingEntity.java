@@ -3,7 +3,9 @@ package entity;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import physics.PhysicsDataStructure;
 import configuration.ConfigManager;
+import entity.projectile.Projectile;
 
 public abstract class LivingEntity extends DynamicEntity {
 
@@ -67,7 +69,7 @@ public abstract class LivingEntity extends DynamicEntity {
 	 * @param damage is the number of health points to be subtracted
 	 */
 	public void damage(int damage){
-		setHealth(-damage);
+		setHealth(this.health-damage);
 	}
 	
 	/**
@@ -135,5 +137,24 @@ public abstract class LivingEntity extends DynamicEntity {
 		points[3].y = this.position.y * ConfigManager.unitPixelSize  - t.y + d.y;
 		points[2].x = this.position.x * ConfigManager.unitPixelSize  + t.x + d.x;
 		points[2].y = this.position.y * ConfigManager.unitPixelSize  + t.y + d.y;
+	}
+	
+	@Override
+	public void ContactHandler(PhysicsDataStructure a) {
+		switch(a.getType())
+		{
+		case BLOCK:
+			break;
+		case ENTITY:
+			break;
+		case PROJECTILE:
+			Projectile p = (Projectile) a.getPhysicsObject();
+			System.out.println(a);
+			System.out.println(p.getDamage());
+			damage(p.getDamage());
+			break;
+		default:
+			break;
+		}
 	}
 }

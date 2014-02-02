@@ -14,13 +14,15 @@ public abstract class Weapon extends Item {
 	protected long lastShot;
 	protected float projectileSpeed;
 	protected float projectileSize;
+	protected int damage;
 	
-	public Weapon(long fireRate, float projectileSpeed, float projectileSize)
+	public Weapon(long fireRate, float projectileSpeed, float projectileSize, int damage)
 	{
 		this.fireRate = fireRate;
 		this.lastShot = 0;
 		this.projectileSpeed = projectileSpeed;
 		this.projectileSize = projectileSize;
+		this.damage = damage;
 	}
 	
 	/**
