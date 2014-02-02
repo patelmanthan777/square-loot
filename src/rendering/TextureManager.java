@@ -47,7 +47,7 @@ public class TextureManager {
 		return textures[textureEnum.LASERRIFLE.ordinal()];
 	}
 	
-	public static Texture metalJunkTexture(){
-		return textures[textureEnum.METALJUNK.ordinal()];
+	public static Texture batteryTexture(){
+		return textures[textureEnum.BATTERY.ordinal()];
 	}
 }

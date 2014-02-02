@@ -1,5 +1,6 @@
 package game;
 
+import item.Battery;
 import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
