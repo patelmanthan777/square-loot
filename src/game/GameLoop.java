@@ -8,8 +8,6 @@ import light.LightManager;
 import utils.GraphicsAL;
 
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -120,19 +118,10 @@ public class GameLoop extends Game{
 		map.drawItems();
 		p.draw();
 		LivingEntityManager.render();
-		ProjectileManager.drawProjectiles();						
-		OverlayManager.render();
-		
-        glPushMatrix();
-        glPushAttrib(GL_ALL_ATTRIB_BITS);		
-		nifty.render(false);
-        glPopAttrib();
-        glPopMatrix();
-        
-		glEnable(GL_TEXTURE_2D);	
-		
-		glPopMatrix();	
-							
+		ProjectileManager.drawProjectiles();
+		OverlayManager.render();		
+		glPopMatrix();
+
 
 	}
 }
