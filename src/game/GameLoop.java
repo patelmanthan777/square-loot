@@ -1,6 +1,7 @@
 package game;
 
 import item.Battery;
+import item.ItemManager;
 import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
@@ -114,7 +115,7 @@ public class GameLoop extends Game{
 		background.draw();
 		map.renderMapToFrameBuffers();
 		LightManager.render();
-		map.drawItems();
+		ItemManager.render();
 		p.draw();
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
