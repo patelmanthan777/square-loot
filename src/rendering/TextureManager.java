@@ -13,7 +13,7 @@ public class TextureManager {
 		PLAYER,
 		ZOMBIE,
 		LASERRIFLE,
-		METALJUNK
+		BATTERY
 	}	
 	
 	private static Texture[] textures = new Texture[textureEnum.values().length];
@@ -24,7 +24,7 @@ public class TextureManager {
 			textures[textureEnum.PLAYER.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/player.png"));
 			textures[textureEnum.ZOMBIE.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/zombie.png"));
 			textures[textureEnum.LASERRIFLE.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/laserRifle.png"));
-			textures[textureEnum.METALJUNK.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/metalJunk.png"));
+			textures[textureEnum.BATTERY.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/battery.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

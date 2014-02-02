@@ -1,5 +1,5 @@
 package game;
-import item.MetalJunk;
+
 import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
@@ -64,7 +64,7 @@ public class GameLoop extends Game{
 
 		p.setLaser(playerLaser);		
 		p.pickUp(new LaserRifle(250,200,200));
-		p.pickUp(new MetalJunk(200,200));
+		p.pickUp(new Battery(200,200));
 		
 		LightManager.addShadowCaster(map);
 		
