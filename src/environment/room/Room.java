@@ -194,7 +194,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	
 	private void computeHorizontalEdgeShadows(Light light, ShadowBuffer[] shadowBuffer) {
 		/* NORTH */
-		for (int layer = 0; layer < Map.maxLayer+1; layer++) {
+		for (int layer = 1; layer < Map.maxLayer+1; layer++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				int first = -1;
 				for (int i = 0; i < Map.roomBlockSize.x; i++) {
@@ -219,7 +219,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			}
 		}
 		/* SOUTH */
-		for (int layer = 0; layer < Map.maxLayer+1; layer++) {
+		for (int layer = 1; layer < Map.maxLayer+1; layer++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				int first = -1;
 				for (int i = (int) (Map.roomBlockSize.x-1); i >=0; i--) {
@@ -246,7 +246,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	}
 	private void computeVerticalEdgeShadows(Light light, ShadowBuffer[] shadowBuffer) {
 		/* EAST */
-		for (int layer = 0; layer < Map.maxLayer+1; layer++) {
+		for (int layer = 1; layer < Map.maxLayer+1; layer++) {
 			for (int i = 0; i < Map.roomBlockSize.x; i++) {
 				int first = -1;
 				for (int j = 0; j < Map.roomBlockSize.y; j++) {
@@ -271,7 +271,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			}
 		}
 		/* WEST */
-		for (int layer = 0; layer < Map.maxLayer+1; layer++) {
+		for (int layer = 1; layer < Map.maxLayer+1; layer++) {
 			for (int i = 0; i < Map.roomBlockSize.x; i++) {
 				int first = -1;
 				for (int j = (int) (Map.roomBlockSize.y-1); j >= 0; j--) {
