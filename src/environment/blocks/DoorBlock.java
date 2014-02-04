@@ -32,11 +32,14 @@ public class DoorBlock extends PhysicalBlock{
 	}
 	
 	public void open(){
+		if(!opened)
+		{
 		opened = true;
 		System.out.println(bodyf);
 		if(bodyf != null)
 		{
 		 bodyf.getWorld().destroyBody(bodyf);
+		}
 		}
 	}
 	
@@ -50,10 +53,7 @@ public class DoorBlock extends PhysicalBlock{
 		else
 			open();
 	}
-	@Override
-	public  boolean testCollision(){
-		return !opened;
-	}
+
 
 	@Override
 	public void drawAt(float posX, float posY) {
