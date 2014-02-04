@@ -12,7 +12,7 @@ public class DoorBlock extends PhysicalBlock{
 	private int i;
 	private int j;
 	
-	private Body body;
+	private Body bodyf;
 	
 	public DoorBlock(Block underBlock, int i, int j){
 		this.underBlock = underBlock;
@@ -33,6 +33,11 @@ public class DoorBlock extends PhysicalBlock{
 	
 	public void open(){
 		opened = true;
+		System.out.println(bodyf);
+		if(bodyf != null)
+		{
+		 bodyf.getWorld().destroyBody(bodyf);
+		}
 	}
 	
 	public void close(){
@@ -69,8 +74,9 @@ public class DoorBlock extends PhysicalBlock{
 	
 	@Override
 	public Body initPhysics(World w, float x, float y){
-		this.body = super.initPhysics(w, x, y);
-		return body;
+		this.bodyf = super.initPhysics(w, x, y);
+		System.out.println(bodyf);
+		return bodyf;
 	}
 	public void disablePhysics(){
 		
