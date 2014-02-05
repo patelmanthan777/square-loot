@@ -568,7 +568,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				float posX = x + i * Map.blockPixelSize.x;
 				float posY = y + j * Map.blockPixelSize.y;
-				grid[i][j].initPhysics(w, posX, posY);
+				grid[i][j].init(posX, posY);
 			}
 		}	
 	}

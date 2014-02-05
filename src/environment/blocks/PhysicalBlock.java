@@ -3,15 +3,18 @@ package environment.blocks;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.World;
 
 import physics.PhysicsDataStructure;
+import physics.PhysicsManager;
 import physics.PhysicsObject;
 import physics.bodyType;
 import configuration.ConfigManager;
 
 public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 
+	/*TODO Suppress this attribute*/
+	float x,y;
+	
 	public PhysicalBlock(float x, float y) {
 		super(x,y);
 	}
@@ -19,19 +22,25 @@ public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 	public PhysicalBlock() {
 		super();
 	}
-
+	
 	@Override
-	public Body initPhysics(World w, float x, float y) {
+	public void init(float x, float y)
+	{
+		this.x = x; 
+		this.y = y;
+		initPhysics();
+	}
+
+	public void initPhysics() {
 		BodyDef bodyDef = new BodyDef();			    
 	    bodyDef.position.set(x/ConfigManager.unitPixelSize + 0.5f,
 	    		y/ConfigManager.unitPixelSize + 0.5f);
-	    Body body = w.createBody(bodyDef);
+	    Body body = PhysicsManager.createBody(bodyDef);
 	    PolygonShape box = new PolygonShape();
 	    box.setAsBox(0.5f, 0.5f);
 	    body.createFixture(box, 0.0f);
 		PhysicsDataStructure s = new PhysicsDataStructure(this,bodyType.BLOCK); 
 		body.setUserData(s);
-		return body;
 	}
 
 	@Override

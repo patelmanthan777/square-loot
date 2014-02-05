@@ -2,8 +2,6 @@ package environment.blocks;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector4f;
 
@@ -14,9 +12,7 @@ public abstract class Block {
 	 * The blocks are squared shaped.
 	 */
 	protected int nb_points = 4;
-	protected boolean pressurized = false;
 	protected boolean castShadows = false;
-	protected boolean collidable = false;
 	protected Vector2f[] points = new Vector2f[4];
 	protected Vector4f color = new Vector4f();
 	
@@ -32,8 +28,6 @@ public abstract class Block {
 	 * Indicates whether shadows should be drawn on this block.
 	 */
 	protected int layer;
-	
-	public abstract Body initPhysics(World w, float x, float y);
 	
 	public Block(){
 		points[0] = new Vector2f();
@@ -51,6 +45,10 @@ public abstract class Block {
 		points[3] = new Vector2f(x, y + Map.blockPixelSize.y);
 		
 		layer = 0;
+	}
+	
+	public void init(float x, float y)
+	{
 	}
 	
 	/**
@@ -265,13 +263,5 @@ public abstract class Block {
 	
 	public int getLayer(){
 		return layer;
-	}
-	
-	public boolean isPressurized(){
-		return pressurized;
-	}
-	
-	public  boolean testCollision(){
-		return collidable;
 	}
 }

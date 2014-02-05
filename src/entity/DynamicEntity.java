@@ -6,10 +6,10 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
-import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 
 import physics.PhysicsDataStructure;
+import physics.PhysicsManager;
 import physics.PhysicsObject;
 import physics.bodyType;
 import rendering.Drawable;
@@ -60,12 +60,12 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	 * @param w
 	 *            the physics world
 	 */
-	public void initPhysics(World w){
+	public void initPhysics(){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DYNAMIC;
 		bodyDef.fixedRotation = true;
 		bodyDef.position.set(position.x, position.y);
-		body = w.createBody(bodyDef);
+		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();
 		dynamicBox.setAsBox(0.4f, 0.4f);
 		FixtureDef fixtureDef = new FixtureDef();

@@ -80,10 +80,10 @@ public class EntityManager {
 
 	public static void initPhysics(World world) {
 		for (Npc npc : npcs) {
-			npc.initPhysics(world);
+			npc.initPhysics();
 		}
 		for (Player p : players) {
-			p.initPhysics(world);
+			p.initPhysics();
 		}
 		
 	}
