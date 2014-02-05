@@ -20,11 +20,13 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.ImageRenderer;
+import de.lessvoid.nifty.elements.render.PanelRenderer;
 import de.lessvoid.nifty.nulldevice.NullSoundDevice;
 import de.lessvoid.nifty.render.NiftyImage;
 import de.lessvoid.nifty.renderer.lwjgl.input.LwjglInputSystem;
 import de.lessvoid.nifty.renderer.lwjgl.render.LwjglRenderDevice;
 import de.lessvoid.nifty.spi.time.impl.AccurateTimeProvider;
+import de.lessvoid.nifty.tools.SizeValue;
 import entity.player.Player;
 
 public class HUD {
@@ -63,6 +65,7 @@ public class HUD {
 	
 	public static boolean update(){				
 		updateEquipment();
+		updateHealthBar();
 		
 		return nifty.update();
 	}
@@ -70,10 +73,15 @@ public class HUD {
 	private static void updateEquipment(){
 		Element e = HUD.nifty.getCurrentScreen().findElementByName("equipment1");
 		ImageRenderer img = e.getRenderer(ImageRenderer.class);
-		img.setImage(itemImages.get(inventory.getInfo(InventoryItemEnum.PWEAPON)));
-		
+		img.setImage(itemImages.get(inventory.getInfo(InventoryItemEnum.PWEAPON)));		
 	}
 	
+	private static void updateHealthBar(){
+		Element e = HUD.nifty.getCurrentScreen().findElementByName("healthbar");
+		int width = 100 * player.getHealth() / player.getMaxHealth();
+		e.setConstraintWidth(SizeValue.percent(width));
+		e.getParent().layoutElements();
+	}
 	
 	public static void render(){
 		GL11.glDisable(GL11.GL_CULL_FACE);       
@@ -193,6 +201,37 @@ public class HUD {
 					
 					panel( new PanelBuilder(){{
 						height("92%");
+						childLayoutVertical();
+						
+						panel(new PanelBuilder(){{
+							height("90%");
+						}});
+						
+						panel(new PanelBuilder(){{
+							height("5%");
+							childLayoutCenter();
+							
+							panel(new PanelBuilder("healthbarframe"){{
+								height("90%");
+								width("75%");
+								backgroundColor("#ffff");
+								childLayoutCenter();
+								
+								panel(new PanelBuilder(){{
+									height("90%");
+									width("99%");
+									childLayoutHorizontal();
+									
+									panel(new PanelBuilder("healthbar"){{
+										backgroundColor("#f00f");
+										width("25%");
+									}});
+								}});
+							}});
+						}});
+						
+						panel(new PanelBuilder());
+						
 					}});
 				}});
 				
