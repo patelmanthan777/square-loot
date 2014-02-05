@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import item.Battery;
 import item.Item;
+import item.ItemListEnum;
 
 import item.weapon.PrimaryWeapon;
 import item.weapon.SecondaryWeapon;
@@ -12,6 +13,7 @@ import item.shield.Shield;
 import item.motionGear.MotionGear;
 import item.accessory.Accessory;
 
+import userInterface.HUD;
 import userInterface.Overlay;
 import userInterface.inventory.InventoryItemEnum;
 
@@ -21,7 +23,7 @@ import userInterface.inventory.InventoryItemEnum;
 public class Inventory extends Overlay{		
 	private float weight;
 		
-	class InventorySlot<A> {
+	class InventorySlot<A extends Item> {
 		A slot = null;
 				
 		public boolean isEmpty(){
@@ -36,6 +38,10 @@ public class Inventory extends Overlay{
 		
 		public A access(){
 			return slot;
+		}
+		
+		public ItemListEnum getInfo(){
+			return slot.self;
 		}
 		
 		public A remove(){
@@ -62,15 +68,17 @@ public class Inventory extends Overlay{
 	
 	
 	public Inventory(int size){	
-		weight = 0f;					
-			
+		weight = 0f;							
+		
 		battery = new InventorySlot<Battery>();
 		
 		pweapon = new InventorySlot<PrimaryWeapon>();
 		sweapon = new InventorySlot<SecondaryWeapon>();
 		shield = new InventorySlot<Shield>();
 		accessory = new InventorySlot<Accessory>();
-		mgear = new InventorySlot<MotionGear>();										
+		mgear = new InventorySlot<MotionGear>();
+		
+		HUD.registerInventory(this);
 	}
 	
 	/**
@@ -105,7 +113,7 @@ public class Inventory extends Overlay{
 	}
 	
 	/**
-	 * Return the item requested equipment.
+	 * Return the requested equipped item.
 	 */
 	public Item access(InventoryItemEnum i){
 		
@@ -127,7 +135,32 @@ public class Inventory extends Overlay{
 	}		
 	
 	
-	
+	/**
+	 *  Return the requested information.
+	 */
+	public ItemListEnum getInfo(InventoryItemEnum i){
+		switch (i){
+		case PWEAPON:
+			if (!pweapon.isEmpty())
+				return pweapon.getInfo();
+		case SWEAPON:
+			if (!sweapon.isEmpty())
+				return sweapon.getInfo();
+		case SHIELD:
+			if (!shield.isEmpty())
+				return shield.getInfo();
+		case ACCESSORY:
+			if (!accessory.isEmpty())
+				return accessory.getInfo();
+		case MGEAR:
+			if (!mgear.isEmpty())
+				return mgear.getInfo();
+		case NOITEM:
+		}
+		
+		return null;
+	}
+		
 	
 	/**
 	 * Remove the requested equipment from the inventory.
@@ -211,6 +244,7 @@ public class Inventory extends Overlay{
 	public boolean isCarryingBattery(){
 		return !battery.isEmpty(); 
 	}
+	
 	
 	public void draw(){}
 	

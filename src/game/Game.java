@@ -9,15 +9,9 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 
 import rendering.TextureManager;
+import userInterface.HUD;
+
 import configuration.ConfigManager;
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.builder.LayerBuilder;
-import de.lessvoid.nifty.builder.PanelBuilder;
-import de.lessvoid.nifty.builder.ScreenBuilder;
-import de.lessvoid.nifty.nulldevice.NullSoundDevice;
-import de.lessvoid.nifty.renderer.lwjgl.input.LwjglInputSystem;
-import de.lessvoid.nifty.renderer.lwjgl.render.LwjglRenderDevice;
-import de.lessvoid.nifty.spi.time.impl.AccurateTimeProvider;
 
 
 import event.Timer;
@@ -29,7 +23,6 @@ public abstract class Game {
 	static public boolean isRunning; //false means that the game is closing
 	protected Control controle;
 	
-	protected Nifty nifty;
 	/**
 	 * Enter the game loop, the function exit only when the variable isRunning
 	 * is set to 'false', meaning that the game is shutting down.
@@ -144,62 +137,8 @@ public abstract class Game {
 		createWindow();
 		initGL();
 		TextureManager.init();		
+		HUD.init();
 
-		LwjglInputSystem inputSystem = new LwjglInputSystem();
-		
-		try {
-			inputSystem.startup();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		nifty = new Nifty(
-				new LwjglRenderDevice(),
-				new NullSoundDevice(),
-				inputSystem,
-				new AccurateTimeProvider());
-	
-		
-		nifty.loadStyleFile("nifty-default-styles.xml");
-		nifty.loadControlFile("nifty-default-controls.xml");
-		
-       
-		new ScreenBuilder("start") {{     
-			layer(new LayerBuilder(){{
-				childLayoutHorizontal();	   						    	   					    		       	   					    	   					    	   					    	   					
-    		   
-				panel( new PanelBuilder(){{
-					width("25%");
-				}});
-    		   
-				panel( new PanelBuilder(){{
-					width("50%");
-					childLayoutVertical();
-					
-					panel( new PanelBuilder(){{
-						height("8%");
-						childLayoutCenter();						
-						panel( new PanelBuilder(){{
-							width("50%");
-							backgroundColor("#002f");
-						}});
-					}});
-					
-					panel( new PanelBuilder(){{
-						height("92%");
-					}});
-				}});
-				
-				panel( new PanelBuilder(){{
-					width("25%");
-				}});
-    	   					
-			}});
-    	   				
-		}}.build(nifty);
-		nifty.gotoScreen("start");
-
-		
 	}
 	
 	/**

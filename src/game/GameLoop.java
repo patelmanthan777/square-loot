@@ -10,13 +10,14 @@ import light.LightManager;
 import utils.GraphicsAL;
 
 
-import org.lwjgl.opengl.GL11;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import configuration.ConfigManager;
 import rendering.Background;
 import rendering.Camera;
+import userInterface.HUD;
 import userInterface.OverlayManager;
 import entity.npc.LivingEntityManager;
 import entity.player.Player;
@@ -91,6 +92,7 @@ public class GameLoop extends Game{
 	 **/
 	@Override
 	public void update(long elapsedTime) {		
+		isRunning &= !HUD.update();
 		
 		background.update(elapsedTime);
 		map.update(elapsedTime);
@@ -100,6 +102,8 @@ public class GameLoop extends Game{
 		LightManager.setCamPosition(p.getPosition());
 		map.setDrawPosition(p.getPosition());
 		LivingEntityManager.update(elapsedTime);
+		
+
 	}
 	
 	/**
@@ -121,15 +125,8 @@ public class GameLoop extends Game{
 		LivingEntityManager.render();
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();		
-		
-		
-        GL11.glDisable(GL11.GL_CULL_FACE);       
-        
-		nifty.render(false);
-        
-        GL11.glEnable(GL11.GL_CULL_FACE); 
-		glEnable(GL_TEXTURE_2D);
-		
+		HUD.render();
+		        
 		glPopMatrix();
 
 

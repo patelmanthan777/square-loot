@@ -132,6 +132,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		inventory.equippedItemAction(InventoryItemEnum.PWEAPON, position.x, position.y,
 									  							directionX, directionY);
 	}
+	
 
 	public void dropBattery(){
 		Item tmp = inventory.remove(InventoryItemEnum.BATTERY);

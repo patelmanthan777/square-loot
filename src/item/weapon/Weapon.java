@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import event.Timer;
 import item.Equipment;
+import item.ItemListEnum;
 
 public abstract class Weapon extends Equipment {
 	protected long fireRate;
@@ -13,9 +14,9 @@ public abstract class Weapon extends Equipment {
 	 */
 	protected long lastShot;
 	
-	public Weapon(long fireRate, float x, float y)
+	public Weapon(long fireRate, float x, float y, ItemListEnum s)
 	{
-		super(x,y);
+		super(x,y,s);
 		this.fireRate = fireRate;
 		this.lastShot = 0;
 	}
