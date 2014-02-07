@@ -73,7 +73,23 @@ public class HUD {
 	private static void updateEquipment(){
 		Element e = HUD.nifty.getCurrentScreen().findElementByName("equipment1");
 		ImageRenderer img = e.getRenderer(ImageRenderer.class);
-		img.setImage(itemImages.get(inventory.getInfo(InventoryItemEnum.PWEAPON)));		
+		img.setImage(itemImages.get(inventory.getInfo(InventoryItemEnum.PWEAPON)));
+		
+		e = HUD.nifty.getCurrentScreen().findElementByName("equipment2");
+		img = e.getRenderer(ImageRenderer.class);
+		img.setImage(itemImages.get(inventory.getInfo(InventoryItemEnum.SWEAPON)));
+		
+		e = HUD.nifty.getCurrentScreen().findElementByName("equipment3");
+		img = e.getRenderer(ImageRenderer.class);
+		img.setImage(itemImages.get(inventory.getInfo(InventoryItemEnum.SHIELD)));
+		
+		e = HUD.nifty.getCurrentScreen().findElementByName("equipment4");
+		img = e.getRenderer(ImageRenderer.class);
+		img.setImage(itemImages.get(inventory.getInfo(InventoryItemEnum.ACCESSORY)));
+		
+		e = HUD.nifty.getCurrentScreen().findElementByName("equipment5");
+		img = e.getRenderer(ImageRenderer.class);
+		img.setImage(itemImages.get(inventory.getInfo(InventoryItemEnum.MGEAR)));
 	}
 	
 	private static void updateHealthBar(){
