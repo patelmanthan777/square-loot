@@ -8,7 +8,7 @@ public class Entity {
 	private Vector2f tangent;
 	protected String name = null;
 	private float angle;
-	
+	private float deltaAngle = 0;
 	
 	public Entity(Vector2f pos){
 		this(pos.x, pos.y);
@@ -118,7 +118,7 @@ public class Entity {
 	}
 	
 	public void setRadianAngle(float angle){
-		this.angle = angle;
+		setAngle(angle);
 		updateDirection();
 	}
 	
@@ -132,5 +132,14 @@ public class Entity {
 	
 	public float getDegreAngle(){
 		return (float) Math.toDegrees(angle);
+	}
+	
+	public float getDeltaAngle(){
+		return deltaAngle;
+	}
+	
+	public void setAngle(float angle){
+		deltaAngle = this.angle - angle;
+		this.angle = angle;
 	}
 }

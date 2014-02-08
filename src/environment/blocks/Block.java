@@ -253,10 +253,7 @@ public abstract class Block {
 	}
 
 	public void setColor(float r, float g, float b, float a) {
-		this.color.x = r;
-		this.color.y = g;
-		this.color.z = b;
-		this.color.w = a;
+		this.color.set(r,g,b,a);
 	}
 	
 	public int getLayer(){
