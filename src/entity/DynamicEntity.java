@@ -12,7 +12,7 @@ import environment.Map;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
 import physics.PhysicsObject;
-import physics.bodyType;
+import physics.GameBodyType;
 import rendering.Drawable;
 
 public abstract class DynamicEntity extends Entity implements Drawable, PhysicsObject{
@@ -25,6 +25,9 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	protected float accFactor = 0.005f;
 	protected Body body;
 	protected Vector2f speed = new Vector2f();
+
+	protected GameBodyType  btype = GameBodyType.ENTITY;
+
 
 	public DynamicEntity(Vector2f pos) {
 		super(pos);
@@ -75,7 +78,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.1f;
 		body.createFixture(fixtureDef);
-		PhysicsDataStructure s = new PhysicsDataStructure(this,bodyType.ENTITY); 
+		PhysicsDataStructure s = new PhysicsDataStructure(this, btype); 
 		body.setUserData(s);
 	}
 
@@ -127,6 +130,8 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		case BLOCK:
 			break;
 		case ENTITY:
+			break;
+		case PLAYER:
 			break;
 		case PROJECTILE:
 			break;

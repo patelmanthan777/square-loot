@@ -1,7 +1,8 @@
 package physics;
 
-public enum bodyType {
+public enum GameBodyType {
 	PROJECTILE,
 	ENTITY,
+	PLAYER,
 	BLOCK
 }
