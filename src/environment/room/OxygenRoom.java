@@ -8,7 +8,7 @@ public class OxygenRoom extends Room{
 	
 	public static final int maxPressure = 100;
 	private long timeLoadMax = 10000;
-	private long timeLoadLimit = timeLoadMax;
+	private long timeLoadLimit = 0;
 	
 	public OxygenRoom(float posX, float posY) {
 		super(posX, posY);

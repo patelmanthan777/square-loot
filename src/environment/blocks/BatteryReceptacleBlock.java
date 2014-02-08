@@ -1,5 +1,6 @@
 package environment.blocks;
 
+import physics.PhysicsDataStructure;
 import environment.room.OxygenRoom;
 
 public class BatteryReceptacleBlock extends SolidBlock{
@@ -13,5 +14,23 @@ public class BatteryReceptacleBlock extends SolidBlock{
 	
 	public void powering(){
 		room.powering();
+	}
+	
+	@Override
+	public void ContactHandler(PhysicsDataStructure a) {
+		switch(a.getType())
+		{
+		case BLOCK:
+			break;
+		case ENTITY:
+			break;
+		case PLAYER:
+			break;
+		case PROJECTILE:
+			powering();
+			break;
+		default:
+			break;
+		}
 	}
 }
