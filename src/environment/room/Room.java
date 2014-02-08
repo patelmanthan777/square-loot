@@ -2,7 +2,6 @@ package environment.room;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -572,7 +571,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 		discovered = true;
 	}
 	
-	public void initPhysics(World w) {
+	public void initPhysics() {
 		for (int i = 0; i < Map.roomBlockSize.x; i++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				float posX = x + i * Map.blockPixelSize.x;
@@ -602,8 +601,13 @@ public abstract class Room implements Drawable, ShadowCaster {
 		return newPressure;
 	}
 	
+	public void consumeOxygen(float quantity){
+		setNewPressure(pressure-quantity);
+		update(0);
+	}
+	
 	public void setNewPressure(float pressure){
-		this.newPressure = pressure;
+		this.newPressure = pressure > 0 ? pressure : 0;
 	}
 	
 	public void update(long delta){

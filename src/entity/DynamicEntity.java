@@ -148,4 +148,32 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	public Vector2f getSpeed(){
 		return speed;
 	}
+	
+	@Override
+	public void setPosition(Vector2f pos){
+		super.setPosition(pos);
+		Vec2 p = new Vec2(pos.x, pos.y);
+		body.setTransform(p, 0);
+	}
+
+	@Override
+	public void setPosition(float posx, float posy){
+		super.setPosition(posx,posy);
+		Vec2 p = new Vec2(posx, posy);
+		body.setTransform(p, 0);
+	}
+	
+	@Override
+	public void setX(float x){
+		super.setX(x);
+		Vec2 p = new Vec2(x, position.y);
+		body.setTransform(p, 0);
+	}
+
+	@Override
+	public void setY(float y){
+		super.setY(y);
+		Vec2 p = new Vec2(position.x, y);
+		body.setTransform(p, 0);
+	}
 }

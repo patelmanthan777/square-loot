@@ -1,8 +1,5 @@
 package environment.blocks;
 
-import light.Light;
-import light.ShadowBuffer;
-
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;

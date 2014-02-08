@@ -41,6 +41,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private SpriteSheet featherSprites;
 	private Animation featherAnimation;
 	private int pressure=0;
+	private int oxygenConsumptionPerSecond = 25;
 	
 	public Player(Vector2f pos, int inventorySize) {
 		super(pos, inventorySize);
@@ -82,6 +83,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			headAnimationFrame = headAnimation.getFrame();
 			headAnimation.setDuration(headAnimationFrame, (int) (Math.random()*1000));
 		}
+		
+		/* Oxygen consumption */
+		m.getRoom(this.getX(), this.getY()).consumeOxygen((float)(delta * oxygenConsumptionPerSecond)/(float)(Timer.unitInOneSecond));
+		
 	}
 	
 
@@ -193,7 +198,9 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	
 	public void primaryWeapon(float directionX, float directionY){
-		inventory.equippedItemAction(InventoryItemEnum.PWEAPON, position.x, position.y,
+		float x = (float) (position.x + (0.4f * Math.sqrt(2)) * directionX /Math.sqrt(directionX*directionX + directionY*directionY));
+		float y = (float) (position.y + (0.4f * Math.sqrt(2)) * directionY /Math.sqrt(directionX*directionX + directionY*directionY));
+		inventory.equippedItemAction(InventoryItemEnum.PWEAPON, x, y,
 									  							directionX, directionY);
 	}
 
