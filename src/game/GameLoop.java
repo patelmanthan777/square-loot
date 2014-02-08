@@ -43,12 +43,15 @@ public class GameLoop extends Game{
 	 * window manager and openGL.
 	 */
 	public void init() {
+		PhysicsManager.init();
+		
 		p = EntityManager.createPlayer();
 		controle = new Control(p);
 		BlockFactory.initBlocks();
 
 		GraphicsAL.init();
 		map = new Map(new Vector2f(10,10), new Vector2f(32,32), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
+		map.initPhysics();
 		map.renderMapToFrameBuffers();	
 
 		p.setPosition(map.getSpawnPosition());
@@ -76,7 +79,7 @@ public class GameLoop extends Game{
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
 
-		PhysicsManager.init(map);
+		
 
 		OverlayManager.createPlayerInventory(p);
 		

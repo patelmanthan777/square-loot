@@ -5,19 +5,14 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.World;
 
-import entity.EntityManager;
-import environment.Map;
-
 public class PhysicsManager {
 	private static World world;
 	private static int velocityIterations = 8;
     private static int positionIterations = 3;
 	
-	public static void init(Map m)
+	public static void init()
 	{
 		 world = new World(new Vec2(0.0f, 0.0f));
-		 m.initPhysics(world);
-		 EntityManager.initPhysics(world);
 		 PhysicsContactListener listener =  new PhysicsContactListener();
 		 world.setContactListener(listener);
 	}

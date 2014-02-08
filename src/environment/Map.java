@@ -6,7 +6,6 @@ import light.PointLight;
 import light.Laser;
 import light.LightManager;
 import light.ShadowBuffer;
-import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 import configuration.ConfigManager;
 import environment.blocks.Block;
@@ -432,14 +431,14 @@ public class Map implements ShadowCaster {
 		return getFBO(i, j, layer).getTextureID();
 	}
 
-	public void initPhysics(World w) {
+	public void initPhysics() {
 		for(Room[] roomArray : roomGrid)
 		{
 			for(Room r : roomArray)
 			{
 				if(r != null)
 				{
-					r.initPhysics(w);
+					r.initPhysics();
 				}
 			}
 		}

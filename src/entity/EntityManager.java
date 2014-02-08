@@ -3,7 +3,6 @@ package entity;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 
 import entity.npc.Npc;
@@ -22,7 +21,9 @@ public class EntityManager {
 	}
 
 	public static void createZombie(float posx, float posy) {
-		npcs.add(new Zombie(posx, posy, 1, 1, 0));
+		Npc npc = new Zombie(posx, posy, 1, 1, 0);
+		npcs.add(npc);
+		npc.initPhysics();
 	}
 
 	public static void updateInput(long elapsedTime) {
@@ -77,16 +78,7 @@ public class EntityManager {
 	public static Player createPlayer() {
 		Player player = new Player(new Vector2f(0, 0), 10);
 		players.add(player);
+		player.initPhysics();
 		return player;
-	}
-
-	public static void initPhysics(World world) {
-		for (Npc npc : npcs) {
-			npc.initPhysics();
-		}
-		for (Player p : players) {
-			p.initPhysics();
-		}
-		
 	}
 }

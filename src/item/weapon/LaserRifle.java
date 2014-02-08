@@ -3,8 +3,6 @@ package item.weapon;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import configuration.ConfigManager;
-
 import rendering.TextureManager;
 
 import entity.projectile.ProjectileManager;

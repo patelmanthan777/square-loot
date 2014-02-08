@@ -2,7 +2,6 @@ package environment.room;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -572,7 +571,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 		discovered = true;
 	}
 	
-	public void initPhysics(World w) {
+	public void initPhysics() {
 		for (int i = 0; i < Map.roomBlockSize.x; i++) {
 			for (int j = 0; j < Map.roomBlockSize.y; j++) {
 				float posX = x + i * Map.blockPixelSize.x;
