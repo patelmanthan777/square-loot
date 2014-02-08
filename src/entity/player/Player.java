@@ -21,7 +21,12 @@ import environment.Map;
 import environment.room.OxygenRoom;
 import event.Timer;
 
-public class Player extends LivingEntity implements MiniMapDrawable{
+
+public class Player extends LivingEntity implements MiniMapDrawable {
+	
+	
+	private int energy=0;	
+
 	private Laser laser;
 	private Light light;
 	private SpriteSheet headSprites;
@@ -186,6 +191,20 @@ public class Player extends LivingEntity implements MiniMapDrawable{
 									  							directionX, directionY);
 	}
 
+	/*Energy handling*/
+	public void charge(int enrgy){
+		energy += Math.abs(enrgy);		
+	}
+	
+	public boolean decharge(int enrgy){
+		boolean hasEnoughEnergy = this.energy >= enrgy;
+		
+		if(hasEnoughEnergy)
+			energy -= Math.abs(enrgy);
+		
+		return hasEnoughEnergy;
+	}
+	
 	public void dropBattery(){
 		Item tmp = inventory.remove(InventoryItemEnum.BATTERY);
 		if (tmp != null){

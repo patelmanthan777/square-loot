@@ -132,6 +132,7 @@ public class Entity {
 	
 	public float getDegreAngle(){
 		return (float) Math.toDegrees(angle);
+
 	}
 	
 	public float getDeltaAngle(){

@@ -60,6 +60,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 		for (int i = 0; i < 4; i++) {
 			shadowPoints[i] = new Vector2f();
 		}
+		
 		construct();
 	}
 
@@ -103,77 +104,60 @@ public abstract class Room implements Drawable, ShadowCaster {
 	 *            is the index of the wall
 	 */
 	public Door createDoor(int wall) {
-		
-		if (wall == 0) {
-			grid[(int) Map.roomBlockSize.x / 2 - 2][0] = BlockFactory
+		if (wall == 0 || wall == 2) {
+			int j;
+			if(wall == 0)
+			{
+				j = 0;
+			}
+			else
+			{
+				j = (int) Map.roomBlockSize.y - 2;
+			}
+
+			grid[(int) Map.roomBlockSize.x / 2 - 2][j] = BlockFactory
 					.createBorderBlock();
-			grid[(int) Map.roomBlockSize.x / 2 - 1][0] = BlockFactory
+			grid[(int) Map.roomBlockSize.x / 2 - 1][j] = BlockFactory
 					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x / 2 + 0][0] = BlockFactory
+			grid[(int) Map.roomBlockSize.x / 2 + 0][j] = BlockFactory
 					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x / 2 + 1][0] = BlockFactory
+			grid[(int) Map.roomBlockSize.x / 2 + 1][j] = BlockFactory
 					.createBorderBlock();
-			grid[(int) Map.roomBlockSize.x / 2 - 2][1] = BlockFactory
+			grid[(int) Map.roomBlockSize.x / 2 - 2][j+1] = BlockFactory
 					.createBorderBlock();
-			grid[(int) Map.roomBlockSize.x / 2 - 1][1] = BlockFactory
+			grid[(int) Map.roomBlockSize.x / 2 - 1][j+1] = BlockFactory
 					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x / 2 + 0][1] = BlockFactory
+			grid[(int) Map.roomBlockSize.x / 2 + 0][j+1] = BlockFactory
 					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x / 2 + 1][1] = BlockFactory
-					.createBorderBlock();
-		}
-		else if (wall == 1) {
-			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
-					.createBorderBlock();
-			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
-					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
-					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x - 1][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
-					.createBorderBlock();
-			grid[(int) Map.roomBlockSize.x - 2][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
-					.createBorderBlock();
-			grid[(int) Map.roomBlockSize.x - 2][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
-					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x - 2][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
-					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x - 2][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
+			grid[(int) Map.roomBlockSize.x / 2 + 1][j+1] = BlockFactory
 					.createBorderBlock();
 		}
-		else if (wall == 2) {
-			grid[(int) Map.roomBlockSize.x / 2 - 2][(int) Map.roomBlockSize.y - 1] = BlockFactory
+		else if (wall == 1 || wall == 3) {
+			int i;
+			if(wall == 3)
+			{
+				i = 0;
+			}
+			else
+			{
+				i = (int) Map.roomBlockSize.x - 2;
+			}
+			
+			grid[i][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
 					.createBorderBlock();
-			grid[(int) Map.roomBlockSize.x / 2 - 1][(int) Map.roomBlockSize.y - 1] = BlockFactory
+			grid[i][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
 					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x / 2 + 0][(int) Map.roomBlockSize.y - 1] = BlockFactory
+			grid[i][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
 					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x / 2 + 1][(int) Map.roomBlockSize.y - 1] = BlockFactory
+			grid[i][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
 					.createBorderBlock();
-			grid[(int) Map.roomBlockSize.x / 2 - 2][(int) Map.roomBlockSize.y - 2] = BlockFactory
+			grid[i+1][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
 					.createBorderBlock();
-			grid[(int) Map.roomBlockSize.x / 2 - 1][(int) Map.roomBlockSize.y - 2] = BlockFactory
+			grid[i+1][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
 					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x / 2 + 0][(int) Map.roomBlockSize.y - 2] = BlockFactory
+			grid[i+1][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
 					.createEmptyBlock();
-			grid[(int) Map.roomBlockSize.x / 2 + 1][(int) Map.roomBlockSize.y - 2] = BlockFactory
-					.createBorderBlock();
-		}
-		else if (wall == 3) {
-			grid[0][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
-					.createBorderBlock();
-			grid[0][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
-					.createEmptyBlock();
-			grid[0][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
-					.createEmptyBlock();
-			grid[0][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
-					.createBorderBlock();
-			grid[1][(int) Map.roomBlockSize.y / 2 - 2] = BlockFactory
-					.createBorderBlock();
-			grid[1][(int) Map.roomBlockSize.y / 2 - 1] = BlockFactory
-					.createEmptyBlock();
-			grid[1][(int) Map.roomBlockSize.y / 2 + 0] = BlockFactory
-					.createEmptyBlock();
-			grid[1][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
+			grid[i+1][(int) Map.roomBlockSize.y / 2 + 1] = BlockFactory
 					.createBorderBlock();
 		}
 		Door door = new Door(this, wall);
