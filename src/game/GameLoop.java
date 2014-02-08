@@ -74,12 +74,12 @@ public class GameLoop extends Game{
 		
 		LightManager.addShadowCaster(map);
 		
+		ItemManager.init();
+		
 		OverlayManager.init();
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
-
-		
 
 		OverlayManager.createPlayerInventory(p);
 		

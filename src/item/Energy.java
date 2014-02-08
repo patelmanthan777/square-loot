@@ -23,7 +23,7 @@ public class Energy extends Item {
 		drawSize[0] = 15;
 		drawSize[1] = 30;
 		
-		this.charge = charge;
+		this.charge = charge;				
 	}
 	
 	public int getTextureID(){
@@ -37,8 +37,8 @@ public class Energy extends Item {
 	@Override	
 	public void initPhysics(){
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
-		bodyDef.fixedRotation = false;
+		bodyDef.type = BodyType.STATIC;
+		bodyDef.fixedRotation = true;
 		bodyDef.position.set(position.x, position.y);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();

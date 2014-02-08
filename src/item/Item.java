@@ -18,15 +18,14 @@ import physics.PhysicsObject;
 
 import rendering.Drawable;
 import utils.GraphicsAL;
-import entity.Entity;
+import entity.DynamicEntity;
+
 import environment.Map;
 
-public abstract class Item extends Entity implements Drawable, PhysicsObject{
+public abstract class Item extends DynamicEntity implements Drawable, PhysicsObject{
 	protected float weight = 0;	
 	Vector2f [] points = new Vector2f[4];
 	
-	
-	protected Body body;
 	protected boolean destroyed = false;
 	
 	protected int [] drawSize = new int[2];	
@@ -43,11 +42,7 @@ public abstract class Item extends Entity implements Drawable, PhysicsObject{
 	
 	public boolean shouldBeDestroyed(){
 		return destroyed;
-	}
-	
-	public void destroy() {
-		body.getWorld().destroyBody(body);
-	}
+	}	
 	
 	public float getWeight(){
 		return weight;
@@ -100,24 +95,7 @@ public abstract class Item extends Entity implements Drawable, PhysicsObject{
 		glDisable(GL_BLEND);
 	}
 	
-	public void initPhysics(){
-	}
-
-	public void ContactHandler(PhysicsDataStructure a) {
-		switch(a.getType())
-		{
-		case BLOCK:
-			break;
-		case ENTITY:
-			break;
-		case PLAYER:
-			break;
-		case PROJECTILE:
-			break;
-		default:
-			break;
-		}
-	}
+	
 	
 	public abstract int getTextureID();
 }
