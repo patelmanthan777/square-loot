@@ -55,8 +55,4 @@ public class SpawnRoom extends Room{
 		
 		
 	}
-	@Override 
-	public void setNewPressure(float pressure) {
-		
-	}
 }

@@ -36,6 +36,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private SpriteSheet featherSprites;
 	private Animation featherAnimation;
 	private int pressure=0;
+	private int oxygenConsumptionPerSecond = 25;
 	
 	public Player(Vector2f pos, int inventorySize) {
 		super(pos, inventorySize);
@@ -76,6 +77,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			headAnimationFrame = headAnimation.getFrame();
 			headAnimation.setDuration(headAnimationFrame, (int) (Math.random()*1000));
 		}
+		
+		/* Oxygen consumption */
+		m.getRoom(this.getX(), this.getY()).consumeOxygen((float)(delta * oxygenConsumptionPerSecond)/(float)(Timer.unitInOneSecond));
+		
 	}
 	
 

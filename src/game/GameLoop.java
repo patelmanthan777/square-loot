@@ -8,12 +8,8 @@ import light.Light;
 import light.LightManager;
 import utils.GraphicsAL;
 
-
-
-
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-
 
 import physics.PhysicsManager;
 import configuration.ConfigManager;
