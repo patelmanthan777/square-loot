@@ -1,11 +1,10 @@
 package environment.blocks;
 
 import environment.room.OxygenRoom;
-import environment.room.Room;
 
 public class BatteryReceptacleBlock extends SolidBlock{
 	
-	private Room room;
+	private OxygenRoom room;
 	
 	public BatteryReceptacleBlock(OxygenRoom room){
 		this.room = room;
@@ -13,6 +12,6 @@ public class BatteryReceptacleBlock extends SolidBlock{
 	}
 	
 	public void powering(){
-		
+		room.powering();
 	}
 }

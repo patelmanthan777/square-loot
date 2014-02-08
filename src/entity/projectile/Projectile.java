@@ -12,7 +12,7 @@ import org.lwjgl.util.vector.Vector3f;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
 import physics.PhysicsObject;
-import physics.bodyType;
+import physics.GameBodyType;
 import rendering.Drawable;
 import entity.Entity;
 
@@ -101,7 +101,7 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 		body.createFixture(fixtureDef);
 		Vec2 vel = new Vec2(direction.x * speedValue, direction.y * speedValue);
 		body.setLinearVelocity(vel);
-		PhysicsDataStructure s = new PhysicsDataStructure(this,bodyType.PROJECTILE); 
+		PhysicsDataStructure s = new PhysicsDataStructure(this,GameBodyType.PROJECTILE); 
 		body.setUserData(s);
 	}
 
@@ -129,7 +129,9 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 		{
 		case BLOCK:
 			break;
-		case ENTITY:
+		case ENTITY:			
+			break;
+		case PLAYER:
 			break;
 		case PROJECTILE:
 			break;

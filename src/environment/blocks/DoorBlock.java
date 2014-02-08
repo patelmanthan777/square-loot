@@ -6,7 +6,7 @@ import org.jbox2d.dynamics.BodyDef;
 
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
-import physics.bodyType;
+import physics.GameBodyType;
 import configuration.ConfigManager;
 import environment.Map;
 
@@ -85,7 +85,7 @@ public class DoorBlock extends PhysicalBlock {
 	    PolygonShape box = new PolygonShape();
 	    box.setAsBox(0.5f, 0.5f);
 	    body.createFixture(box, 0.0f);
-		PhysicsDataStructure s = new PhysicsDataStructure(this,bodyType.BLOCK); 
+		PhysicsDataStructure s = new PhysicsDataStructure(this,GameBodyType.BLOCK); 
 		body.setUserData(s);
 	}
 

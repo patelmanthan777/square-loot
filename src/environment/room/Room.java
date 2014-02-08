@@ -602,8 +602,13 @@ public abstract class Room implements Drawable, ShadowCaster {
 		return newPressure;
 	}
 	
+	public void consumeOxygen(float quantity){
+		setNewPressure(pressure-quantity);
+		update(0);
+	}
+	
 	public void setNewPressure(float pressure){
-		this.newPressure = pressure;
+		this.newPressure = pressure > 0 ? pressure : 0;
 	}
 	
 	public void update(long delta){

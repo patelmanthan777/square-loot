@@ -12,12 +12,15 @@ import static org.lwjgl.opengl.GL11.glEnable;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import physics.PhysicsDataStructure;
+import physics.PhysicsObject;
+
 import rendering.Drawable;
 import utils.GraphicsAL;
 import entity.Entity;
 import environment.Map;
 
-public abstract class Item extends Entity implements Drawable{
+public abstract class Item extends Entity implements Drawable, PhysicsObject{
 	protected float weight = 0;	
 	Vector2f [] points = new Vector2f[4];
 	
@@ -84,6 +87,24 @@ public abstract class Item extends Entity implements Drawable{
 		glDisable(GL_BLEND);
 	}
 	
+	public void initPhysics(){
+	}
 
+	public void ContactHandler(PhysicsDataStructure a) {
+		switch(a.getType())
+		{
+		case BLOCK:
+			break;
+		case ENTITY:
+			break;
+		case PLAYER:
+			break;
+		case PROJECTILE:
+			break;
+		default:
+			break;
+		}
+	}
+	
 	public abstract int getTextureID();
 }

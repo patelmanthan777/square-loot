@@ -12,6 +12,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
+import physics.GameBodyType;
+
 import configuration.ConfigManager;
 import rendering.MiniMapDrawable;
 import userInterface.MiniMap;
@@ -36,9 +38,11 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private SpriteSheet featherSprites;
 	private Animation featherAnimation;
 	private int pressure=0;
+	private int oxygenConsumptionPerSecond = 25;
 	
 	public Player(Vector2f pos, int inventorySize) {
 		super(pos, inventorySize);
+		this.btype = GameBodyType.PLAYER;
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
@@ -76,6 +80,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			headAnimationFrame = headAnimation.getFrame();
 			headAnimation.setDuration(headAnimationFrame, (int) (Math.random()*1000));
 		}
+		
+		/* Oxygen consumption */
+		m.getRoom(this.getX(), this.getY()).consumeOxygen((float)(delta * oxygenConsumptionPerSecond)/(float)(Timer.unitInOneSecond));
+		
 	}
 	
 
