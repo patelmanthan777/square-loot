@@ -18,6 +18,7 @@ import physics.PhysicsObject;
 import rendering.Drawable;
 import utils.GraphicsAL;
 import entity.Entity;
+import environment.Map;
 
 public abstract class Item extends Entity implements Drawable, PhysicsObject{
 	protected float weight = 0;	
@@ -42,14 +43,14 @@ public abstract class Item extends Entity implements Drawable, PhysicsObject{
 	
 	public void draw(){
 		
-		points[0].x = position.x;
-		points[0].y = position.y + drawSize[1];
-		points[1].x = position.x + drawSize[0];
-		points[1].y = position.y + drawSize[1];
-		points[2].x = position.x + drawSize[0];
-		points[2].y = position.y;
-		points[3].x = position.x;
-		points[3].y = position.y;				
+		points[0].x = position.x*Map.blockPixelSize.x;
+		points[0].y = position.y*Map.blockPixelSize.y + drawSize[1];
+		points[1].x = position.x*Map.blockPixelSize.x + drawSize[0];
+		points[1].y = position.y*Map.blockPixelSize.y + drawSize[1];
+		points[2].x = position.x*Map.blockPixelSize.x + drawSize[0];
+		points[2].y = position.y*Map.blockPixelSize.y;
+		points[3].x = position.x*Map.blockPixelSize.x;
+		points[3].y = position.y*Map.blockPixelSize.y;				
 		
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		
