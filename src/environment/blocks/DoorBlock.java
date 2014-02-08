@@ -1,5 +1,8 @@
 package environment.blocks;
 
+import light.Light;
+import light.ShadowBuffer;
+
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
@@ -30,6 +33,7 @@ public class DoorBlock extends PhysicalBlock {
 		this.i = i;
 		this.j = j;
 		this.layer = Map.doorLayer;
+		this.castShadows = false;
 	}
 
 	public boolean isOpened() {
