@@ -352,7 +352,7 @@ public class Map implements ShadowCaster {
 				for (int j = 0; j < Map.mapRoomSize.y; j++) {
 					if (roomGrid[i][j] != null) {
 						if (roomGrid[i][j] != null) {
-							roomGrid[i][j].update();
+							roomGrid[i][j].update(delta);
 						}
 					}
 				}
@@ -368,7 +368,7 @@ public class Map implements ShadowCaster {
 	 * @param j
 	 *            ordinate in blocks
 	 */
-	public void updatePressure(int i, int j) {
+	private void updatePressure(int i, int j) {
 		if (roomGrid[i][j] != null) {
 			float pressure = 0;
 			float coef = 0;
@@ -420,8 +420,8 @@ public class Map implements ShadowCaster {
 	}
 
 	public Room getRoom(float x, float y){
-		return roomGrid[(int) (x / roomPixelSize.x)]
-					   [(int) (y / roomPixelSize.y)];
+		return roomGrid[(int) (x / roomBlockSize.x)]
+					   [(int) (y / roomBlockSize.y)];
 	}
 	
 	public static FBO getFBO(int i, int j, int layer) {

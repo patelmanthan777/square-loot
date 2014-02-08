@@ -1,5 +1,7 @@
 package environment.blocks;
 
+import environment.room.OxygenRoom;
+
 public class BlockFactory {
 	/**
 	 * Blocks inside the rooms, do not cast shadows, do not collide.
@@ -51,5 +53,9 @@ public class BlockFactory {
 	
 	static public Block createDoorBlock(Block underBlock, int i, int j){
 		return new DoorBlock(underBlock, i, j);
+	}
+	
+	static public Block createBatteryReceptacleBlock(OxygenRoom room){
+		return new BatteryReceptacleBlock(room);
 	}
 }

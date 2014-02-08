@@ -27,6 +27,7 @@ public class ConfigManager {
 			loadResolution(prop);
 			loadFullscreen(prop);
 			loadMaxFps(prop);
+			loadOxygenTime(prop);
 		}catch (Exception e){
 			System.out.println(e.toString());
 		}
@@ -46,6 +47,12 @@ public class ConfigManager {
 	
 	static private void loadMaxFps(Properties prop) {
 		String str = prop.getProperty("MaxFPS");
+		maxFps = Integer.parseInt(str);
+		maxFps = (maxFps == 0) ? 5000 : maxFps;
+	}
+	
+	static private void loadOxygenTime(Properties prop) {
+		String str = prop.getProperty("OxygenTime");
 		maxFps = Integer.parseInt(str);
 		maxFps = (maxFps == 0) ? 5000 : maxFps;
 	}

@@ -8,6 +8,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.util.vector.Vector2f;
 
+import environment.Map;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
 import physics.PhysicsObject;
@@ -23,6 +24,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	protected float descFactor = 0.5f;
 	protected float accFactor = 0.005f;
 	protected Body body;
+	protected Vector2f speed = new Vector2f();
 
 	public DynamicEntity(Vector2f pos) {
 		super(pos);
@@ -83,9 +85,11 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	 * @param dt
 	 *            represents the time passed since last update
 	 */
-	public void updatePostion() {
+	public void updatePosition(long delta, Map m) {
 		Vec2 position = body.getPosition();
 		setPosition(position.x, position.y);
+		speed.x = this.body.getLinearVelocity().x;
+		speed.y = this.body.getLinearVelocity().y;
 	}
 
 	public void updatePhysics(long dt) {
@@ -113,6 +117,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		
 		translation.x = 0;
 		translation.y = 0;
+		
 	}
 	
 	@Override
@@ -133,5 +138,9 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	public void destroy()
 	{
 		body.getWorld().destroyBody(body);
+	}
+	
+	public Vector2f getSpeed(){
+		return speed;
 	}
 }

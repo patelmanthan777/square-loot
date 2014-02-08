@@ -15,6 +15,7 @@ public class StatsOverlay extends Overlay{
 		glLoadIdentity();
 		
 		OverlayManager.font.drawString(50, 50, Timer.getFPSDisplay(), Color.white);
+		OverlayManager.font.drawString(50, 75, Timer.getChrono(), Color.white);
 		glPopMatrix();
 		glDisable(GL_BLEND);
 		

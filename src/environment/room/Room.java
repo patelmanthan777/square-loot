@@ -31,7 +31,6 @@ public abstract class Room implements Drawable, ShadowCaster {
 	 */
 	protected float y;
 	protected Vector3f miniMapColor = new Vector3f(1, 1, 1);
-	//protected boolean[] doors = new boolean[4];
 	protected boolean discovered = false;
 	protected float pressure;
 	protected float newPressure;
@@ -39,6 +38,8 @@ public abstract class Room implements Drawable, ShadowCaster {
 	protected Sas[] sas = new Sas[4];
 	protected int doorLayer = 1;
 	protected boolean renderIsUpdated[] = new  boolean[4];
+	
+	
 	/* avoid dynamic allocation in computeShadow */
 	boolean[] neighbours = new boolean[4];
 	private Vector2f shadowPoints[] = new Vector2f[4];
@@ -63,7 +64,30 @@ public abstract class Room implements Drawable, ShadowCaster {
 		construct();
 	}
 
-	protected abstract void construct();
+	protected void construct(){
+		for(int i = 2; i < (int)Map.roomBlockSize.x-2;i++){
+			for(int j = 2; j < (int)Map.roomBlockSize.y-2; j++){
+				grid[i][j] = BlockFactory.createEmptyBlock();
+			}
+		}
+		for(int i = 0; i < (int)Map.roomBlockSize.x;i++){
+			grid[i][0] = BlockFactory.createVoidBlock();
+			grid[i][(int)Map.roomBlockSize.y-1] = BlockFactory.createVoidBlock();
+		}
+		for(int i = 0; i < (int)Map.roomBlockSize.y; i++){
+			grid[0][i] = BlockFactory.createVoidBlock();
+			grid[(int)Map.roomBlockSize.x-1][i] = BlockFactory.createVoidBlock();
+		}
+		
+		for(int i = 1; i < (int)Map.roomBlockSize.x-1;i++){
+			grid[i][1] = BlockFactory.createBorderBlock();
+			grid[i][(int)Map.roomBlockSize.y-2] = BlockFactory.createBorderBlock();
+		}
+		for(int i = 1; i < (int)Map.roomBlockSize.y-1; i++){
+			grid[1][i] = BlockFactory.createBorderBlock();
+			grid[(int)Map.roomBlockSize.x-2][i] = BlockFactory.createBorderBlock();
+		}
+	}
 
 	public int getX() {
 		return (int) x;
@@ -435,7 +459,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 					* MiniMap.roomSize.y);
 			float doorRatio = 0.1f;
 			glDisable(GL_BLEND);
-			glColor3f(miniMapColor.x, miniMapColor.y*pressure/100, miniMapColor.z*pressure/100);
+			glColor3f(miniMapColor.x, miniMapColor.y*pressure/OxygenRoom.maxPressure, miniMapColor.z*pressure/OxygenRoom.maxPressure);
 			glLoadIdentity();
 			if (doors[0]!=null) {
 				glBegin(GL_LINE_STRIP);
@@ -582,12 +606,14 @@ public abstract class Room implements Drawable, ShadowCaster {
 		this.newPressure = pressure;
 	}
 	
-	public void update(){
+	public void update(long delta){
 		this.pressure = this.newPressure;
 	}
+	
 	public void setSas(Sas sas, int wall){
 		this.sas[wall] = sas;
 	}
+	
 	public Sas[] getSas(){
 		return sas;
 	}
@@ -595,6 +621,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 	public void setRenderUpdated(boolean bool, int layer){
 		renderIsUpdated[layer] = bool;
 	}
+	
 	public boolean renderIsUpdated(int layer){
 		return renderIsUpdated[layer];
 	}

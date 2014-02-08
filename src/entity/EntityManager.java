@@ -5,9 +5,11 @@ import java.util.LinkedList;
 
 import org.jbox2d.dynamics.World;
 import org.lwjgl.util.vector.Vector2f;
+
 import entity.npc.Npc;
 import entity.npc.Zombie;
 import entity.player.Player;
+import environment.Map;
 import static org.lwjgl.opengl.GL11.*;
 
 public class EntityManager {
@@ -38,14 +40,14 @@ public class EntityManager {
 		}
 	}
 
-	public static void updatePosition() {
+	public static void updatePosition(long delta, Map m) {
 		Iterator<Npc> ite = npcs.iterator();
 		while(ite.hasNext())
 		{
 			Npc npc = ite.next();
 			if(npc.getHealth() > 0)
 			{
-				npc.updatePostion();
+				npc.updatePosition(delta, m);
 			}
 			else
 			{
@@ -55,7 +57,7 @@ public class EntityManager {
 		}
 		
 		for (Player p : players) {
-			p.updatePostion();
+			p.updatePosition(delta, m);
 		}
 	}
 
