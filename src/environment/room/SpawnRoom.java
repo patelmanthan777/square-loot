@@ -21,7 +21,7 @@ public class SpawnRoom extends Room{
 				                       0.5f,
 				                       10,
 				                       1));
-		construct();
+
 	}
 
 	@Override

@@ -59,6 +59,8 @@ public abstract class Room implements Drawable, ShadowCaster {
 		for (int i = 0; i < 4; i++) {
 			shadowPoints[i] = new Vector2f();
 		}
+		
+		construct();
 	}
 
 	protected abstract void construct();
