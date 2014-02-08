@@ -6,8 +6,8 @@ import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
 import light.LightManager;
-
 import utils.GraphicsAL;
+
 
 
 import org.lwjgl.util.vector.Vector2f;
@@ -125,12 +125,15 @@ public class GameLoop extends Game{
 		glClearColor(0,0,0,0);
 		glPushMatrix();
 		glLoadIdentity();
+		
 		cam.draw();
 		background.draw();
+		
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		ItemManager.render();
 		EntityManager.render();
+
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();		
 		glPopMatrix();

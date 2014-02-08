@@ -17,7 +17,7 @@ public abstract class LivingEntity extends DynamicEntity {
 	private String healthFraction;
 	protected Vector2f t = new Vector2f();
 	protected Vector2f d = new Vector2f();
-	protected Vector2f halfSize = new Vector2f(20, 20);
+	protected Vector2f halfSize = new Vector2f(40, 40);
 	
 	protected Inventory inventory = null;
 	
