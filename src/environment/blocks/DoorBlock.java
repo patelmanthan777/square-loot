@@ -78,8 +78,8 @@ public class DoorBlock extends PhysicalBlock {
 	@Override
 	public void initPhysics() {
 		BodyDef bodyDef = new BodyDef();			    
-	    bodyDef.position.set(x/ConfigManager.unitPixelSize + 0.5f,
-	    		y/ConfigManager.unitPixelSize + 0.5f);
+	    bodyDef.position.set(points[0].x/ConfigManager.unitPixelSize + 0.5f,
+	    		points[0].y/ConfigManager.unitPixelSize + 0.5f);
 	    body = PhysicsManager.createBody(bodyDef);
 	    PolygonShape box = new PolygonShape();
 	    box.setAsBox(0.5f, 0.5f);

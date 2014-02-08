@@ -11,9 +11,6 @@ import physics.bodyType;
 import configuration.ConfigManager;
 
 public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
-
-	/*TODO Suppress this attribute*/
-	float x,y;
 	
 	public PhysicalBlock(float x, float y) {
 		super(x,y);
@@ -26,15 +23,14 @@ public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 	@Override
 	public void init(float x, float y)
 	{
-		this.x = x; 
-		this.y = y;
+		initBlock(x, y);
 		initPhysics();
 	}
 
 	public void initPhysics() {
 		BodyDef bodyDef = new BodyDef();			    
-	    bodyDef.position.set(x/ConfigManager.unitPixelSize + 0.5f,
-	    		y/ConfigManager.unitPixelSize + 0.5f);
+	    bodyDef.position.set(points[0].x/ConfigManager.unitPixelSize + 0.5f,
+	    		points[0].y/ConfigManager.unitPixelSize + 0.5f);
 	    Body body = PhysicsManager.createBody(bodyDef);
 	    PolygonShape box = new PolygonShape();
 	    box.setAsBox(0.5f, 0.5f);

@@ -56,9 +56,7 @@ public abstract class Block {
 	 * @param positionx
 	 * @param positiony
 	 */
-	protected void initBlock(float positionx, float positiony){
-		float x = positionx;
-		float y = positiony;
+	protected void initBlock(float x, float y){
 		points[0].x = x;
 		points[0].y = y;
 		points[1].x = x + Map.blockPixelSize.x;
