@@ -237,4 +237,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			break;
 		}
 	}
+	
+	public int getEnergy(){
+		return energy;
+	}
 }
