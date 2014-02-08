@@ -195,7 +195,9 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	
 	public void primaryWeapon(float directionX, float directionY){
-		inventory.equippedItemAction(InventoryItemEnum.PWEAPON, position.x, position.y,
+		float x = (float) (position.x + (0.4f * Math.sqrt(2)) * directionX /Math.sqrt(directionX*directionX + directionY*directionY));
+		float y = (float) (position.y + (0.4f * Math.sqrt(2)) * directionY /Math.sqrt(directionX*directionX + directionY*directionY));
+		inventory.equippedItemAction(InventoryItemEnum.PWEAPON, x, y,
 									  							directionX, directionY);
 	}
 
