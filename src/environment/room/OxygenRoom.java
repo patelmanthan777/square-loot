@@ -18,7 +18,6 @@ public class OxygenRoom extends Room{
 		this.miniMapColor.x = 0;
 		this.miniMapColor.y = 0;
 		this.miniMapColor.z = 1;
-		construct();
 	}
 
 	@Override
