@@ -1,5 +1,7 @@
 package environment.room;
 
+import item.Energy;
+import item.ItemManager;
 import light.LightManager;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -37,30 +39,33 @@ public class EnergyRoom extends Room{
 			grid[1][i] = BlockFactory.createBorderBlock();
 			grid[(int)Map.roomBlockSize.x-2][i] = BlockFactory.createBorderBlock();
 		}
-		
-		/*
-		grid[2][2] = BlockFactory.createEnergyBlock();
-		grid[3][2] = BlockFactory.createEnergyBlock();
-		*/
+				
+		Energy e = new Energy(x+3*Map.blockPixelSize.x,
+							  y+(float)2.5*Map.blockPixelSize.y,
+							  100);
+		ItemManager.add(e);
 		grid[4][2] = BlockFactory.createSolidBlock();
 		
-		grid[11][2] = BlockFactory.createSolidBlock();
-		/*
-		grid[12][2] = BlockFactory.createEnergyBlock();
-		grid[13][2] = BlockFactory.createEnergyBlock();
-		*/
 		
-		/*
-		grid[2][(int)Map.roomBlockSize.y-3] = BlockFactory.createEnergyBlock();
-		grid[3][(int)Map.roomBlockSize.y-3] = BlockFactory.createEnergyBlock();		
-		*/
+		e = new Energy(x+(Map.roomBlockSize.x-3)*Map.blockPixelSize.x,
+				  	   y+(float)2.5*Map.blockPixelSize.y,
+				       100);
+		ItemManager.add(e);
+		grid[(int)Map.roomBlockSize.x-5][2] = BlockFactory.createSolidBlock();
+		
+		
+		e = new Energy(x+3*Map.blockPixelSize.x,
+				  	   y+(float)((Map.roomBlockSize.y-2.5)*Map.blockPixelSize.y),
+				  	   100);
+		ItemManager.add(e);
 		grid[4][(int)Map.roomBlockSize.y-3] = BlockFactory.createSolidBlock();
 		
-		grid[11][(int)Map.roomBlockSize.y-3] = BlockFactory.createSolidBlock();
-		/*
-		grid[12][(int)Map.roomBlockSize.y-3] = BlockFactory.createEnergyBlock();
-		grid[13][(int)Map.roomBlockSize.y-3] = BlockFactory.createEnergyBlock();
-		*/
+		e = new Energy(x+(Map.roomBlockSize.x-3)*Map.blockPixelSize.x,
+			  	   	   y+(float)((Map.roomBlockSize.y-2.5)*Map.blockPixelSize.y),
+			  	   	   100);
+		ItemManager.add(e);
+		grid[(int)Map.roomBlockSize.x-5][(int)Map.roomBlockSize.y-3] = BlockFactory.createSolidBlock();
+		
 									
 		
 		
