@@ -2,6 +2,7 @@ package item.weapon;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import configuration.ConfigManager;
 import event.Timer;
 import item.Equipment;
 
@@ -50,6 +51,10 @@ public abstract class Weapon extends Equipment {
 	abstract public void fire(Vector2f pos, Vector2f target);
 	
 	public void action(Vector2f pos, Vector2f target){
-		fire(pos,target);
+		Vector2f direct = new Vector2f();
+		target.normalise(direct);
+		Vector2f position = new Vector2f(pos.x +(projectileSize/ConfigManager.unitPixelSize)*direct.x,
+										 pos.y +(projectileSize/ConfigManager.unitPixelSize)*direct.y);
+		fire(position,target);
 	}
 }
