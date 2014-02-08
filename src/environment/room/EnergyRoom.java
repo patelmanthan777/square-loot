@@ -40,28 +40,28 @@ public class EnergyRoom extends Room{
 			grid[(int)Map.roomBlockSize.x-2][i] = BlockFactory.createBorderBlock();
 		}
 				
-		Energy e = new Energy(x+3*Map.blockPixelSize.x,
-							  y+(float)2.5*Map.blockPixelSize.y,
+		Energy e = new Energy(x/Map.blockPixelSize.x+3,
+							  y/Map.blockPixelSize.y+(float)2.5,
 							  100);
 		ItemManager.add(e);
 		grid[4][2] = BlockFactory.createSolidBlock();
 		
 		
-		e = new Energy(x+(Map.roomBlockSize.x-3)*Map.blockPixelSize.x,
-				  	   y+(float)2.5*Map.blockPixelSize.y,
+		e = new Energy(x/Map.blockPixelSize.x+(Map.roomBlockSize.x-3),
+				  	   y/Map.blockPixelSize.y+(float)2.5,
 				       100);
 		ItemManager.add(e);
 		grid[(int)Map.roomBlockSize.x-5][2] = BlockFactory.createSolidBlock();
 		
 		
-		e = new Energy(x+3*Map.blockPixelSize.x,
-				  	   y+(float)((Map.roomBlockSize.y-2.5)*Map.blockPixelSize.y),
+		e = new Energy(x/Map.blockPixelSize.x+3,
+				  	   y/Map.blockPixelSize.y+(float)(Map.roomBlockSize.y-2.5),
 				  	   100);
 		ItemManager.add(e);
 		grid[4][(int)Map.roomBlockSize.y-3] = BlockFactory.createSolidBlock();
 		
-		e = new Energy(x+(Map.roomBlockSize.x-3)*Map.blockPixelSize.x,
-			  	   	   y+(float)((Map.roomBlockSize.y-2.5)*Map.blockPixelSize.y),
+		e = new Energy(x/Map.blockPixelSize.x+(Map.roomBlockSize.x-3),
+			  	   	   y/Map.blockPixelSize.y+(float)((Map.roomBlockSize.y-2.5)),
 			  	   	   100);
 		ItemManager.add(e);
 		grid[(int)Map.roomBlockSize.x-5][(int)Map.roomBlockSize.y-3] = BlockFactory.createSolidBlock();
@@ -69,10 +69,9 @@ public class EnergyRoom extends Room{
 									
 		
 		
-		Vector2f pos = new Vector2f(x+Map.roomPixelSize.x/2,y+Map.roomPixelSize.y/2);
+		Vector2f pos = new Vector2f(x/Map.blockPixelSize.x+Map.roomPixelSize.x/2,y/Map.blockPixelSize.y+Map.roomPixelSize.y/2);
 		Vector3f color = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 		float radius = (float)Math.random()*100;
-
 		float dstMax = Map.roomPixelSize.x;
 		LightManager.addPointLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
 	}

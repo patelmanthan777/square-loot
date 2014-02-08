@@ -15,11 +15,20 @@ public class ItemManager {
 		items.add(i);
 	}
 	
-	public static void remove(Item i){
+	private static void remove(Item i){
 		items.remove(items.indexOf(i));
 	}
 	
-
+	public static void update(){
+		for(Item i: items){
+			if(i.shouldBeDestroyed()){
+				i.destroy();
+				remove(i);
+			}
+		}
+		
+	}
+	
 	public static void render(){	
 		for(Item i : items){
 			i.draw();

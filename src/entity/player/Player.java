@@ -1,6 +1,7 @@
 package entity.player;
 
 import item.Item;
+import item.Energy;
 import item.ItemManager;
 import light.Laser;
 import light.Light;
@@ -13,6 +14,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
 import physics.GameBodyType;
+import physics.PhysicsDataStructure;
 
 import configuration.ConfigManager;
 import rendering.MiniMapDrawable;
@@ -22,6 +24,7 @@ import entity.LivingEntity;
 import environment.Map;
 import environment.room.OxygenRoom;
 import event.Timer;
+
 
 
 public class Player extends LivingEntity implements MiniMapDrawable {
@@ -212,6 +215,19 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		Item tmp = inventory.remove(InventoryItemEnum.BATTERY);
 		if (tmp != null){
 			dropItem(tmp, position.x, position.y);			
+		}
+	}
+	
+	@Override
+	public void ContactHandler(PhysicsDataStructure a) {
+		super.ContactHandler(a);
+		switch(a.getType())
+		{
+		case ENERGY:
+			charge(((Energy) a.getPhysicsObject()).getCharge());			
+			break;		
+		default:
+			break;
 		}
 	}
 }

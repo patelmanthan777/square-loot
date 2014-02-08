@@ -10,6 +10,7 @@ import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
+import org.jbox2d.dynamics.Body;
 import org.lwjgl.util.vector.Vector2f;
 
 import physics.PhysicsDataStructure;
@@ -24,6 +25,10 @@ public abstract class Item extends Entity implements Drawable, PhysicsObject{
 	protected float weight = 0;	
 	Vector2f [] points = new Vector2f[4];
 	
+	
+	protected Body body;
+	protected boolean destroyed = false;
+	
 	protected int [] drawSize = new int[2];	
 	
 	public Item(float x, float y){
@@ -34,6 +39,14 @@ public abstract class Item extends Entity implements Drawable, PhysicsObject{
 		for(int i = 0 ; i < 4 ; i++){
 			points[i] = new Vector2f();
 		}
+	}
+	
+	public boolean shouldBeDestroyed(){
+		return destroyed;
+	}
+	
+	public void destroy() {
+		body.getWorld().destroyBody(body);
 	}
 	
 	public float getWeight(){
