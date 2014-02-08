@@ -10,6 +10,7 @@ import utils.GraphicsAL;
 
 
 
+
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -24,6 +25,7 @@ import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
+import event.Timer;
 import event.control.Control;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -72,7 +74,7 @@ public class GameLoop extends Game{
 		p.pickUp(new Battery(200,200));
 		
 		LightManager.addShadowCaster(map);
-
+		
 		OverlayManager.init();
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
@@ -81,7 +83,9 @@ public class GameLoop extends Game{
 		PhysicsManager.init(map);
 
 		OverlayManager.createPlayerInventory(p);
-
+		
+		Timer.start();
+		
 		isRunning = true;
 	}
 
@@ -101,7 +105,7 @@ public class GameLoop extends Game{
 		PhysicsManager.update(elapsedTime);
 		
 		/* Position*/
-		EntityManager.updatePosition();
+		EntityManager.updatePosition(elapsedTime, map);
 		
 		ProjectileManager.updateProjectiles();
 		background.update(elapsedTime);
@@ -137,7 +141,6 @@ public class GameLoop extends Game{
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();		
 		glPopMatrix();
-
 
 	}
 }

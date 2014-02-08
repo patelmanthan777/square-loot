@@ -4,11 +4,12 @@ import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 import rendering.MiniMapDrawable;
-import rendering.TextureManager;
 import userInterface.MiniMap;
-import utils.GraphicsAL;
 import entity.player.Player;
 import environment.Map;
 
@@ -16,10 +17,15 @@ public class Zombie extends Npc implements MiniMapDrawable {
 
 	private static int scentDistanceBlk = 5;
 	//private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
-	private ZombieState state;
+	private ZombieState zombieState;
 	private float orientationSpeed = 0;
 	private float orientationDesc = 0.00001f;
 	private boolean running = false;
+	
+	
+	private SpriteSheet headSprites;
+	
+	
 	/*** avoid dynamic allocation in thinkAndAct ***/
 	private Vector2f thisToPlayer = new Vector2f();
 
@@ -51,18 +57,36 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		this.setHealth(10);
 		this.accFactor = 0.001f;
 		this.descFactor = 0.2f;
-
-		state = ZombieState.IDLE;
+		this.halfSize.x = 40;
+		this.halfSize.y = 40;
+		zombieState = ZombieState.IDLE;
+		try {
+			headSprites = new SpriteSheet("assets/textures/zombie.png",256,256);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
 
+	
+	@Override
+	public void updatePosition(long delta, Map m){
+		super.updatePosition(delta, m);
+		/* animation update stuff */
+		
+	}
+	
+	
 	@Override
 	public void draw() {
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1,1,1);
-		GraphicsAL.drawQuadTexture(points,
-				   				   GraphicsAL.fullTexPoints,
-				   				   TextureManager.zombieTexture().getTextureID());			
+		
+		/* BODY */
+		Image tile = headSprites.getSprite(0,0);
+		tile.setCenterOfRotation(halfSize.x, halfSize.y);
+		tile.setRotation(-(this.getDegreAngle()+90));	
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x, this.getY()*Map.blockPixelSize.y-halfSize.y,halfSize.x*2,halfSize.y*2);
 		glDisable(GL_BLEND);
 	}
 
@@ -101,14 +125,14 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	public void thinkAndAct(LinkedList<Player> players, long deltaT) {
 		float dst = scentDistanceBlk;
 		float length;
-		state = ZombieState.IDLE;
+		zombieState = ZombieState.IDLE;
 		for (Player p : players) {
 			Vector2f.sub(p.getPosition(), this.getPosition(), thisToPlayer);
 			length = thisToPlayer.length();
 			thisToPlayer.normalise(thisToPlayer);
 			if (length < dst || dst == -1) {
 				// chase the nearest player
-				state = ZombieState.CHASING;
+				zombieState = ZombieState.CHASING;
 				dst = length;
 				this.setDirection(thisToPlayer);
 				this.translate(thisToPlayer.x, thisToPlayer.y);
@@ -116,7 +140,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 			}
 
 		}
-		if (state == ZombieState.IDLE) {
+		if (zombieState == ZombieState.IDLE) {
 			// randomly moves
 
 			for (int i = 0; i < deltaT; i++) {

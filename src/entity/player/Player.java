@@ -7,26 +7,73 @@ import light.Light;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.newdawn.slick.Animation;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 import configuration.ConfigManager;
 import rendering.MiniMapDrawable;
-import rendering.TextureManager;
 import userInterface.MiniMap;
 import userInterface.inventory.InventoryItemEnum;
-import utils.GraphicsAL;
 import entity.LivingEntity;
 import environment.Map;
+import environment.room.OxygenRoom;
+import event.Timer;
 
 public class Player extends LivingEntity implements MiniMapDrawable{
 	private Laser laser;
 	private Light light;
+	private SpriteSheet headSprites;
+	private Animation headAnimation;
+	private int headAnimationFrame = -1;
+	private SpriteSheet bodySprites;
+	private SpriteSheet featherSprites;
+	private Animation featherAnimation;
+	private int pressure=0;
 	
 	public Player(Vector2f pos, int inventorySize) {
 		super(pos, inventorySize);
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
+		try {
+			headSprites = new SpriteSheet("assets/textures/animperso.png",256,256);
+			headAnimation = new Animation(headSprites, 600);
+			headAnimation.setPingPong(true);
+			bodySprites = new SpriteSheet("assets/textures/playerBody.png",256,256);
+			featherSprites = new SpriteSheet("assets/textures/feather.png",256,256);
+			featherAnimation = new Animation(featherSprites, 50);
+			featherAnimation.setPingPong(true);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
+	
+	@Override
+	public void updatePosition(long delta, Map m){
+		super.updatePosition(delta, m);
+		this.pressure = (int) m.getRoom(this.getX(), this.getY()).getPressure();
+		headAnimation.update(delta);
+		featherAnimation.update(delta);
+		if(this.getSpeed().length() == 0 && this.getDeltaAngle() == 0){
+			featherAnimation.setLooping(false);
+		}else{
+			featherAnimation.setLooping(true);
+			featherAnimation.start();
+			if(this.getSpeed().length() != 0){
+				featherAnimation.setSpeed(4f);
+			}else{
+				featherAnimation.setSpeed(1f);
+			}
+		}
+		if(headAnimationFrame != headAnimation.getFrame()){
+			headAnimationFrame = headAnimation.getFrame();
+			headAnimation.setDuration(headAnimationFrame, (int) (Math.random()*1000));
+		}
+	}
+	
+
 	public void setLight(Light l) {
 		light = l;
 		Vector2f p = new Vector2f(position.x * ConfigManager.unitPixelSize,
@@ -44,21 +91,42 @@ public class Player extends LivingEntity implements MiniMapDrawable{
 
 	@Override
 	public void draw() {
+		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1,1,1);
-		GraphicsAL.drawQuadTexture(points,
-				   				   GraphicsAL.fullTexPoints,
-				   				   TextureManager.playerTexture().getTextureID());
+		
+		/* BODY */
+		float speed = this.getSpeed().length();
+		float zoomx =  (float) (5f * Math.cos(Timer.getTime()/400f));
+		float zoomy = speed != 0 ? (float) (5f * Math.cos(Timer.getTime()/20f)): 0;
+		Image tile = bodySprites.getSprite(Math.min((int)((float)pressure/(float)OxygenRoom.maxPressure*5),4), 0);
+		tile.setCenterOfRotation(halfSize.x+zoomx/2f, halfSize.y+zoomy/2f);
+		tile.setRotation(-(this.getDegreAngle()+90));
+		int fact = 40;
+		
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x + this.getDirection().x*fact-zoomx/2f, this.getY()*Map.blockPixelSize.y-halfSize.y + this.getDirection().y*fact-zoomy/2f,halfSize.x*2+zoomx,halfSize.y*2+zoomy);
+		
+		/* HEAD */
+		tile = headAnimation.getCurrentFrame();
+		tile.setCenterOfRotation(halfSize.x, halfSize.y);
+		tile.setRotation(-(this.getDegreAngle()+90));
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x, this.getY()*Map.blockPixelSize.y-halfSize.y,halfSize.x*2,halfSize.y*2);
+		
+		/* FEATHER */
+		tile = featherAnimation.getCurrentFrame();
+		tile.setCenterOfRotation(halfSize.x, halfSize.y);
+		tile.setRotation(-(this.getDegreAngle()+90));
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x, this.getY()*Map.blockPixelSize.y-halfSize.y,halfSize.x*2,halfSize.y*2);
 		glDisable(GL_BLEND);
 	}
 
 	@Override
 	public void drawOnMiniMap() {
 		float persoRatio = 0.5f;
-		int posx = (int) (MiniMap.position.x + (getX() / Map.roomPixelSize.x)
+		int posx = (int) (MiniMap.position.x + (getX() / Map.roomBlockSize.x)
 				* MiniMap.roomSize.x - persoRatio * MiniMap.roomSize.x / 2);
-		int posy = (int) (MiniMap.position.y + (getY() / Map.roomPixelSize.y)
+		int posy = (int) (MiniMap.position.y + (getY() / Map.roomBlockSize.y)
 				* MiniMap.roomSize.y - persoRatio * MiniMap.roomSize.y / 2);
 		glColor3f(0, 1, 0);
 		// draw quad
