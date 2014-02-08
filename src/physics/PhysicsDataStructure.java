@@ -2,15 +2,15 @@ package physics;
 
 public class PhysicsDataStructure {
 	private PhysicsObject obj;
-	private bodyType type;
+	private GameBodyType type;
 	
-	public PhysicsDataStructure(PhysicsObject obj, bodyType type)
+	public PhysicsDataStructure(PhysicsObject obj, GameBodyType type)
 	{
 		this.obj = obj;
 		this.type = type;
 	}
 	
-	public bodyType getType()
+	public GameBodyType getType()
 	{
 		return type;
 	}
