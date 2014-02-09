@@ -19,7 +19,8 @@ public class Bullet extends Projectile {
  */
 	static private Shader bulletShaderProgram = null;
 	private Light l;
-
+	static int nb = 0;
+	int thisNb = 0;
 	/**
 	 * Initialize the bullet shader
 	 */
@@ -48,7 +49,9 @@ public class Bullet extends Projectile {
 	public Bullet(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {
 		super(pos,rot,speedValue,size,damage);
 		color = new Vector3f(1,0,1);
-		l = LightManager.addPointLight(null, new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
+		thisNb = nb;
+		l = LightManager.addPointLight(this.toString()+thisNb, new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
+		nb++;
 	}
 
 	@Override
@@ -85,5 +88,17 @@ public class Bullet extends Projectile {
 	@Override
 	public Projectile Clone(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {		
 		return new Bullet(pos, rot, speedValue, size, damage);
+	}
+	@Override
+	public void destroy() {
+		super.destroy();
+		LightManager.deactivateLight(this.toString()+thisNb, true);
+	}
+	@Override
+	public void reset(Vector2f pos, Vector2f rot,  float speedValue, float size, int damage)
+	{
+		super.reset(pos, rot, speedValue, size, damage);
+		l.activate();
+		l.setPosition(pos.x*ConfigManager.unitPixelSize, pos.y*ConfigManager.unitPixelSize);
 	}
 }
