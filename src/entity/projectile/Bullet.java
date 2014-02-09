@@ -90,7 +90,7 @@ public class Bullet extends Projectile {
 	@Override
 	public void destroy() {
 		super.destroy();
-		LightManager.deactivateLight(this.toString(), true);
+		l.deactivate();
 	}
 	
 	@Override

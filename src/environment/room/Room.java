@@ -201,7 +201,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 				int first = -1;
 				for (int i = 0; i < Map.roomBlockSize.x; i++) {
 					if (light.getY() > j * Map.blockPixelSize.y + this.y) {
-						if (grid[i][j].castShadows()  && (j==0 || !(grid[i][j-1].castShadows() && grid[i][j-1].getLayer() == grid[i][j].getLayer())) && grid[i][j].getLayer() == layer) {
+						if ((grid[i][j].castShadows() && (int) ((light.getX()-x)/Map.blockPixelSize.x) != i || (int) ((light.getY()-y)/Map.blockPixelSize.y) != j)  && (j==0 || !(grid[i][j-1].castShadows() && grid[i][j-1].getLayer() == grid[i][j].getLayer())) && grid[i][j].getLayer() == layer) {
 							if (first == -1) {
 								beginShadow(light,i,j,0);
 								first = i;
@@ -226,7 +226,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 				int first = -1;
 				for (int i = (int) (Map.roomBlockSize.x-1); i >=0; i--) {
 					if (light.getY() < (j+1) * Map.blockPixelSize.y + this.y) {
-						if (grid[i][j].castShadows() && (j==Map.roomBlockSize.y-1 || !(grid[i][j+1].castShadows() && grid[i][j+1].getLayer() == grid[i][j].getLayer())) && grid[i][j].getLayer() == layer) {
+						if ((grid[i][j].castShadows() && (int) ((light.getX()-x)/Map.blockPixelSize.x) != i || (int) ((light.getY()-y)/Map.blockPixelSize.y) != j) && (j==Map.roomBlockSize.y-1 || !(grid[i][j+1].castShadows() && grid[i][j+1].getLayer() == grid[i][j].getLayer())) && grid[i][j].getLayer() == layer) {
 							if (first == -1) {
 								beginShadow(light,i,j,2);
 								first = i;
@@ -253,7 +253,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 				int first = -1;
 				for (int j = 0; j < Map.roomBlockSize.y; j++) {
 					if (light.getX() < (i+1) * Map.blockPixelSize.x + this.x) {
-						if (grid[i][j].castShadows() && (i==Map.roomBlockSize.x-1 || !(grid[i+1][j].castShadows() && grid[i+1][j].getLayer() == grid[i][j].getLayer())) && grid[i][j].getLayer() == layer) {
+						if ((grid[i][j].castShadows() && (int) ((light.getX()-x)/Map.blockPixelSize.x) != i || (int) ((light.getY()-y)/Map.blockPixelSize.y) != j) && (i==Map.roomBlockSize.x-1 || !(grid[i+1][j].castShadows() && grid[i+1][j].getLayer() == grid[i][j].getLayer())) && grid[i][j].getLayer() == layer) {
 							if (first == -1) {
 								beginShadow(light,i,j,1);
 								first = i;
@@ -278,7 +278,7 @@ public abstract class Room implements Drawable, ShadowCaster {
 				int first = -1;
 				for (int j = (int) (Map.roomBlockSize.y-1); j >= 0; j--) {
 					if (light.getX() > i * Map.blockPixelSize.x + this.x) {
-						if (grid[i][j].castShadows() && (i==0 || !(grid[i-1][j].castShadows() && grid[i-1][j].getLayer() == grid[i][j].getLayer())) && grid[i][j].getLayer() == layer) {
+						if ((grid[i][j].castShadows() && (int) ((light.getX()-x)/Map.blockPixelSize.x) != i || (int) ((light.getY()-y)/Map.blockPixelSize.y) != j) && (i==0 || !(grid[i-1][j].castShadows() && grid[i-1][j].getLayer() == grid[i][j].getLayer())) && grid[i][j].getLayer() == layer) {
 							if (first == -1) {
 								beginShadow(light,i,j,3);
 								first = i;
