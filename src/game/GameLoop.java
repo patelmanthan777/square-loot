@@ -80,8 +80,6 @@ public class GameLoop extends Game{
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
-
-		OverlayManager.createPlayerInventory(p);
 		
 		Timer.start();
 		

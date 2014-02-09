@@ -31,23 +31,23 @@ public class Zombie extends Npc implements MiniMapDrawable {
 
 	/**********************************************/
 
-	public Zombie(Vector2f pos, int inventorySize) {
-		super(pos, inventorySize);
+	public Zombie(Vector2f pos) {
+		super(pos);
 		init();
 	}
 
-	public Zombie(Vector2f pos, Vector2f rot, int inventorySize) {
-		super(pos, rot, inventorySize);
+	public Zombie(Vector2f pos, Vector2f rot) {
+		super(pos, rot);
 		init();
 	}
 
-	public Zombie(float posx, float posy, float dirx, float diry, int inventorySize) {
-		super(posx, posy, dirx, diry, inventorySize);
+	public Zombie(float posx, float posy, float dirx, float diry) {
+		super(posx, posy, dirx, diry);
 		init();
 	}
 
-	public Zombie(float posx, float posy, int inventorySize) {
-		super(posx, posy, inventorySize);
+	public Zombie(float posx, float posy) {
+		super(posx, posy);
 		init();
 	}
 

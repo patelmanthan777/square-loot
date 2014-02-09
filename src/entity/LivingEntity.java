@@ -19,32 +19,25 @@ public abstract class LivingEntity extends DynamicEntity {
 	protected Vector2f d = new Vector2f();
 	protected Vector2f halfSize = new Vector2f(40, 40);
 	
-	protected Inventory inventory = null;
 	
-	public LivingEntity(Vector2f pos, int inventorySize) {
+	
+	public LivingEntity(Vector2f pos) {
 		super(pos);
 		init();
-		if (inventorySize > 0)
-			inventory = new Inventory(inventorySize);
+		
 	}
 	
-	public LivingEntity(Vector2f pos,Vector2f dir, int inventorySize) {
+	public LivingEntity(Vector2f pos,Vector2f dir) {
 		super(pos,dir);
-		init();
-		if (inventorySize > 0)
-			inventory = new Inventory(inventorySize);
+		init();		
 	}
-	public LivingEntity(float posx, float posy, float dirx, float diry, int inventorySize) {
+	public LivingEntity(float posx, float posy, float dirx, float diry) {
 		super(posx,posy,dirx,diry);
-		init();
-		if (inventorySize > 0)
-			inventory = new Inventory(inventorySize);
+		init();		
 	}
-	public LivingEntity(float posx, float posy, int inventorySize) {
+	public LivingEntity(float posx, float posy) {
 		super(posx,posy);
 		init();
-		if (inventorySize > 0)
-			inventory = new Inventory(inventorySize);
 	}	
 	
 	public int getHealth(){
@@ -167,10 +160,5 @@ public abstract class LivingEntity extends DynamicEntity {
 		default:
 			break;
 		}
-	}
-
-	
-	public Inventory getInventory(){
-		return inventory;
 	}
 }

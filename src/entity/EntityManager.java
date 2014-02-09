@@ -21,7 +21,7 @@ public class EntityManager {
 	}
 
 	public static void createZombie(float posx, float posy) {
-		Npc npc = new Zombie(posx, posy, 1, 1, 0);
+		Npc npc = new Zombie(posx, posy, 1, 1);
 		npcs.add(npc);
 		npc.initPhysics();
 	}
@@ -76,7 +76,7 @@ public class EntityManager {
 	}
 
 	public static Player createPlayer() {
-		Player player = new Player(new Vector2f(0, 0), 10);
+		Player player = new Player(new Vector2f(0, 0));
 		players.add(player);
 		player.initPhysics();
 		return player;
