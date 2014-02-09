@@ -71,7 +71,7 @@ public class GameLoop extends Game{
 		p.setLight(playerLight);
 
 		p.setLaser(playerLaser);		
-		p.pickUp(new LaserRifle(250,200,200,0.05f,10,50));
+		p.pickUp(new LaserRifle(100,200,200,0.2f,10,50));
 		p.pickUp(new Battery(200,200));
 		
 		HUD.registerPlayer(p);
