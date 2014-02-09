@@ -2,6 +2,7 @@ package item;
 
 
 
+
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
@@ -15,12 +16,11 @@ import org.jbox2d.dynamics.BodyType;
 import org.lwjgl.util.vector.Vector2f;
 
 import physics.GameBodyType;
-import physics.PhysicsObject;
 
+import physics.PhysicsObject;
 import rendering.Drawable;
 import utils.GraphicsAL;
 import entity.DynamicEntity;
-
 import environment.Map;
 
 public abstract class Item extends DynamicEntity implements Drawable, PhysicsObject{

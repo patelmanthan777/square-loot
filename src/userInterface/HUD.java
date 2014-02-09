@@ -1,7 +1,6 @@
 package userInterface;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.*;
 
 import item.ItemListEnum;
 
@@ -20,7 +19,6 @@ import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.ImageRenderer;
-import de.lessvoid.nifty.elements.render.PanelRenderer;
 import de.lessvoid.nifty.nulldevice.NullSoundDevice;
 import de.lessvoid.nifty.render.NiftyImage;
 import de.lessvoid.nifty.renderer.lwjgl.input.LwjglInputSystem;

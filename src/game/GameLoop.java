@@ -114,9 +114,6 @@ public class GameLoop extends Game{
 		ItemManager.update(elapsedTime, map);
 		background.update(elapsedTime);
 		
-		
-		
-		
 		/* Cam and light */
 		Vector2f pos = new Vector2f(p.getPosition().x * ConfigManager.unitPixelSize,
 				p.getPosition().y * ConfigManager.unitPixelSize);
