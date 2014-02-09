@@ -69,7 +69,7 @@ public class EnergyRoom extends Room{
 									
 		
 		
-		Vector2f pos = new Vector2f(x/Map.blockPixelSize.x+Map.roomPixelSize.x/2,y/Map.blockPixelSize.y+Map.roomPixelSize.y/2);
+		Vector2f pos = new Vector2f(x+Map.roomPixelSize.x/2,y+Map.roomPixelSize.y/2);
 		Vector3f color = new Vector3f((float)Math.random(),(float)Math.random(),(float)Math.random());
 		float radius = (float)Math.random()*100;
 		float dstMax = Map.roomPixelSize.x;

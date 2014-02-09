@@ -1,25 +1,11 @@
 package item;
 
-
-
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-
-import org.jbox2d.dynamics.Body;
+import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
-
-import physics.PhysicsDataStructure;
 import physics.PhysicsObject;
-
 import rendering.Drawable;
 import utils.GraphicsAL;
 import entity.DynamicEntity;
-
 import environment.Map;
 
 public abstract class Item extends DynamicEntity implements Drawable, PhysicsObject{

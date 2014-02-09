@@ -1,13 +1,8 @@
 package userInterface;
 
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.NiftyEventSubscriber;
-import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.elements.events.NiftyMouseMovedEvent;
-import de.lessvoid.nifty.elements.render.PanelRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
-import de.lessvoid.nifty.tools.Color;
 
 
 

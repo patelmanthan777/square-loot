@@ -5,7 +5,6 @@ import org.lwjgl.util.vector.Vector2f;
 import physics.PhysicsDataStructure;
 import configuration.ConfigManager;
 import entity.projectile.Projectile;
-import userInterface.inventory.Inventory;
 
 public abstract class LivingEntity extends DynamicEntity {
 

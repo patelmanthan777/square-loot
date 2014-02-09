@@ -7,7 +7,6 @@ import org.newdawn.slick.Color;
 
 import configuration.ConfigManager;
 import entity.player.Player;
-import event.Timer;
 
 public class PlayerStatsOverlay extends Overlay{
 
