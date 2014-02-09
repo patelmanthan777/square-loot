@@ -27,6 +27,8 @@ public class BatteryReceptacleBlock extends SolidBlock{
 		case PLAYER:
 			break;
 		case PROJECTILE:
+			break;
+		case ENERGYSHOT:
 			powering();
 			break;
 		default:

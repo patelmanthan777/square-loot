@@ -1,65 +1,133 @@
 package entity.projectile;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_ONE;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
+import static org.lwjgl.opengl.GL11.*;
 import light.Light;
 import light.LightManager;
 
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import rendering.Shader;
+import physics.GameBodyType;
+import physics.PhysicsDataStructure;
+import physics.PhysicsManager;
 import configuration.ConfigManager;
+import rendering.Shader;
 
-public class EnergyShot extends Projectile{
+public class EnergyShot extends Projectile {
+
+/**
+ * Save the shader program associated with the bullets. -1 means
+ * not initialized. 
+ */
+	static private Shader bulletShaderProgram = null;
 	private Light l;
+
+	/**
+	 * Initialize the bullet shader
+	 */
+	static public void initBulletShader(){
+		if(bulletShaderProgram == null)
+		{
+			bulletShaderProgram = new Shader("bullet");
+		}
+	}
 	
-	public EnergyShot(){
+	/**
+	 * Bullet class constructor 
+	 * @param pos
+	 * @param rot
+	 */
+	public EnergyShot() {
 		super();
 	}
 	
+	/**
+	 * Bullet class constructor 
+	 * @param pos
+	 * @param rot
+	 */
 	public EnergyShot(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {
 		super(pos,rot,speedValue,size,damage);
-		l = LightManager.addPointLight(null, new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
-	}
+		color = new Vector3f(0.2f,0.8f,1f);
+		l = LightManager.addPointLight(this.toString(), new Vector2f(200, 200), color, 20,2*(int)ConfigManager.resolution.x,true);
 	
-	@Override
-	public void updatePostion() {
-		super.updatePostion();
-		l.setPosition(this.position);
-	}
-	
-	@Override
-	public void draw() {
-	/*	glDisable(GL_TEXTURE_2D);
-		GL11.glColor3f(1, 0, 1);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE);
-		glBegin(GL_TRIANGLE_STRIP);
-		glVertex2f((position.x + size) * ConfigManager.unitPixelSize, (position.y - size) * ConfigManager.unitPixelSize);
-		glVertex2f((position.x - size) * ConfigManager.unitPixelSize, (position.y - size) * ConfigManager.unitPixelSize);
-		glVertex2f((position.x + size) * ConfigManager.unitPixelSize, (position.y + size) * ConfigManager.unitPixelSize);
-		glVertex2f((position.x - size) * ConfigManager.unitPixelSize, (position.y + size) * ConfigManager.unitPixelSize);
-		glEnd();
-		glDisable(GL_BLEND);
-		Shader.unuse();
-		glEnable(GL_TEXTURE_2D);
-	*/	
 	}
 
 	@Override
-	public Projectile Clone(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {
-		// TODO Auto-generated method stub
+	public void updatePostion() {
+		super.updatePostion();
+		l.setPosition(this.position.x* ConfigManager.unitPixelSize,this.position.y* ConfigManager.unitPixelSize);
+	}
+	
+	/**
+	 * Draw the bullet.
+	 */
+	@Override
+	public void draw() {
+	
+	}
+
+	@Override
+	public Projectile Clone(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {		
 		return new EnergyShot(pos, rot, speedValue, size, damage);
 	}
 	
+	@Override
+	public void destroy() {
+		super.destroy();
+		LightManager.deactivateLight(this.toString(), true);
+	}
+	
+	@Override
+	public void reset(Vector2f pos, Vector2f rot,  float speedValue, float size, int damage)
+	{
+		super.reset(pos, rot, speedValue, size, damage);
+		l.activate();
+		l.setPosition(pos.x*ConfigManager.unitPixelSize, pos.y*ConfigManager.unitPixelSize);
+	}
+	
+	public void initPhysics(){
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DYNAMIC;
+		bodyDef.bullet = true;
+		bodyDef.fixedRotation = true;
+		bodyDef.position.set(position.x, position.y);
+		body = PhysicsManager.createBody(bodyDef);
+		PolygonShape dynamicBox = new PolygonShape();
+		dynamicBox.setAsBox(0.1f, 0.1f);
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = dynamicBox;		
+		fixtureDef.density = 1.0f;
+		fixtureDef.friction = 0.1f;
+		body.createFixture(fixtureDef);
+		Vec2 vel = new Vec2(direction.x * speedValue, direction.y * speedValue);
+		body.setLinearVelocity(vel);
+		PhysicsDataStructure s = new PhysicsDataStructure(this,GameBodyType.ENERGYSHOT); 
+		body.setUserData(s);
+	}
+	@Override
+	public void ContactHandler(PhysicsDataStructure a)
+	{
+		this.toDestroy();
+		switch(a.getType())
+		{
+		case BLOCK:
+			break;
+		case ENTITY:			
+			break;
+		case PLAYER:
+			break;
+		case PROJECTILE:
+			break;
+		default:
+			break;
+		}
+	}
 }
+

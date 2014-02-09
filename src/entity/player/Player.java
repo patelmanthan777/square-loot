@@ -4,6 +4,7 @@ import item.Item;
 import item.Energy;
 import item.ItemManager;
 import item.weapon.EnergyWeapon;
+import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
@@ -67,7 +68,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		}
 				
 		inventory = new Inventory(5);
-		eweapon = new EnergyWeapon(250,200,200,0.05f,10,50);
+		eweapon = new EnergyWeapon(1000,200,200,0.02f,10,50);
 	}
 	
 	@Override
@@ -252,7 +253,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	}
 	
 	public void shootEnergy(){
-		System.out.println("BOOM");
-		eweapon.action(Vector2f.add((Vector2f) this.position.scale(Map.blockPixelSize.x), (Vector2f) this.direction.scale(10), null), (Vector2f) this.direction.scale(Map.blockPixelSize.x));
+		Vector2f p = new Vector2f(this.position.x+this.direction.x,this.position.y+this.direction.y);
+		
+		eweapon.action(p, this.direction);
 	}
 }

@@ -190,7 +190,7 @@ public class PlayerControl {
 	}
 	
 	private void energyShotAction(KeyState state) {
-		if (state == KeyState.PRESSED) {
+		if (state == KeyState.HELD || state == KeyState.PRESSED) {
 			p.shootEnergy();
 		}
 	}
