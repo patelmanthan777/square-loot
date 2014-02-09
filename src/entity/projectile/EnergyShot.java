@@ -1,6 +1,5 @@
 package entity.projectile;
 
-import static org.lwjgl.opengl.GL11.*;
 import light.Light;
 import light.LightManager;
 
@@ -9,7 +8,6 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 

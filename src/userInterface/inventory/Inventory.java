@@ -1,17 +1,12 @@
 package userInterface.inventory;
 
-
-
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
-
 import org.lwjgl.util.vector.Vector2f;
-
 import item.Battery;
 import item.Item;
 import item.ItemListEnum;
 import item.Key;
-import item.weapon.EnergyWeapon;
 import item.weapon.PrimaryWeapon;
 import item.weapon.SecondaryWeapon;
 import item.shield.Shield;

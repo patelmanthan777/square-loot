@@ -4,7 +4,6 @@ import item.Item;
 import item.Energy;
 import item.ItemManager;
 import item.weapon.EnergyWeapon;
-import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
