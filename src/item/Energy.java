@@ -23,6 +23,8 @@ public class Energy extends Item {
 		drawSize[0] = 15;
 		drawSize[1] = 30;
 		
+		gbtype = GameBodyType.ENERGY;
+		
 		this.charge = charge;				
 	}
 	
@@ -38,7 +40,7 @@ public class Energy extends Item {
 	public void initPhysics(){
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.STATIC;
-		bodyDef.fixedRotation = true;
+		bodyDef.fixedRotation = false;
 		bodyDef.position.set(position.x, position.y);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();

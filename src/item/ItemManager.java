@@ -2,6 +2,8 @@ package item;
 
 import java.util.LinkedList;
 
+import environment.Map;
+
 
 public class ItemManager {
 
@@ -13,6 +15,7 @@ public class ItemManager {
 	}
 	
 	public static void add(Item i){
+		i.destroyed = false;
 		items.add(i);
 		i.initPhysics();
 	}
@@ -22,8 +25,9 @@ public class ItemManager {
 	}
 	
 	
-	public static void update(){
+	public static void update(long delta, Map m){		
 		for(Item i: items){
+			i.updatePosition(delta, m);
 			if(i.shouldBeDestroyed()){
 				i.destroy();
 				removedItems.add(i);
@@ -34,12 +38,13 @@ public class ItemManager {
 			remove(i);
 		}
 		
+
 		removedItems.clear();		
 	}
 	
 	public static void render(){	
 		for(Item i : items){
-			i.draw();
+			i.draw();			
 		}
 	}	
 }

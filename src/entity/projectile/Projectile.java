@@ -140,6 +140,11 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 		}
 	}
 	
+	@Override
+	public void EndContactHandler(PhysicsDataStructure a) {
+		
+	}
+	
 	public int getDamage()
 	{
 		return damage;

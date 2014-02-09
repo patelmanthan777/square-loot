@@ -20,7 +20,13 @@ public class PhysicsContactListener implements ContactListener {
 
 	@Override
 	public void endContact(Contact contact) {
-		// TODO Auto-generated method stub
+		PhysicsDataStructure a = (PhysicsDataStructure) contact.getFixtureA()
+				.getBody().getUserData();
+		PhysicsDataStructure b = (PhysicsDataStructure) contact.getFixtureB()
+				.getBody().getUserData();
+
+		a.getPhysicsObject().EndContactHandler(b);
+		b.getPhysicsObject().EndContactHandler(a);
 
 	}
 

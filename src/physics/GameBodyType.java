@@ -5,5 +5,6 @@ public enum GameBodyType {
 	ENTITY,
 	PLAYER,
 	ENERGY,
+	ITEM,
 	BLOCK
 }

@@ -7,6 +7,7 @@ import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
 
+import org.jbox2d.dynamics.BodyType;
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
@@ -44,11 +45,13 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private int pressure=0;
 	private int oxygenConsumptionPerSecond = 25;
 	
+	private Item contactItem=null;
+	
 	protected Inventory inventory = null;
 	
 	public Player(Vector2f pos) {
 		super(pos);
-		this.btype = GameBodyType.PLAYER;
+		this.gbtype = GameBodyType.PLAYER;
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
@@ -190,17 +193,23 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return light;
 	}
 	
-	private void dropItem(Item i, float x, float y){
-		i.setPosition(x, y);
+	private void dropItem(Item i, float x, float y){	
 		ItemManager.add(i);
+		i.setPosition(x, y);
 	}
 	
-	public void pickUp(Item i){
+	public void pickUp(){
+		if(contactItem != null && pickUp(contactItem))
+			contactItem.destroyed = true;
+	}
+
+	public boolean pickUp(Item i){
 		Item tmp = inventory.add(i);
 		if(tmp != null)
 			dropItem(tmp, position.x, position.y);
+		
+		return tmp != i;
 	}
-
 	
 	public void primaryWeapon(float directionX, float directionY){
 		float x = (float) (position.x + (0.4f * Math.sqrt(2)) * directionX /Math.sqrt(directionX*directionX + directionY*directionY));
@@ -233,14 +242,26 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	
 	@Override
 	public void ContactHandler(PhysicsDataStructure a) {
-		super.ContactHandler(a);
 		switch(a.getType())
 		{
+		case ITEM:
+			contactItem = (Item) a.getPhysicsObject();
+			break;
 		case ENERGY:
 			charge(((Energy) a.getPhysicsObject()).getCharge());			
 			break;		
 		default:
 			break;
+		}
+	}
+	
+	@Override
+	public void EndContactHandler(PhysicsDataStructure a) {
+		switch(a.getType())
+		{
+			case ITEM:
+				if(contactItem == a.getPhysicsObject())
+					contactItem = null;
 		}
 	}
 	

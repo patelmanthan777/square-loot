@@ -55,4 +55,9 @@ public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 			break;
 		}
 	}
+	
+	@Override
+	public void EndContactHandler(PhysicsDataStructure a) {
+		
+	}
 }

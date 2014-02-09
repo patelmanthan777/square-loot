@@ -1,6 +1,7 @@
 package entity;
 
 
+import org.jbox2d.dynamics.BodyType;
 import org.lwjgl.util.vector.Vector2f;
 import physics.PhysicsDataStructure;
 import configuration.ConfigManager;
@@ -23,20 +24,24 @@ public abstract class LivingEntity extends DynamicEntity {
 	
 	public LivingEntity(Vector2f pos) {
 		super(pos);
+		this.btype = BodyType.DYNAMIC;
 		init();
 		
 	}
 	
 	public LivingEntity(Vector2f pos,Vector2f dir) {
 		super(pos,dir);
+		this.btype = BodyType.DYNAMIC;
 		init();		
 	}
 	public LivingEntity(float posx, float posy, float dirx, float diry) {
 		super(posx,posy,dirx,diry);
+		this.btype = BodyType.DYNAMIC;
 		init();		
 	}
 	public LivingEntity(float posx, float posy) {
 		super(posx,posy);
+		this.btype = BodyType.DYNAMIC;
 		init();
 	}	
 	

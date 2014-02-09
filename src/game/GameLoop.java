@@ -111,7 +111,7 @@ public class GameLoop extends Game{
 		EntityManager.updatePosition(elapsedTime, map);
 		
 		ProjectileManager.updateProjectiles();
-		ItemManager.update();
+		ItemManager.update(elapsedTime, map);
 		background.update(elapsedTime);
 		
 		

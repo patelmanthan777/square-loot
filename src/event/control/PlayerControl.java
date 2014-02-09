@@ -19,6 +19,7 @@ public class PlayerControl {
 		MOVE_BACKWARD,
 		PRIMARY_WEAPON,
 		BATTERY,
+		PICKUP,
 		LIGHT
 	}
 
@@ -74,6 +75,11 @@ public class PlayerControl {
 		l = new LinkedList<Integer>();
 		l.add(Keyboard.KEY_F);
 		keyBinding.put(playerActions.BATTERY, l);
+		
+		// PICKUP
+		l = new LinkedList<Integer>();
+		l.add(Keyboard.KEY_R);
+		keyBinding.put(playerActions.PICKUP, l);
 	}
 
 	/**
@@ -130,6 +136,9 @@ public class PlayerControl {
 			break;
 		case BATTERY:
 			batteryAction(state);
+			break;		
+		case PICKUP:
+			pickUpAction(state);
 			break;
 		}
 	}
@@ -170,6 +179,12 @@ public class PlayerControl {
 	private void batteryAction(KeyState state) {
 		if (state == KeyState.PRESSED) {			
 			p.dropBattery();			
+		}
+	}
+	
+	private void pickUpAction(KeyState state) {
+		if (state == KeyState.PRESSED) {			
+			p.pickUp();			
 		}
 	}
 	

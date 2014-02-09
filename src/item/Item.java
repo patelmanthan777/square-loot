@@ -10,10 +10,11 @@ import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
-import org.jbox2d.dynamics.Body;
+
+import org.jbox2d.dynamics.BodyType;
 import org.lwjgl.util.vector.Vector2f;
 
-import physics.PhysicsDataStructure;
+import physics.GameBodyType;
 import physics.PhysicsObject;
 
 import rendering.Drawable;
@@ -26,8 +27,8 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 	protected float weight = 0;	
 	Vector2f [] points = new Vector2f[4];
 	public final ItemListEnum self;
-	
-	protected boolean destroyed = false;
+		
+	public boolean destroyed = false;
 	
 	protected int [] drawSize = new int[2];	
 	
@@ -37,10 +38,14 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 		drawSize[1] = 30;
 		self = s;
 		
+		gbtype = GameBodyType.ITEM;
+		this.btype = BodyType.DYNAMIC;
+		
 		for(int i = 0 ; i < 4 ; i++){
 			points[i] = new Vector2f();
 		}
 	}
+	
 	
 	public boolean shouldBeDestroyed(){
 		return destroyed;
@@ -96,7 +101,6 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 								   getTextureID());		
 		glDisable(GL_BLEND);
 	}
-	
 	
 	
 	public abstract int getTextureID();

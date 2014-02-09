@@ -26,7 +26,8 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	protected Body body;
 	protected Vector2f speed = new Vector2f();
 
-	protected GameBodyType  btype = GameBodyType.ENTITY;
+	protected GameBodyType  gbtype = GameBodyType.ENTITY;
+	protected BodyType       btype =     BodyType.STATIC;
 
 
 	public DynamicEntity(Vector2f pos) {
@@ -67,7 +68,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	 */
 	public void initPhysics(){
 		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = BodyType.DYNAMIC;
+		bodyDef.type = btype;
 		bodyDef.fixedRotation = true;
 		bodyDef.position.set(position.x, position.y);
 		body = PhysicsManager.createBody(bodyDef);
@@ -78,7 +79,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.1f;
 		body.createFixture(fixtureDef);
-		PhysicsDataStructure s = new PhysicsDataStructure(this, btype); 
+		PhysicsDataStructure s = new PhysicsDataStructure(this, gbtype); 
 		body.setUserData(s);
 	}
 
@@ -138,6 +139,11 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		default:
 			break;
 		}
+	}
+	
+	@Override
+	public void EndContactHandler(PhysicsDataStructure a) {
+		
 	}
 	
 	public void destroy()
