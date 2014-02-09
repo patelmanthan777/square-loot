@@ -53,7 +53,7 @@ public class EnergyShot extends Projectile {
 	public EnergyShot(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {
 		super(pos,rot,speedValue,size,damage);
 		color = new Vector3f(0.2f,0.8f,1f);
-		l = LightManager.addPointLight(this.toString(), new Vector2f(200, 200), color, 20,2*(int)ConfigManager.resolution.x,true);
+		l = LightManager.addPointLight(this.toString(), new Vector2f(200, 200), color, 50,2*(int)ConfigManager.resolution.x,true);
 	
 	}
 
