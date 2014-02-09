@@ -18,7 +18,7 @@ public class BatteryReceptacleBlock extends SolidBlock{
 	
 	public BatteryReceptacleBlock(OxygenRoom room, int posx, int posy){
 		this.room = room;
-		this.color.set(0.8f, 0.2f, 0.2f, 1);
+		this.color.set(0.2f, 1f, 1f, 1);
 		this.posx = posx;
 		this.posy = posy;
 		l = LightManager.addPointLight(this.toString(), new Vector2f((posx+0.5f)*ConfigManager.unitPixelSize,(posy+0.5f)*ConfigManager.unitPixelSize), new Vector3f(color.x,color.y,color.z), 100, 1000, true);
