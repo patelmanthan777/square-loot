@@ -1,6 +1,8 @@
 package item.weapon;
 
 
+import item.ItemListEnum;
+
 import org.lwjgl.util.vector.Vector2f;
 
 import rendering.TextureManager;
@@ -11,9 +13,7 @@ public class LaserRifle extends PrimaryWeapon {
 
 	public LaserRifle(long fireRate, float x, float y, float projectileSpeed, float projectileSize, int damage)
 	{
-		super(fireRate, x, y, projectileSpeed, projectileSize, damage);
-		position.x = x;
-		position.y = y;	
+		super(fireRate, x, y, ItemListEnum.LASERRIFLE, projectileSpeed, projectileSize, damage);
 	}
 
 	@Override

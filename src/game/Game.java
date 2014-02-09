@@ -9,8 +9,9 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 
 import rendering.TextureManager;
+import userInterface.HUD;
+
 import configuration.ConfigManager;
-import de.lessvoid.nifty.Nifty;
 
 
 import event.Timer;
@@ -22,7 +23,6 @@ public abstract class Game {
 	static public boolean isRunning; //false means that the game is closing
 	protected Control controle;
 	
-	protected Nifty nifty;
 	/**
 	 * Enter the game loop, the function exit only when the variable isRunning
 	 * is set to 'false', meaning that the game is shutting down.
@@ -137,6 +137,7 @@ public abstract class Game {
 		createWindow();
 		initGL();
 		TextureManager.init();		
+		HUD.init();
 
 	}
 	

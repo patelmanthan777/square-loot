@@ -25,15 +25,17 @@ import environment.Map;
 public abstract class Item extends DynamicEntity implements Drawable, PhysicsObject{
 	protected float weight = 0;	
 	Vector2f [] points = new Vector2f[4];
+	public final ItemListEnum self;
 	
 	protected boolean destroyed = false;
 	
 	protected int [] drawSize = new int[2];	
 	
-	public Item(float x, float y){
+	public Item(float x, float y, ItemListEnum s){
 		super(x, y);
 		drawSize[0] = 30;
 		drawSize[1] = 30;
+		self = s;
 		
 		for(int i = 0 ; i < 4 ; i++){
 			points[i] = new Vector2f();

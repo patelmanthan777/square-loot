@@ -6,6 +6,7 @@ import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
 import light.LightManager;
+
 import utils.GraphicsAL;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -15,6 +16,7 @@ import physics.PhysicsManager;
 import configuration.ConfigManager;
 import rendering.Background;
 import rendering.Camera;
+import userInterface.HUD;
 import userInterface.OverlayManager;
 import entity.EntityManager;
 import entity.player.Player;
@@ -72,6 +74,8 @@ public class GameLoop extends Game{
 		p.pickUp(new LaserRifle(250,200,200,0.05f,10,50));
 		p.pickUp(new Battery(200,200));
 		
+		HUD.registerPlayer(p);
+		
 		LightManager.addShadowCaster(map);
 		
 		ItemManager.init();
@@ -80,8 +84,6 @@ public class GameLoop extends Game{
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
-
-		OverlayManager.createPlayerInventory(p);
 		
 		Timer.start();
 		
@@ -94,7 +96,9 @@ public class GameLoop extends Game{
 	 * @param elapsedTime represents the time passed since last update.z
 	 **/
 	@Override
-	public void update(long elapsedTime) {
+
+	public void update(long elapsedTime) {		
+		isRunning &= !HUD.update();
 
 		/* Input */
 		EntityManager.updateInput(elapsedTime);
@@ -117,8 +121,6 @@ public class GameLoop extends Game{
 		LightManager.setCamPosition(pos);
 		map.setDrawPosition(pos);
 		map.update(elapsedTime);
-		
-		
 	}
 	
 	/**
@@ -131,17 +133,19 @@ public class GameLoop extends Game{
 		glClearColor(0,0,0,0);
 		glPushMatrix();
 		glLoadIdentity();
-		
 		cam.draw();
 		background.draw();
-		
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		ItemManager.render();
+
 		EntityManager.render();
+
 
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();		
+		HUD.render();
+		        
 		glPopMatrix();
 
 	}

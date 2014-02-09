@@ -8,5 +8,6 @@ public enum InventoryItemEnum {
 	ACCESSORY,
 	MGEAR,
 	BATTERY,
+	KEY,
 	NOITEM
 }

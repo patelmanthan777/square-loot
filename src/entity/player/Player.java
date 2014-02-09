@@ -19,6 +19,7 @@ import physics.PhysicsDataStructure;
 import configuration.ConfigManager;
 import rendering.MiniMapDrawable;
 import userInterface.MiniMap;
+import userInterface.inventory.Inventory;
 import userInterface.inventory.InventoryItemEnum;
 import entity.LivingEntity;
 import environment.Map;
@@ -43,8 +44,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private int pressure=0;
 	private int oxygenConsumptionPerSecond = 25;
 	
-	public Player(Vector2f pos, int inventorySize) {
-		super(pos, inventorySize);
+	protected Inventory inventory = null;
+	
+	public Player(Vector2f pos) {
+		super(pos);
 		this.btype = GameBodyType.PLAYER;
 		this.updatePoints();
 		this.setMaxHealth(20);
@@ -60,6 +63,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
+				
+		inventory = new Inventory(5);
 	}
 	
 	@Override
@@ -203,6 +208,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		inventory.equippedItemAction(InventoryItemEnum.PWEAPON, x, y,
 									  							directionX, directionY);
 	}
+	
 
 	/*Energy handling*/
 	public void charge(int enrgy){

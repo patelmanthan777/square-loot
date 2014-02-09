@@ -18,7 +18,7 @@ public class Energy extends Item {
 
 	
 	public Energy(float x, float y, int charge){
-		super(x,y);
+		super(x,y,ItemListEnum.ENERGY);
 		weight = 100;
 		drawSize[0] = 15;
 		drawSize[1] = 30;
