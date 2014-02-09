@@ -15,12 +15,7 @@ public class SpawnRoom extends Room{
 		miniMapColor.z = 0;
 		discovered = true;
 		pressure = 0;
-		ItemManager.add(new LaserRifle(250,
-									   posX/Map.blockPixelSize.x + Map.roomBlockSize.x/2,
-				                       posY/Map.blockPixelSize.y + Map.roomBlockSize.y/2,
-				                       0.5f,
-				                       10,
-				                       1));
+		
 
 	}
 
@@ -53,6 +48,12 @@ public class SpawnRoom extends Room{
 		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
 		
+		ItemManager.add(new LaserRifle(100,
+				   x/Map.blockPixelSize.x + Map.roomBlockSize.x/2,
+                y/Map.blockPixelSize.y + Map.roomBlockSize.y/2,
+                0.2f,
+                10,
+                1));
 		
 	}
 }

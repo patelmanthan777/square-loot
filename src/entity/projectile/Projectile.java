@@ -104,6 +104,8 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 		PhysicsDataStructure s = new PhysicsDataStructure(this,GameBodyType.PROJECTILE); 
 		body.setUserData(s);
 	}
+	
+	
 
 	/**
 	 * Update the entity position according to its attributes.

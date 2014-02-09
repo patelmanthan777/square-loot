@@ -14,6 +14,7 @@ public class ConfigManager {
 	public static Vector2f resolution = new Vector2f(1280,720);
 	public static int maxFps = 120;
 	public static int unitPixelSize = 48;
+	public static int oxygenTime = 10;
 	
 	/**
 	 * Initialize the ConfigManager class by reading from the "options.txt"
@@ -53,7 +54,6 @@ public class ConfigManager {
 	
 	static private void loadOxygenTime(Properties prop) {
 		String str = prop.getProperty("OxygenTime");
-		maxFps = Integer.parseInt(str);
-		maxFps = (maxFps == 0) ? 5000 : maxFps;
+		oxygenTime = Integer.parseInt(str);
 	}
 }
