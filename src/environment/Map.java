@@ -6,9 +6,7 @@ import light.PointLight;
 import light.Laser;
 import light.LightManager;
 import light.ShadowBuffer;
-
 import org.lwjgl.util.vector.Vector2f;
-
 import configuration.ConfigManager;
 import environment.blocks.Block;
 import environment.room.Room;
@@ -205,34 +203,13 @@ public class Map implements ShadowCaster {
 		}
 	}
 
-	/**
-	 * Test whether the coordinates are inside the map boundaries.
-	 * 
-	 * @param x
-	 *            the horizontal position
-	 * @param y
-	 *            the vertical position
-	 * @return <b>true</b> if the position is in collision, <b>false</b>
-	 *         otherwise
-	 */
-	public boolean testCollision(float x, float y) {
-		int roomI = (int) Math.floor(x / (roomPixelSize.x));
-		int roomJ = (int) Math.floor(y / (roomPixelSize.y));
-		if (roomI < 0 || roomJ < 0 || roomI > Map.mapRoomSize.x - 1
-				|| roomJ > Map.mapRoomSize.y - 1) {
-			return true;
-		} else {
-			if (roomGrid[roomI][roomJ] != null) {
-				return roomGrid[roomI][roomJ].testCollision(x - roomPixelSize.x
-						* roomI, y - roomPixelSize.y * roomJ);
-			} else {
-				return true;
-			}
-		}
-	}
-
 	public Vector2f getSpawnPixelPosition() {
 		return spawnPixelPosition;
+	}
+	
+	public Vector2f getSpawnPosition() {
+		return  new Vector2f(spawnPixelPosition.x / ConfigManager.unitPixelSize,
+				spawnPixelPosition.y / ConfigManager.unitPixelSize );
 	}
 
 	/**
@@ -249,9 +226,9 @@ public class Map implements ShadowCaster {
 	 *            the position
 	 */
 	public void setDrawPosition(Vector2f pos) {
-
 		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
 		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
+
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
 		Sas[] doors = roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y]
 				.getSas();
@@ -374,7 +351,7 @@ public class Map implements ShadowCaster {
 				for (int j = 0; j < Map.mapRoomSize.y; j++) {
 					if (roomGrid[i][j] != null) {
 						if (roomGrid[i][j] != null) {
-							roomGrid[i][j].update();
+							roomGrid[i][j].update(delta);
 						}
 					}
 				}
@@ -390,7 +367,7 @@ public class Map implements ShadowCaster {
 	 * @param j
 	 *            ordinate in blocks
 	 */
-	public void updatePressure(int i, int j) {
+	private void updatePressure(int i, int j) {
 		if (roomGrid[i][j] != null) {
 			float pressure = 0;
 			float coef = 0;
@@ -442,8 +419,8 @@ public class Map implements ShadowCaster {
 	}
 
 	public Room getRoom(float x, float y){
-		return roomGrid[(int) (x / roomPixelSize.x)]
-					   [(int) (y / roomPixelSize.y)];
+		return roomGrid[(int) (x / roomBlockSize.x)]
+					   [(int) (y / roomBlockSize.y)];
 	}
 	
 	public static FBO getFBO(int i, int j, int layer) {
@@ -452,6 +429,20 @@ public class Map implements ShadowCaster {
 
 	public static int getTextureID(int i, int j, int layer) {
 		return getFBO(i, j, layer).getTextureID();
+	}
+
+	public void initPhysics() {
+		for(Room[] roomArray : roomGrid)
+		{
+			for(Room r : roomArray)
+			{
+				if(r != null)
+				{
+					r.initPhysics();
+				}
+			}
+		}
+		
 	}
 
 	public Block getBlock(int i, int j) {

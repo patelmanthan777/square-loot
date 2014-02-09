@@ -1,134 +1,145 @@
 package entity;
-
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-import rendering.Drawable;
-import environment.Map;
 
-public abstract class Entity extends Node implements Drawable {
-	protected Vector2f speed = new Vector2f(0, 0);
-	/**
-	 * Represent the direction in which the entity moves
-	 */
-	private Vector2f translation = new Vector2f(0, 0);
-	protected float minSpeed = 0.01f;
-	protected float maxSpeed = 20f;
-	protected float descFactor = 50;
-	protected float accFactor = 0.025f;
-	protected Vector3f color;
 
-	public Entity(Vector2f pos) {
-		super(pos);
-	}
-
-	public Entity(Vector2f pos, Vector2f rot) {
-		super(pos, rot);
+public class Entity {
+	protected Vector2f position;
+	protected Vector2f direction;
+	private Vector2f tangent;
+	protected String name = null;
+	private float angle;
+	private float deltaAngle = 0;
+	
+	public Entity(Vector2f pos){
+		this(pos.x, pos.y);
 	}
 	
-	public Entity(float posx, float posy, float dirx, float diry) {
-		super(posx,posy,dirx,diry);
+	public Entity(Vector2f pos, Vector2f rot){
+		this(pos.x,pos.y,rot.x,rot.y);
 	}
-	public Entity(float posx, float posy) {
-		super(posx,posy);
+	
+	public Entity(float posx, float posy){
+		this(posx,posy,1,0);
 	}
-
-	public Vector3f getColor() {
-		return color;
+	
+	
+	public Entity(float posx, float posy, float dirx, float diry){
+		position = new Vector2f(posx, posy);
+		direction = new Vector2f(dirx,diry);
+		direction.normalise(direction);
+		tangent = new Vector2f(direction.y,-direction.x);
+		angle = computeAngle(direction);
 	}
-
-	public void setColor(Vector3f color) {
-		this.color = color;
-	}
-
-	public Vector2f getSpeed() {
-		return speed;
-	}
-
-	public void setSpeed(Vector2f speed) {
-		this.speed = speed;
+	
+	public void setPosition(Vector2f pos){
+		setPosition(pos.x,pos.y);
 	}
 
-	/**
-	 * Update the translation attribute by adding the parameters to the
-	 * respective coordinates.
-	 * 
-	 * @param translationx
-	 *            represents horizontal motion
-	 * @param translationy
-	 *            represents vertical motion
-	 */
-	public void translate(float translationx, float translationy) {
-		this.translation.x += translationx;
-		this.translation.y += translationy;
+	public void setPosition(float posx, float posy){
+		position.x = posx;
+		position.y = posy;
 	}
 
-	/**
-	 * Test whether the point defined by the first and second argument is within
-	 * the boundaries of the map.
-	 * 
-	 * @param x
-	 *            is horizontal coordinate
-	 * @param y
-	 *            is vertical coordinate
-	 * @param m
-	 *            is the world representation
-	 * @return true if the coordinate are outside the map boundaries, false
-	 *         otherwise.
-	 */
-	public abstract boolean isInCollision(float x, float y, Map m);
+	public void setDirection(Vector2f ori){
+		setDirection(ori.x,ori.y);
+	}
 
-	/**
-	 * Update the entity position according to its attributes.
-	 * 
-	 * @param dt
-	 *            represents the time passed since last update
-	 * @param m
-	 *            is the world representation needed in case of collision
-	 */
-	public void updatePostion(long dt, Map m) {
+	public void setDirection(float orix, float oriy){
+		setDirectionNoAngle(orix, oriy);
+		setAngle(computeAngle(direction));
+	}
 
-		if (translation.length() != 0) {
-			translation.normalise(translation);
-			translation.scale(accFactor * dt);
-		}
-		speed.x = speed.x + translation.x - (speed.x / descFactor) * dt;
-		speed.y = speed.y + translation.y - (speed.y / descFactor) * dt;
+	private void setDirectionNoAngle(float orix, float oriy){
+		direction.x = orix;
+		direction.y = oriy;
+		direction.normalise(direction);
+		tangent.x = direction.y;
+		tangent.y = -direction.x;
+	}
 
-		translation.x = 0;
-		translation.y = 0;
+	public Vector2f getPosition(){
+		return position;
+	}
 
-		float normSpeed = speed.length();
+	public Vector2f getDirection(){
+		return direction;
+	}
 
-		if (normSpeed != 0) {
-			if (normSpeed < minSpeed) {
-				speed.x = 0;
-				speed.y = 0;
-			} else if (normSpeed > maxSpeed) {
-				speed.normalise(speed);
-				speed.scale(maxSpeed);
-				/*
-				 * speed.x = maxSpeed * speed.x / normSpeed; speed.y = maxSpeed
-				 * * speed.y / normSpeed;
-				 */
-			}
-		}
+	public float getAngle(){
+		return angle;
+	}
 
-		float x_tmp = position.x + speed.x * dt;
-		float y_tmp = position.y + speed.y * dt;
+	public float getX(){
+		return position.x;
+	}
 
-		if (!isInCollision(x_tmp, y_tmp, m)) {
-			setPosition(x_tmp, y_tmp);
-		} else {
-			if (isInCollision(x_tmp, position.y, m))
-				speed.x = 0;
-			if (isInCollision(position.x, y_tmp, m))
-				speed.y = 0;
-			if (!isInCollision(position.x, y_tmp, m)
-					&& !isInCollision(x_tmp, position.y, m)) {
-				speed.x = 0;
-				speed.y = 0;
-			}
-			setPosition(position.x + speed.x * dt, position.y + speed.y * dt);
-		}
+	public float getY(){
+		return position.y;
+	}
+
+	public float getRotationX(){
+		return direction.x;
+	}
+
+	public float getRotationY(){
+		return direction.y;
+	}
+
+	public void setX(float x){
+		position.x = x;
+	}
+
+	public void setY(float y){
+		position.y = y;
+	}
+
+	public void setName(String name){
+		this.name = name;
+	}
+
+	public Vector2f getTangent(){
+		return tangent;
+	}
+
+	public static float computeAngle(Vector2f dir){
+		float angle = 0;
+		angle = (float) Math.acos(dir.x);
+		angle = dir.y < 0 ? angle: -angle;
+		return angle;
+	}
+
+	public void rotateRadian(float deltaAngle){
+		setRadianAngle(angle + deltaAngle);
+	}
+
+	public void rotateDegree(float deltaAngle){
+		float delta = (float) Math.toRadians(deltaAngle);
+		rotateRadian(delta);
+	}
+
+	public void setRadianAngle(float angle){
+		setAngle(angle);
+		updateDirection();
+	}
+
+	private void updateDirection(){
+		setDirectionNoAngle((float) Math.cos(angle),(float) Math.sin(angle));
+	}
+
+	public float getRadianAngle(){
+		return angle;
+	}
+
+	public float getDegreAngle(){
+		return (float) Math.toDegrees(angle);
+	}
+
+	public float getDeltaAngle(){
+		return deltaAngle;
+	}
+
+	public void setAngle(float angle){
+		deltaAngle = this.angle - angle;
+		this.angle = angle;
 	}
 }

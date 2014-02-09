@@ -2,6 +2,7 @@ package item.weapon;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import configuration.ConfigManager;
 import event.Timer;
 import item.Equipment;
 import item.ItemListEnum;
@@ -13,12 +14,19 @@ public abstract class Weapon extends Equipment {
 	 * fire cooldown.
 	 */
 	protected long lastShot;
+	protected float projectileSpeed;
+	protected float projectileSize;
+	protected int damage;
 	
-	public Weapon(long fireRate, float x, float y, ItemListEnum s)
+
+	public Weapon(long fireRate, float x, float y, ItemListEnum s, float projectileSpeed, float projectileSize, int damage)
 	{
 		super(x,y,s);
 		this.fireRate = fireRate;
 		this.lastShot = 0;
+		this.projectileSpeed = projectileSpeed;
+		this.projectileSize = projectileSize;
+		this.damage = damage;
 	}
 	
 	/**
@@ -45,6 +53,10 @@ public abstract class Weapon extends Equipment {
 	abstract public void fire(Vector2f pos, Vector2f target);
 	
 	public void action(Vector2f pos, Vector2f target){
-		fire(pos,target);
+		Vector2f direct = new Vector2f();
+		target.normalise(direct);
+		Vector2f position = new Vector2f(pos.x +(projectileSize/ConfigManager.unitPixelSize)*direct.x,
+										 pos.y +(projectileSize/ConfigManager.unitPixelSize)*direct.y);
+		fire(position,target);
 	}
 }

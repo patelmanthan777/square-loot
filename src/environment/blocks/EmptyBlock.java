@@ -6,6 +6,4 @@ public class EmptyBlock extends Block {
 		super();
 		layer = 0;
 	}
-	
-	
 }

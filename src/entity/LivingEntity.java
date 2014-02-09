@@ -2,10 +2,13 @@ package entity;
 
 
 import org.lwjgl.util.vector.Vector2f;
-
+import physics.PhysicsDataStructure;
+import configuration.ConfigManager;
+import entity.projectile.Projectile;
 import userInterface.inventory.Inventory;
 
-public abstract class LivingEntity extends Entity {
+public abstract class LivingEntity extends DynamicEntity {
+
 
 	private static final int nbPoints = 4;
 	protected Vector2f[] points = new Vector2f[nbPoints];
@@ -16,32 +19,25 @@ public abstract class LivingEntity extends Entity {
 	protected Vector2f d = new Vector2f();
 	protected Vector2f halfSize = new Vector2f(40, 40);
 	
-	protected Inventory inventory = null;
 	
-	public LivingEntity(Vector2f pos, int inventorySize) {
+	
+	public LivingEntity(Vector2f pos) {
 		super(pos);
 		init();
-		if (inventorySize > 0)
-			inventory = new Inventory(inventorySize);
+		
 	}
 	
-	public LivingEntity(Vector2f pos,Vector2f dir, int inventorySize) {
+	public LivingEntity(Vector2f pos,Vector2f dir) {
 		super(pos,dir);
-		init();
-		if (inventorySize > 0)
-			inventory = new Inventory(inventorySize);
+		init();		
 	}
-	public LivingEntity(float posx, float posy, float dirx, float diry, int inventorySize) {
+	public LivingEntity(float posx, float posy, float dirx, float diry) {
 		super(posx,posy,dirx,diry);
-		init();
-		if (inventorySize > 0)
-			inventory = new Inventory(inventorySize);
+		init();		
 	}
-	public LivingEntity(float posx, float posy, int inventorySize) {
+	public LivingEntity(float posx, float posy) {
 		super(posx,posy);
 		init();
-		if (inventorySize > 0)
-			inventory = new Inventory(inventorySize);
 	}	
 	
 	public int getHealth(){
@@ -77,7 +73,7 @@ public abstract class LivingEntity extends Entity {
 	 * @param damage is the number of health points to be subtracted
 	 */
 	public void damage(int damage){
-		setHealth(-damage);
+		setHealth(this.health-damage);
 	}
 	
 	/**
@@ -137,17 +133,32 @@ public abstract class LivingEntity extends Entity {
 		t.y = getTangent().y;
 		d.scale(halfSize.y);
 		t.scale(halfSize.x);
-		points[0].x = this.position.x + t.x - d.x;
-		points[0].y = this.position.y + t.y - d.y;
-		points[1].x = this.position.x - t.x - d.x;
-		points[1].y = this.position.y - t.y - d.y;
-		points[2].x = this.position.x - t.x + d.x;
-		points[2].y = this.position.y - t.y + d.y;
-		points[3].x = this.position.x + t.x + d.x;
-		points[3].y = this.position.y + t.y + d.y;
+		points[0].x = this.position.x * ConfigManager.unitPixelSize - t.x - d.x;
+		points[0].y = this.position.y * ConfigManager.unitPixelSize - t.y - d.y;
+		points[1].x = this.position.x * ConfigManager.unitPixelSize  + t.x - d.x;
+		points[1].y = this.position.y * ConfigManager.unitPixelSize  + t.y - d.y;
+		points[2].x = this.position.x * ConfigManager.unitPixelSize  + t.x + d.x;
+		points[2].y = this.position.y * ConfigManager.unitPixelSize  + t.y + d.y;
+		points[3].x = this.position.x * ConfigManager.unitPixelSize  - t.x + d.x;
+		points[3].y = this.position.y * ConfigManager.unitPixelSize  - t.y + d.y;
 	}
 	
-	public Inventory getInventory(){
-		return inventory;
+	@Override
+	public void ContactHandler(PhysicsDataStructure a) {
+		switch(a.getType())
+		{
+		case BLOCK:
+			break;
+		case ENTITY:
+			break;
+		case PROJECTILE:
+			Projectile p = (Projectile) a.getPhysicsObject();
+			System.out.println(a);
+			System.out.println(p.getDamage());
+			damage(p.getDamage());
+			break;
+		default:
+			break;
+		}
 	}
 }

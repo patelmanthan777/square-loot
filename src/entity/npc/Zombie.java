@@ -3,83 +3,90 @@ package entity.npc;
 import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
-
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 import rendering.MiniMapDrawable;
-import rendering.TextureManager;
 import userInterface.MiniMap;
-import utils.GraphicsAL;
 import entity.player.Player;
 import environment.Map;
 
 public class Zombie extends Npc implements MiniMapDrawable {
 
 	private static int scentDistanceBlk = 5;
-	private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
-	private ZombieState state;
+	//private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
+	private ZombieState zombieState;
 	private float orientationSpeed = 0;
 	private float orientationDesc = 0.00001f;
 	private boolean running = false;
+	
+	
+	private SpriteSheet headSprites;
+	
+	
 	/*** avoid dynamic allocation in thinkAndAct ***/
 	private Vector2f thisToPlayer = new Vector2f();
 
 	/**********************************************/
 
-	public Zombie(Vector2f pos, int inventorySize) {
-		super(pos, inventorySize);
+	public Zombie(Vector2f pos) {
+		super(pos);
 		init();
 	}
 
-	public Zombie(Vector2f pos, Vector2f rot, int inventorySize) {
-		super(pos, rot, inventorySize);
+	public Zombie(Vector2f pos, Vector2f rot) {
+		super(pos, rot);
 		init();
 	}
 
-	public Zombie(float posx, float posy, float dirx, float diry, int inventorySize) {
-		super(posx, posy, dirx, diry, inventorySize);
+	public Zombie(float posx, float posy, float dirx, float diry) {
+		super(posx, posy, dirx, diry);
 		init();
 	}
 
-	public Zombie(float posx, float posy, int inventorySize) {
-		super(posx, posy, inventorySize);
+	public Zombie(float posx, float posy) {
+		super(posx, posy);
 		init();
 	}
 
 	private void init() {
-
-		Vector3f col = new Vector3f(0.5f, 0.7f, 0);
-		setColor(col);
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(10);
-		this.accFactor = 0.015f;
-		this.descFactor = 40f;
+		this.accFactor = 0.001f;
+		this.descFactor = 0.2f;
 		this.halfSize.x = 40;
 		this.halfSize.y = 40;
-		state = ZombieState.IDLE;
-	}
-
-	@Override
-	public boolean isInCollision(float x, float y, Map m) {
-		if (m.testCollision(x - halfSize.x, y - halfSize.y)
-				|| m.testCollision(x + halfSize.x, y - halfSize.y)
-				|| m.testCollision(x - halfSize.x, y + halfSize.y)
-				|| m.testCollision(x + halfSize.x, y + halfSize.y)) {
-			return true;
+		zombieState = ZombieState.IDLE;
+		try {
+			headSprites = new SpriteSheet("assets/textures/zombie.png",256,256);
+		} catch (SlickException e) {
+			e.printStackTrace();
 		}
-		return false;
 	}
 
+	
+	@Override
+	public void updatePosition(long delta, Map m){
+		super.updatePosition(delta, m);
+		/* animation update stuff */
+		
+	}
+	
+	
 	@Override
 	public void draw() {
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1,1,1);
-		GraphicsAL.drawQuadTexture(points,
-				   				   GraphicsAL.fullTexPoints,
-				   				   TextureManager.zombieTexture().getTextureID());			
+		
+		/* BODY */
+		Image tile = headSprites.getSprite(0,0);
+		tile.setCenterOfRotation(halfSize.x, halfSize.y);
+		tile.setRotation(-(this.getDegreAngle()+90));	
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x, this.getY()*Map.blockPixelSize.y-halfSize.y,halfSize.x*2,halfSize.y*2);
 		glDisable(GL_BLEND);
 	}
 
@@ -116,16 +123,16 @@ public class Zombie extends Npc implements MiniMapDrawable {
 
 	@Override
 	public void thinkAndAct(LinkedList<Player> players, long deltaT) {
-		float dst = scentDistancePx;
+		float dst = scentDistanceBlk;
 		float length;
-		state = ZombieState.IDLE;
+		zombieState = ZombieState.IDLE;
 		for (Player p : players) {
 			Vector2f.sub(p.getPosition(), this.getPosition(), thisToPlayer);
 			length = thisToPlayer.length();
 			thisToPlayer.normalise(thisToPlayer);
 			if (length < dst || dst == -1) {
 				// chase the nearest player
-				state = ZombieState.CHASING;
+				zombieState = ZombieState.CHASING;
 				dst = length;
 				this.setDirection(thisToPlayer);
 				this.translate(thisToPlayer.x, thisToPlayer.y);
@@ -133,7 +140,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 			}
 
 		}
-		if (state == ZombieState.IDLE) {
+		if (zombieState == ZombieState.IDLE) {
 			// randomly moves
 
 			for (int i = 0; i < deltaT; i++) {

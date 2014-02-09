@@ -12,9 +12,7 @@ public abstract class Block {
 	 * The blocks are squared shaped.
 	 */
 	protected int nb_points = 4;
-	protected boolean pressurized = false;
 	protected boolean castShadows = false;
-	protected boolean collidable = false;
 	protected Vector2f[] points = new Vector2f[4];
 	protected Vector4f color = new Vector4f();
 	
@@ -31,10 +29,6 @@ public abstract class Block {
 	 */
 	protected int layer;
 	
-	
-	
-	
-
 	public Block(){
 		points[0] = new Vector2f();
 		points[1] = new Vector2f();
@@ -53,14 +47,16 @@ public abstract class Block {
 		layer = 0;
 	}
 	
+	public void init(float x, float y)
+	{
+	}
+	
 	/**
 	 * Set a block position to the given coordinates.
 	 * @param positionx
 	 * @param positiony
 	 */
-	protected void initBlock(float positionx, float positiony){
-		float x = positionx;
-		float y = positiony;
+	protected void initBlock(float x, float y){
 		points[0].x = x;
 		points[0].y = y;
 		points[1].x = x + Map.blockPixelSize.x;
@@ -257,21 +253,10 @@ public abstract class Block {
 	}
 
 	public void setColor(float r, float g, float b, float a) {
-		this.color.x = r;
-		this.color.y = g;
-		this.color.z = b;
-		this.color.w = a;
+		this.color.set(r,g,b,a);
 	}
 	
 	public int getLayer(){
 		return layer;
-	}
-	
-	public boolean isPressurized(){
-		return pressurized;
-	}
-	
-	public  boolean testCollision(){
-		return collidable;
 	}
 }

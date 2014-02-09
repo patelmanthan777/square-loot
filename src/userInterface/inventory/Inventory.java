@@ -67,9 +67,10 @@ public class Inventory extends Overlay{
 
 	
 	
-	public Inventory(int size){	
-		weight = 0f;							
-		
+
+	public Inventory(){	
+		weight = 0f;					
+			
 		battery = new InventorySlot<Battery>();
 		
 		pweapon = new InventorySlot<PrimaryWeapon>();

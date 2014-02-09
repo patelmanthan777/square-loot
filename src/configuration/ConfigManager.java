@@ -13,6 +13,7 @@ public class ConfigManager {
 	public static boolean fullScreen = false;
 	public static Vector2f resolution = new Vector2f(1280,720);
 	public static int maxFps = 120;
+	public static int unitPixelSize = 48;
 	
 	/**
 	 * Initialize the ConfigManager class by reading from the "options.txt"
@@ -26,6 +27,7 @@ public class ConfigManager {
 			loadResolution(prop);
 			loadFullscreen(prop);
 			loadMaxFps(prop);
+			loadOxygenTime(prop);
 		}catch (Exception e){
 			System.out.println(e.toString());
 		}
@@ -45,6 +47,12 @@ public class ConfigManager {
 	
 	static private void loadMaxFps(Properties prop) {
 		String str = prop.getProperty("MaxFPS");
+		maxFps = Integer.parseInt(str);
+		maxFps = (maxFps == 0) ? 5000 : maxFps;
+	}
+	
+	static private void loadOxygenTime(Properties prop) {
+		String str = prop.getProperty("OxygenTime");
 		maxFps = Integer.parseInt(str);
 		maxFps = (maxFps == 0) ? 5000 : maxFps;
 	}

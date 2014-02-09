@@ -10,16 +10,24 @@ import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
+import org.jbox2d.dynamics.Body;
 import org.lwjgl.util.vector.Vector2f;
+
+import physics.PhysicsDataStructure;
+import physics.PhysicsObject;
 
 import rendering.Drawable;
 import utils.GraphicsAL;
-import entity.Node;
+import entity.DynamicEntity;
 
-public abstract class Item extends Node implements Drawable{
+import environment.Map;
+
+public abstract class Item extends DynamicEntity implements Drawable, PhysicsObject{
 	protected float weight = 0;	
 	Vector2f [] points = new Vector2f[4];
 	public final ItemListEnum self;
+	
+	protected boolean destroyed = false;
 	
 	protected int [] drawSize = new int[2];	
 	
@@ -34,6 +42,10 @@ public abstract class Item extends Node implements Drawable{
 		}
 	}
 	
+	public boolean shouldBeDestroyed(){
+		return destroyed;
+	}	
+	
 	public float getWeight(){
 		return weight;
 	}
@@ -41,14 +53,14 @@ public abstract class Item extends Node implements Drawable{
 	
 	public void draw(){
 		
-		points[0].x = position.x;
-		points[0].y = position.y + drawSize[1];
-		points[1].x = position.x + drawSize[0];
-		points[1].y = position.y + drawSize[1];
-		points[2].x = position.x + drawSize[0];
-		points[2].y = position.y;
-		points[3].x = position.x;
-		points[3].y = position.y;				
+		points[0].x = position.x*Map.blockPixelSize.x;
+		points[0].y = position.y*Map.blockPixelSize.y + drawSize[1];
+		points[1].x = position.x*Map.blockPixelSize.x + drawSize[0];
+		points[1].y = position.y*Map.blockPixelSize.y + drawSize[1];
+		points[2].x = position.x*Map.blockPixelSize.x + drawSize[0];
+		points[2].y = position.y*Map.blockPixelSize.y;
+		points[3].x = position.x*Map.blockPixelSize.x;
+		points[3].y = position.y*Map.blockPixelSize.y;				
 		
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		
@@ -85,6 +97,7 @@ public abstract class Item extends Node implements Drawable{
 		glDisable(GL_BLEND);
 	}
 	
-
+	
+	
 	public abstract int getTextureID();
 }

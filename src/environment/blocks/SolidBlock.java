@@ -1,19 +1,15 @@
 package environment.blocks;
 
-public class SolidBlock extends ShadowCasterBlock{
-	
-	
-	
-	protected SolidBlock(){
+
+public class SolidBlock extends PhysicalBlock {
+
+	protected SolidBlock() {
 		super();
 		layer = 1;
-		this.collidable = true;
 	}
-	
-	protected SolidBlock(float x, float y){
-		super(x,y);
+
+	protected SolidBlock(float x, float y) {
+		super(x, y);
 		layer = 1;
-		this.collidable = true;
 	}
-	
 }

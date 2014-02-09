@@ -16,9 +16,12 @@ public class SpawnRoom extends Room{
 		discovered = true;
 		pressure = 0;
 		ItemManager.add(new LaserRifle(250,
-									   posX + Map.roomPixelSize.x/2,
-				                       posY + Map.roomPixelSize.y/2));
-		construct();
+									   posX/Map.blockPixelSize.x + Map.roomBlockSize.x/2,
+				                       posY/Map.blockPixelSize.y + Map.roomBlockSize.y/2,
+				                       0.5f,
+				                       10,
+				                       1));
+
 	}
 
 	@Override
@@ -50,10 +53,6 @@ public class SpawnRoom extends Room{
 		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
 		
-		
-	}
-	@Override 
-	public void setNewPressure(float pressure) {
 		
 	}
 }

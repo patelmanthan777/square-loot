@@ -2,12 +2,7 @@ package entity.projectile;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import org.lwjgl.util.vector.Vector2f;
-
-import environment.Map;
-import event.Timer;
-
 
 public class ProjectileFactory{
 	/** Alive projectile list */ 
@@ -34,31 +29,31 @@ public class ProjectileFactory{
 	 * @param pos Initial position of the projectile
 	 * @param rot Initial direction of the projectile
 	 */
-	public void createProjectile(Vector2f pos, Vector2f rot){
+	public void createProjectile(Vector2f pos, Vector2f rot, float speedValue, float size, int damage){
+		Projectile project;
 		if(deadList.isEmpty())
 		{
-			Projectile project = modelProjectile.Clone(pos, rot);
-			projectileList.add(project);
+			project = modelProjectile.Clone(pos, rot, speedValue, size, damage);
 		}
 		else
 		{
-			Projectile project = deadList.poll();
-			project.reset(pos, rot);
-			projectileList.add(project);
+			project = deadList.poll();
+			project.reset(pos, rot, speedValue, size, damage);
 		}
+		projectileList.add(project);
+		project.initPhysics();
 	}
 	
 	public void destroyProjectile(Projectile project)
 	{
 		deadList.add(project);
+		project.destroy();
 	}
 	
 	/**
 	 * Update all projectiles of the projectileFactory
-	 * @param m the map
 	 */
-	public void updateProjectiles(Map m) {
-		long dt = Timer.getDelta();
+	public void updateProjectiles() {
 		Iterator<Projectile> ite = projectileList.iterator();
 		while(ite.hasNext()){
 			Projectile project = ite.next();
@@ -69,7 +64,7 @@ public class ProjectileFactory{
 			}
 			else
 			{
-				project.updatePostion(dt,m);
+				project.updatePostion();
 			}
 			
 		}

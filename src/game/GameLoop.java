@@ -9,21 +9,21 @@ import light.LightManager;
 
 import utils.GraphicsAL;
 
-
-
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import physics.PhysicsManager;
 import configuration.ConfigManager;
 import rendering.Background;
 import rendering.Camera;
 import userInterface.HUD;
 import userInterface.OverlayManager;
-import entity.npc.LivingEntityManager;
+import entity.EntityManager;
 import entity.player.Player;
 import entity.projectile.ProjectileManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
+import event.Timer;
 import event.control.Control;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -45,22 +45,25 @@ public class GameLoop extends Game{
 	 * window manager and openGL.
 	 */
 	public void init() {
+		PhysicsManager.init();
 		
-		
-		p = LivingEntityManager.createPlayer();
+		p = EntityManager.createPlayer();
 		controle = new Control(p);
 		BlockFactory.initBlocks();
-		
+
 		GraphicsAL.init();
-		map = new Map(new Vector2f(15,15), new Vector2f(16,12), new Vector2f(48,48));
-		map.renderMapToFrameBuffers();
+		map = new Map(new Vector2f(10,10), new Vector2f(32,32), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
+		map.initPhysics();
+		map.renderMapToFrameBuffers();	
+
+		p.setPosition(map.getSpawnPosition());
+
 		background = new Background();
-		p.setPosition(map.getSpawnPixelPosition());
 		
 		ProjectileManager.init();
-			
-		LivingEntityManager.init();
-		
+
+		EntityManager.init();
+	
 		LightManager.init();
 		Light playerLight = LightManager.addPointLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
 		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getDirection());
@@ -68,21 +71,21 @@ public class GameLoop extends Game{
 		p.setLight(playerLight);
 
 		p.setLaser(playerLaser);		
-		p.pickUp(new LaserRifle(250,200,200));
+		p.pickUp(new LaserRifle(250,200,200,0.05f,10,50));
 		p.pickUp(new Battery(200,200));
 		
 		HUD.registerPlayer(p);
 		
 		LightManager.addShadowCaster(map);
 		
-
-
+		ItemManager.init();
 		
 		OverlayManager.init();
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
-		OverlayManager.createPlayerInventory(p);
+		
+		Timer.start();
 		
 		isRunning = true;
 	}
@@ -90,22 +93,37 @@ public class GameLoop extends Game{
 	/**
 	 * Update the game state, namely entities, HUD and lights
 	 * position
-	 * @param elapsedTime represents the time passed since last update.
+	 * @param elapsedTime represents the time passed since last update.z
 	 **/
 	@Override
+
 	public void update(long elapsedTime) {		
 		isRunning &= !HUD.update();
-		
-		background.update(elapsedTime);
-		map.update(elapsedTime);
-		p.updatePostion(elapsedTime, map);
-		ProjectileManager.updateProjectiles(map);
-		cam.setPosition(p.getPosition());
-		LightManager.setCamPosition(p.getPosition());
-		map.setDrawPosition(p.getPosition());
-		LivingEntityManager.update(elapsedTime);
-		
 
+		/* Input */
+		EntityManager.updateInput(elapsedTime);
+		
+		/* Physics */
+		EntityManager.updatePhysics(elapsedTime);
+		PhysicsManager.update(elapsedTime);
+		
+		/* Position*/
+		EntityManager.updatePosition(elapsedTime, map);
+		
+		ProjectileManager.updateProjectiles();
+		ItemManager.update();
+		background.update(elapsedTime);
+		
+		
+		
+		
+		/* Cam and light */
+		Vector2f pos = new Vector2f(p.getPosition().x * ConfigManager.unitPixelSize,
+				p.getPosition().y * ConfigManager.unitPixelSize);
+		cam.setPosition(pos);
+		LightManager.setCamPosition(pos);
+		map.setDrawPosition(pos);
+		map.update(elapsedTime);
 	}
 	
 	/**
@@ -123,14 +141,15 @@ public class GameLoop extends Game{
 		map.renderMapToFrameBuffers();
 		LightManager.render();
 		ItemManager.render();
-		p.draw();
-		LivingEntityManager.render();
+
+		EntityManager.render();
+
+
 		ProjectileManager.drawProjectiles();
 		OverlayManager.render();		
 		HUD.render();
 		        
 		glPopMatrix();
-
 
 	}
 }

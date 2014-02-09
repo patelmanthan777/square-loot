@@ -3,9 +3,11 @@ package userInterface;
 import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.vector.Vector2f;
+import org.newdawn.slick.Color;
 
 import configuration.ConfigManager;
 import entity.player.Player;
+import event.Timer;
 
 public class PlayerStatsOverlay extends Overlay{
 
@@ -19,6 +21,21 @@ public class PlayerStatsOverlay extends Overlay{
 	
 	@Override
 	public void draw() {
+		drawHealth();
+		drawEnergy();
+	}
+	
+	public void drawEnergy() {
+		glEnable(GL_BLEND); 
+       	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glPushMatrix();
+		glLoadIdentity();
+		OverlayManager.font.drawString(50, 100, "Energy : "+player.getEnergy(), Color.white);
+		glPopMatrix();
+		glDisable(GL_BLEND);
+	}
+	
+	public void drawHealth() {
 		int health = player.getHealth();
 		int maxHealth = player.getMaxHealth();
 		String display = player.getHealthFraction();

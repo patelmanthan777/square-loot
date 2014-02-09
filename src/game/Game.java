@@ -147,7 +147,6 @@ public abstract class Game {
 	 */
 	public static void initGL() {
 		
-		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_TEXTURE_2D);
 
