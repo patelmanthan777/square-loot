@@ -52,7 +52,7 @@ public class GameLoop extends Game{
 		BlockFactory.initBlocks();
 
 		GraphicsAL.init();
-		map = new Map(new Vector2f(10,10), new Vector2f(32,32), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
+		map = new Map(new Vector2f(10,10), new Vector2f(16,12), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
 		map.initPhysics();
 		map.renderMapToFrameBuffers();	
 

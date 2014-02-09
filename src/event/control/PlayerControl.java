@@ -19,7 +19,8 @@ public class PlayerControl {
 		MOVE_BACKWARD,
 		PRIMARY_WEAPON,
 		BATTERY,
-		LIGHT
+		LIGHT,
+		ENERGYSHOT,
 	}
 
 	private HashMap<playerActions, LinkedList<Integer>> keyBinding;
@@ -74,6 +75,11 @@ public class PlayerControl {
 		l = new LinkedList<Integer>();
 		l.add(Keyboard.KEY_F);
 		keyBinding.put(playerActions.BATTERY, l);
+		
+		// ENERGYSHOT
+		l = new LinkedList<Integer>();
+		l.add(Keyboard.KEY_SPACE);
+		keyBinding.put(playerActions.ENERGYSHOT, l);
 	}
 
 	/**
@@ -131,6 +137,9 @@ public class PlayerControl {
 		case BATTERY:
 			batteryAction(state);
 			break;
+		case ENERGYSHOT:
+			energyShotAction(state);
+			break;
 		}
 	}
 
@@ -177,6 +186,12 @@ public class PlayerControl {
 	private void primaryWeaponAction(KeyState state) {
 		if (state == KeyState.HELD || state == KeyState.PRESSED) {
 			p.primaryWeapon(mouse.direction.x,mouse.direction.y);
+		}
+	}
+	
+	private void energyShotAction(KeyState state) {
+		if (state == KeyState.PRESSED) {
+			p.shootEnergy();
 		}
 	}
 

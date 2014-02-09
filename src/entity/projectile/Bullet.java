@@ -1,6 +1,8 @@
 package entity.projectile;
 
 import static org.lwjgl.opengl.GL11.*;
+import light.Light;
+import light.LightManager;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
@@ -16,6 +18,7 @@ public class Bullet extends Projectile {
  * not initialized. 
  */
 	static private Shader bulletShaderProgram = null;
+	private Light l;
 
 	/**
 	 * Initialize the bullet shader
@@ -45,8 +48,15 @@ public class Bullet extends Projectile {
 	public Bullet(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {
 		super(pos,rot,speedValue,size,damage);
 		color = new Vector3f(1,0,1);
+		l = LightManager.addPointLight(null, new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
 	}
 
+	@Override
+	public void updatePostion() {
+		super.updatePostion();
+		l.setPosition(this.position.x* ConfigManager.unitPixelSize,this.position.y* ConfigManager.unitPixelSize);
+	}
+	
 	/**
 	 * Draw the bullet.
 	 */
