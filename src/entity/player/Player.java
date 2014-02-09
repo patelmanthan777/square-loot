@@ -64,7 +64,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			e.printStackTrace();
 		}
 				
-		inventory = new Inventory();
+		inventory = new Inventory(5);
 	}
 	
 	@Override

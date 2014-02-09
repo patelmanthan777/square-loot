@@ -1,11 +1,16 @@
 package userInterface.inventory;
 
 
+
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+
 import org.lwjgl.util.vector.Vector2f;
 
 import item.Battery;
 import item.Item;
 import item.ItemListEnum;
+import item.Key;
 
 import item.weapon.PrimaryWeapon;
 import item.weapon.SecondaryWeapon;
@@ -51,7 +56,10 @@ public class Inventory extends Overlay{
 	
 	
 	/*Carried*/
-	private InventorySlot<Battery> battery;
+	private InventorySlot<Key> key;
+	
+	private LinkedList<Battery> batteries;
+	private int batteryNbMax;
 	
 	/*Active Equipment*/
 	
@@ -68,10 +76,13 @@ public class Inventory extends Overlay{
 	
 	
 
-	public Inventory(){	
+	public Inventory(int size){	
 		weight = 0f;					
 			
-		battery = new InventorySlot<Battery>();
+		key = new InventorySlot<Key>();				
+		
+		batteries = new LinkedList<Battery>();
+		batteryNbMax = size;
 		
 		pweapon = new InventorySlot<PrimaryWeapon>();
 		sweapon = new InventorySlot<SecondaryWeapon>();
@@ -104,7 +115,14 @@ public class Inventory extends Overlay{
 		else if (i instanceof MotionGear)
 			tmp = mgear.add((MotionGear) i);
 		else if (i instanceof Battery)
-			tmp = battery.add((Battery) i);
+			if(batteries.size() < batteryNbMax){
+				batteries.addLast((Battery) i);
+				tmp = null;
+			}
+			else
+				tmp = i;					
+		else if (i instanceof Key)
+			tmp = key.add((Key) i);
 		
 		if(tmp == null){
 			weight += i.getWeight();
@@ -130,6 +148,8 @@ public class Inventory extends Overlay{
 		case MGEAR:
 			return mgear.access();
 		case NOITEM:
+		default:
+			break;
 		}
 		
 		return null;
@@ -157,7 +177,9 @@ public class Inventory extends Overlay{
 			if (!mgear.isEmpty())
 				return mgear.getInfo();
 		case NOITEM:
-		}
+		default:
+			break;
+		}	
 		
 		return null;
 	}
@@ -186,10 +208,18 @@ public class Inventory extends Overlay{
 		case MGEAR:			
 			tmp = mgear.remove();
 			break;
-		case BATTERY:				
-			tmp = battery.remove();
+		case BATTERY:
+			try{
+				tmp = batteries.removeLast();
+			}
+			catch(NoSuchElementException e){
+				tmp = null;
+			}			
 			break;
+		case KEY:
+			tmp = key.remove();
 		case NOITEM:
+		default:
 		}
 							
 		if(tmp != null)
@@ -235,6 +265,7 @@ public class Inventory extends Overlay{
 			break;
 		case BATTERY:
 		case NOITEM:
+		default:
 		}	
 		
 	}
@@ -242,8 +273,8 @@ public class Inventory extends Overlay{
 	/**
 	 * Test whether there is a battery in the inventory.
 	 */
-	public boolean isCarryingBattery(){
-		return !battery.isEmpty(); 
+	public boolean isCarryingKey(){
+		return !key.isEmpty(); 
 	}
 	
 	
