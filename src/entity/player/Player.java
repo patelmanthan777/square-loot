@@ -42,7 +42,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private SpriteSheet featherSprites;
 	private Animation featherAnimation;
 	private int pressure=0;
-	private int oxygenConsumptionPerSecond = 25;
+	private int oxygenConsumptionPerSecond = 10;
 	
 	private Item contactItem=null;
 	private Npc contactNPC=null;
@@ -55,7 +55,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		this.gbtype = GameBodyType.PLAYER;
 		this.updatePoints();
 		this.setMaxHealth(20);
-		this.setHealth(10);
+		this.setHealth(20);
 		try {
 			headSprites = new SpriteSheet("assets/textures/animperso.png",256,256);
 			headAnimation = new Animation(headSprites, 600);

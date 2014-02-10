@@ -9,7 +9,7 @@ import event.Timer;
 public class OxygenRoom extends Room{
 	
 	public static final int maxPressure = 100;
-	private long timeLoadMax;
+	protected long timeLoadMax;
 	private long timeLoadLimit = 0;
 	private BatteryReceptacleBlock block = null;
 	
