@@ -3,11 +3,10 @@ package entity.player;
 import item.Item;
 import item.Energy;
 import item.ItemManager;
+import item.weapon.EnergyWeapon;
 import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
-
-import org.jbox2d.dynamics.BodyType;
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
@@ -16,7 +15,6 @@ import org.newdawn.slick.SpriteSheet;
 
 import physics.GameBodyType;
 import physics.PhysicsDataStructure;
-
 import configuration.ConfigManager;
 import rendering.MiniMapDrawable;
 import userInterface.MiniMap;
@@ -46,6 +44,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private int oxygenConsumptionPerSecond = 25;
 	
 	private Item contactItem=null;
+	private EnergyWeapon eweapon;
 	
 	protected Inventory inventory = null;
 	
@@ -68,6 +67,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		}
 				
 		inventory = new Inventory(5);
+		eweapon = new EnergyWeapon(1000,200,200,0.02f,10,50);
 	}
 	
 	@Override
@@ -269,5 +269,11 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	
 	public int getEnergy(){
 		return energy;
+	}
+	
+	public void shootEnergy(){
+		Vector2f p = new Vector2f(this.position.x+this.direction.x,this.position.y+this.direction.y);
+		
+		eweapon.action(p, this.direction);
 	}
 }

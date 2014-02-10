@@ -55,7 +55,7 @@ public class BlockFactory {
 		return new DoorBlock(underBlock, i, j);
 	}
 	
-	static public Block createBatteryReceptacleBlock(OxygenRoom room){
-		return new BatteryReceptacleBlock(room);
+	static public Block createBatteryReceptacleBlock(OxygenRoom room, int posx, int posy){
+		return new BatteryReceptacleBlock(room, posx, posy);
 	}
 }

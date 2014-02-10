@@ -8,6 +8,7 @@ import light.Light;
 import light.LightManager;
 import physics.GameBodyType;
 
+
 import physics.PhysicsDataStructure;
 import environment.room.OxygenRoom;
 import item.Item;
@@ -16,6 +17,7 @@ public class BatteryReceptacleBlock extends SolidBlock{
 	
 	private OxygenRoom room;
 	private Light l;
+
 	
 	public BatteryReceptacleBlock(OxygenRoom room){
 		super();
@@ -39,11 +41,17 @@ public class BatteryReceptacleBlock extends SolidBlock{
 									   100,
 									   1000,
 									   true);
+	
 		l.deactivate();
 	}
 	
 	public void powering(){
-		room.powering();
+		room.powering(this);
+		l.activate();
+	}
+	
+	public void unpowering(){
+		l.deactivate();
 	}
 	
 	@Override

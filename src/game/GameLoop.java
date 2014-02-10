@@ -52,7 +52,7 @@ public class GameLoop extends Game{
 		BlockFactory.initBlocks();
 
 		GraphicsAL.init();
-		map = new Map(new Vector2f(10,10), new Vector2f(32,32), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
+		map = new Map(new Vector2f(10,10), new Vector2f(20,16), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
 		map.initPhysics();
 		map.renderMapToFrameBuffers();	
 
@@ -70,8 +70,7 @@ public class GameLoop extends Game{
 		
 		p.setLight(playerLight);
 
-		p.setLaser(playerLaser);		
-		p.pickUp(new LaserRifle(250,200,200,0.05f,10,50));
+		p.setLaser(playerLaser);
 		p.pickUp(new Battery(200,200));
 		
 		HUD.registerPlayer(p);

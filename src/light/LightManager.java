@@ -216,7 +216,7 @@ public class LightManager {
 		float posx = dynamic ? l.getX() - camPos.x
 				+ (int) ConfigManager.resolution.x / 2 : l.getX()
 				- (Map.currentBufferPosition.x + i * Map.textureSize);
-		float posy = dynamic ? l.getY() - camPos.y
+		float posy = dynamic ? -l.getY() + camPos.y
 				+ (int) ConfigManager.resolution.y / 2 : -l.getY()
 				+ Map.currentBufferPosition.y + j * Map.textureSize
 				+ Map.textureSize;
