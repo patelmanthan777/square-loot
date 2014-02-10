@@ -186,7 +186,7 @@ public class PlayerControl {
 	
 	private void batteryAction(KeyState state) {
 		if (state == KeyState.PRESSED) {			
-			p.dropBattery();			
+			p.drop();			
 		}
 	}
 	

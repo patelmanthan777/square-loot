@@ -239,8 +239,15 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return hasEnoughEnergy;
 	}
 	
-	public void dropBattery(){
-		Item tmp = inventory.remove(InventoryItemEnum.BATTERY);
+	public void drop(){
+		Item tmp;
+		
+		if (inventory.isCarryingKey())
+			tmp = inventory.remove(InventoryItemEnum.KEY);
+		else{
+			tmp = inventory.remove(InventoryItemEnum.BATTERY);			
+		}
+		
 		if (tmp != null){
 			dropItem(tmp, position.x, position.y);			
 		}
