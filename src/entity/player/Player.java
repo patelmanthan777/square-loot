@@ -244,6 +244,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public void ContactHandler(PhysicsDataStructure a) {
 		switch(a.getType())
 		{
+		case BATTERY:
 		case ITEM:
 			contactItem = (Item) a.getPhysicsObject();
 			break;
@@ -259,6 +260,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public void EndContactHandler(PhysicsDataStructure a) {
 		switch(a.getType())
 		{
+			case BATTERY:
 			case ITEM:
 				if(contactItem == a.getPhysicsObject())
 					contactItem = null;

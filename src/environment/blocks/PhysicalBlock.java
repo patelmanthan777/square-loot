@@ -11,13 +11,16 @@ import physics.GameBodyType;
 import configuration.ConfigManager;
 
 public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
+	GameBodyType gbtype;
 	
 	public PhysicalBlock(float x, float y) {
 		super(x,y);
+		gbtype = GameBodyType.BLOCK;
 	}
 
 	public PhysicalBlock() {
 		super();
+		gbtype = GameBodyType.BLOCK;
 	}
 	
 	@Override
@@ -35,7 +38,7 @@ public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 	    PolygonShape box = new PolygonShape();
 	    box.setAsBox(0.5f, 0.5f);
 	    body.createFixture(box, 0.0f);
-		PhysicsDataStructure s = new PhysicsDataStructure(this,GameBodyType.BLOCK); 
+		PhysicsDataStructure s = new PhysicsDataStructure(this,gbtype); 
 		body.setUserData(s);
 	}
 

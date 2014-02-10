@@ -6,5 +6,7 @@ public enum GameBodyType {
 	PLAYER,
 	ENERGY,
 	ITEM,
-	BLOCK
+	RECEPTACLE,
+	BLOCK,
+	BATTERY
 }
