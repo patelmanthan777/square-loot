@@ -19,15 +19,17 @@ public class MapGenerator {
 	private static LinkedList<Room> surroundedRooms;
 	private static Room[][] roomsGrid;
 	
+	private static boolean haveEndRoom;
+	
 	/**
 	 * Generate the rooms maze.
 	 * @return The class attribute roomsGrid initialized to form a room maze.
 	 */
-	static void generate(Map map) {
+	static void generate(Map map, int n) {
 		roomsGrid = map.getRooms();
 		rooms = new LinkedList<Room>();
 		surroundedRooms = new LinkedList<Room>();
-		createRooms();
+		createRooms(n);
 	}
 
 	
@@ -36,7 +38,8 @@ public class MapGenerator {
 	 * For a cell to be a room it must not be surrounded by already existing
 	 * rooms. The generation ends when no cell satisfies this requirement.
 	 */
-	private static void createRooms() {
+	private static void createRooms(int n) {
+		haveEndRoom = false;
 		int ispawn = (int)(Math.random() * Map.mapRoomSize.x);
 		int jspawn = (int)(Math.random() * Map.mapRoomSize.y);
 		Map.spawnPixelPosition = new Vector2f(((float)ispawn+0.5f)*Map.roomPixelSize.x, ((float)jspawn+0.5f)*Map.roomPixelSize.y);
@@ -46,8 +49,7 @@ public class MapGenerator {
 		roomsGrid[(int)ispawn][(int)jspawn] = r;
 		rooms.add(r);
 		boolean stop = false;
-		while (rooms.size() > 0 && !stop) {
-			
+		while (rooms.size() >0 && !stop && rooms.size() <= n) {
 			int surround;
 			int rand = (int) (Math.random() * rooms.size());
 			int x;
@@ -68,7 +70,7 @@ public class MapGenerator {
 				int rand2 = (int) (Math.random() * (4 - surround));
 				if (y != 0 && canBeRoom(x, y - 1)) {
 					if (rand2 == 0) {
-						r2 = randRoom(x * Map.roomPixelSize.x, (y - 1) * Map.roomPixelSize.y);
+						r2 = randRoom(x * Map.roomPixelSize.x, (y - 1) * Map.roomPixelSize.y, rooms.size(), n);
 						roomsGrid[x][y - 1] = r2;
 						rooms.add(r2);
 					} else {
@@ -77,7 +79,7 @@ public class MapGenerator {
 				}
 				if (x != Map.mapRoomSize.x - 1 && canBeRoom(x + 1, y)) {
 					if (rand2 == 0) {
-						r2 =randRoom((x + 1) * Map.roomPixelSize.x, y * Map.roomPixelSize.y);
+						r2 =randRoom((x + 1) * Map.roomPixelSize.x, y * Map.roomPixelSize.y, rooms.size(), n);
 						roomsGrid[x + 1][y] = r2;
 						rooms.add(r2);
 					} else {
@@ -86,7 +88,7 @@ public class MapGenerator {
 				}
 				if (y != Map.mapRoomSize.y - 1 && canBeRoom(x, y + 1)) {
 					if (rand2 == 0) {
-						r2 = randRoom(x * Map.roomPixelSize.x, (y + 1) * Map.roomPixelSize.y);
+						r2 = randRoom(x * Map.roomPixelSize.x, (y + 1) * Map.roomPixelSize.y, rooms.size(), n);
 						roomsGrid[x][y + 1] = r2;
 						rooms.add(r2);
 					} else {
@@ -96,7 +98,7 @@ public class MapGenerator {
 				if (x != 0 && roomsGrid[x - 1][y] == null
 						&& canBeRoom(x - 1, y)) {
 					if (rand2 == 0) {
-						r2 = randRoom((x - 1) * Map.roomPixelSize.x,y * Map.roomPixelSize.y);
+						r2 = randRoom((x - 1) * Map.roomPixelSize.x,y * Map.roomPixelSize.y, rooms.size(), n);
 						roomsGrid[x - 1][y] = r2;
 						rooms.add(r2);
 					} else {
@@ -182,19 +184,34 @@ public class MapGenerator {
 		return bool;
 	}
 	
-	private static Room randRoom(float x, float y){
+	private static Room randRoom(float x, float y, int nbRoom, int n){
 		Room room;
+		
+		if(!haveEndRoom)
+		{
+			Double rand = Math.random();
+			Double threshold = ((double)nbRoom)/n;
+			if(rand < threshold)
+			{
+				room = new EndRoom(x,y);
+				room.construct();
+				haveEndRoom=true;
+				return room;
+			}
+		}
+
 		Double rand = Math.random();
-		if(rand > 0.3){
+		if(rand > 0.4){
 			room = new EnergyRoom(x,y);
 		}
 		else{
 			Double nrand = Math.random();
-			if(nrand > 0.5)
+			if(nrand > 0.8)
 				room = new Market(x,y);
-			else
+			else 
 				room = new RandomBlockRoom(x,y);
 		}
+
 		room.construct();
 		return room;
 	}

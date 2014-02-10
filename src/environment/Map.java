@@ -78,7 +78,7 @@ public class Map implements ShadowCaster {
 	 */
 	public static FBO[][][] mapFBO = new FBO[textureNb][textureNb][maxLayer];
 
-	public Map(Vector2f mapRoomSize, Vector2f roomBlockSize,
+	public Map(int n, Vector2f mapRoomSize, Vector2f roomBlockSize,
 			Vector2f blockPixelSize) {
 		Map.mapRoomSize = mapRoomSize;
 		Map.roomBlockSize = roomBlockSize;
@@ -109,7 +109,7 @@ public class Map implements ShadowCaster {
 			}
 		}
 		roomGrid = new Room[(int) Map.mapRoomSize.x][(int) Map.mapRoomSize.y];
-		generate();
+		generate(n);
 		currentBufferPosition = new Vector2f(
 				(int) (spawnPixelPosition.x - (Map.textureNb / 2.0f)
 						* textureSize),
@@ -215,8 +215,8 @@ public class Map implements ShadowCaster {
 	/**
 	 * Generate the map
 	 */
-	public void generate() {
-		MapGenerator.generate(this);
+	public void generate(int n) {
+		MapGenerator.generate(this, n);
 	}
 
 	/**

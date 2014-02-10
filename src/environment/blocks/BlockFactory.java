@@ -19,14 +19,18 @@ public class BlockFactory {
 	/**
 	 * Blocks outside the rooms.
 	 */
-	static VoidBlock voidBlock = new VoidBlock();	
+	static VoidBlock voidBlock = new VoidBlock();
+	
+	static EndBlock endBlock = new EndBlock();
 	
 	static public void initBlocks(){
 		emptyBlock.setColor(1f, 1f, 1f,1f);				
 		borderBlock.setColor(0.2f, 0.2f, 0.2f,1f);
 		solidBlock.setColor(0.2f, 0.2f, 0.2f,1f);
 		spawnBlock.setColor(0f, 1f, 0f,1f);
-		voidBlock.setColor(0f, 0f, 0f, 0f);		
+		voidBlock.setColor(0f, 0f, 0f, 0f);
+		endBlock.setColor(1f, 0f, 0f, 1);
+		
 	}
 	
 	static public Block createEmptyBlock(){
@@ -48,6 +52,10 @@ public class BlockFactory {
 
 	static public Block createSpawnBlock(){
 		return spawnBlock;
+	}
+	
+	static public Block createEndBlock(){
+		return endBlock;
 	}
 	
 	
