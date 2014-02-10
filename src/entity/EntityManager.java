@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import org.lwjgl.util.vector.Vector2f;
 
 import entity.npc.Npc;
+import entity.npc.Shopkeeper;
 import entity.npc.Zombie;
 import entity.player.Player;
 import environment.Map;
@@ -25,7 +26,12 @@ public class EntityManager {
 		npcs.add(npc);
 		npc.initPhysics();
 	}
-
+	
+	public static void createShopkeeper(float posx, float posy) {
+		Npc npc = new Shopkeeper(posx, posy, 1, 1);
+		npcs.add(npc);
+		npc.initPhysics();
+	}
 	public static void updateInput(long elapsedTime) {
 		for (Npc npc : npcs) {
 			npc.thinkAndAct(players, elapsedTime);

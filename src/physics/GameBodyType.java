@@ -9,5 +9,6 @@ public enum GameBodyType {
 	ITEM,
 	RECEPTACLE,
 	BLOCK,
-	BATTERY
+	BATTERY,
+	SHOPKEEPER
 }

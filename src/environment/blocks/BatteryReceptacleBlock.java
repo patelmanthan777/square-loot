@@ -58,7 +58,7 @@ public class BatteryReceptacleBlock extends SolidBlock{
 	public void ContactHandler(PhysicsDataStructure a) {
 		switch(a.getType())
 		{
-		case BATTERY:			
+		case ENERGYSHOT:			
 				powering();
 			break;
 		default:

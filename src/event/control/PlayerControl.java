@@ -192,7 +192,7 @@ public class PlayerControl {
 	
 	private void pickUpAction(KeyState state) {
 		if (state == KeyState.PRESSED) {			
-			p.pickUp();			
+			p.pickUpOrBuy();			
 		}
 	}
 	

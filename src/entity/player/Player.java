@@ -3,7 +3,6 @@ package entity.player;
 import item.Item;
 import item.Energy;
 import item.ItemManager;
-import item.weapon.EnergyWeapon;
 import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
@@ -21,6 +20,8 @@ import userInterface.MiniMap;
 import userInterface.inventory.Inventory;
 import userInterface.inventory.InventoryItemEnum;
 import entity.LivingEntity;
+import entity.npc.Npc;
+import entity.npc.Shopkeeper;
 import environment.Map;
 import environment.room.OxygenRoom;
 import event.Timer;
@@ -44,7 +45,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private int oxygenConsumptionPerSecond = 25;
 	
 	private Item contactItem=null;
-	private EnergyWeapon eweapon;
+	private Npc contactNPC=null;
+
 	
 	protected Inventory inventory = null;
 	
@@ -66,8 +68,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			e.printStackTrace();
 		}
 				
-		inventory = new Inventory(5);
-		eweapon = new EnergyWeapon(1000,200,200,0.02f,10,50);
+		inventory = new Inventory(5);		
 	}
 	
 	@Override
@@ -198,9 +199,14 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		i.setPosition(x, y);
 	}
 	
-	public void pickUp(){
+	public void pickUpOrBuy(){
 		if(contactItem != null && pickUp(contactItem))
 			contactItem.destroyed = true;
+		else if	(contactNPC != null && contactNPC instanceof Shopkeeper){
+			Item tmp = ((Shopkeeper) contactNPC).buy(this);
+				if (tmp != null)
+					pickUp(tmp);
+		}
 	}
 
 	public boolean pickUp(Item i){
@@ -224,7 +230,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		energy += Math.abs(enrgy);		
 	}
 	
-	public boolean decharge(int enrgy){
+	public boolean discharge(int enrgy){
 		boolean hasEnoughEnergy = this.energy >= enrgy;
 		
 		if(hasEnoughEnergy)
@@ -250,7 +256,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			break;
 		case ENERGY:
 			charge(((Energy) a.getPhysicsObject()).getCharge());			
-			break;		
+			break;
+		case SHOPKEEPER:
+			contactNPC = (Npc) a.getPhysicsObject();
+			break;
 		default:
 			break;
 		}
@@ -260,6 +269,9 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public void EndContactHandler(PhysicsDataStructure a) {
 		switch(a.getType())
 		{
+			case SHOPKEEPER:
+				contactNPC = null;
+				break;
 			case BATTERY:
 			case ITEM:
 				if(contactItem == a.getPhysicsObject())
@@ -274,6 +286,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public void shootEnergy(){
 		Vector2f p = new Vector2f(this.position.x+this.direction.x,this.position.y+this.direction.y);
 		
-		eweapon.action(p, this.direction);
+		inventory.energyShot(p, this.direction);
 	}
 }

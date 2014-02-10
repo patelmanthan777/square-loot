@@ -52,11 +52,17 @@ public abstract class Weapon extends Equipment {
 	 */
 	abstract public void fire(Vector2f pos, Vector2f target);
 	
-	public void action(Vector2f pos, Vector2f target){
+	public boolean action(Vector2f pos, Vector2f target){
 		Vector2f direct = new Vector2f();
 		target.normalise(direct);
 		Vector2f position = new Vector2f(pos.x +(projectileSize/ConfigManager.unitPixelSize)*direct.x,
 										 pos.y +(projectileSize/ConfigManager.unitPixelSize)*direct.y);
-		fire(position,target);
+		if(readyToFire()){
+			fire(position,target);
+			updateLastShot();
+			return true;
+		}
+		
+		return false;
 	}
 }

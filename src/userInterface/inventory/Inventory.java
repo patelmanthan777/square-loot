@@ -7,6 +7,7 @@ import item.Battery;
 import item.Item;
 import item.ItemListEnum;
 import item.Key;
+import item.weapon.EnergyWeapon;
 import item.weapon.PrimaryWeapon;
 import item.weapon.SecondaryWeapon;
 import item.shield.Shield;
@@ -63,10 +64,10 @@ public class Inventory extends Overlay{
 	private InventorySlot<Shield> shield;
 	private InventorySlot<Accessory> accessory;
 	private InventorySlot<MotionGear> mgear;
+	private EnergyWeapon eweapon;
 	
 	
 	
-
 	
 	
 
@@ -83,6 +84,8 @@ public class Inventory extends Overlay{
 		shield = new InventorySlot<Shield>();
 		accessory = new InventorySlot<Accessory>();
 		mgear = new InventorySlot<MotionGear>();
+		
+		eweapon = new EnergyWeapon(1000,200,200,0.02f,10,50);
 		
 		HUD.registerInventory(this);
 	}
@@ -261,6 +264,12 @@ public class Inventory extends Overlay{
 		case NOITEM:
 		default:
 		}	
+		
+	}
+	
+	public void energyShot(Vector2f pos, Vector2f target){
+		if(batteries.size() > 0 && eweapon.action(pos, target))		
+			batteries.removeLast();
 		
 	}
 

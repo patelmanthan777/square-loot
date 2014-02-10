@@ -18,11 +18,7 @@ public class LaserRifle extends PrimaryWeapon {
 
 	@Override
 	public void fire(Vector2f pos, Vector2f target) {	
-		if(this.readyToFire())
-		{
-			ProjectileManager.createBullet(pos, target, projectileSpeed, projectileSize, damage);
-			this.updateLastShot();
-		}		
+		ProjectileManager.createBullet(pos, target, projectileSpeed, projectileSize, damage);		
 	}
 	
 	public int getTextureID(){

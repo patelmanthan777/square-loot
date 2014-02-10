@@ -7,7 +7,7 @@ import org.lwjgl.util.vector.Vector2f;
 import rendering.TextureManager;
 import entity.projectile.ProjectileManager;
 
-public class EnergyWeapon extends PrimaryWeapon{
+public class EnergyWeapon extends Weapon{
 
 	public EnergyWeapon(long fireRate, float x, float y,
 			float projectileSpeed, float projectileSize, int damage) {
@@ -17,11 +17,7 @@ public class EnergyWeapon extends PrimaryWeapon{
 
 	@Override
 	public void fire(Vector2f pos, Vector2f target) {	
-		if(this.readyToFire())
-		{
-			ProjectileManager.createEnergyShot(pos, target, projectileSpeed, projectileSize, damage);
-			this.updateLastShot();
-		}		
+		ProjectileManager.createEnergyShot(pos, target, projectileSpeed, projectileSize, damage);		
 	}
 	
 	public int getTextureID(){
