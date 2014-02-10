@@ -4,9 +4,9 @@ import java.util.LinkedList;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import environment.room.EndRoom;
 import environment.room.EnergyRoom;
 import environment.room.Market;
-import environment.room.OxygenRoom;
 import environment.room.RandomBlockRoom;
 import environment.room.Room;
 import environment.room.SpawnRoom;
@@ -42,6 +42,7 @@ public class MapGenerator {
 		Map.spawnPixelPosition = new Vector2f(((float)ispawn+0.5f)*Map.roomPixelSize.x, ((float)jspawn+0.5f)*Map.roomPixelSize.y);
 		Map.spawnRoomPosition = new Vector2f(ispawn, jspawn);
 		Room r = new SpawnRoom((float)ispawn*Map.roomPixelSize.x,(float)jspawn*Map.roomPixelSize.y);
+		r.construct();
 		roomsGrid[(int)ispawn][(int)jspawn] = r;
 		rooms.add(r);
 		boolean stop = false;
@@ -194,6 +195,7 @@ public class MapGenerator {
 			else
 				room = new RandomBlockRoom(x,y);
 		}
+		room.construct();
 		return room;
 	}
 }

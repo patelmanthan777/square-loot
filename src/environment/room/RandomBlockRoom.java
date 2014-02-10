@@ -17,7 +17,7 @@ public class RandomBlockRoom extends OxygenRoom{
 	}
 
 	@Override
-	protected void construct() {
+	public void construct() {
 		super.construct();
 		for(int i = 2; i < (int)Map.roomBlockSize.x-2;i++){
 			for(int j = 2; j < (int)Map.roomBlockSize.y-2; j++){

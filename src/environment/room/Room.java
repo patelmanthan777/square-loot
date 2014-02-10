@@ -59,11 +59,9 @@ public abstract class Room implements Drawable, ShadowCaster {
 		for (int i = 0; i < 4; i++) {
 			shadowPoints[i] = new Vector2f();
 		}
-		
-		construct();
 	}
 
-	protected void construct(){
+	public void construct(){
 		for(int i = 2; i < (int)Map.roomBlockSize.x-2;i++){
 			for(int j = 2; j < (int)Map.roomBlockSize.y-2; j++){
 				grid[i][j] = BlockFactory.createEmptyBlock();

@@ -10,7 +10,7 @@ public class VoidRoom extends Room{
 	}
 
 	@Override
-	protected void construct() {
+	public void construct() {
 		for(int i = 0; i < Map.roomBlockSize.x;i++){
 			for(int j = 0; j < Map.roomBlockSize.y; j++){
 				grid[i][j] = BlockFactory.createVoidBlock();

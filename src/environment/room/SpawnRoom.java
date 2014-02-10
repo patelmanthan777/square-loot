@@ -19,7 +19,7 @@ public class SpawnRoom extends OxygenRoom{
 	}
 
 	@Override
-	protected void construct() {
+	public void construct() {
 		for(int i = 1; i < (int)Map.roomBlockSize.x-1;i++){
 			for(int j = 1; j < (int)Map.roomBlockSize.y-1; j++){
 				grid[i][j] = BlockFactory.createEmptyBlock();
