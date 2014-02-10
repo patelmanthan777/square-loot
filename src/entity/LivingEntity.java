@@ -157,8 +157,6 @@ public abstract class LivingEntity extends DynamicEntity {
 			break;
 		case PROJECTILE:
 			Projectile p = (Projectile) a.getPhysicsObject();
-			System.out.println(a);
-			System.out.println(p.getDamage());
 			damage(p.getDamage());
 			break;
 		default:

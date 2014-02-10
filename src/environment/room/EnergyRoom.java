@@ -7,6 +7,9 @@ import light.LightManager;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import configuration.ConfigManager;
+
+import entity.EntityManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
 
@@ -74,5 +77,6 @@ public class EnergyRoom extends Room{
 		float radius = (float)Math.random()*100;
 		float dstMax = Map.roomPixelSize.x;
 		LightManager.addPointLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
+		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y / ConfigManager.unitPixelSize);
 	}
 }

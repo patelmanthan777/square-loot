@@ -255,6 +255,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	
 	@Override
 	public void ContactHandler(PhysicsDataStructure a) {
+		super.ContactHandler(a);
 		switch(a.getType())
 		{
 		case BATTERY:
