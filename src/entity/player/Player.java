@@ -42,7 +42,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private SpriteSheet featherSprites;
 	private Animation featherAnimation;
 	private int pressure=0;
-	private int oxygenConsumptionPerSecond = 10;
+	private int oxygenConsumptionPerSecond = 25;
+	
+	private long apneaTimer = -1;
+	private long apneaTimerMax = 10;
 	
 	private Item contactItem=null;
 	private Npc contactNPC=null;
@@ -75,6 +78,13 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public void updatePosition(long delta, Map m){
 		super.updatePosition(delta, m);
 		this.pressure = (int) m.getRoom(this.getX(), this.getY()).getPressure();
+		if(pressure == 0 && apneaTimer !=-1)
+			updateApnea();
+		else if(pressure == 0)
+			apneaTimer = apneaTimerMax*Timer.unitInOneSecond + Timer.getTime();
+		else
+			apneaTimer = -1;
+		
 		headAnimation.update(delta);
 		featherAnimation.update(delta);
 		if(this.getSpeed().length() == 0 && this.getDeltaAngle() == 0){
@@ -98,6 +108,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		
 	}
 	
+	private void updateApnea(){
+		if(apneaTimer < Timer.getTime())
+			setHealth(getHealth()-1);				
+	}
 
 	public void setLight(Light l) {
 		light = l;
@@ -289,6 +303,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	
 	public int getEnergy(){
 		return energy;
+	}
+	
+	public int getPressure(){
+		return pressure;
 	}
 	
 	public void shootEnergy(){
