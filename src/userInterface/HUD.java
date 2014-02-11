@@ -26,6 +26,7 @@ import de.lessvoid.nifty.renderer.lwjgl.render.LwjglRenderDevice;
 import de.lessvoid.nifty.spi.time.impl.AccurateTimeProvider;
 import de.lessvoid.nifty.tools.SizeValue;
 import entity.player.Player;
+import environment.room.OxygenRoom;
 
 public class HUD {
 	private static Player player;
@@ -64,6 +65,7 @@ public class HUD {
 	public static boolean update(){				
 		updateEquipment();
 		updateHealthBar();
+		updateOxygenBar();
 		
 		return nifty.update();
 	}
@@ -93,6 +95,13 @@ public class HUD {
 	private static void updateHealthBar(){
 		Element e = HUD.nifty.getCurrentScreen().findElementByName("healthbar");
 		int width = 100 * player.getHealth() / player.getMaxHealth();
+		e.setConstraintWidth(SizeValue.percent(width));
+		e.getParent().layoutElements();
+	}
+	
+	private static void updateOxygenBar(){
+		Element e = HUD.nifty.getCurrentScreen().findElementByName("oxygenbar");
+		int width = 100 * player.getPressure() / OxygenRoom.maxPressure;
 		e.setConstraintWidth(SizeValue.percent(width));
 		e.getParent().layoutElements();
 	}
@@ -225,20 +234,42 @@ public class HUD {
 							height("5%");
 							childLayoutCenter();
 							
-							panel(new PanelBuilder("healthbarframe"){{
+							panel(new PanelBuilder(){{
 								height("90%");
 								width("75%");
-								backgroundColor("#ffff");
-								childLayoutCenter();
+								childLayoutVertical();
 								
-								panel(new PanelBuilder(){{
-									height("90%");
-									width("99%");
-									childLayoutHorizontal();
+								panel(new PanelBuilder("healthbarframe"){{
 									
-									panel(new PanelBuilder("healthbar"){{
-										backgroundColor("#f00f");
-										width("25%");
+									backgroundColor("#ffff");
+									childLayoutCenter();
+									
+									panel(new PanelBuilder(){{
+										height("90%");
+										width("99%");
+										childLayoutHorizontal();
+										
+										panel(new PanelBuilder("healthbar"){{
+											backgroundColor("#f00f");
+											width("25%");
+										}});
+									}});
+								}});
+								
+								panel(new PanelBuilder("oxygenbarframe"){{
+							
+									backgroundColor("#ffff");
+									childLayoutCenter();
+									
+									panel(new PanelBuilder(){{
+										height("90%");
+										width("99%");
+										childLayoutHorizontal();
+										
+										panel(new PanelBuilder("oxygenbar"){{
+											backgroundColor("#00ff");
+											width("25%");
+										}});
 									}});
 								}});
 							}});

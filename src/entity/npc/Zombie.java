@@ -8,10 +8,14 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
+import physics.GameBodyType;
+import physics.PhysicsDataStructure;
+
 import rendering.MiniMapDrawable;
 import userInterface.MiniMap;
 import entity.player.Player;
 import environment.Map;
+import event.Timer;
 
 public class Zombie extends Npc implements MiniMapDrawable {
 
@@ -22,6 +26,9 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	private float orientationDesc = 0.00001f;
 	private boolean running = false;
 	
+	private Player contactPlayer;
+	private long attackTimer = -1;
+	private long attackTimerMax = 1;
 	
 	private SpriteSheet headSprites;
 	
@@ -59,6 +66,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		//this.descFactor = 0.2f;
 		this.halfSize.x = 40;
 		this.halfSize.y = 40;
+		gbtype = GameBodyType.ZOMBIE;
 		zombieState = ZombieState.IDLE;
 		try {
 			headSprites = new SpriteSheet("assets/textures/zombie.png",256,256);
@@ -67,14 +75,29 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		}
 	}
 
-	
+
 	@Override
 	public void updatePosition(long delta, Map m){
 		super.updatePosition(delta, m);
 		/* animation update stuff */
 		
+		if(contactPlayer != null && attackTimer !=-1)
+			contactPlayer.damage(attack());
+		else if(contactPlayer != null){
+			attackTimer = attackTimerMax*Timer.unitInOneSecond + Timer.getTime();
+		}
+		else
+			attackTimer = -1;
 	}
 	
+	
+	public int attack(){
+		if(attackTimer < Timer.getTime()){
+			attackTimer = attackTimerMax*Timer.unitInOneSecond + Timer.getTime();
+			return 1;			
+		}
+		return 0;
+	}
 	
 	@Override
 	public void draw() {
@@ -158,6 +181,30 @@ public class Zombie extends Npc implements MiniMapDrawable {
 				orientationSpeed = (float) Math.max(-3, orientationSpeed);
 				this.rotateDegree(orientationSpeed);
 			}
+		}
+	}
+	
+	@Override
+	public void ContactHandler(PhysicsDataStructure a) {
+		super.ContactHandler(a);
+		switch(a.getType())
+		{		
+		case PLAYER:
+			contactPlayer = (Player) a.getPhysicsObject();
+			break;
+		default:			
+		}
+	}
+	
+	@Override
+	public void EndContactHandler(PhysicsDataStructure a) {
+		switch(a.getType())
+		{
+		case PLAYER:
+			if(contactPlayer == a.getPhysicsObject())
+				contactPlayer = null;
+			break;
+		default:	
 		}
 	}
 }
