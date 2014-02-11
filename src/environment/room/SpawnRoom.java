@@ -2,11 +2,10 @@ package environment.room;
 
 import environment.Map;
 import environment.blocks.BlockFactory;
+import event.Timer;
 
-import item.ItemManager;
-import item.weapon.LaserRifle;
 
-public class SpawnRoom extends Room{
+public class SpawnRoom extends OxygenRoom{
 
 	public SpawnRoom(float posX,float posY) {
 		super(posX,posY);
@@ -14,13 +13,13 @@ public class SpawnRoom extends Room{
 		miniMapColor.y = 1;
 		miniMapColor.z = 0;
 		discovered = true;
-		pressure = 0;
-		
-
+		pressure = OxygenRoom.maxPressure;
+		this.timeLoadMax = 30 * Timer.unitInOneSecond;
+		powering(null);
 	}
 
 	@Override
-	protected void construct() {
+	public void construct() {
 		for(int i = 1; i < (int)Map.roomBlockSize.x-1;i++){
 			for(int j = 1; j < (int)Map.roomBlockSize.y-1; j++){
 				grid[i][j] = BlockFactory.createEmptyBlock();
@@ -46,14 +45,6 @@ public class SpawnRoom extends Room{
 		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
-		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
-		
-		ItemManager.add(new LaserRifle(100,
-				   x/Map.blockPixelSize.x + Map.roomBlockSize.x/2,
-                y/Map.blockPixelSize.y + Map.roomBlockSize.y/2,
-                0.2f,
-                10,
-                1));
-		
+		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();				
 	}
 }
