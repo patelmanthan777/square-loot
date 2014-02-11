@@ -88,7 +88,7 @@ public class Inventory extends Overlay{
 		accessory = new InventorySlot<Accessory>();
 		mgear = new InventorySlot<MotionGear>();
 		
-		eweapon = new EnergyWeapon(1000,200,200,0.02f,10,50);
+		eweapon = new EnergyWeapon(1000,200,200,10f,10,50);
 		
 		HUD.registerInventory(this);
 		

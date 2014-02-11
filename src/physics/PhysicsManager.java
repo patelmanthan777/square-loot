@@ -5,6 +5,8 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.World;
 
+import event.Timer;
+
 public class PhysicsManager {
 	private static World world;
 	private static int velocityIterations = 8;
@@ -19,7 +21,7 @@ public class PhysicsManager {
 	
 	public static void update(float dt)
 	{
-	    world.step(dt, velocityIterations, positionIterations);
+	    world.step(dt/Timer.unitInOneSecond, velocityIterations, positionIterations);
 	}
 	
 	public static Body createBody(BodyDef bodyDef)

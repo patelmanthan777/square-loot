@@ -74,7 +74,7 @@ public class GameLoop extends Game{
 		p.pickUp(new LaserRifle(100,
 				 map.getSpawnPosition().x,
 				 map.getSpawnPosition().y,
-				 0.2f,
+				 100f,
 				 10,
 				 10));
 		p.pickUp(new Battery(200,200));

@@ -23,8 +23,8 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	 */
 	protected Vector2f translation = new Vector2f(0, 0);
 	//protected float maxSpeed = 0.02f;
-	protected float descFactor = 0.05f;
-	protected float accFactor = 0.02f;
+	protected float descFactor = 0.5f;
+	protected float accFactor = 30f;
 	
 	protected Body body;
 	protected Vector2f speed = new Vector2f();
@@ -105,14 +105,14 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		
 		if (this.translation.length() != 0) {
 			this.translation.normalise(translation);
-			this.translation.scale(accFactor * delta);
+			this.translation.scale(accFactor);
 			this.speed.x += this.translation.x;
 			this.speed.y += this.translation.y;
 		}
 				
 		
-		float newSpeedx = this.speed.x - this.speed.x * descFactor * delta;
-		float newSpeedy = this.speed.y -= this.speed.y * descFactor * delta;
+		float newSpeedx = this.speed.x - this.speed.x * descFactor;
+		float newSpeedy = this.speed.y -= this.speed.y * descFactor;
 		
 		
 		this.speed.x = MathFunction.sameSigne(speed.x,newSpeedx)? newSpeedx : 0;

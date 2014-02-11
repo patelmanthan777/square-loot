@@ -19,7 +19,7 @@ import event.Timer;
 
 public class Zombie extends Npc implements MiniMapDrawable {
 
-	private static int scentDistanceBlk = 5;
+	private static int scentDistanceBlk = 8;
 	//private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
 	private ZombieState zombieState;
 	private float orientationSpeed = 0;
@@ -63,7 +63,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(20);
-		//this.accFactor = 0.1f;
+		this.accFactor = 15f;
 		//this.descFactor = 0.2f;
 		this.halfSize.x = 40;
 		this.halfSize.y = 40;
