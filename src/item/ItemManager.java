@@ -2,6 +2,8 @@ package item;
 
 import java.util.LinkedList;
 
+import entity.npc.Npc;
+import entity.player.Player;
 import environment.Map;
 
 
@@ -24,9 +26,13 @@ public class ItemManager {
 		items.remove(items.indexOf(i));
 	}
 	
-	
+	public static void updatePhysics(long elapsedTime) {
+		for(Item i: items){ 
+			i.updatePhysics(elapsedTime);
+		}
+	}
 	public static void update(long delta, Map m){		
-		for(Item i: items){
+		for(Item i: items){ 
 			i.updatePosition(delta, m);
 			if(i.shouldBeDestroyed()){
 				i.destroy();

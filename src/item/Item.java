@@ -34,6 +34,7 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 	
 	public Item(float x, float y, ItemListEnum s){
 		super(x, y);
+		this.descFactor = 0.01f;
 		drawSize[0] = 30;
 		drawSize[1] = 30;
 		self = s;

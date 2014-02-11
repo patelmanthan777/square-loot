@@ -114,6 +114,7 @@ public class GameLoop extends Game{
 		
 		/* Physics */
 		EntityManager.updatePhysics(elapsedTime);
+		ItemManager.updatePhysics(elapsedTime);
 		PhysicsManager.update(elapsedTime);
 		
 		/* Position*/

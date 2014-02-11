@@ -1,4 +1,4 @@
 Resolution=1600x900
 Fullscreen=false
-MaxFPS=60
-OxygenTime=10ddd
+MaxFPS=0
+OxygenTime=10
