@@ -50,15 +50,15 @@ public abstract class Weapon extends Equipment {
 	 * @param pos the position where the weapon has been fire
 	 * @param target the target area
 	 */
-	abstract public void fire(Vector2f pos, Vector2f target);
+	abstract public void fire(Vector2f pos, Vector2f target, Vector2f initSpeed);
 	
-	public boolean action(Vector2f pos, Vector2f target){
+	public boolean action(Vector2f pos, Vector2f target, Vector2f initSpeed){
 		Vector2f direct = new Vector2f();
 		target.normalise(direct);
 		Vector2f position = new Vector2f(pos.x +(projectileSize/ConfigManager.unitPixelSize)*direct.x,
 										 pos.y +(projectileSize/ConfigManager.unitPixelSize)*direct.y);
 		if(readyToFire()){
-			fire(position,target);
+			fire(position,target,initSpeed);
 			updateLastShot();
 			return true;
 		}

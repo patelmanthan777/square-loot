@@ -153,8 +153,8 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		body.getWorld().destroyBody(body);
 	}
 	
-	public Vec2 getSpeed(){
-		return body.getLinearVelocity();
+	public Vector2f getSpeed(){
+		return new Vector2f(this.speed.x/ConfigManager.blockPhysicSize,this.speed.y/ConfigManager.blockPhysicSize);
 	}
 	
 	@Override
@@ -183,5 +183,10 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		super.setY(y);
 		Vec2 p = new Vec2(position.x*ConfigManager.blockPhysicSize, y);
 		body.setTransform(p, 0);
+	}
+	
+	public void setSpeed(float x, float y){
+		this.speed.x = x;
+		this.speed.y = y;
 	}
 }

@@ -2,7 +2,10 @@ package userInterface.inventory;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+
 import org.lwjgl.util.vector.Vector2f;
+
+import entity.LivingEntity;
 import item.Battery;
 import item.Item;
 import item.ItemListEnum;
@@ -67,11 +70,11 @@ public class Inventory extends Overlay{
 	private EnergyWeapon eweapon;
 	
 	
-	
+	private LivingEntity owner;
 	
 	
 
-	public Inventory(int size){	
+	public Inventory(int size, LivingEntity owner){	
 		weight = 0f;					
 			
 		key = new InventorySlot<Key>();				
@@ -88,6 +91,8 @@ public class Inventory extends Overlay{
 		eweapon = new EnergyWeapon(1000,200,200,0.02f,10,50);
 		
 		HUD.registerInventory(this);
+		
+		this.owner = owner;
 	}
 	
 	/**
@@ -238,27 +243,27 @@ public class Inventory extends Overlay{
 		case PWEAPON:
 			if(pweapon.access() != null)
 				pweapon.access().action(new Vector2f(x   , y   ),
-						                new Vector2f(dirx, diry));			
+						                new Vector2f(dirx, diry),owner.getSpeed());			
 			break;
 		case SWEAPON:
 			if(pweapon.access() != null)
 				sweapon.access().action(new Vector2f(x   , y   ),
-                                        new Vector2f(dirx, diry));			
+                                        new Vector2f(dirx, diry),owner.getSpeed());			
 			break;
 		case SHIELD:			
 			if(pweapon.access() != null)
 				shield.access().action(new Vector2f(x   , y   ),
-									   new Vector2f(dirx, diry));			
+									   new Vector2f(dirx, diry),owner.getSpeed());			
 			break;
 		case ACCESSORY:			
 			if(pweapon.access() != null)
 				accessory.access().action(new Vector2f(x   , y   ),
-                                          new Vector2f(dirx, diry));			
+                                          new Vector2f(dirx, diry),owner.getSpeed());			
 			break;
 		case MGEAR:			
 			if(pweapon.access() != null)
 				mgear.access().action(new Vector2f(x   , y   ),
-									  new Vector2f(dirx, diry));			
+									  new Vector2f(dirx, diry),owner.getSpeed());			
 			break;
 		case BATTERY:
 		case NOITEM:
@@ -268,7 +273,7 @@ public class Inventory extends Overlay{
 	}
 	
 	public void energyShot(Vector2f pos, Vector2f target){
-		if(batteries.size() > 0 && eweapon.action(pos, target))		
+		if(batteries.size() > 0 && eweapon.action(pos, target,owner.getSpeed()))		
 			batteries.removeLast();
 		
 	}

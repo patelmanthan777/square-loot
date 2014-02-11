@@ -8,5 +8,5 @@ public abstract class Equipment extends Item{
 		super(x,y,s);
 	}
 	
-	public abstract boolean action(Vector2f pos, Vector2f target);
+	public abstract boolean action(Vector2f pos, Vector2f target, Vector2f initSpeed);
 }

@@ -27,13 +27,13 @@ public final class ProjectileManager {
 	 * @param pos the bullet position
 	 * @param rot the bullet direction
 	 */
-	static public void createBullet(Vector2f pos, Vector2f rot, float speedValue, float size, int damage){
-		bulletFactory.createProjectile(pos, rot, speedValue,size,damage);
+	static public void createBullet(Vector2f pos, Vector2f rot, Vector2f initSpeed,float speedValue, float size, int damage){
+		bulletFactory.createProjectile(pos, rot, initSpeed, speedValue,size,damage);
 	}
 	
 	
-	static public void createEnergyShot(Vector2f pos, Vector2f rot, float speedValue, float size, int damage){
-		energyShotFactory.createProjectile(pos, rot, speedValue,size,damage);
+	static public void createEnergyShot(Vector2f pos, Vector2f rot, Vector2f initSpeed,float speedValue, float size, int damage){
+		energyShotFactory.createProjectile(pos, rot,  initSpeed,speedValue,size,damage);
 	}
 		
 	/**

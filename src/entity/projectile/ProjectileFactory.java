@@ -29,16 +29,16 @@ public class ProjectileFactory{
 	 * @param pos Initial position of the projectile
 	 * @param rot Initial direction of the projectile
 	 */
-	public void createProjectile(Vector2f pos, Vector2f rot, float speedValue, float size, int damage){
+	public void createProjectile(Vector2f pos, Vector2f rot, Vector2f initSpeed, float speedValue, float size, int damage){
 		Projectile project;
 		if(deadList.isEmpty())
 		{
-			project = modelProjectile.Clone(pos, rot, speedValue, size, damage);
+			project = modelProjectile.Clone(pos, rot, initSpeed,speedValue, size, damage);
 		}
 		else
 		{
 			project = deadList.poll();
-			project.reset(pos, rot, speedValue, size, damage);
+			project.reset(pos, rot, initSpeed,speedValue, size, damage);
 		}
 		projectileList.add(project);
 		project.initPhysics();

@@ -16,8 +16,8 @@ public class EnergyWeapon extends Weapon{
 
 
 	@Override
-	public void fire(Vector2f pos, Vector2f target) {	
-		ProjectileManager.createEnergyShot(pos, target, projectileSpeed, projectileSize, damage);		
+	public void fire(Vector2f pos, Vector2f target, Vector2f initSpeed) {	
+		ProjectileManager.createEnergyShot(pos, target, initSpeed, projectileSpeed, projectileSize, damage);		
 	}
 	
 	public int getTextureID(){

@@ -142,4 +142,6 @@ public class Entity {
 		deltaAngle = this.angle - angle;
 		this.angle = angle;
 	}
+	
+
 }

@@ -25,6 +25,7 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 	protected float speedValue;
 	protected float size;
 	protected int damage;
+	protected Vector2f initSpeed = new Vector2f(0,0);
 	
 	public Projectile() {
 		super(0.f,0.f);
@@ -34,10 +35,11 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 		damage = 0;
 	}
 	
-	public Projectile(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {
+	public Projectile(Vector2f pos, Vector2f rot, Vector2f initSpeed, float speedValue, float size, int damage) {
 		super(pos, rot);
 		destroyed = false;
 		this.speedValue = speedValue;
+		this.initSpeed.set(initSpeed.x, initSpeed.y);
 		this.size = size;
 		this.damage = damage;
 	}
@@ -48,12 +50,13 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 	 * @param rot id the new orientation 
 	 * @param damage 
 	 */
-	public void reset(Vector2f pos, Vector2f rot,  float speedValue, float size, int damage)
+	public void reset(Vector2f pos, Vector2f rot,  Vector2f initSpeed, float speedValue, float size, int damage)
 	{
 		this.setPosition(pos);
 		this.setDirection(rot);
 		destroyed = false;
 		this.speedValue = speedValue;
+		this.initSpeed.set(initSpeed.x, initSpeed.y);
 		this.size = size;
 		this.damage = damage;
 	}
@@ -78,7 +81,7 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 	 * @param rot
 	 * @return 
 	 */ 
-	abstract public Projectile Clone(Vector2f pos, Vector2f rot, float speedValue, float size, int damage);
+	abstract public Projectile Clone(Vector2f pos, Vector2f rot, Vector2f initSpeed, float speedValue, float size, int damage);
 	
 	/**
 	 * Initialize the physics body
@@ -100,7 +103,7 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.1f;
 		body.createFixture(fixtureDef);
-		Vec2 vel = new Vec2(direction.x * speedValue, direction.y * speedValue);
+		Vec2 vel = new Vec2((direction.x * speedValue+initSpeed.x)*ConfigManager.blockPhysicSize, (direction.y * speedValue+initSpeed.y)*ConfigManager.blockPhysicSize);
 		body.setLinearVelocity(vel);
 		PhysicsDataStructure s = new PhysicsDataStructure(this,GameBodyType.PROJECTILE); 
 		body.setUserData(s);
@@ -117,7 +120,7 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 	public void updatePostion() {
 		Vec2 position = body.getPosition();
 		setPosition(position.x/ConfigManager.blockPhysicSize, position.y/ConfigManager.blockPhysicSize);
-		Vec2 vel = new Vec2(direction.x * speedValue *ConfigManager.blockPhysicSize, direction.y * speedValue *ConfigManager.blockPhysicSize);
+		Vec2 vel = new Vec2((direction.x * speedValue+initSpeed.x)*ConfigManager.blockPhysicSize, (direction.y * speedValue+initSpeed.y)*ConfigManager.blockPhysicSize);
 		body.setLinearVelocity(vel);
 	}
 

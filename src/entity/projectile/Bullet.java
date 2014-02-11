@@ -44,8 +44,8 @@ public class Bullet extends Projectile {
 	 * @param pos
 	 * @param rot
 	 */
-	public Bullet(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {
-		super(pos,rot,speedValue,size,damage);
+	public Bullet(Vector2f pos, Vector2f rot, Vector2f initSpeed, float speedValue, float size, int damage) {
+		super(pos,rot,initSpeed,speedValue,size,damage);
 		color = new Vector3f(1,1,0.8f);
 		l = LightManager.addPointLight(this.toString(), new Vector2f(200, 200), color, 20,2*(int)ConfigManager.resolution.x,true);
 	
@@ -83,8 +83,8 @@ public class Bullet extends Projectile {
 	}
 
 	@Override
-	public Projectile Clone(Vector2f pos, Vector2f rot, float speedValue, float size, int damage) {		
-		return new Bullet(pos, rot, speedValue, size, damage);
+	public Projectile Clone(Vector2f pos, Vector2f rot, Vector2f initSpeed, float speedValue, float size, int damage) {		
+		return new Bullet(pos, rot, initSpeed,speedValue, size, damage);
 	}
 	
 	@Override
@@ -94,9 +94,9 @@ public class Bullet extends Projectile {
 	}
 	
 	@Override
-	public void reset(Vector2f pos, Vector2f rot,  float speedValue, float size, int damage)
+	public void reset(Vector2f pos, Vector2f rot, Vector2f initSpeed, float speedValue, float size, int damage)
 	{
-		super.reset(pos, rot, speedValue, size, damage);
+		super.reset(pos, rot, initSpeed, speedValue, size, damage);
 		l.activate();
 		l.setPosition(pos.x*ConfigManager.unitPixelSize, pos.y*ConfigManager.unitPixelSize);
 	}

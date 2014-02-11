@@ -3,9 +3,11 @@ package entity.player;
 import item.Item;
 import item.Energy;
 import item.ItemManager;
+import item.weapon.Weapon;
 import light.Laser;
 import light.Light;
 import static org.lwjgl.opengl.GL11.*;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
@@ -72,12 +74,13 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			e.printStackTrace();
 		}
 				
-		inventory = new Inventory(5);		
+		inventory = new Inventory(5,this);		
 	}
 	
 	@Override
 	public void updatePosition(long delta, Map m){
 		super.updatePosition(delta, m);
+		((Weapon)(this.inventory.access(InventoryItemEnum.PWEAPON))).setSpeed(this.speed.x,this.speed.y);
 		this.pressure = (int) m.getRoom(this.getX(), this.getY()).getPressure();
 		
 		if(pressure == 0 && apneaTimer !=-1)
