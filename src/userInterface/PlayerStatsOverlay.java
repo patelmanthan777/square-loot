@@ -22,6 +22,7 @@ public class PlayerStatsOverlay extends Overlay{
 	public void draw() {
 		drawHealth();
 		drawEnergy();
+		drawBatteries();
 	}
 	
 	public void drawEnergy() {
@@ -30,6 +31,16 @@ public class PlayerStatsOverlay extends Overlay{
         glPushMatrix();
 		glLoadIdentity();
 		OverlayManager.font.drawString(50, 100, "Energy : "+player.getEnergy(), Color.white);
+		glPopMatrix();
+		glDisable(GL_BLEND);
+	}
+
+	public void drawBatteries() {
+		glEnable(GL_BLEND); 
+       	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glPushMatrix();
+		glLoadIdentity();
+		OverlayManager.font.drawString(50, 125, "Batteries : "+player.getBatteriesNb(), Color.white);
 		glPopMatrix();
 		glDisable(GL_BLEND);
 	}

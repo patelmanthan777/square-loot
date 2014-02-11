@@ -311,6 +311,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return energy;
 	}
 	
+	public int getBatteriesNb(){
+		return inventory.getBatteriesNb();
+	}
+	
 	public int getPressure(){
 		return pressure;
 	}

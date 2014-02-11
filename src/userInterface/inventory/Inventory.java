@@ -285,6 +285,9 @@ public class Inventory extends Overlay{
 		return !key.isEmpty(); 
 	}
 	
+	public int getBatteriesNb(){
+		return batteries.size();
+	}
 	
 	public void draw(){}
 	

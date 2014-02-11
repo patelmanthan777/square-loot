@@ -26,9 +26,10 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	private float orientationDesc = 0.00001f;
 	private boolean running = false;
 	
+	private int attackValue = 5;
 	private Player contactPlayer;
 	private long attackTimer = -1;
-	private long attackTimerMax = 1;
+	private long attackTimerMax = 100;
 	
 	private SpriteSheet headSprites;
 	
@@ -61,7 +62,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	private void init() {
 		this.updatePoints();
 		this.setMaxHealth(20);
-		this.setHealth(10);
+		this.setHealth(20);
 		//this.accFactor = 0.1f;
 		//this.descFactor = 0.2f;
 		this.halfSize.x = 40;
@@ -84,6 +85,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		if(contactPlayer != null && attackTimer !=-1)
 			contactPlayer.damage(attack());
 		else if(contactPlayer != null){
+			contactPlayer.damage(attackValue);
 			attackTimer = attackTimerMax*Timer.unitInOneSecond + Timer.getTime();
 		}
 		else
@@ -94,7 +96,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	public int attack(){
 		if(attackTimer < Timer.getTime()){
 			attackTimer = attackTimerMax*Timer.unitInOneSecond + Timer.getTime();
-			return 1;			
+			return attackValue;			
 		}
 		return 0;
 	}
