@@ -1,7 +1,6 @@
 package entity;
 
 import org.jbox2d.collision.shapes.CircleShape;
-import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
@@ -9,21 +8,24 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.util.vector.Vector2f;
 
+import configuration.ConfigManager;
 import environment.Map;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
 import physics.PhysicsObject;
 import physics.GameBodyType;
 import rendering.Drawable;
+import utils.MathFunction;
 
 public abstract class DynamicEntity extends Entity implements Drawable, PhysicsObject{
 	/**
 	 * Represent the direction in which the entity moves
 	 */
 	protected Vector2f translation = new Vector2f(0, 0);
-	protected float maxSpeed = 0.02f;
-	protected float descFactor = 0.5f;
-	protected float accFactor = 0.005f;
+	//protected float maxSpeed = 0.02f;
+	protected float descFactor = 0.05f;
+	protected float accFactor = 0.02f;
+	
 	protected Body body;
 	protected Vector2f speed = new Vector2f();
 
@@ -71,14 +73,14 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = btype;
 		bodyDef.fixedRotation = true;
-		bodyDef.position.set(position.x, position.y);
+		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
 		body = PhysicsManager.createBody(bodyDef);
 		CircleShape dynamicCircle = new CircleShape();
-		dynamicCircle.setRadius(0.4f);
+		dynamicCircle.setRadius(0.4f*ConfigManager.blockPhysicSize);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicCircle;
-		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0.1f;
+		fixtureDef.density = 0.3f;
+		fixtureDef.friction = 0.0f;
 		body.createFixture(fixtureDef);
 		PhysicsDataStructure s = new PhysicsDataStructure(this, gbtype); 
 		body.setUserData(s);
@@ -92,37 +94,36 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	 */
 	public void updatePosition(long delta, Map m) {
 		Vec2 position = body.getPosition();
-		setPosition(position.x, position.y);
+		setPosition(position.x /ConfigManager.blockPhysicSize, position.y/ConfigManager.blockPhysicSize);
 		speed.x = this.body.getLinearVelocity().x;
 		speed.y = this.body.getLinearVelocity().y;
 	}
 
-	public void updatePhysics(long dt) {
-
-		Vec2 vel = body.getLinearVelocity();
-
-		if (translation.length() != 0) {
-			Vec2 point = new Vec2(position.x, position.y);
-			translation.normalise(translation);
-			translation.scale(dt * accFactor);
-			Vec2 impulse = new Vec2(translation.x, translation.y);
-			body.applyLinearImpulse(impulse, point);
-		} else {
-
-			body.setLinearVelocity(new Vec2(vel.x * descFactor, vel.y
-					* descFactor));
-		}
-
-		vel = body.getLinearVelocity();
-		if (vel.length() > maxSpeed) {
-			float normFactor = maxSpeed / vel.length();
-			body.setLinearVelocity(new Vec2(vel.x * normFactor, vel.y
-					* normFactor));
-		}
+	public void updatePhysics(long delta) {
+		if(delta > 200)
+			return;
 		
-		translation.x = 0;
-		translation.y = 0;
+		if (this.translation.length() != 0) {
+			this.translation.normalise(translation);
+			this.translation.scale(accFactor * delta);
+			this.speed.x += this.translation.x;
+			this.speed.y += this.translation.y;
+		}
+				
 		
+		float newSpeedx = this.speed.x - this.speed.x * descFactor * delta;
+		float newSpeedy = this.speed.y -= this.speed.y * descFactor * delta;
+		
+		
+		this.speed.x = MathFunction.sameSigne(speed.x,newSpeedx)? newSpeedx : 0;
+		this.speed.y = MathFunction.sameSigne(speed.y,newSpeedy)? newSpeedy : 0;
+
+		
+		
+		this.translation.x = 0;
+		this.translation.y = 0;
+
+		body.setLinearVelocity(new Vec2(this.speed.x,this.speed.y));
 	}
 	
 	@Override
@@ -152,35 +153,35 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		body.getWorld().destroyBody(body);
 	}
 	
-	public Vector2f getSpeed(){
-		return speed;
+	public Vec2 getSpeed(){
+		return body.getLinearVelocity();
 	}
 	
 	@Override
 	public void setPosition(Vector2f pos){
 		super.setPosition(pos);
-		Vec2 p = new Vec2(pos.x, pos.y);
+		Vec2 p = new Vec2(pos.x*ConfigManager.blockPhysicSize, pos.y*ConfigManager.blockPhysicSize);
 		body.setTransform(p, 0);
 	}
 
 	@Override
 	public void setPosition(float posx, float posy){
 		super.setPosition(posx,posy);
-		Vec2 p = new Vec2(posx, posy);
+		Vec2 p = new Vec2(posx*ConfigManager.blockPhysicSize, posy*ConfigManager.blockPhysicSize);
 		body.setTransform(p, 0);
 	}
 	
 	@Override
 	public void setX(float x){
 		super.setX(x);
-		Vec2 p = new Vec2(x, position.y);
+		Vec2 p = new Vec2(x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
 		body.setTransform(p, 0);
 	}
 
 	@Override
 	public void setY(float y){
 		super.setY(y);
-		Vec2 p = new Vec2(position.x, y);
+		Vec2 p = new Vec2(position.x*ConfigManager.blockPhysicSize, y);
 		body.setTransform(p, 0);
 	}
 }

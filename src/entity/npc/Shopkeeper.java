@@ -1,7 +1,6 @@
 package entity.npc;
 
 import static org.lwjgl.opengl.GL11.*;
-
 import item.Battery;
 import item.Item;
 import item.Key;
@@ -17,10 +16,10 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
+import configuration.ConfigManager;
 import physics.GameBodyType;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
-
 import entity.player.Player;
 import environment.Map;
 
@@ -85,10 +84,10 @@ public class Shopkeeper extends Npc{
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.STATIC;
 		bodyDef.fixedRotation = true;
-		bodyDef.position.set(position.x, position.y);
+		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(0.4f, 0.4f);
+		dynamicBox.setAsBox(0.4f*ConfigManager.blockPhysicSize, 0.4f*ConfigManager.blockPhysicSize);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicBox;
 		fixtureDef.density = 1.0f;

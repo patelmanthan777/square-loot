@@ -15,6 +15,7 @@ public class ConfigManager {
 	public static int maxFps = 120;
 	public static int unitPixelSize = 48;
 	public static int oxygenTime = 10;
+	public static float blockPhysicSize = 10;
 	
 	/**
 	 * Initialize the ConfigManager class by reading from the "options.txt"

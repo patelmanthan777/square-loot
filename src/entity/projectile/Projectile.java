@@ -9,6 +9,7 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import configuration.ConfigManager;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
 import physics.PhysicsObject;
@@ -90,10 +91,10 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 		bodyDef.type = BodyType.DYNAMIC;
 		bodyDef.bullet = true;
 		bodyDef.fixedRotation = true;
-		bodyDef.position.set(position.x, position.y);
+		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(0.1f, 0.1f);
+		dynamicBox.setAsBox(0.1f*ConfigManager.blockPhysicSize, 0.1f*ConfigManager.blockPhysicSize);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicBox;		
 		fixtureDef.density = 1.0f;
@@ -115,8 +116,8 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 	 */
 	public void updatePostion() {
 		Vec2 position = body.getPosition();
-		setPosition(position.x, position.y);
-		Vec2 vel = new Vec2(direction.x * speedValue, direction.y * speedValue);
+		setPosition(position.x/ConfigManager.blockPhysicSize, position.y/ConfigManager.blockPhysicSize);
+		Vec2 vel = new Vec2(direction.x * speedValue *ConfigManager.blockPhysicSize, direction.y * speedValue *ConfigManager.blockPhysicSize);
 		body.setLinearVelocity(vel);
 	}
 

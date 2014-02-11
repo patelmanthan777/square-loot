@@ -177,6 +177,7 @@ public class PlayerControl {
 
 	private void lightAction(KeyState state) {
 		if (state == KeyState.PRESSED) {
+			System.out.println(p.getSpeed());
 			if (p.getLight().isActive())
 				p.getLight().deactivate();
 			else

@@ -1,15 +1,14 @@
 package item;
 
 import org.jbox2d.collision.shapes.PolygonShape;
-
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
+import configuration.ConfigManager;
 import physics.GameBodyType;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
-
 import rendering.TextureManager;
 
 
@@ -41,10 +40,10 @@ public class Energy extends Item {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.STATIC;
 		bodyDef.fixedRotation = false;
-		bodyDef.position.set(position.x, position.y);
+		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(0.4f, 0.4f);
+		dynamicBox.setAsBox(0.4f*ConfigManager.blockPhysicSize, 0.4f*ConfigManager.blockPhysicSize);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicBox;
 		fixtureDef.density = 1.0f;

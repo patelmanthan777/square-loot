@@ -95,10 +95,10 @@ public class EnergyShot extends Projectile {
 		bodyDef.type = BodyType.DYNAMIC;
 		bodyDef.bullet = true;
 		bodyDef.fixedRotation = true;
-		bodyDef.position.set(position.x, position.y);
+		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(0.1f, 0.1f);
+		dynamicBox.setAsBox(0.1f*ConfigManager.blockPhysicSize, 0.1f*ConfigManager.blockPhysicSize);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicBox;		
 		fixtureDef.density = 1.0f;
