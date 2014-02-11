@@ -22,6 +22,7 @@ import userInterface.inventory.InventoryItemEnum;
 import entity.LivingEntity;
 import entity.npc.Npc;
 import entity.npc.Shopkeeper;
+import entity.npc.Zombie;
 import environment.Map;
 import environment.room.OxygenRoom;
 import event.Timer;
@@ -78,6 +79,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public void updatePosition(long delta, Map m){
 		super.updatePosition(delta, m);
 		this.pressure = (int) m.getRoom(this.getX(), this.getY()).getPressure();
+		
 		if(pressure == 0 && apneaTimer !=-1)
 			updateApnea();
 		else if(pressure == 0)
@@ -110,7 +112,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	
 	private void updateApnea(){
 		if(apneaTimer < Timer.getTime())
-			setHealth(getHealth()-1);				
+			damage(1);				
 	}
 
 	public void setLight(Light l) {
@@ -271,7 +273,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public void ContactHandler(PhysicsDataStructure a) {
 		super.ContactHandler(a);
 		switch(a.getType())
-		{
+		{		
 		case BATTERY:
 		case ITEM:
 			contactItem = (Item) a.getPhysicsObject();
@@ -292,7 +294,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		switch(a.getType())
 		{
 			case SHOPKEEPER:
-				contactNPC = null;
+				if(contactNPC == a.getPhysicsObject())
+					contactNPC = null;
 				break;
 			case BATTERY:
 			case ITEM:
