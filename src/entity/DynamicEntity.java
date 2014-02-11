@@ -1,5 +1,6 @@
 package entity;
 
+import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -72,10 +73,10 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		bodyDef.fixedRotation = true;
 		bodyDef.position.set(position.x, position.y);
 		body = PhysicsManager.createBody(bodyDef);
-		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(0.4f, 0.4f);
+		CircleShape dynamicCircle = new CircleShape();
+		dynamicCircle.setRadius(0.4f);
 		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = dynamicBox;
+		fixtureDef.shape = dynamicCircle;
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.1f;
 		body.createFixture(fixtureDef);

@@ -3,6 +3,7 @@ package environment.blocks;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.FixtureDef;
 
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
@@ -34,10 +35,15 @@ public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 		BodyDef bodyDef = new BodyDef();			    
 	    bodyDef.position.set(points[0].x/ConfigManager.unitPixelSize + 0.5f,
 	    		points[0].y/ConfigManager.unitPixelSize + 0.5f);
+	   
 	    Body body = PhysicsManager.createBody(bodyDef);
 	    PolygonShape box = new PolygonShape();
+	    FixtureDef fixtureDef = new FixtureDef();
+	    fixtureDef.friction = 0;
+	    fixtureDef.density = 0;
+	    fixtureDef.shape = box;
 	    box.setAsBox(0.5f, 0.5f);
-	    body.createFixture(box, 0.0f);
+	    body.createFixture(fixtureDef);
 		PhysicsDataStructure s = new PhysicsDataStructure(this,gbtype); 
 		body.setUserData(s);
 	}
