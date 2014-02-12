@@ -2,65 +2,64 @@ package rendering;
 
 import java.io.IOException;
 
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 
 public class TextureManager {
-	
+
 	private static enum textureEnum {
-		BACKGROUND,
-		PLAYER,
-		ZOMBIE,
-		LASERRIFLE,
-		BATTERY,
-		KEY,
-		ENERGY
-	}	
-	
-	private static Texture[] textures = new Texture[textureEnum.values().length];
-	
-	public static void init(){
-		try {
-			textures[textureEnum.BACKGROUND.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/background.png"));
-			textures[textureEnum.PLAYER.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/player.png"));
-			textures[textureEnum.ZOMBIE.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/zombie.png"));
-			textures[textureEnum.LASERRIFLE.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/laserRifle.png"));
-			textures[textureEnum.BATTERY.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/battery.png"));
-			textures[textureEnum.ENERGY.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/energy.png"));
-			textures[textureEnum.KEY.ordinal()] = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("assets/textures/key.png"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	} 
-	
-	
-	public static Texture playerTexture(){
-		return textures[textureEnum.PLAYER.ordinal()];
+		BACKGROUND, PLAYER, ZOMBIE, LASERRIFLE, BATTERY, KEY, ENERGY,SHOPKEEPER
 	}
 
-	public static Texture keyTexture(){
-		return textures[textureEnum.KEY.ordinal()];
+	private static Image[] images = new Image[textureEnum.values().length];
+
+	public static void init() {
+		try {
+			images[textureEnum.BACKGROUND.ordinal()] = new Image("assets/textures/background.png");
+			images[textureEnum.PLAYER.ordinal()] = new Image("assets/textures/player.png");
+			images[textureEnum.ZOMBIE.ordinal()] = new Image("assets/textures/zombie.png");
+			images[textureEnum.LASERRIFLE.ordinal()] = new Image("assets/textures/laserRifle.png");
+			images[textureEnum.BATTERY.ordinal()] = new Image("assets/textures/battery.png");
+			images[textureEnum.ENERGY.ordinal()] = new Image("assets/textures/energy.png");
+			images[textureEnum.KEY.ordinal()] = new Image("assets/textures/key.png");
+			images[textureEnum.SHOPKEEPER.ordinal()] = new Image("assets/textures/shopkeeper.png");
+		} catch (SlickException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	
-	
-	public static Texture backgroundTexture(){
-		return textures[textureEnum.BACKGROUND.ordinal()];
+
+	public static Image playerTexture() {
+		return images[textureEnum.PLAYER.ordinal()];
 	}
-	
-	public static Texture zombieTexture(){
-		return textures[textureEnum.ZOMBIE.ordinal()];
+
+	public static Image keyTexture() {
+		return images[textureEnum.KEY.ordinal()];
 	}
-	
-	public static Texture laserRifleTexture(){
-		return textures[textureEnum.LASERRIFLE.ordinal()];
+
+	public static Image backgroundTexture() {
+		return images[textureEnum.BACKGROUND.ordinal()];
 	}
-	
-	public static Texture batteryTexture(){
-		return textures[textureEnum.BATTERY.ordinal()];
+
+	public static Image zombieTexture() {
+		return images[textureEnum.ZOMBIE.ordinal()];
 	}
-	
-	public static Texture energyTexture(){
-		return textures[textureEnum.ENERGY.ordinal()];
+
+	public static Image laserRifleTexture() {
+		return images[textureEnum.LASERRIFLE.ordinal()];
+	}
+
+	public static Image batteryTexture() {
+		return images[textureEnum.BATTERY.ordinal()];
+	}
+
+	public static Image energyTexture() {
+		return images[textureEnum.ENERGY.ordinal()];
+	}
+	public static Image shopKeeperTexture() {
+		return images[textureEnum.SHOPKEEPER.ordinal()];
 	}
 }

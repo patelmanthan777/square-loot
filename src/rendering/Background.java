@@ -48,7 +48,7 @@ public class Background implements Drawable{
 		
 		GraphicsAL.drawQuadTexture(points,
 								   texPoints,
-								   TextureManager.backgroundTexture().getTextureID());		
+								   TextureManager.backgroundTexture().getTexture().getTextureID());		
 		
 		glPopMatrix();
 	}

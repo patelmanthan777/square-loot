@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.Color;
 
+import rendering.TextureManager;
 import configuration.ConfigManager;
 import entity.player.Player;
 
@@ -30,7 +31,8 @@ public class PlayerStatsOverlay extends Overlay{
        	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
 		glLoadIdentity();
-		OverlayManager.font.drawString(50, 100, "Energy : "+player.getEnergy(), Color.white);
+		TextureManager.energyTexture().draw(50, 100, 20, 20);
+		OverlayManager.font.drawString(100, 100, ""+ player.getEnergy(), Color.white);
 		glPopMatrix();
 		glDisable(GL_BLEND);
 	}
@@ -40,7 +42,7 @@ public class PlayerStatsOverlay extends Overlay{
        	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
 		glLoadIdentity();
-		
+		TextureManager.batteryTexture().draw(50, 125, 20, 20);
 		OverlayManager.font.drawString(100, 125, "" + player.getBatteriesNb(), Color.white);
 		glPopMatrix();
 		glDisable(GL_BLEND);

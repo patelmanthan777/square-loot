@@ -21,6 +21,6 @@ public class EnergyWeapon extends Weapon{
 	}
 	
 	public int getTextureID(){
-		return TextureManager.laserRifleTexture().getTextureID();
+		return TextureManager.laserRifleTexture().getTexture().getTextureID();
 	}
 }

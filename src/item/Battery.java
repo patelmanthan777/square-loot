@@ -15,7 +15,7 @@ public class Battery extends Item {
 	public Battery(float x, float y){
 		super(x,y,ItemListEnum.BATTERY);
 		weight = 0;
-		
+		halfSize.set(0.3f,0.3f);
 		gbtype = GameBodyType.BATTERY;
 		try {
 			sprites = new SpriteSheet("assets/textures/battery.png",64,64);
@@ -28,7 +28,7 @@ public class Battery extends Item {
 	
 	
 	public int getTextureID(){
-		return TextureManager.batteryTexture().getTextureID();
+		return TextureManager.batteryTexture().getTexture().getTextureID();
 	}	
 	
 	

@@ -22,6 +22,6 @@ public class LaserRifle extends PrimaryWeapon {
 	}
 	
 	public int getTextureID(){
-		return TextureManager.laserRifleTexture().getTextureID();
+		return TextureManager.laserRifleTexture().getTexture().getTextureID();
 	}
 }

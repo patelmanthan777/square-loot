@@ -36,7 +36,7 @@ public class Energy extends Item {
 	}
 	
 	public int getTextureID(){
-		return TextureManager.energyTexture().getTextureID();
+		return TextureManager.energyTexture().getTexture().getTextureID();
 	}	
 	
 	public int getCharge(){

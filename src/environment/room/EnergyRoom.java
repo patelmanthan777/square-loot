@@ -45,27 +45,27 @@ public class EnergyRoom extends Room{
 				
 		Energy e = new Energy(x/Map.blockPixelSize.x+3,
 							  y/Map.blockPixelSize.y+(float)2.5,
-							  100);
+							  1);
 		ItemManager.add(e);
 		grid[4][2] = BlockFactory.createSolidBlock();
 		
 		
 		e = new Energy(x/Map.blockPixelSize.x+(Map.roomBlockSize.x-3),
 				  	   y/Map.blockPixelSize.y+(float)2.5,
-				       100);
+				       1);
 		ItemManager.add(e);
 		grid[(int)Map.roomBlockSize.x-5][2] = BlockFactory.createSolidBlock();
 		
 		
 		e = new Energy(x/Map.blockPixelSize.x+3,
 				  	   y/Map.blockPixelSize.y+(float)(Map.roomBlockSize.y-2.5),
-				  	   100);
+				  	   1);
 		ItemManager.add(e);
 		grid[4][(int)Map.roomBlockSize.y-3] = BlockFactory.createSolidBlock();
 		
 		e = new Energy(x/Map.blockPixelSize.x+(Map.roomBlockSize.x-3),
 			  	   	   y/Map.blockPixelSize.y+(float)((Map.roomBlockSize.y-2.5)),
-			  	   	   100);
+			  	   	   1);
 		ItemManager.add(e);
 		grid[(int)Map.roomBlockSize.x-5][(int)Map.roomBlockSize.y-3] = BlockFactory.createSolidBlock();
 		

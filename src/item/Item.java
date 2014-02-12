@@ -41,7 +41,6 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 		this.halfSize.x = (float)30/(float)ConfigManager.unitPixelSize;
 		this.halfSize.y = (float)30/(float)ConfigManager.unitPixelSize;	
 		self = s;
-		
 		gbtype = GameBodyType.ITEM;
 		this.btype = BodyType.DYNAMIC;
 		
