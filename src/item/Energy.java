@@ -4,6 +4,8 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 import configuration.ConfigManager;
 import physics.GameBodyType;
@@ -19,12 +21,18 @@ public class Energy extends Item {
 	public Energy(float x, float y, int charge){
 		super(x,y,ItemListEnum.ENERGY);
 		weight = 100;
-		drawSize[0] = 15;
-		drawSize[1] = 30;
 		
 		gbtype = GameBodyType.ENERGY;
 		
-		this.charge = charge;				
+		this.charge = charge;	
+		this.halfSize.set(0.3f,0.3f);
+		
+		try {
+			sprites = new SpriteSheet("assets/textures/energy.png",64,64);
+			image = sprites.getSprite(0, 0);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public int getTextureID(){
@@ -43,7 +51,7 @@ public class Energy extends Item {
 		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(0.4f*ConfigManager.blockPhysicSize, 0.4f*ConfigManager.blockPhysicSize);
+		dynamicBox.setAsBox(halfSize.x*ConfigManager.blockPhysicSize, halfSize.y*ConfigManager.blockPhysicSize);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicBox;
 		fixtureDef.density = 1.0f;

@@ -25,7 +25,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	//protected float maxSpeed = 0.02f;
 	protected float descFactor = 0.5f;
 	protected float accFactor = 30f;
-	
+	protected Vector2f halfSize = new Vector2f();
 	protected Body body;
 	protected Vector2f speed = new Vector2f();
 
@@ -76,7 +76,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
 		body = PhysicsManager.createBody(bodyDef);
 		CircleShape dynamicCircle = new CircleShape();
-		dynamicCircle.setRadius(0.4f*ConfigManager.blockPhysicSize);
+		dynamicCircle.setRadius((this.halfSize.x)*ConfigManager.blockPhysicSize);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicCircle;
 		fixtureDef.density = 0.3f;

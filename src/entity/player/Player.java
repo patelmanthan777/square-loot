@@ -24,7 +24,6 @@ import userInterface.inventory.InventoryItemEnum;
 import entity.LivingEntity;
 import entity.npc.Npc;
 import entity.npc.Shopkeeper;
-import entity.npc.Zombie;
 import environment.Map;
 import environment.room.OxygenRoom;
 import event.Timer;
@@ -59,9 +58,9 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public Player(Vector2f pos) {
 		super(pos);
 		this.gbtype = GameBodyType.PLAYER;
-		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(20);
+		halfSize.set(0.4f, 0.4f);
 		try {
 			headSprites = new SpriteSheet("assets/textures/animperso.png",256,256);
 			headAnimation = new Animation(headSprites, 600);
@@ -135,7 +134,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	@Override
 	public void draw() {
-		
+		float factor = 2f;
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glColor3f(1,1,1);
@@ -145,23 +144,23 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		float zoomx =  (float) (5f * Math.cos(Timer.getTime()/400f));
 		float zoomy = speed != 0 ? (float) (5f * Math.cos(Timer.getTime()/20f)): 0;
 		Image tile = bodySprites.getSprite(Math.min((int)((float)pressure/(float)OxygenRoom.maxPressure*5),4), 0);
-		tile.setCenterOfRotation(halfSize.x+zoomx/2f, halfSize.y+zoomy/2f);
+		tile.setCenterOfRotation(halfSize.x*factor*ConfigManager.unitPixelSize+zoomx/2f, halfSize.y*factor*ConfigManager.unitPixelSize+zoomy/2f);
 		tile.setRotation(-(this.getDegreAngle()+90));
 		int fact = 40;
 		
-		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x + this.getDirection().x*fact-zoomx/2f, this.getY()*Map.blockPixelSize.y-halfSize.y + this.getDirection().y*fact-zoomy/2f,halfSize.x*2+zoomx,halfSize.y*2+zoomy);
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize + this.getDirection().x*fact-zoomx/2f, this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize + this.getDirection().y*fact-zoomy/2f,halfSize.x*factor*2*ConfigManager.unitPixelSize+zoomx,halfSize.y*factor*2*ConfigManager.unitPixelSize+zoomy);
 		
 		/* HEAD */
 		tile = headAnimation.getCurrentFrame();
-		tile.setCenterOfRotation(halfSize.x, halfSize.y);
+		tile.setCenterOfRotation(halfSize.x*factor*ConfigManager.unitPixelSize, halfSize.y*factor*ConfigManager.unitPixelSize);
 		tile.setRotation(-(this.getDegreAngle()+90));
-		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x, this.getY()*Map.blockPixelSize.y-halfSize.y,halfSize.x*2,halfSize.y*2);
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize,halfSize.x*factor*2*ConfigManager.unitPixelSize,halfSize.y*factor*2*ConfigManager.unitPixelSize);
 		
 		/* FEATHER */
 		tile = featherAnimation.getCurrentFrame();
-		tile.setCenterOfRotation(halfSize.x, halfSize.y);
+		tile.setCenterOfRotation(halfSize.x*factor*ConfigManager.unitPixelSize, halfSize.y*factor*ConfigManager.unitPixelSize);
 		tile.setRotation(-(this.getDegreAngle()+90));
-		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x, this.getY()*Map.blockPixelSize.y-halfSize.y,halfSize.x*2,halfSize.y*2);
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize,halfSize.x*factor*2*ConfigManager.unitPixelSize,halfSize.y*factor*2*ConfigManager.unitPixelSize);
 		glDisable(GL_BLEND);
 	}
 
@@ -191,7 +190,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			if (laser != null) {
 				laser.setDirection(orix, oriy);
 			}
-			updatePoints();
 		}
 	}
 
@@ -206,7 +204,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			laser.setPosition(posx * ConfigManager.unitPixelSize,
 					posy * ConfigManager.unitPixelSize);
 		}
-		updatePoints();
 	}
 
 	public Light getLight() {

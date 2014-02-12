@@ -54,13 +54,13 @@ public class Shopkeeper extends Npc{
 	}
 	
 	private void init() {
-		this.updatePoints();
+		//this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(20);
 		this.accFactor = 0.001f;
 		this.descFactor = 0.2f;
-		this.halfSize.x = 40;
-		this.halfSize.y = 40;	
+		this.halfSize.x = (float)40/(float)ConfigManager.unitPixelSize;
+		this.halfSize.y = (float)40/(float)ConfigManager.unitPixelSize;	
 		
 		price = 1000;
 		
@@ -118,9 +118,9 @@ public class Shopkeeper extends Npc{
 			break;
 		}
 		
-		tile.setCenterOfRotation(halfSize.x, halfSize.y);
+		tile.setCenterOfRotation(halfSize.x*ConfigManager.unitPixelSize, halfSize.y*ConfigManager.unitPixelSize);
 		tile.setRotation(-(this.getDegreAngle()+90));	
-		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x, this.getY()*Map.blockPixelSize.y-halfSize.y,halfSize.x*2,halfSize.y*2);
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize.y-halfSize.y*ConfigManager.unitPixelSize,halfSize.x*2*ConfigManager.unitPixelSize,halfSize.y*2*ConfigManager.unitPixelSize);
 		glDisable(GL_BLEND);
 	}
 	

@@ -12,11 +12,15 @@ import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
 
 
+
+
 import org.jbox2d.dynamics.BodyType;
 import org.lwjgl.util.vector.Vector2f;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SpriteSheet;
 
+import configuration.ConfigManager;
 import physics.GameBodyType;
-
 import physics.PhysicsObject;
 import rendering.Drawable;
 import utils.GraphicsAL;
@@ -27,16 +31,15 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 	protected float weight = 0;	
 	Vector2f [] points = new Vector2f[4];
 	public final ItemListEnum self;
-		
-	public boolean destroyed = false;
+	public boolean destroyed = false;	
 	
-	protected int [] drawSize = new int[2];	
-	
+	protected SpriteSheet sprites;
+	protected Image image;
 	public Item(float x, float y, ItemListEnum s){
 		super(x, y);
 		this.descFactor = 0.01f;
-		drawSize[0] = 30;
-		drawSize[1] = 30;
+		this.halfSize.x = (float)30/(float)ConfigManager.unitPixelSize;
+		this.halfSize.y = (float)30/(float)ConfigManager.unitPixelSize;	
 		self = s;
 		
 		gbtype = GameBodyType.ITEM;
@@ -45,6 +48,8 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 		for(int i = 0 ; i < 4 ; i++){
 			points[i] = new Vector2f();
 		}
+		
+		
 	}
 	
 	
@@ -57,22 +62,12 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 	}
 	
 	
-	public void draw(){
-		
-		points[0].x = position.x*Map.blockPixelSize.x;
-		points[0].y = position.y*Map.blockPixelSize.y + drawSize[1];
-		points[1].x = position.x*Map.blockPixelSize.x + drawSize[0];
-		points[1].y = position.y*Map.blockPixelSize.y + drawSize[1];
-		points[2].x = position.x*Map.blockPixelSize.x + drawSize[0];
-		points[2].y = position.y*Map.blockPixelSize.y;
-		points[3].x = position.x*Map.blockPixelSize.x;
-		points[3].y = position.y*Map.blockPixelSize.y;				
-		
+	public void draw(){			
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		
-		GraphicsAL.drawQuadTexture(points,
-				   				   GraphicsAL.fullTexPoints,
-				   				   getTextureID());			
+				
+		image.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize.y-halfSize.y*ConfigManager.unitPixelSize,halfSize.x*2*ConfigManager.unitPixelSize,halfSize.y*2*ConfigManager.unitPixelSize);
+	
 		glDisable(GL_BLEND);
 	}
 	
@@ -85,13 +80,13 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 					 float height){
 		
 		
-		points[0].x = x + (width - width*drawSize[0]/drawSize[1])/2;
+		points[0].x = x + (width - width*halfSize.x/halfSize.y)/2;
 		points[0].y = y + height;
-		points[1].x = x + (width - width*drawSize[0]/drawSize[1])/2 + width*drawSize[0]/drawSize[1];
+		points[1].x = x + (width - width*halfSize.x/halfSize.y)/2 + width*halfSize.x/halfSize.y;
 		points[1].y = y + height;
-		points[2].x = x + (width - width*drawSize[0]/drawSize[1])/2 + width*drawSize[0]/drawSize[1];
+		points[2].x = x + (width - width*halfSize.x/halfSize.y)/2 + width*halfSize.x/halfSize.y;
 		points[2].y = y;
-		points[3].x = x + (width - width*drawSize[0]/drawSize[1])/2;
+		points[3].x = x + (width - width*halfSize.x/halfSize.y)/2;
 		points[3].y = y;		
 		
 		glEnable(GL_BLEND); 

@@ -40,7 +40,8 @@ public class PlayerStatsOverlay extends Overlay{
        	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glPushMatrix();
 		glLoadIdentity();
-		OverlayManager.font.drawString(50, 125, "Batteries : "+player.getBatteriesNb(), Color.white);
+		
+		OverlayManager.font.drawString(100, 125, "" + player.getBatteriesNb(), Color.white);
 		glPopMatrix();
 		glDisable(GL_BLEND);
 	}

@@ -3,14 +3,15 @@ package entity.npc;
 import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
+
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
+import configuration.ConfigManager;
 import physics.GameBodyType;
 import physics.PhysicsDataStructure;
-
 import rendering.MiniMapDrawable;
 import userInterface.MiniMap;
 import entity.player.Player;
@@ -20,7 +21,6 @@ import event.Timer;
 public class Zombie extends Npc implements MiniMapDrawable {
 
 	private static int scentDistanceBlk = 8;
-	//private static int scentDistancePx = (int) (scentDistanceBlk * Map.blockPixelSize.x);
 	private ZombieState zombieState;
 	private float orientationSpeed = 0;
 	private float orientationDesc = 0.00001f;
@@ -60,13 +60,12 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	}
 
 	private void init() {
-		this.updatePoints();
 		this.setMaxHealth(20);
 		this.setHealth(20);
 		this.accFactor = 15f;
 		//this.descFactor = 0.2f;
-		this.halfSize.x = 40;
-		this.halfSize.y = 40;
+		this.halfSize.x = (float)40/(float)ConfigManager.unitPixelSize;
+		this.halfSize.y = (float)40/(float)ConfigManager.unitPixelSize;	
 		gbtype = GameBodyType.ZOMBIE;
 		zombieState = ZombieState.IDLE;
 		try {
@@ -109,9 +108,9 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		
 		/* BODY */
 		Image tile = headSprites.getSprite(0,0);
-		tile.setCenterOfRotation(halfSize.x, halfSize.y);
+		tile.setCenterOfRotation(halfSize.x*ConfigManager.unitPixelSize, halfSize.y*ConfigManager.unitPixelSize);
 		tile.setRotation(-(this.getDegreAngle()+90));	
-		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x, this.getY()*Map.blockPixelSize.y-halfSize.y,halfSize.x*2,halfSize.y*2);
+		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize.y-halfSize.y*ConfigManager.unitPixelSize,halfSize.x*2*ConfigManager.unitPixelSize,halfSize.y*2*ConfigManager.unitPixelSize);
 		glDisable(GL_BLEND);
 	}
 
@@ -134,17 +133,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		glEnd();
 	}
 
-	@Override
-	public void setDirection(float orix, float oriy) {
-		super.setDirection(orix, oriy);
-		updatePoints();
-	}
 
-	@Override
-	public void setPosition(float posx, float posy) {
-		super.setPosition(posx, posy);
-		updatePoints();
-	}
 
 	@Override
 	public void thinkAndAct(LinkedList<Player> players, long deltaT) {
@@ -161,7 +150,6 @@ public class Zombie extends Npc implements MiniMapDrawable {
 				dst = length;
 				this.setDirection(thisToPlayer);
 				this.translate(thisToPlayer.x, thisToPlayer.y);
-				updatePoints();
 			}
 
 		}

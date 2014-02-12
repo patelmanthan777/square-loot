@@ -11,7 +11,6 @@ import physics.GameBodyType;
 
 import physics.PhysicsDataStructure;
 import environment.room.OxygenRoom;
-import item.Item;
 
 public class BatteryReceptacleBlock extends SolidBlock{
 	
