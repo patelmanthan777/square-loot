@@ -62,8 +62,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	private void init() {
 		this.setMaxHealth(20);
 		this.setHealth(20);
-		this.accFactor = 15f;
-		//this.descFactor = 0.2f;
+		this.accFactor = ConfigManager.robotAcc;
 		this.halfSize.x = (float)40/(float)ConfigManager.unitPixelSize;
 		this.halfSize.y = (float)40/(float)ConfigManager.unitPixelSize;	
 		gbtype = GameBodyType.ZOMBIE;

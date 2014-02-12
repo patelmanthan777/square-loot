@@ -16,6 +16,10 @@ public class ConfigManager {
 	public static int unitPixelSize = 48;
 	public static int oxygenTime = 10;
 	public static float blockPhysicSize = 1;
+	public static float playerAcc = 20;
+	public static float robotAcc = 10;
+	public static float ownPressureCoef = 500;
+	public static float playerOxygenConsumption = 25;
 	
 	/**
 	 * Initialize the ConfigManager class by reading from the "options.txt"
@@ -30,6 +34,11 @@ public class ConfigManager {
 			loadFullscreen(prop);
 			loadMaxFps(prop);
 			loadOxygenTime(prop);
+			loadRobotAcc(prop);
+			loadPlayerAcc(prop);
+			loadOwnPressureCoef(prop);
+			loadPlayerOxygenConsumption(prop);
+			
 		}catch (Exception e){
 			System.out.println(e.toString());
 		}
@@ -43,7 +52,7 @@ public class ConfigManager {
 	}
 	
 	static private void loadFullscreen(Properties prop) {
-		String str = prop.getProperty("Fullscreen");
+		String str = prop.getProperty("FullScreen");
 		fullScreen = Boolean.parseBoolean(str);
 	}
 	
@@ -56,5 +65,23 @@ public class ConfigManager {
 	static private void loadOxygenTime(Properties prop) {
 		String str = prop.getProperty("OxygenTime");
 		oxygenTime = Integer.parseInt(str);
+	}
+	
+	static private void loadRobotAcc(Properties prop) {
+		String str = prop.getProperty("RobotAcc");
+		robotAcc = Float.parseFloat(str);
+	}
+	
+	static private void loadPlayerAcc(Properties prop) {
+		String str = prop.getProperty("PlayerAcc");
+		playerAcc = Float.parseFloat(str);
+	}
+	static private void loadOwnPressureCoef(Properties prop) {
+		String str = prop.getProperty("OwnPressureCoef");
+		ownPressureCoef = Float.parseFloat(str);
+	}
+	static private void loadPlayerOxygenConsumption(Properties prop) {
+		String str = prop.getProperty("PlayerOxygenConsumption");
+		playerOxygenConsumption = Float.parseFloat(str);
 	}
 }

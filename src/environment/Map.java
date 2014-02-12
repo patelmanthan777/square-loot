@@ -64,7 +64,7 @@ public class Map implements ShadowCaster {
 	Vector2f cpos = new Vector2f();
 	/* ************************* */
 	private static int neighboorPressureCoef = 1;
-	private static int ownPressureCoef = 500;
+	private static int ownPressureCoef;
 	public static int textureSize;
 	public static final int textureNb = 5;
 	public static int doorLayer = 0;
@@ -91,7 +91,7 @@ public class Map implements ShadowCaster {
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x * roomPixelSize.x,
 				mapRoomSize.y * roomPixelSize.y);
 		this.drawRoomPosition = new Vector2f(0, 0);
-
+		ownPressureCoef = (int) ConfigManager.ownPressureCoef;
 		Map.textureSize = (int) (Math.max(ConfigManager.resolution.x,
 				ConfigManager.resolution.y) / (textureNb - 2));
 		for (int layer = 0; layer < maxLayer; layer++) {
