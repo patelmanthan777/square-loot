@@ -1,9 +1,6 @@
 package item;
 
 import java.util.LinkedList;
-
-import entity.npc.Npc;
-import entity.player.Player;
 import environment.Map;
 
 

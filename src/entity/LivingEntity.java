@@ -4,7 +4,6 @@ package entity;
 import org.jbox2d.dynamics.BodyType;
 import org.lwjgl.util.vector.Vector2f;
 import physics.PhysicsDataStructure;
-import configuration.ConfigManager;
 import entity.projectile.Projectile;
 
 public abstract class LivingEntity extends DynamicEntity {
