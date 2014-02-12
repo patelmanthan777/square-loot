@@ -113,9 +113,7 @@ public class Shopkeeper extends Npc {
 			tile = TextureManager.keyTexture();
 			break;
 		}
-		tile.rotate(180);
-		tile.draw((this.getX() + halfSize.x - 0.2f) * ConfigManager.unitPixelSize, (this.getY() - halfSize.y)* ConfigManager.unitPixelSize, halfSize.x * ConfigManager.unitPixelSize, halfSize.y * ConfigManager.unitPixelSize);
-		tile.setRotation(0);
+		tile.draw((this.getX() + halfSize.x - 0.2f) * ConfigManager.unitPixelSize, (this.getY())* ConfigManager.unitPixelSize, halfSize.x * ConfigManager.unitPixelSize, halfSize.y * ConfigManager.unitPixelSize);
 		glDisable(GL_BLEND);
 	}
 
