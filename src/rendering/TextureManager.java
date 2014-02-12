@@ -6,7 +6,7 @@ import org.newdawn.slick.SlickException;
 public class TextureManager {
 
 	private static enum textureEnum {
-		BACKGROUND, PLAYER, ZOMBIE, LASERRIFLE, BATTERY, KEY, ENERGY,SHOPKEEPER
+		BACKGROUND, PLAYER, ZOMBIE, LASERRIFLE, BATTERY, KEY, ENERGY,SHOPKEEPER,BULLET
 	}
 
 	private static Image[] images = new Image[textureEnum.values().length];
@@ -21,6 +21,7 @@ public class TextureManager {
 			images[textureEnum.ENERGY.ordinal()] = new Image("assets/textures/energy.png");
 			images[textureEnum.KEY.ordinal()] = new Image("assets/textures/key.png");
 			images[textureEnum.SHOPKEEPER.ordinal()] = new Image("assets/textures/shopkeeper.png");
+			images[textureEnum.BULLET.ordinal()]  = new Image("assets/textures/bullet.png");
 		} catch (SlickException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,5 +57,8 @@ public class TextureManager {
 	}
 	public static Image shopKeeperTexture() {
 		return images[textureEnum.SHOPKEEPER.ordinal()];
+	}
+	public static Image bulletTexture() {
+		return images[textureEnum.BULLET.ordinal()];
 	}
 }

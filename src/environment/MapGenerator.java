@@ -49,7 +49,7 @@ public class MapGenerator {
 		roomsGrid[(int)ispawn][(int)jspawn] = r;
 		rooms.add(r);
 		boolean stop = false;
-		while (rooms.size() >0 && !stop && rooms.size() <= n) {
+		while (rooms.size() >0 && !stop && (rooms.size() + surroundedRooms.size()) <= n) {
 			int surround;
 			int rand = (int) (Math.random() * rooms.size());
 			int x;

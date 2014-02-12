@@ -7,8 +7,12 @@ import light.LightManager;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.SpriteSheet;
 
 import configuration.ConfigManager;
+import environment.Map;
 import rendering.Shader;
 
 public class Bullet extends Projectile {
@@ -19,6 +23,8 @@ public class Bullet extends Projectile {
  */
 	static private Shader bulletShaderProgram = null;
 	private Light l;
+	
+	protected Image image;
 
 	/**
 	 * Initialize the bullet shader
@@ -48,7 +54,11 @@ public class Bullet extends Projectile {
 		super(pos,rot,initSpeed,speedValue,size,damage);
 		color = new Vector3f(1,1,0.8f);
 		l = LightManager.addPointLight(this.toString(), new Vector2f(200, 200), color, 20,2*(int)ConfigManager.resolution.x,true);
-	
+		try {
+			image =  new Image("assets/textures/bullet.png");
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -62,6 +72,13 @@ public class Bullet extends Projectile {
 	 */
 	@Override
 	public void draw() {
+		glEnable(GL_BLEND); 
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		
+				
+		image.draw(this.getX()*Map.blockPixelSize.x-size/2, this.getY()*Map.blockPixelSize.y-size/2,size,size);
+	
+		glDisable(GL_BLEND);
+		/*
 		glDisable(GL_TEXTURE_2D);
 		GL11.glColor3f(color.x, color.y, color.z);
 		Bullet.bulletShaderProgram.use();
@@ -80,6 +97,7 @@ public class Bullet extends Projectile {
 		glDisable(GL_BLEND);
 		Shader.unuse();
 		glEnable(GL_TEXTURE_2D);
+		*/
 	}
 
 	@Override
@@ -99,5 +117,10 @@ public class Bullet extends Projectile {
 		super.reset(pos, rot, initSpeed, speedValue, size, damage);
 		l.activate();
 		l.setPosition(pos.x*ConfigManager.unitPixelSize, pos.y*ConfigManager.unitPixelSize);
+		try {
+			image =  new Image("assets/textures/bullet.png");
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
 	}
 }
