@@ -18,6 +18,7 @@ import physics.GameBodyType;
 import physics.PhysicsDataStructure;
 import configuration.ConfigManager;
 import rendering.MiniMapDrawable;
+import rendering.TextureManager;
 import userInterface.MiniMap;
 import userInterface.inventory.Inventory;
 import userInterface.inventory.InventoryItemEnum;
@@ -171,7 +172,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	@Override
 	public void drawOnMiniMap() {
-		float persoRatio = 0.5f;
+		float persoRatio = 0.8f;
 		int posx = (int) (MiniMap.position.x + (getX() / Map.roomBlockSize.x)
 				* MiniMap.roomSize.x - persoRatio * MiniMap.roomSize.x / 2);
 		int posy = (int) (MiniMap.position.y + (getY() / Map.roomBlockSize.y)
@@ -179,13 +180,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		glColor3f(0, 1, 0);
 		// draw quad
 		glLoadIdentity();
-		glBegin(GL_TRIANGLE_STRIP);
-		glVertex2f(posx + persoRatio * MiniMap.roomSize.x, posy);
-		glVertex2f(posx, posy);
-		glVertex2f(posx + persoRatio * MiniMap.roomSize.x, posy + persoRatio
-				* MiniMap.roomSize.y);
-		glVertex2f(posx, posy + persoRatio * MiniMap.roomSize.y);
-		glEnd();
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		TextureManager.playerTexture().draw(posx,posy,persoRatio * MiniMap.roomSize.x,persoRatio * MiniMap.roomSize.y);
+		glDisable(GL_BLEND);
 	}
 
 	@Override
