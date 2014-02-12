@@ -2,11 +2,13 @@ package item;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import entity.LivingEntity;
+
 public abstract class Equipment extends Item{
 	
 	public Equipment(float x, float y, ItemListEnum s){
 		super(x,y,s);
 	}
 	
-	public abstract boolean action(Vector2f pos, Vector2f target, Vector2f initSpeed);
+	public abstract boolean action(Vector2f pos, Vector2f target, LivingEntity doer);
 }

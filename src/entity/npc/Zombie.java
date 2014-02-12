@@ -149,7 +149,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 				zombieState = ZombieState.CHASING;
 				dst = length;
 				this.setDirection(thisToPlayer);
-				this.translate(thisToPlayer.x, thisToPlayer.y);
+				this.translate(this.getDirection().x, this.getDirection().y);
 			}
 
 		}

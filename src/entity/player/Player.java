@@ -131,7 +131,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 				position.y * ConfigManager.unitPixelSize);
 		l.setPosition(p);
 	}
-
+	
 	@Override
 	public void draw() {
 		float factor = 2f;

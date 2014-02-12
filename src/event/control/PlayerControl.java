@@ -154,24 +154,28 @@ public class PlayerControl {
 	private void moveForwardAction(KeyState state) {
 		if (state == KeyState.HELD || state == KeyState.PRESSED) {
 			p.translate(0, -1);
+			p.normaliseTranslation();
 		}
 	}
 
 	private void moveBackwardAction(KeyState state) {
 		if (state == KeyState.HELD || state == KeyState.PRESSED) {
 			p.translate(0, 1);
+			p.normaliseTranslation();
 		}
 	}
 
 	private void moveRightAction(KeyState state) {
 		if (state == KeyState.HELD || state == KeyState.PRESSED) {
 			p.translate(1, 0);
+			p.normaliseTranslation();
 		}
 	}
 
 	private void moveLeftAction(KeyState state) {
 		if (state == KeyState.HELD || state == KeyState.PRESSED) {
 			p.translate(-1, 0);
+			p.normaliseTranslation();
 		}
 	}
 

@@ -63,6 +63,10 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		this.translation.y += translationy;
 	}
 
+	public void normaliseTranslation(){
+		this.translation.normalise(translation);
+	}
+	
 	/**
 	 * Initialize the physics body
 	 * 
@@ -104,7 +108,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 			return;
 		
 		if (this.translation.length() != 0) {
-			this.translation.normalise(translation);
+			//this.translation.normalise(translation);
 			this.translation.scale(accFactor);
 			this.speed.x += this.translation.x;
 			this.speed.y += this.translation.y;

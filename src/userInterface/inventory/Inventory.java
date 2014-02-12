@@ -243,27 +243,27 @@ public class Inventory extends Overlay{
 		case PWEAPON:
 			if(pweapon.access() != null)
 				pweapon.access().action(new Vector2f(x   , y   ),
-						                new Vector2f(dirx, diry),owner.getSpeed());			
+						                new Vector2f(dirx, diry),owner);			
 			break;
 		case SWEAPON:
 			if(pweapon.access() != null)
 				sweapon.access().action(new Vector2f(x   , y   ),
-                                        new Vector2f(dirx, diry),owner.getSpeed());			
+                                        new Vector2f(dirx, diry),owner);			
 			break;
 		case SHIELD:			
 			if(pweapon.access() != null)
 				shield.access().action(new Vector2f(x   , y   ),
-									   new Vector2f(dirx, diry),owner.getSpeed());			
+									   new Vector2f(dirx, diry),owner);			
 			break;
 		case ACCESSORY:			
 			if(pweapon.access() != null)
 				accessory.access().action(new Vector2f(x   , y   ),
-                                          new Vector2f(dirx, diry),owner.getSpeed());			
+                                          new Vector2f(dirx, diry),owner);			
 			break;
 		case MGEAR:			
 			if(pweapon.access() != null)
 				mgear.access().action(new Vector2f(x   , y   ),
-									  new Vector2f(dirx, diry),owner.getSpeed());			
+									  new Vector2f(dirx, diry),owner);			
 			break;
 		case BATTERY:
 		case NOITEM:
@@ -273,7 +273,7 @@ public class Inventory extends Overlay{
 	}
 	
 	public void energyShot(Vector2f pos, Vector2f target){
-		if(batteries.size() > 0 && eweapon.action(pos, target,owner.getSpeed()))		
+		if(batteries.size() > 0 && eweapon.action(pos, target,owner))		
 			batteries.removeLast();
 		
 	}
