@@ -147,20 +147,25 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		tile.setCenterOfRotation(halfSize.x*factor*ConfigManager.unitPixelSize+zoomx/2f, halfSize.y*factor*ConfigManager.unitPixelSize+zoomy/2f);
 		tile.setRotation(-(this.getDegreAngle()+90));
 		int fact = 40;
+		float x = this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize + this.getDirection().x*fact-zoomx/2f;
+		float y = this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize + this.getDirection().y*fact-zoomy/2f;
+		tile.draw(x, y,halfSize.x*factor*2*ConfigManager.unitPixelSize+zoomx,halfSize.y*factor*2*ConfigManager.unitPixelSize+zoomy);
 		
-		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize + this.getDirection().x*fact-zoomx/2f, this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize + this.getDirection().y*fact-zoomy/2f,halfSize.x*factor*2*ConfigManager.unitPixelSize+zoomx,halfSize.y*factor*2*ConfigManager.unitPixelSize+zoomy);
+		
+		x = this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize;
+		y = this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize;
 		
 		/* HEAD */
 		tile = headAnimation.getCurrentFrame();
 		tile.setCenterOfRotation(halfSize.x*factor*ConfigManager.unitPixelSize, halfSize.y*factor*ConfigManager.unitPixelSize);
 		tile.setRotation(-(this.getDegreAngle()+90));
-		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize,halfSize.x*factor*2*ConfigManager.unitPixelSize,halfSize.y*factor*2*ConfigManager.unitPixelSize);
+		tile.draw(x, y, halfSize.x*factor*2*ConfigManager.unitPixelSize, halfSize.y*factor*2*ConfigManager.unitPixelSize);
 		
 		/* FEATHER */
 		tile = featherAnimation.getCurrentFrame();
 		tile.setCenterOfRotation(halfSize.x*factor*ConfigManager.unitPixelSize, halfSize.y*factor*ConfigManager.unitPixelSize);
 		tile.setRotation(-(this.getDegreAngle()+90));
-		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize,halfSize.x*factor*2*ConfigManager.unitPixelSize,halfSize.y*factor*2*ConfigManager.unitPixelSize);
+		tile.draw(x, y,halfSize.x*factor*2*ConfigManager.unitPixelSize,halfSize.y*factor*2*ConfigManager.unitPixelSize);
 		glDisable(GL_BLEND);
 	}
 
