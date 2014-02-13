@@ -53,6 +53,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	
 	private long apneaTimer = -1;
 	private long apneaTimerMax = 10;
+	private long damageApneaTimer = 1;
+	private int apneaDamage = 1;
 	
 	private Item contactItem=null;
 	private Npc contactNPC=null;
@@ -107,12 +109,16 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		((Weapon)(this.inventory.access(InventoryItemEnum.PWEAPON))).setSpeed(this.speed.x,this.speed.y);
 		this.pressure = (int) m.getRoom(this.getX(), this.getY()).getPressure();
 		
-		if(pressure == 0 && apneaTimer !=-1)
-			updateApnea();
-		else if(pressure == 0)
-			apneaTimer = apneaTimerMax*Timer.unitInOneSecond + Timer.getTime();
-		else
+		if(pressure == 0){ 
+			if(apneaTimer ==-1){
+				apneaTimer = apneaTimerMax*Timer.unitInOneSecond + Timer.getTime();
+			} else if(apneaTimer < Timer.getTime()){
+				apneaTimer = damageApneaTimer*Timer.unitInOneSecond + Timer.getTime();
+				damage(apneaDamage);
+			}
+		}else{
 			apneaTimer = -1;
+		}
 		
 		headAnimation.update(delta);
 		featherAnimation.update(delta);
@@ -141,10 +147,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			
 	}
 	
-	private void updateApnea(){
-		if(apneaTimer < Timer.getTime())
-			damage(1);				
-	}
 
 	public void setLight(Light l) {
 		light = l;
