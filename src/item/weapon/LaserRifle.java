@@ -6,6 +6,7 @@ import item.ItemListEnum;
 import org.lwjgl.util.vector.Vector2f;
 
 import rendering.TextureManager;
+import sound.SoundManager;
 import entity.LivingEntity;
 import entity.projectile.ProjectileManager;
 
@@ -20,7 +21,7 @@ public class LaserRifle extends PrimaryWeapon {
 	public void fire(Vector2f pos, Vector2f target, LivingEntity doer) {	
 		ProjectileManager.createBullet(pos, target,  doer.getSpeed(), projectileSpeed, projectileSize, damage);	
 		doer.translate(-doer.getDirection().x*recoil, -doer.getDirection().y*recoil);
-		
+		SoundManager.gunShot(0, 0);
 	}
 	
 	public int getTextureID(){

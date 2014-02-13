@@ -20,6 +20,7 @@ public class ConfigManager {
 	public static float robotAcc = 10;
 	public static float ownPressureCoef = 500;
 	public static float playerOxygenConsumption = 25;
+	public static float musicVolume = 0.5f;
 	
 	/**
 	 * Initialize the ConfigManager class by reading from the "options.txt"
@@ -83,5 +84,9 @@ public class ConfigManager {
 	static private void loadPlayerOxygenConsumption(Properties prop) {
 		String str = prop.getProperty("PlayerOxygenConsumption");
 		playerOxygenConsumption = Float.parseFloat(str);
+	}
+	static private void loadMusicVolume(Properties prop) {
+		String str = prop.getProperty("MusicVolume");
+		musicVolume = Float.parseFloat(str);
 	}
 }

@@ -6,7 +6,6 @@ import item.weapon.LaserRifle;
 import light.Laser;
 import light.Light;
 import light.LightManager;
-
 import utils.GraphicsAL;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -16,6 +15,7 @@ import physics.PhysicsManager;
 import configuration.ConfigManager;
 import rendering.Background;
 import rendering.Camera;
+import sound.SoundManager;
 import userInterface.HUD;
 import userInterface.OverlayManager;
 import entity.EntityManager;
@@ -45,6 +45,7 @@ public class GameLoop extends Game{
 	 * window manager and openGL.
 	 */
 	public void init() {
+		
 		PhysicsManager.init();
 		
 		p = EntityManager.createPlayer();
@@ -93,6 +94,9 @@ public class GameLoop extends Game{
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
+		
+		
+		SoundManager.init();
 		
 		Timer.start();
 		

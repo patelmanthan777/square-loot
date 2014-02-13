@@ -4,5 +4,6 @@ MaxFPS=0
 OxygenTime=10
 PlayerAcc=20
 RobotAcc=10
-OwnPressureCoef=500
+OwnPressureCoef=100
 PlayerOxygenConsumption=25
+MusicVolume=0.3
