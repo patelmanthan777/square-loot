@@ -1,9 +1,19 @@
 package entity;
 
+import item.Battery;
+import item.weapon.LaserRifle;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import light.Laser;
+import light.Light;
+import light.LightManager;
+
 import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
+
+import configuration.ConfigManager;
 
 import entity.npc.Npc;
 import entity.npc.Shopkeeper;
@@ -19,6 +29,16 @@ public class EntityManager {
 
 	public static void init() {
 
+	}
+	
+	public static void reinitNPCS() {
+		npcs.clear();
+	}
+	
+	public static Player reinitPlayers() {
+		players.clear();
+		
+		return createPlayer();
 	}
 
 	public static void createZombie(float posx, float posy) {
@@ -85,6 +105,25 @@ public class EntityManager {
 		Player player = new Player(new Vector2f(0, 0));
 		players.add(player);
 		player.initPhysics();
+		
+		Light playerLight = LightManager.addPointLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
+		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), player.getDirection());
+		
+		player.setLight(playerLight);
+
+		player.setLaser(playerLaser);
+		player.pickUp(new LaserRifle(100,
+				 0f,
+				 0f,
+				 100f,
+				 10,
+				 10));
+		player.pickUp(new Battery(200,200));
+		player.pickUp(new Battery(200,200));
+		player.pickUp(new Battery(200,200));
+		player.pickUp(new Battery(200,200));
+		player.pickUp(new Battery(200,200));
+		
 		return player;
 	}
 }

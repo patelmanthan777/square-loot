@@ -1,5 +1,6 @@
 package entity.player;
 
+import game.Game;
 import item.Item;
 import item.Energy;
 import item.ItemManager;
@@ -113,6 +114,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		/* Oxygen consumption */
 		m.getRoom(this.getX(), this.getY()).consumeOxygen((float)(delta * oxygenConsumptionPerSecond)/(float)(Timer.unitInOneSecond));
 		
+		
+		if(getHealth() == 0)
+			Game.isAlive = false;
+			
 	}
 	
 	private void updateApnea(){
@@ -129,10 +134,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 
 	public void setLaser(Laser l) {
 		laser = l;
-		l.setDirection(getDirection());
-		Vector2f p = new Vector2f(position.x * ConfigManager.unitPixelSize,
-				position.y * ConfigManager.unitPixelSize);
-		l.setPosition(p);
 	}
 	
 	@Override

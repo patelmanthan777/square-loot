@@ -29,4 +29,8 @@ public class PhysicsManager {
 		Body b = world.createBody(bodyDef);
 		return b;
 	}
+	
+	public static void reinit(){
+		init();
+	}
 }

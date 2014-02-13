@@ -63,6 +63,16 @@ public class LightManager {
 		ambiantShader = new Shader("ambiant");
 	}
 
+	static public void reinit() {
+		for (int i = 0; i < Map.textureNb; i++) {
+			for (int j = 0; j < Map.textureNb; j++) {
+				staticLightsFBO[i][j] = new FBO(Map.textureSize,
+						Map.textureSize);
+				shouldBeRendered[i][j] = true;
+			}
+		}				
+	}
+	
 	static public void addShadowCaster(ShadowCaster sc) {
 		shadowCasters.add(sc);
 

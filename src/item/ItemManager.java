@@ -10,8 +10,13 @@ public class ItemManager {
 	private static LinkedList <Item> removedItems = new LinkedList<Item>();
 	
 	public static void init(){
-
+		
 	}
+	
+	public static void reinit(){
+		items.clear();
+	}
+	
 	
 	public static void add(Item i){
 		i.destroyed = false;
