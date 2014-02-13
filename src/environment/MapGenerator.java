@@ -19,7 +19,8 @@ public class MapGenerator {
 	private static LinkedList<Room> surroundedRooms;
 	private static Room[][] roomsGrid;
 	
-	private static boolean haveEndRoom;
+	private static int requiredEndRoom;
+	private static int requiredMarket;
 	
 	/**
 	 * Generate the rooms maze.
@@ -39,7 +40,8 @@ public class MapGenerator {
 	 * rooms. The generation ends when no cell satisfies this requirement.
 	 */
 	private static void createRooms(int n) {
-		haveEndRoom = false;
+		requiredEndRoom = 1;
+		requiredMarket = 2;
 		int ispawn = (int)(Math.random() * Map.mapRoomSize.x);
 		int jspawn = (int)(Math.random() * Map.mapRoomSize.y);
 		Map.spawnPixelPosition = new Vector2f(((float)ispawn+0.5f)*Map.roomPixelSize.x, ((float)jspawn+0.5f)*Map.roomPixelSize.y);
@@ -186,30 +188,32 @@ public class MapGenerator {
 	
 	private static Room randRoom(float x, float y, int nbRoom, int n){
 		Room room;
-		
-		if(!haveEndRoom)
-		{
-			Double rand = Math.random();
-			Double threshold = ((double)nbRoom)/n;
-			if(rand < threshold)
-			{
-				room = new EndRoom(x,y);
-				room.construct();
-				haveEndRoom=true;
-				return room;
-			}
-		}
 
 		Double rand = Math.random();
+		Double factor = ((double)nbRoom)/n;
+		Double thresholdEndRoom = factor * requiredEndRoom;
+		Double thresholdMarket = factor * requiredMarket + thresholdEndRoom;
+		if(rand < thresholdEndRoom)
+		{
+			room = new EndRoom(x,y);
+			room.construct();
+			requiredEndRoom--;
+			return room;
+		}
+		else if(rand < thresholdMarket)
+		{
+			room = new Market(x,y);
+			room.construct();
+			requiredMarket--;
+			return room;
+		}
+
+		rand = Math.random();
 		if(rand > 0.4){
 			room = new EnergyRoom(x,y);
 		}
 		else{
-			Double nrand = Math.random();
-			if(nrand > 0.8)
-				room = new Market(x,y);
-			else 
-				room = new RandomBlockRoom(x,y);
+			room = new RandomBlockRoom(x,y);
 		}
 
 		room.construct();
