@@ -1,15 +1,12 @@
 package game;
 
-import item.Battery;
+
 import item.ItemManager;
-import item.weapon.LaserRifle;
-import light.Laser;
-import light.Light;
 import light.LightManager;
 import utils.GraphicsAL;
 
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
+
 
 import physics.PhysicsManager;
 import configuration.ConfigManager;
@@ -44,45 +41,30 @@ public class GameLoop extends Game{
 	 * Initialize the state of the game entities, as well as the
 	 * window manager and openGL.
 	 */
-	public void init() {
-		
-		PhysicsManager.init();
-		
-		p = EntityManager.createPlayer();
-		controle = new Control(p);
-		BlockFactory.initBlocks();
 
+	public void firstInit(){
+		super.firstInit();
+		
+		PhysicsManager.init();		
+			
+		BlockFactory.initBlocks();
+		EntityManager.init();
 		GraphicsAL.init();
+
 		map = new Map(15, new Vector2f(10,10), new Vector2f(20,16), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
 		map.initPhysics();
 		map.renderMapToFrameBuffers();	
 
-		p.setPosition(map.getSpawnPosition());
-
 		background = new Background();
 		
 		ProjectileManager.init();
-
-		EntityManager.init();
-	
 		LightManager.init();
-		Light playerLight = LightManager.addPointLight("playerLight", new Vector2f(200, 200), new Vector3f(1, 1, 0.8f), 20,2*(int)ConfigManager.resolution.x,true);
-		Laser playerLaser = LightManager.addLaser("playerLaser", new Vector2f(200,200), new Vector3f(1,0,0), p.getDirection());
-		
-		p.setLight(playerLight);
 
-		p.setLaser(playerLaser);
-		p.pickUp(new LaserRifle(100,
-				 map.getSpawnPosition().x,
-				 map.getSpawnPosition().y,
-				 100f,
-				 10,
-				 10));
-		p.pickUp(new Battery(200,200));
-		p.pickUp(new Battery(200,200));
-		p.pickUp(new Battery(200,200));
-		p.pickUp(new Battery(200,200));
-		p.pickUp(new Battery(200,200));
+	
+		p = EntityManager.createPlayer();
+		p.setPosition(map.getSpawnPosition());
+		controle = new Control(p);
+		
 		
 		HUD.registerPlayer(p);
 		
@@ -101,6 +83,40 @@ public class GameLoop extends Game{
 		Timer.start();
 		
 		isRunning = true;
+
+	}
+	
+	/**
+	 * Regenerate a map and reinitialize what needs to be
+	 */
+	public void reinit() {
+		PhysicsManager.reinit();
+		EntityManager.reinitNPCS();
+		
+		map = new Map(15, new Vector2f(6,6), new Vector2f(20,16), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
+		map.initPhysics();
+		map.renderMapToFrameBuffers();
+
+		LightManager.reinit();
+		
+		if(!isAlive)
+			p=EntityManager.reinitPlayers();
+		
+				
+		
+		p.setPosition(map.getSpawnPosition());
+		controle = new Control(p);
+		
+		HUD.registerPlayer(p);
+		
+		OverlayManager.init();
+		OverlayManager.createStatsOverlay();
+		OverlayManager.createMiniMap(map.getRooms(), p);
+		OverlayManager.createPlayerStatsOverlay(p);
+		
+		Timer.start();
+		
+		isAlive = true;
 	}
 
 	/**
