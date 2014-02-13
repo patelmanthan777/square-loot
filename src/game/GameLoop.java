@@ -91,6 +91,7 @@ public class GameLoop extends Game{
 	 */
 	public void reinit() {
 		LightManager.reinit();
+		ProjectileManager.reinit();
 		PhysicsManager.reinit();		
 		EntityManager.reinitNPCS();
 		

@@ -21,6 +21,10 @@ public final class ProjectileManager {
 		Bullet.initBulletShader();
 	}
 	
+	static public void reinit(){
+		bulletFactory = new ProjectileFactory(new Bullet());
+		energyShotFactory = new ProjectileFactory(new EnergyShot());
+	}
 	
 	/**
 	 * Create a Bullet
