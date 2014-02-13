@@ -13,10 +13,12 @@ import configuration.ConfigManager;
 import physics.GameBodyType;
 import physics.PhysicsDataStructure;
 import rendering.MiniMapDrawable;
+import sound.SoundManager;
 import userInterface.MiniMap;
 import entity.player.Player;
 import environment.Map;
 import event.Timer;
+import game.GameLoop;
 
 public class Zombie extends Npc implements MiniMapDrawable {
 
@@ -64,7 +66,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		this.setHealth(20);
 		this.accFactor = ConfigManager.robotAcc;
 		this.halfSize.x = (float)40/(float)ConfigManager.unitPixelSize;
-		this.halfSize.y = (float)40/(float)ConfigManager.unitPixelSize;	
+		this.halfSize.y = (float)40/(float)ConfigManager.unitPixelSize;
 		gbtype = GameBodyType.ZOMBIE;
 		zombieState = ZombieState.IDLE;
 		try {
@@ -138,6 +140,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	public void thinkAndAct(LinkedList<Player> players, long deltaT) {
 		float dst = scentDistanceBlk;
 		float length;
+		ZombieState save = zombieState;
 		zombieState = ZombieState.IDLE;
 		for (Player p : players) {
 			Vector2f.sub(p.getPosition(), this.getPosition(), thisToPlayer);
@@ -145,12 +148,15 @@ public class Zombie extends Npc implements MiniMapDrawable {
 			thisToPlayer.normalise(thisToPlayer);
 			if (length < dst || dst == -1) {
 				// chase the nearest player
+				if(save == ZombieState.IDLE){
+					SoundManager.robotAttack(-GameLoop.cam.getX() + this.getPosition().x, -GameLoop.cam.getY() + this.getPosition().y);
+				}
 				zombieState = ZombieState.CHASING;
 				dst = length;
 				this.setDirection(thisToPlayer);
 				this.translate(this.getDirection().x, this.getDirection().y);
+				this.normaliseTranslation();
 			}
-
 		}
 		if (zombieState == ZombieState.IDLE) {
 			// randomly moves
@@ -158,9 +164,10 @@ public class Zombie extends Npc implements MiniMapDrawable {
 			for (int i = 0; i < deltaT; i++) {
 				running = (Math.random() < 0.001) ? !running : running;
 
-				if (running)
+				if (running){
 					this.translate(this.getDirection().x, this.getDirection().y);
-
+					this.normaliseTranslation();
+				}
 				float deltaOrientation = (float) ((Math.random() - 0.5f) * 0.005);
 				orientationSpeed += deltaOrientation;
 				orientationSpeed = orientationSpeed > 0 ? (float) Math.max(0,

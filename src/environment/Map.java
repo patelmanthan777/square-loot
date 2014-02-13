@@ -226,8 +226,8 @@ public class Map implements ShadowCaster {
 	 *            the position
 	 */
 	public void setDrawPosition(Vector2f pos) {
-		drawRoomPosition.x = pos.x / Map.roomPixelSize.x;
-		drawRoomPosition.y = pos.y / Map.roomPixelSize.y;
+		drawRoomPosition.x = pos.x / Map.roomBlockSize.x;
+		drawRoomPosition.y = pos.y / Map.roomBlockSize.y;
 
 		roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y].discover();
 		Sas[] doors = roomGrid[(int) drawRoomPosition.x][(int) drawRoomPosition.y]
@@ -238,15 +238,15 @@ public class Map implements ShadowCaster {
 		}
 		int translateMapFBOx = 0;
 		int translateMapFBOy = 0;
-		if (pos.x - ConfigManager.resolution.x / 2 < currentBufferPosition.x)
+		if (pos.x*ConfigManager.unitPixelSize - ConfigManager.resolution.x / 2 < currentBufferPosition.x)
 			translateMapFBOx = -1;
-		else if (pos.x + ConfigManager.resolution.x / 2 > currentBufferPosition.x
+		else if (pos.x*ConfigManager.unitPixelSize + ConfigManager.resolution.x / 2 > currentBufferPosition.x
 				+ Map.textureNb * Map.textureSize)
 			translateMapFBOx = 1;
 
-		if (pos.y - ConfigManager.resolution.y / 2 < currentBufferPosition.y)
+		if (pos.y*ConfigManager.unitPixelSize - ConfigManager.resolution.y / 2 < currentBufferPosition.y)
 			translateMapFBOy = -1;
-		else if (pos.y + ConfigManager.resolution.y / 2 > currentBufferPosition.y
+		else if (pos.y*ConfigManager.unitPixelSize + ConfigManager.resolution.y / 2 > currentBufferPosition.y
 				+ Map.textureNb * Map.textureSize)
 			translateMapFBOy = 1;
 

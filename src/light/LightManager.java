@@ -364,8 +364,8 @@ public class LightManager {
 	}
 
 	public static void setCamPosition(Vector2f pos) {
-		camPos.x = pos.x;
-		camPos.y = pos.y;
+		camPos.x = pos.x*ConfigManager.unitPixelSize;
+		camPos.y = pos.y*ConfigManager.unitPixelSize;
 	}
 
 	private static void computeTextureDiagonal() {

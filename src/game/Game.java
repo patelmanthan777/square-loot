@@ -51,6 +51,7 @@ public abstract class Game {
 				Display.update(); // update the view/screen					
 
 			}
+			destroy();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -168,4 +169,5 @@ public abstract class Game {
 	public abstract void update(long delta);
 	
 	public abstract void render();
+	public abstract void destroy();
 }

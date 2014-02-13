@@ -129,11 +129,10 @@ public class GameLoop extends Game{
 		background.update(elapsedTime);
 		
 		/* Cam and light */
-		Vector2f pos = new Vector2f(p.getPosition().x * ConfigManager.unitPixelSize,
-				p.getPosition().y * ConfigManager.unitPixelSize);
-		cam.setPosition(pos);
-		LightManager.setCamPosition(pos);
-		map.setDrawPosition(pos);
+		
+		cam.setPosition(p.getPosition());
+		LightManager.setCamPosition(p.getPosition());
+		map.setDrawPosition(p.getPosition());
 		map.update(elapsedTime);
 	}
 	
@@ -162,5 +161,11 @@ public class GameLoop extends Game{
 		        
 		glPopMatrix();
 
+	}
+
+	@Override
+	public void destroy() {
+		SoundManager.destroy();
+		
 	}
 }
