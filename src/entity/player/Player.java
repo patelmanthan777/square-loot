@@ -199,6 +199,13 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		}
 	}
 
+	
+	
+	@Override
+	public void setPosition(Vector2f pos) {
+		setPosition(pos.x, pos.y);
+	}
+	
 	@Override
 	public void setPosition(float posx, float posy) {
 		super.setPosition(posx, posy);

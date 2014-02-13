@@ -26,6 +26,10 @@ public  class OverlayManager {
 			e.printStackTrace();
 		}
 	}
+	
+	static public void reinit(){
+		overlays.clear();		
+	}
 	static public void addOverlay(Overlay ov){
 		overlays.add(ov);
 	}

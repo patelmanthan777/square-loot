@@ -64,6 +64,12 @@ public class LightManager {
 	}
 
 	static public void reinit() {
+		activatedDynamicLights.clear();
+		activatedStaticLights.clear();
+		deactivatedLights.clear();
+		shadowCasters.clear();
+		lightShadows.clear();
+						
 		for (int i = 0; i < Map.textureNb; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
 				staticLightsFBO[i][j] = new FBO(Map.textureSize,

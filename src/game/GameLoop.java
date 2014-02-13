@@ -90,14 +90,15 @@ public class GameLoop extends Game{
 	 * Regenerate a map and reinitialize what needs to be
 	 */
 	public void reinit() {
-		PhysicsManager.reinit();
+		LightManager.reinit();
+		PhysicsManager.reinit();		
 		EntityManager.reinitNPCS();
 		
 		map = new Map(15, new Vector2f(6,6), new Vector2f(20,16), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
 		map.initPhysics();
 		map.renderMapToFrameBuffers();
 
-		LightManager.reinit();
+
 		
 		if(!isAlive)
 			p=EntityManager.reinitPlayers();
@@ -109,7 +110,7 @@ public class GameLoop extends Game{
 		
 		HUD.registerPlayer(p);
 		
-		OverlayManager.init();
+		OverlayManager.reinit();
 		OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
 		OverlayManager.createPlayerStatsOverlay(p);
