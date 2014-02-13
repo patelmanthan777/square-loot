@@ -39,7 +39,7 @@ public class ConfigManager {
 			loadPlayerAcc(prop);
 			loadOwnPressureCoef(prop);
 			loadPlayerOxygenConsumption(prop);
-			
+			loadMusicVolume(prop);
 		}catch (Exception e){
 			System.out.println(e.toString());
 		}
