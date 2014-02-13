@@ -444,6 +444,16 @@ public class Map implements ShadowCaster {
 		}
 		
 	}
+	
+	public void destroy(){
+		for (int i = 0; i < Map.mapRoomSize.x; i++) {
+			for (int j = 0; j < Map.mapRoomSize.y; j++) {
+				if (roomGrid[i][j] != null) {
+					roomGrid[i][j].destroy();
+				}
+			}
+		}
+	}
 
 	public Block getBlock(int i, int j) {
 		if (i < 0 || j < 0) {

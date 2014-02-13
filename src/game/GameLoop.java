@@ -95,6 +95,7 @@ public class GameLoop extends Game{
 		PhysicsManager.reinit();		
 		EntityManager.reinitNPCS();
 		
+		map.destroy();
 		map = new Map(15, new Vector2f(6,6), new Vector2f(20,16), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
 		map.initPhysics();
 		map.renderMapToFrameBuffers();
@@ -102,7 +103,7 @@ public class GameLoop extends Game{
 
 		
 		if(!isAlive)
-			p=EntityManager.reinitPlayers();
+			p.reinit();
 		
 				
 		

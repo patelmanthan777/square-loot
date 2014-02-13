@@ -113,7 +113,7 @@ public class EntityManager {
 
 		player.setLaser(playerLaser);
 		player.pickUp(new LaserRifle(100,
-				 0f,
+									 0f,
 				 0f,
 				 100f,
 				 10,

@@ -22,4 +22,8 @@ public class VoidRoom extends Room{
 	public void drawOnMiniMap() {
 		
 	}
+	
+	@Override
+	public void destroy(){
+	}
 }

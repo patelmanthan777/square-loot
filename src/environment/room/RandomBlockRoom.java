@@ -35,4 +35,11 @@ public class RandomBlockRoom extends OxygenRoom{
 		LightManager.addPointLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
 		EntityManager.createZombie(pos.x / ConfigManager.unitPixelSize, pos.y / ConfigManager.unitPixelSize);
 	}
+	
+	
+	@Override
+	public void destroy(){
+		super.destroy();
+		LightManager.deleteLight("room "+x+" " + y);
+	}
 }

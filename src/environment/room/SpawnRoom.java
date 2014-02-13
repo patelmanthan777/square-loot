@@ -1,5 +1,6 @@
 package environment.room;
 
+import light.LightManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
 import event.Timer;
@@ -46,5 +47,10 @@ public class SpawnRoom extends OxygenRoom{
 		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();				
+	}
+	
+	@Override
+	public void destroy(){
+		super.destroy();
 	}
 }

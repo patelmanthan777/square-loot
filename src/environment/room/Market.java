@@ -54,6 +54,12 @@ public class Market extends Room{
 		LightManager.addPointLight("room "+x+" " + y, pos, color, radius, dstMax ,false);
 		EntityManager.createShopkeeper(pos.x / ConfigManager.unitPixelSize, pos.y / ConfigManager.unitPixelSize);
 	}
+	
+	@Override
+	public void destroy(){		
+		LightManager.deleteLight("room "+x+" " + y);
+	}
+	
 	@Override
 	public void drawOnMiniMap() {
 		super.drawOnMiniMap();

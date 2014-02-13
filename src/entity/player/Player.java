@@ -1,9 +1,11 @@
 package entity.player;
 
 import game.Game;
+import item.Battery;
 import item.Item;
 import item.Energy;
 import item.ItemManager;
+import item.weapon.LaserRifle;
 import item.weapon.Weapon;
 import light.Laser;
 import light.Light;
@@ -79,6 +81,24 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		}
 				
 		inventory = new Inventory(5,this);		
+	}
+	
+	public void reinit(){		
+		this.setHealth(getMaxHealth());
+		inventory = new Inventory(5,this);
+		initPhysics();
+		
+		pickUp(new LaserRifle(100,
+				 0f,
+				0f,
+				100f,
+				10,
+				10));
+		pickUp(new Battery(200,200));
+		pickUp(new Battery(200,200));
+		pickUp(new Battery(200,200));
+		pickUp(new Battery(200,200));
+		pickUp(new Battery(200,200));
 	}
 	
 	@Override

@@ -1,5 +1,6 @@
 package environment.room;
 
+import light.LightManager;
 import configuration.ConfigManager;
 import environment.Map;
 import environment.blocks.BatteryReceptacleBlock;
@@ -44,6 +45,10 @@ public class OxygenRoom extends Room{
 			this.block.unpowering();
 		}
 		this.block = block;
+	}
+	
+	@Override
+	public void destroy(){
 	}
 	
 }

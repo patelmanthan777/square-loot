@@ -44,7 +44,13 @@ public class EndRoom extends Room{
 				grid[i][j] = BlockFactory.createEndBlock();
 			}
 
-		}
+		}		
 	}
+	
+	@Override
+	public void destroy(){
+	}
+	
+	
 
 }

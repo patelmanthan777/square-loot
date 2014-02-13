@@ -94,6 +94,8 @@ public abstract class Room implements Drawable, ShadowCaster {
 		return (int) y;
 	}
 
+	abstract public void destroy();
+	
 	/**
 	 * Create door on the given wall, clockwise indices starting at noon.
 	 * 
