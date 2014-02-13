@@ -20,6 +20,7 @@ import physics.PhysicsDataStructure;
 import configuration.ConfigManager;
 import rendering.MiniMapDrawable;
 import rendering.TextureManager;
+import sound.SoundManager;
 import userInterface.MiniMap;
 import userInterface.inventory.Inventory;
 import userInterface.inventory.InventoryItemEnum;
@@ -333,5 +334,11 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		Vector2f p = new Vector2f(this.position.x+this.direction.x,this.position.y+this.direction.y);
 		
 		inventory.energyShot(p, this.direction);
+	}
+	
+	@Override
+	public void damage(int damage){
+		super.damage(damage);
+		SoundManager.playerPunched(this.getX(), this.getY());
 	}
 }

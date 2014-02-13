@@ -21,7 +21,7 @@ public class LaserRifle extends PrimaryWeapon {
 	public void fire(Vector2f pos, Vector2f target, LivingEntity doer) {	
 		ProjectileManager.createBullet(pos, target,  doer.getSpeed(), projectileSpeed, projectileSize, damage);	
 		doer.translate(-doer.getDirection().x*recoil, -doer.getDirection().y*recoil);
-		SoundManager.gunShot(0, 0);
+		SoundManager.gunShot(doer.getX(), doer.getY());
 	}
 	
 	public int getTextureID(){

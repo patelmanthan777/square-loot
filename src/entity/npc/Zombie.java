@@ -31,7 +31,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 	private int attackValue = 5;
 	private Player contactPlayer;
 	private long attackTimer = -1;
-	private long attackTimerMax = 100;
+	private long attackTimerMax = 1;
 	
 	private SpriteSheet headSprites;
 	
@@ -82,23 +82,10 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		super.updatePosition(delta, m);
 		/* animation update stuff */
 		
-		if(contactPlayer != null && attackTimer !=-1)
-			contactPlayer.damage(attack());
-		else if(contactPlayer != null){
+		if(contactPlayer != null && Timer.getTime() > attackTimer){
+			attackTimer = attackTimerMax*Timer.unitInOneSecond + Timer.getTime();
 			contactPlayer.damage(attackValue);
-			attackTimer = attackTimerMax*Timer.unitInOneSecond + Timer.getTime();
 		}
-		else
-			attackTimer = -1;
-	}
-	
-	
-	public int attack(){
-		if(attackTimer < Timer.getTime()){
-			attackTimer = attackTimerMax*Timer.unitInOneSecond + Timer.getTime();
-			return attackValue;			
-		}
-		return 0;
 	}
 	
 	@Override
@@ -149,7 +136,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 			if (length < dst || dst == -1) {
 				// chase the nearest player
 				if(save == ZombieState.IDLE){
-					SoundManager.robotAttack(-GameLoop.cam.getX() + this.getPosition().x, -GameLoop.cam.getY() + this.getPosition().y);
+					SoundManager.robotAttack(this.getPosition().x, this.getPosition().y);
 				}
 				zombieState = ZombieState.CHASING;
 				dst = length;
@@ -202,5 +189,11 @@ public class Zombie extends Npc implements MiniMapDrawable {
 			break;
 		default:	
 		}
+	}
+	
+	@Override
+	public void damage(int damage){
+		super.damage(damage);
+		SoundManager.robotPunched(this.getX(), this.getY());
 	}
 }
