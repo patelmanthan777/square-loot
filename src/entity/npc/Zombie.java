@@ -196,4 +196,10 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		super.damage(damage);
 		SoundManager.robotPunched(this.getX(), this.getY());
 	}
+	
+	@Override 
+	public void destroy(){
+		super.destroy();
+		SoundManager.explosion(this.getX(), this.getY());
+	}
 }

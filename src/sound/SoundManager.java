@@ -56,7 +56,7 @@ public class SoundManager {
 	static public void explosion(float x, float y){
 		float relativeX =  (x - GameLoop.cam.getX())/dstFactor;
 		float relativeY =  (y - GameLoop.cam.getY())/dstFactor;
-		explosion.playAt(1f, ConfigManager.musicVolume, relativeX, relativeY, 0);
+		explosion.playAt(1f, ConfigManager.musicVolume*3f, relativeX, relativeY, 0);
 	}
 	
 	static public void playerPunched(float x, float y){
