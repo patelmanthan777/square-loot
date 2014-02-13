@@ -99,13 +99,9 @@ public class GameLoop extends Game{
 		map = new Map(15, new Vector2f(6,6), new Vector2f(20,16), new Vector2f(ConfigManager.unitPixelSize,ConfigManager.unitPixelSize));
 		map.initPhysics();
 		map.renderMapToFrameBuffers();
-
-
 		
 		if(!isAlive)
-			p.reinit();
-		
-				
+			p.reinit();						
 		
 		p.setPosition(map.getSpawnPosition());
 		controle = new Control(p);
@@ -120,6 +116,7 @@ public class GameLoop extends Game{
 		Timer.start();
 		
 		isAlive = true;
+		newLevel = false;
 	}
 
 	/**

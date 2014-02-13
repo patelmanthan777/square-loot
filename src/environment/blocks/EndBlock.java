@@ -1,8 +1,21 @@
 package environment.blocks;
 
-public class EndBlock extends Block {
+import game.Game;
+import physics.PhysicsDataStructure;
+
+public class EndBlock extends PhysicalBlock {
 	public EndBlock(){
 		super();
 		layer = 0;
+	}
+	
+	@Override
+	public void ContactHandler(PhysicsDataStructure a) {
+		switch(a.getType())
+		{		
+		case PLAYER:
+			Game.newLevel = true;
+			break;
+		}
 	}
 }

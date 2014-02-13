@@ -24,6 +24,7 @@ public abstract class Game {
 	protected Control controle;
 	
 	static public boolean isAlive= true;
+	static public boolean newLevel= false;
 	
 	/**
 	 * Enter the game loop, the function exit only when the variable isRunning
@@ -36,7 +37,7 @@ public abstract class Game {
 			firstInit();
 			while (isRunning) {
 						
-				while (isAlive && isRunning) {
+				while (isAlive && isRunning && !newLevel) {
 					Timer.tick();
 					elapsedTime = Timer.getDelta();
 					controle.update();								
