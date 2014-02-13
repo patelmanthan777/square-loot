@@ -17,6 +17,7 @@ public class SoundManager {
 	private static Sound footStep;
 	private static Sound robotPunched;
 	private static Sound playerPunched;
+	private static Sound coin;
 	
 	static public  void init(){
 		try {
@@ -29,6 +30,7 @@ public class SoundManager {
 			robotPunched = new Sound("assets/sounds/soundeffects/robotpunch.ogg");
 			playerPunched = new Sound("assets/sounds/soundeffects/punch.ogg");
 			explosion = new Sound("assets/sounds/soundeffects/explosion.ogg");
+			coin = new Sound("assets/sounds/soundeffects/coin.ogg");
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -69,6 +71,11 @@ public class SoundManager {
 		robotPunched.playAt(1f, ConfigManager.musicVolume, relativeX, relativeY, 0);
 	}
 	
+	static public void coin(float x, float y){
+		float relativeX =  (x - GameLoop.cam.getX())/dstFactor;
+		float relativeY =  (y - GameLoop.cam.getY())/dstFactor;
+		coin.playAt(1f, ConfigManager.musicVolume, relativeX, relativeY, 0);
+	}
 	
 	static public void destroy(){
 	}

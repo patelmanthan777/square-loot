@@ -14,7 +14,8 @@ public class ItemManager {
 	}
 	
 	public static void reinit(){
-		items.clear();
+		items = new LinkedList<Item>();
+		removedItems = new LinkedList<Item>();
 	}
 	
 	

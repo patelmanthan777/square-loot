@@ -12,6 +12,7 @@ import physics.GameBodyType;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
 import rendering.TextureManager;
+import sound.SoundManager;
 
 
 public class Energy extends Item {
@@ -68,6 +69,7 @@ public class Energy extends Item {
 		switch(a.getType())
 		{
 		case PLAYER:
+			SoundManager.coin(this.getX(), this.getY());
 			destroyed = true;
 			break;		
 		default:
