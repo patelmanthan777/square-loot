@@ -64,15 +64,16 @@ public class LightManager {
 	}
 
 	static public void reinit() {
-
-		
+		shadowCasters.clear();
 		for (int i = 0; i < Map.textureNb; i++) {
 			for (int j = 0; j < Map.textureNb; j++) {
-				staticLightsFBO[i][j] = new FBO(Map.textureSize,
-						Map.textureSize);
 				shouldBeRendered[i][j] = true;
 			}
-		}				
+		}	
+		for(ShadowBuffer[] shadows : lightShadows.values())
+			for (int i = 0; i < Map.maxLayer; i++) {
+				shadows[i].lastShadow = 0;
+			}
 	}
 	
 	static public void addShadowCaster(ShadowCaster sc) {
@@ -88,6 +89,14 @@ public class LightManager {
 		}
 	}
 
+	static public void removeShadowCaster(ShadowCaster sc) {
+		shadowCasters.remove(sc);
+		for(ShadowBuffer[] shadows : lightShadows.values())
+		for (int i = 0; i < Map.maxLayer; i++) {
+			shadows[i].lastShadow = 0;
+		}
+	}
+	
 	static public Light addPointLight(String name, Vector2f p, Vector3f color,
 			float radius, float maxDst, boolean dynamic) {
 		Light l = new PointLight(p, color, radius, maxDst, dynamic);

@@ -31,6 +31,12 @@ public class PhysicsManager {
 	}
 	
 	public static void reinit(){
-		init();
+		Body current = world.getBodyList();
+		Body next;
+		while((current ) != null){
+			next = current.getNext();
+			world.destroyBody(current);
+			current = next;
+		}
 	}
 }
