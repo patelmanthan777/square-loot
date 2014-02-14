@@ -64,4 +64,7 @@ public class BatteryReceptacleBlock extends SolidBlock{
 			break;
 		}
 	}
+	public void destroy(){
+		LightManager.deleteLight(l.toString());
+	}
 }

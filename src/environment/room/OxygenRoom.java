@@ -25,6 +25,7 @@ public class OxygenRoom extends Room{
 	public void construct() {
 		super.construct();
 		grid[(int) (Map.roomBlockSize.x/2)+1][(int) (Map.roomBlockSize.y/2)+1] = BlockFactory.createBatteryReceptacleBlock(this,(int) ((Map.roomBlockSize.x/2)+1+x/Map.blockPixelSize.x),(int) ((Map.roomBlockSize.y/2)+1+y/Map.blockPixelSize.y));
+		block = (BatteryReceptacleBlock) grid[(int) (Map.roomBlockSize.x/2)+1][(int) (Map.roomBlockSize.y/2)+1];
 	}
 	
 	
@@ -49,6 +50,8 @@ public class OxygenRoom extends Room{
 	
 	@Override
 	public void destroy(){
+		if(block!= null)
+			block.destroy();
 	}
 	
 }
