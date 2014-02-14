@@ -100,7 +100,9 @@ public class GameLoop extends Game{
 		map.initPhysics();
 		map.renderMapToFrameBuffers();
 		if(!isAlive){
-			p.reinit();	
+			p.reinit();
+			Timer.stop();
+			Timer.start();
 		}else{
 			p.initPhysics();
 		}

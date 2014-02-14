@@ -89,7 +89,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		this.setHealth(getMaxHealth());
 		inventory = new Inventory(5,this);
 		initPhysics();
-		
+		this.energy = 0;
 		pickUp(new LaserRifle(100,
 				 0f,
 				0f,
