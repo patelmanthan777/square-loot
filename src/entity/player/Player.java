@@ -108,7 +108,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		super.updatePosition(delta, m);
 		((Weapon)(this.inventory.access(InventoryItemEnum.PWEAPON))).setSpeed(this.speed.x,this.speed.y);
 		this.pressure = (int) m.getRoom(this.getX(), this.getY()).getPressure();
-		
+		SoundManager.setPressureRatio((float)pressure/(float)OxygenRoom.maxPressure);
 		if(pressure == 0){ 
 			if(apneaTimer ==-1){
 				apneaTimer = apneaTimerMax*Timer.unitInOneSecond + Timer.getTime();
