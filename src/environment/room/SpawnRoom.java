@@ -15,7 +15,7 @@ public class SpawnRoom extends OxygenRoom{
 		miniMapColor.z = 0;
 		discovered = true;
 		pressure = OxygenRoom.maxPressure;
-		this.timeLoadMax = 30 * Timer.unitInOneSecond;
+		this.timeLoadMax = 15 * Timer.unitInOneSecond;
 		powering(null);
 	}
 

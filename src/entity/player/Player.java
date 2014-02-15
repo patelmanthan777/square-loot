@@ -341,6 +341,13 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return pressure;
 	}
 	
+	public int getApnea(){
+		if (apneaTimer == -1)
+			return 100;
+		
+		return (int) (100 * (apneaTimer - Timer.getTime())/(apneaTimerMax*Timer.unitInOneSecond));
+	}
+	
 	public void shootEnergy(){
 		Vector2f p = new Vector2f(this.position.x+this.direction.x,this.position.y+this.direction.y);
 		

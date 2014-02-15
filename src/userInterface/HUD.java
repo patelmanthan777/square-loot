@@ -66,6 +66,7 @@ public class HUD {
 		updateEquipment();
 		updateHealthBar();
 		updateOxygenBar();
+		updateApneaBar();
 		
 		return nifty.update();
 	}
@@ -102,6 +103,13 @@ public class HUD {
 	private static void updateOxygenBar(){
 		Element e = HUD.nifty.getCurrentScreen().findElementByName("oxygenbar");
 		int width = 100 * player.getPressure() / OxygenRoom.maxPressure;
+		e.setConstraintWidth(SizeValue.percent(width));
+		e.getParent().layoutElements();
+	}
+	
+	private static void updateApneaBar(){
+		Element e = HUD.nifty.getCurrentScreen().findElementByName("apneabar");
+		int width = player.getApnea();
 		e.setConstraintWidth(SizeValue.percent(width));
 		e.getParent().layoutElements();
 	}
@@ -266,9 +274,15 @@ public class HUD {
 										width("99%");
 										childLayoutHorizontal();
 										
-										panel(new PanelBuilder("oxygenbar"){{
-											backgroundColor("#00ff");
-											width("25%");
+										panel(new PanelBuilder("apneabar"){{
+											backgroundColor("#0f0f");
+											width("100%");
+											childLayoutHorizontal();
+										
+											panel(new PanelBuilder("oxygenbar"){{
+												backgroundColor("#00ff");
+												width("25%");
+											}});
 										}});
 									}});
 								}});
