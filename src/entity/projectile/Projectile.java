@@ -132,7 +132,7 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 	{
 		switch(a.getType())
 		{
-		case TRIGGER:
+		case TRIGGERZONE:
 			break;
 		default:
 			this.toDestroy();

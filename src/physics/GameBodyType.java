@@ -12,5 +12,5 @@ public enum GameBodyType {
 	BATTERY,
 	SHOPKEEPER,
 	ZOMBIE,
-	TRIGGER
+	TRIGGERZONE
 }
