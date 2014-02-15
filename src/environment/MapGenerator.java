@@ -44,7 +44,7 @@ public class MapGenerator {
 	private static void createRooms(int n) {
 		requiredEndRoom = 1;
 		requiredMarket = 2;
-		requiredKeyRoom = 1;
+		requiredKeyRoom = 4;
 		int ispawn = (int)(Math.random() * Map.mapRoomSize.x);
 		int jspawn = (int)(Math.random() * Map.mapRoomSize.y);
 		Map.spawnPixelPosition = new Vector2f(((float)ispawn+0.5f)*Map.roomPixelSize.x, ((float)jspawn+0.5f)*Map.roomPixelSize.y);

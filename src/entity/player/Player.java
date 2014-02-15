@@ -56,8 +56,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	private long damageApneaTimer = 1;
 	private int apneaDamage = 1;
 	
-	private Item contactItem=null;
-	private Npc contactNPC=null;
+	private float actionRange = 2.5f;
+	private ActionZone actionZone;
 
 	
 	protected Inventory inventory = null;
@@ -82,13 +82,17 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			e.printStackTrace();
 		}
 				
-		inventory = new Inventory(5,this);		
+		inventory = new Inventory(5,this);
+		actionZone = new ActionZone(actionRange);
+		actionZone.init();
 	}
 	
 	public void reinit(){		
 		this.setHealth(getMaxHealth());
 		inventory = new Inventory(5,this);
 		initPhysics();
+		actionZone = new ActionZone(actionRange);
+		actionZone.init();
 		this.energy = 0;
 		pickUp(new LaserRifle(100,
 				 0f,
@@ -240,6 +244,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 			laser.setPosition(posx * ConfigManager.unitPixelSize,
 					posy * ConfigManager.unitPixelSize);
 		}
+		actionZone.setPosition(posx,posy);
 	}
 
 	public Light getLight() {
@@ -252,10 +257,12 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	}
 	
 	public void pickUpOrBuy(){
-		if(contactItem != null && pickUp(contactItem))
-			contactItem.destroyed = true;
-		else if	(contactNPC != null && contactNPC instanceof Shopkeeper){
-			Item tmp = ((Shopkeeper) contactNPC).buy(this);
+		Item i = actionZone.getItem();
+		Npc npc = actionZone.getNpc();
+		if(i != null && pickUp(i))
+			i.destroyed = true;
+		else if	(npc != null && npc instanceof Shopkeeper){
+			Item tmp = ((Shopkeeper) npc).buy(this);
 				if (tmp != null)
 					pickUp(tmp);
 		}
@@ -310,15 +317,8 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		super.ContactHandler(a);
 		switch(a.getType())
 		{		
-		case BATTERY:
-		case ITEM:
-			contactItem = (Item) a.getPhysicsObject();
-			break;
 		case ENERGY:
 			charge(((Energy) a.getPhysicsObject()).getCharge());			
-			break;
-		case SHOPKEEPER:
-			contactNPC = (Npc) a.getPhysicsObject();
 			break;
 		default:
 			break;
@@ -327,17 +327,6 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	
 	@Override
 	public void EndContactHandler(PhysicsDataStructure a) {
-		switch(a.getType())
-		{
-			case SHOPKEEPER:
-				if(contactNPC == a.getPhysicsObject())
-					contactNPC = null;
-				break;
-			case BATTERY:
-			case ITEM:
-				if(contactItem == a.getPhysicsObject())
-					contactItem = null;
-		}
 	}
 	
 	public int getEnergy(){

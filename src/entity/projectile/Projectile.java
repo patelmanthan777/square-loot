@@ -130,18 +130,12 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 	
 	public void ContactHandler(PhysicsDataStructure a)
 	{
-		this.toDestroy();
 		switch(a.getType())
 		{
-		case BLOCK:
-			break;
-		case ENTITY:			
-			break;
-		case PLAYER:
-			break;
-		case PROJECTILE:
+		case TRIGGER:
 			break;
 		default:
+			this.toDestroy();
 			break;
 		}
 	}

@@ -11,5 +11,6 @@ public enum GameBodyType {
 	BLOCK,
 	BATTERY,
 	SHOPKEEPER,
-	ZOMBIE
+	ZOMBIE,
+	TRIGGER
 }
