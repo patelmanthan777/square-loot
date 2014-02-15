@@ -15,7 +15,6 @@ public class ConfigManager {
 	public static int maxFps = 120;
 	public static int unitPixelSize = 48;
 	public static int oxygenTime = 10;
-	public static float blockPhysicSize = 1;
 	public static float playerAcc = 20;
 	public static float robotAcc = 10;
 	public static float ownPressureCoef = 500;

@@ -9,7 +9,6 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import configuration.ConfigManager;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
 import physics.PhysicsObject;
@@ -94,16 +93,16 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 		bodyDef.type = BodyType.DYNAMIC;
 		bodyDef.bullet = true;
 		bodyDef.fixedRotation = true;
-		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
+		bodyDef.position.set(position.x, position.y);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(0.1f*ConfigManager.blockPhysicSize, 0.1f*ConfigManager.blockPhysicSize);
+		dynamicBox.setAsBox(0.1f, 0.1f);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicBox;		
 		fixtureDef.density = 1.0f;
 		fixtureDef.friction = 0.1f;
 		body.createFixture(fixtureDef);
-		Vec2 vel = new Vec2((direction.x * speedValue+initSpeed.x)*ConfigManager.blockPhysicSize, (direction.y * speedValue+initSpeed.y)*ConfigManager.blockPhysicSize);
+		Vec2 vel = new Vec2((direction.x * speedValue+initSpeed.x), (direction.y * speedValue+initSpeed.y));
 		body.setLinearVelocity(vel);
 		PhysicsDataStructure s = new PhysicsDataStructure(this,GameBodyType.PROJECTILE); 
 		body.setUserData(s);
@@ -119,8 +118,8 @@ public abstract class Projectile extends Entity implements Drawable, PhysicsObje
 	 */
 	public void updatePostion() {
 		Vec2 position = body.getPosition();
-		setPosition(position.x/ConfigManager.blockPhysicSize, position.y/ConfigManager.blockPhysicSize);
-		Vec2 vel = new Vec2((direction.x * speedValue+initSpeed.x)*ConfigManager.blockPhysicSize, (direction.y * speedValue+initSpeed.y)*ConfigManager.blockPhysicSize);
+		setPosition(position.x, position.y);
+		Vec2 vel = new Vec2((direction.x * speedValue+initSpeed.x), (direction.y * speedValue+initSpeed.y));
 		body.setLinearVelocity(vel);
 	}
 

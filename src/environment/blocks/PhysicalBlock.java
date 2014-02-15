@@ -33,8 +33,8 @@ public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 
 	public void initPhysics() {
 		BodyDef bodyDef = new BodyDef();			    
-	    bodyDef.position.set((points[0].x/ConfigManager.unitPixelSize + 0.5f)*ConfigManager.blockPhysicSize,
-	    		(points[0].y/ConfigManager.unitPixelSize + 0.5f)*ConfigManager.blockPhysicSize);
+	    bodyDef.position.set((points[0].x/ConfigManager.unitPixelSize + 0.5f),
+	    		(points[0].y/ConfigManager.unitPixelSize + 0.5f));
 	   
 	    Body body = PhysicsManager.createBody(bodyDef);
 	    PolygonShape box = new PolygonShape();
@@ -43,7 +43,7 @@ public class PhysicalBlock extends ShadowCasterBlock implements PhysicsObject{
 	    fixtureDef.density = 0;
 	    fixtureDef.shape = box;
 	    fixtureDef.restitution = 0.0f;
-	    box.setAsBox(0.5f*ConfigManager.blockPhysicSize, 0.5f*ConfigManager.blockPhysicSize);
+	    box.setAsBox(0.5f, 0.5f);
 	    body.createFixture(fixtureDef);
 		PhysicsDataStructure s = new PhysicsDataStructure(this,gbtype); 
 		body.setUserData(s);

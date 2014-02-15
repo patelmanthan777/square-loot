@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import org.jbox2d.common.Vec2;
 
 import physics.PhysicsDataStructure;
-import configuration.ConfigManager;
 import entity.npc.Npc;
 import entity.trigger.TriggerZone;
 
@@ -24,7 +23,7 @@ public class ActionZone extends TriggerZone {
 	}
 	
 	public void setPosition(float x, float y) {
-		Vec2 p = new Vec2(x*ConfigManager.blockPhysicSize, y*ConfigManager.blockPhysicSize);
+		Vec2 p = new Vec2(x, y);
 		body.setTransform(p, 0);
 		body.setAwake(true);
 	}

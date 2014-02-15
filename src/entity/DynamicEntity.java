@@ -8,7 +8,6 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.util.vector.Vector2f;
 
-import configuration.ConfigManager;
 import environment.Map;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
@@ -77,10 +76,10 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = btype;
 		bodyDef.fixedRotation = true;
-		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
+		bodyDef.position.set(position.x, position.y);
 		body = PhysicsManager.createBody(bodyDef);
 		CircleShape dynamicCircle = new CircleShape();
-		dynamicCircle.setRadius((this.halfSize.x)*ConfigManager.blockPhysicSize);
+		dynamicCircle.setRadius(this.halfSize.x);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicCircle;
 		fixtureDef.density = 0.3f;
@@ -98,7 +97,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	 */
 	public void updatePosition(long delta, Map m) {
 		Vec2 position = body.getPosition();
-		setPosition(position.x /ConfigManager.blockPhysicSize, position.y/ConfigManager.blockPhysicSize);
+		setPosition(position.x, position.y);
 		speed.x = this.body.getLinearVelocity().x;
 		speed.y = this.body.getLinearVelocity().y;
 	}
@@ -158,34 +157,34 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	}
 	
 	public Vector2f getSpeed(){
-		return new Vector2f(this.speed.x/ConfigManager.blockPhysicSize,this.speed.y/ConfigManager.blockPhysicSize);
+		return new Vector2f(this.speed.x,this.speed.y);
 	}
 	
 	@Override
 	public void setPosition(Vector2f pos){
 		super.setPosition(pos);
-		Vec2 p = new Vec2(pos.x*ConfigManager.blockPhysicSize, pos.y*ConfigManager.blockPhysicSize);
+		Vec2 p = new Vec2(pos.x, pos.y);
 		body.setTransform(p, 0);
 	}
 
 	@Override
 	public void setPosition(float posx, float posy){
 		super.setPosition(posx,posy);
-		Vec2 p = new Vec2(posx*ConfigManager.blockPhysicSize, posy*ConfigManager.blockPhysicSize);
+		Vec2 p = new Vec2(posx, posy);
 		body.setTransform(p, 0);
 	}
 	
 	@Override
 	public void setX(float x){
 		super.setX(x);
-		Vec2 p = new Vec2(x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
+		Vec2 p = new Vec2(x, position.y);
 		body.setTransform(p, 0);
 	}
 
 	@Override
 	public void setY(float y){
 		super.setY(y);
-		Vec2 p = new Vec2(position.x*ConfigManager.blockPhysicSize, y);
+		Vec2 p = new Vec2(position.x, y);
 		body.setTransform(p, 0);
 	}
 	

@@ -7,7 +7,6 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 
-import configuration.ConfigManager;
 import physics.GameBodyType;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
@@ -49,10 +48,10 @@ public class Energy extends Item {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.STATIC;
 		bodyDef.fixedRotation = false;
-		bodyDef.position.set(position.x*ConfigManager.blockPhysicSize, position.y*ConfigManager.blockPhysicSize);
+		bodyDef.position.set(position.x, position.y);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(halfSize.x*ConfigManager.blockPhysicSize, halfSize.y*ConfigManager.blockPhysicSize);
+		dynamicBox.setAsBox(halfSize.x, halfSize.y);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicBox;
 		fixtureDef.density = 1.0f;

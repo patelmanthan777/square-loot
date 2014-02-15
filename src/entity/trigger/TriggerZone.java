@@ -7,7 +7,6 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.util.vector.Vector2f;
 
-import configuration.ConfigManager;
 import physics.GameBodyType;
 import physics.PhysicsDataStructure;
 import physics.PhysicsManager;
@@ -34,7 +33,7 @@ public abstract class TriggerZone implements PhysicsObject {
 		bodyDef.position.set(position.x, position.y);
 		body = PhysicsManager.createBody(bodyDef);
 		CircleShape dynamicCircle = new CircleShape();
-		dynamicCircle.setRadius(range*ConfigManager.blockPhysicSize);
+		dynamicCircle.setRadius(range);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicCircle;
 		fixtureDef.density = 0.3f;

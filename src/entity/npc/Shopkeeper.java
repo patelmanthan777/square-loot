@@ -74,10 +74,10 @@ public class Shopkeeper extends Npc {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.STATIC;
 		bodyDef.fixedRotation = true;
-		bodyDef.position.set(position.x * ConfigManager.blockPhysicSize, position.y * ConfigManager.blockPhysicSize);
+		bodyDef.position.set(position.x, position.y);
 		body = PhysicsManager.createBody(bodyDef);
 		PolygonShape dynamicBox = new PolygonShape();
-		dynamicBox.setAsBox(0.4f * ConfigManager.blockPhysicSize, 0.4f * ConfigManager.blockPhysicSize);
+		dynamicBox.setAsBox(0.4f, 0.4f);
 		FixtureDef fixtureDef = new FixtureDef();
 		fixtureDef.shape = dynamicBox;
 		fixtureDef.density = 1.0f;
