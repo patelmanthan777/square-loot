@@ -19,7 +19,7 @@ public class Map implements ShadowCaster {
 	/**
 	 * Block size in number of pixels.
 	 */
-	public static Vector2f blockPixelSize;
+	public static float blockPixelSize;
 	/**
 	 * Room size in number of block.
 	 */
@@ -79,13 +79,13 @@ public class Map implements ShadowCaster {
 	public static FBO[][][] mapFBO = new FBO[textureNb][textureNb][maxLayer];
 
 	public Map(int n, Vector2f mapRoomSize, Vector2f roomBlockSize,
-			Vector2f blockPixelSize) {
+			float blockPixelSize) {
 		Map.mapRoomSize = mapRoomSize;
 		Map.roomBlockSize = roomBlockSize;
 		Map.blockPixelSize = blockPixelSize;
 
-		Map.roomPixelSize = new Vector2f(roomBlockSize.x * blockPixelSize.x,
-				roomBlockSize.y * blockPixelSize.y);
+		Map.roomPixelSize = new Vector2f(roomBlockSize.x * blockPixelSize,
+				roomBlockSize.y * blockPixelSize);
 		Map.mapBlockSize = new Vector2f(mapRoomSize.x * roomBlockSize.x,
 				mapRoomSize.y * roomBlockSize.y);
 		Map.mapPixelSize = new Vector2f(mapRoomSize.x * roomPixelSize.x,

@@ -97,7 +97,7 @@ public class Zombie extends Npc implements MiniMapDrawable {
 		Image tile = headSprites.getSprite(0,0);
 		tile.setCenterOfRotation(halfSize.x*ConfigManager.unitPixelSize, halfSize.y*ConfigManager.unitPixelSize);
 		tile.setRotation(-(this.getDegreAngle()+90));	
-		tile.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize.y-halfSize.y*ConfigManager.unitPixelSize,halfSize.x*2*ConfigManager.unitPixelSize,halfSize.y*2*ConfigManager.unitPixelSize);
+		tile.draw(this.getX()*Map.blockPixelSize-halfSize.x*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize-halfSize.y*ConfigManager.unitPixelSize,halfSize.x*2*ConfigManager.unitPixelSize,halfSize.y*2*ConfigManager.unitPixelSize);
 		glDisable(GL_BLEND);
 	}
 

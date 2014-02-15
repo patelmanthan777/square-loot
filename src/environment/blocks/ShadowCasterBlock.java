@@ -64,8 +64,8 @@ public abstract class ShadowCasterBlock extends Block{
 	 * @param shadowBuffer are the resulting shadows quadrilaterals
 	 */
 	public void computeShadow(Light light, int ix, int iy, ShadowBuffer shadowBuffer){
-		float x =  (ix * Map.blockPixelSize.x);
-		float y =  (iy * Map.blockPixelSize.y);
+		float x =  (ix * Map.blockPixelSize);
+		float y =  (iy * Map.blockPixelSize);
 		int shadowInd = shadowBuffer.lastShadow+1;
 		initBlock(x, y);
 

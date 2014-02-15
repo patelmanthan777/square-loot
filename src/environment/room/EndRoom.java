@@ -14,8 +14,9 @@ public class EndRoom extends Room{
 		miniMapColor.x = 0;
 		miniMapColor.y = 0;
 		miniMapColor.z = 1;
-		endGate = new EndGate(endGateSize, lock, posX/Map.blockPixelSize.x + Map.roomBlockSize.x/2, posY/Map.blockPixelSize.y+Map.roomBlockSize.y/2);
-		System.out.println();
+		endGate = new EndGate(endGateSize, lock,
+							  posX/Map.blockPixelSize + Map.roomBlockSize.x/2,
+							  posY/Map.blockPixelSize + Map.roomBlockSize.y/2);
 		endGate.initPhysics();
 	}
 

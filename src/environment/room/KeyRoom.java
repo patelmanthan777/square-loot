@@ -37,8 +37,8 @@ public class KeyRoom extends Room {
 			grid[(int)Map.roomBlockSize.x-2][i] = BlockFactory.createBorderBlock();
 		}
 
-		Key k = new Key(x/Map.blockPixelSize.x+3,
-				y/Map.blockPixelSize.y+(float)2.5);
+		Key k = new Key(x/Map.blockPixelSize+3,
+				y/Map.blockPixelSize+(float)2.5);
 		ItemManager.add(k);
 	}
 	

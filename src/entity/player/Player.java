@@ -178,13 +178,13 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		tile.setCenterOfRotation(halfSize.x*factor*ConfigManager.unitPixelSize+zoomx/2f, halfSize.y*factor*ConfigManager.unitPixelSize+zoomy/2f);
 		tile.setRotation(-(this.getDegreAngle()+90));
 		int fact = 40;
-		float x = this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize + this.getDirection().x*fact-zoomx/2f;
-		float y = this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize + this.getDirection().y*fact-zoomy/2f;
+		float x = this.getX()*Map.blockPixelSize-halfSize.x*factor*ConfigManager.unitPixelSize + this.getDirection().x*fact-zoomx/2f;
+		float y = this.getY()*Map.blockPixelSize-halfSize.y*factor*ConfigManager.unitPixelSize + this.getDirection().y*fact-zoomy/2f;
 		tile.draw(x, y,halfSize.x*factor*2*ConfigManager.unitPixelSize+zoomx,halfSize.y*factor*2*ConfigManager.unitPixelSize+zoomy);
 		
 		
-		x = this.getX()*Map.blockPixelSize.x-halfSize.x*factor*ConfigManager.unitPixelSize;
-		y = this.getY()*Map.blockPixelSize.y-halfSize.y*factor*ConfigManager.unitPixelSize;
+		x = this.getX()*Map.blockPixelSize-halfSize.x*factor*ConfigManager.unitPixelSize;
+		y = this.getY()*Map.blockPixelSize-halfSize.y*factor*ConfigManager.unitPixelSize;
 		
 		/* HEAD */
 		tile = headAnimation.getCurrentFrame();

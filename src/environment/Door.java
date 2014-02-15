@@ -19,45 +19,45 @@ public class Door{
 			i = (int) (Map.roomBlockSize.x / 2 - 1);
 			j = 1;
 			btmp = r.getBlock(i, j);
-			blocks[0] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize.x+i),(int)(r.getY()/Map.blockPixelSize.x+j));
+			blocks[0] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize+i),(int)(r.getY()/Map.blockPixelSize+j));
 			r.putBlock(blocks[0], i, j);
 			i = (int) (Map.roomBlockSize.x / 2);
 			j = 1;
 			btmp = r.getBlock(i, j);
-			blocks[1] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize.x+i),(int)(r.getY()/Map.blockPixelSize.x+j));
+			blocks[1] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize+i),(int)(r.getY()/Map.blockPixelSize+j));
 			r.putBlock(blocks[1], i, j);
 		} else if (wall == 1) {
 			i = (int) (Map.roomBlockSize.x - 2);
 			j = (int) (Map.roomBlockSize.y / 2 - 1);
 			btmp = r.getBlock(i, j);
-			blocks[0] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize.x+i),(int)(r.getY()/Map.blockPixelSize.x+j));
+			blocks[0] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize+i),(int)(r.getY()/Map.blockPixelSize+j));
 			r.putBlock(blocks[0], i, j);
 			i = (int) (Map.roomBlockSize.x - 2);
 			j = (int) (Map.roomBlockSize.y / 2);
 			btmp = r.getBlock(i, j);
-			blocks[1] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize.x+i),(int)(r.getY()/Map.blockPixelSize.x+j));
+			blocks[1] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize+i),(int)(r.getY()/Map.blockPixelSize+j));
 			r.putBlock(blocks[1], i, j);
 		} else if (wall == 2) {
 			i = (int) (Map.roomBlockSize.x / 2 - 1);
 			j = (int) (Map.roomBlockSize.y - 2);
 			btmp = r.getBlock(i, j);
-			blocks[0] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize.x+i),(int)(r.getY()/Map.blockPixelSize.x+j));
+			blocks[0] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize+i),(int)(r.getY()/Map.blockPixelSize+j));
 			r.putBlock(blocks[0], i, j);
 			i = (int) (Map.roomBlockSize.x / 2);
 			j = (int) (Map.roomBlockSize.y - 2);
 			btmp = r.getBlock(i, j);
-			blocks[1] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize.x+i),(int)(r.getY()/Map.blockPixelSize.x+j));
+			blocks[1] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize+i),(int)(r.getY()/Map.blockPixelSize+j));
 			r.putBlock(blocks[1], i, j);
 		} else {
 			i = 1;
 			j = (int) (Map.roomBlockSize.y / 2 - 1);
 			btmp = r.getBlock(i, j);
-			blocks[0] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize.x+i),(int)(r.getY()/Map.blockPixelSize.x+j));
+			blocks[0] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize+i),(int)(r.getY()/Map.blockPixelSize+j));
 			r.putBlock(blocks[0], i, j);
 			i = 1;
 			j = (int) (Map.roomBlockSize.y / 2);
 			btmp = r.getBlock(i, j);
-			blocks[1] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize.x+i),(int)(r.getY()/Map.blockPixelSize.x+j));
+			blocks[1] = (DoorBlock) BlockFactory.createDoorBlock(btmp,(int)(r.getX()/Map.blockPixelSize+i),(int)(r.getY()/Map.blockPixelSize+j));
 			r.putBlock(blocks[1], i, j);
 		}
 	}

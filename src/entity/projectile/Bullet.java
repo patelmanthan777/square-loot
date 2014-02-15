@@ -71,7 +71,7 @@ public class Bullet extends Projectile {
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		
 				
-		image.draw(this.getX()*Map.blockPixelSize.x-size/2, this.getY()*Map.blockPixelSize.y-size/2,size,size);
+		image.draw(this.getX()*Map.blockPixelSize-size/2, this.getY()*Map.blockPixelSize-size/2,size,size);
 	
 		glDisable(GL_BLEND);
 	}

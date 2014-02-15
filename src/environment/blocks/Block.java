@@ -40,9 +40,9 @@ public abstract class Block {
 	
 	public Block(float x, float y){
 		points[0] = new Vector2f(x, y);
-		points[1] = new Vector2f(x + Map.blockPixelSize.x, y);
-		points[2] = new Vector2f(x + Map.blockPixelSize.x, y + Map.blockPixelSize.y);
-		points[3] = new Vector2f(x, y + Map.blockPixelSize.y);
+		points[1] = new Vector2f(x + Map.blockPixelSize, y);
+		points[2] = new Vector2f(x + Map.blockPixelSize, y + Map.blockPixelSize);
+		points[3] = new Vector2f(x, y + Map.blockPixelSize);
 		
 		layer = 0;
 	}
@@ -59,12 +59,12 @@ public abstract class Block {
 	protected void initBlock(float x, float y){
 		points[0].x = x;
 		points[0].y = y;
-		points[1].x = x + Map.blockPixelSize.x;
+		points[1].x = x + Map.blockPixelSize;
 		points[1].y = y;
-		points[2].x = x + Map.blockPixelSize.x;
-		points[2].y = y + Map.blockPixelSize.y;
+		points[2].x = x + Map.blockPixelSize;
+		points[2].y = y + Map.blockPixelSize;
 		points[3].x = x ;
-		points[3].y = y + Map.blockPixelSize.y;
+		points[3].y = y + Map.blockPixelSize;
 	}
 	
 	/**
@@ -77,9 +77,9 @@ public abstract class Block {
 	public void drawAt(float posX, float posY) {
 		glColor4f(color.x,color.y,color.z,color.w);
 		glVertex2f(posX,posY);
-		glVertex2f(posX,posY+Map.blockPixelSize.y);
-		glVertex2f(posX+Map.blockPixelSize.x,posY+Map.blockPixelSize.y);
-		glVertex2f(posX+Map.blockPixelSize.x,posY);
+		glVertex2f(posX,posY+Map.blockPixelSize);
+		glVertex2f(posX+Map.blockPixelSize,posY+Map.blockPixelSize);
+		glVertex2f(posX+Map.blockPixelSize,posY);
         
 	}
 	
@@ -193,14 +193,14 @@ public abstract class Block {
 	 * @return true if the position is in the block
 	 */
 	public boolean isInside(Vector2f pos, int x, int y){
-		return (((int) (pos.x / Map.blockPixelSize.x) == (int) (x / Map.blockPixelSize.x) &&
-				 (int) (pos.y / Map.blockPixelSize.y) == (int) (y / Map.blockPixelSize.y)) ||
-				(((int)((pos.x-1) / Map.blockPixelSize.x) == (int) (x / Map.blockPixelSize.x)) &&
-				 ((int) (pos.y / Map.blockPixelSize.y) == (int) (y / Map.blockPixelSize.y))) ||
-				(((int) (pos.x / Map.blockPixelSize.x) == (int) (x / Map.blockPixelSize.x)) &&
-				 ((int) ((pos.y-1) / Map.blockPixelSize.y) == (int) (y / Map.blockPixelSize.y))) ||
-				((pos.x == x + Map.blockPixelSize.x) &&
-				 (pos.y == y + Map.blockPixelSize.y)));
+		return (((int) (pos.x / Map.blockPixelSize) == (int) (x / Map.blockPixelSize) &&
+				 (int) (pos.y / Map.blockPixelSize) == (int) (y / Map.blockPixelSize)) ||
+				(((int)((pos.x-1) / Map.blockPixelSize) == (int) (x / Map.blockPixelSize)) &&
+				 ((int) (pos.y / Map.blockPixelSize) == (int) (y / Map.blockPixelSize))) ||
+				(((int) (pos.x / Map.blockPixelSize) == (int) (x / Map.blockPixelSize)) &&
+				 ((int) ((pos.y-1) / Map.blockPixelSize) == (int) (y / Map.blockPixelSize))) ||
+				((pos.x == x + Map.blockPixelSize) &&
+				 (pos.y == y + Map.blockPixelSize)));
 	}
 	
 	/**

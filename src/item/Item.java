@@ -65,7 +65,7 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 		glEnable(GL_BLEND); 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);		
 				
-		image.draw(this.getX()*Map.blockPixelSize.x-halfSize.x*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize.y-halfSize.y*ConfigManager.unitPixelSize,halfSize.x*2*ConfigManager.unitPixelSize,halfSize.y*2*ConfigManager.unitPixelSize);
+		image.draw(this.getX()*Map.blockPixelSize-halfSize.x*ConfigManager.unitPixelSize, this.getY()*Map.blockPixelSize-halfSize.y*ConfigManager.unitPixelSize,halfSize.x*2*ConfigManager.unitPixelSize,halfSize.y*2*ConfigManager.unitPixelSize);
 	
 		glDisable(GL_BLEND);
 	}
