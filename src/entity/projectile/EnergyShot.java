@@ -109,23 +109,5 @@ public class EnergyShot extends Projectile {
 		PhysicsDataStructure s = new PhysicsDataStructure(this,GameBodyType.ENERGYSHOT); 
 		body.setUserData(s);
 	}
-	@Override
-	public void ContactHandler(PhysicsDataStructure a)
-	{
-		this.toDestroy();
-		switch(a.getType())
-		{
-		case BLOCK:
-			break;
-		case ENTITY:			
-			break;
-		case PLAYER:
-			break;
-		case PROJECTILE:
-			break;
-		default:
-			break;
-		}
-	}
 }
 
