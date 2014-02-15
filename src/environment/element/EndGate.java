@@ -26,7 +26,6 @@ public class EndGate extends TriggerZone {
 				{
 					i.destroyed = true;
 					lock--;
-					System.out.println("Gate Unlock :" + lock);
 				}
 			}
 			break;

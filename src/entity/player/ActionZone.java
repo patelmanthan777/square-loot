@@ -35,6 +35,7 @@ public class ActionZone extends TriggerZone {
 	}
 	
 	public Npc getNpc() {
+
 		return npcList.peekFirst();
 	}
 
@@ -60,7 +61,6 @@ public class ActionZone extends TriggerZone {
 		case ITEM:
 		case BATTERY:
 			itemList.add((Item) a.getPhysicsObject());
-			System.out.println("Item : " + itemList.size());
 			break;
 		default:
 			break;
@@ -76,7 +76,7 @@ public class ActionZone extends TriggerZone {
 			break;
 		case ITEM:
 		case BATTERY:
-			System.out.println("Item : " + itemList.size());
+			itemList.remove((Item) a.getPhysicsObject());
 			break;
 		default:
 			break;
