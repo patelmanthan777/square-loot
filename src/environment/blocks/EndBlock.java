@@ -16,6 +16,8 @@ public class EndBlock extends PhysicalBlock {
 		case PLAYER:
 			Game.newLevel = true;
 			break;
+		default:
+			break;
 		}
 	}
 }

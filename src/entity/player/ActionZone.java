@@ -42,14 +42,16 @@ public class ActionZone extends TriggerZone {
 	public void ContactHandler(PhysicsDataStructure a) {
 		switch(a.getType())
 		{
-			case SHOPKEEPER:
-				npcList.add((Npc) a.getPhysicsObject());
-				break;
-			case ITEM:
-			case BATTERY:
-				itemList.add((Item) a.getPhysicsObject());
-				System.out.println("Item : " + itemList.size());
-				break;
+		case SHOPKEEPER:
+			npcList.add((Npc) a.getPhysicsObject());
+			break;
+		case ITEM:
+		case BATTERY:
+			itemList.add((Item) a.getPhysicsObject());
+			System.out.println("Item : " + itemList.size());
+			break;
+		default:
+			break;
 		}
 
 	}
@@ -58,13 +60,15 @@ public class ActionZone extends TriggerZone {
 	public void EndContactHandler(PhysicsDataStructure a) {
 		switch(a.getType())
 		{
-			case SHOPKEEPER:
-				npcList.remove((Npc) a.getPhysicsObject());
+		case SHOPKEEPER:
+			npcList.remove((Npc) a.getPhysicsObject());
 			break;
-			case ITEM:
-				itemList.remove((Item) a.getPhysicsObject());
-				System.out.println("Item : " + itemList.size());
-				break;
+		case ITEM:
+			itemList.remove((Item) a.getPhysicsObject());
+			System.out.println("Item : " + itemList.size());
+			break;
+		default:
+			break;
 		}
 		
 	}

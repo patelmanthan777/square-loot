@@ -18,7 +18,6 @@ import userInterface.MiniMap;
 import entity.player.Player;
 import environment.Map;
 import event.Timer;
-import game.GameLoop;
 
 public class Zombie extends Npc implements MiniMapDrawable {
 

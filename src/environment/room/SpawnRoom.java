@@ -1,6 +1,5 @@
 package environment.room;
 
-import light.LightManager;
 import environment.Map;
 import environment.blocks.BlockFactory;
 import event.Timer;

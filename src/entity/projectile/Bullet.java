@@ -3,14 +3,10 @@ package entity.projectile;
 import static org.lwjgl.opengl.GL11.*;
 import light.Light;
 import light.LightManager;
-
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
-
 import configuration.ConfigManager;
 import environment.Map;
 import rendering.Shader;
