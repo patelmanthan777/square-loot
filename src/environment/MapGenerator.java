@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector2f;
 
 import environment.room.EndRoom;
 import environment.room.EnergyRoom;
+import environment.room.KeyRoom;
 import environment.room.Market;
 import environment.room.RandomBlockRoom;
 import environment.room.Room;
@@ -21,6 +22,7 @@ public class MapGenerator {
 	
 	private static int requiredEndRoom;
 	private static int requiredMarket;
+	private static int requiredKeyRoom;
 	
 	/**
 	 * Generate the rooms maze.
@@ -42,6 +44,7 @@ public class MapGenerator {
 	private static void createRooms(int n) {
 		requiredEndRoom = 1;
 		requiredMarket = 2;
+		requiredKeyRoom = 1;
 		int ispawn = (int)(Math.random() * Map.mapRoomSize.x);
 		int jspawn = (int)(Math.random() * Map.mapRoomSize.y);
 		Map.spawnPixelPosition = new Vector2f(((float)ispawn+0.5f)*Map.roomPixelSize.x, ((float)jspawn+0.5f)*Map.roomPixelSize.y);
@@ -193,6 +196,7 @@ public class MapGenerator {
 		Double factor = ((double)nbRoom)/n;
 		Double thresholdEndRoom = factor * requiredEndRoom;
 		Double thresholdMarket = factor * requiredMarket + thresholdEndRoom;
+		Double thresholdKeyRoom = factor * requiredKeyRoom + thresholdMarket;
 		if(rand < thresholdEndRoom)
 		{
 			room = new EndRoom(x,y);
@@ -205,6 +209,13 @@ public class MapGenerator {
 			room = new Market(x,y);
 			room.construct();
 			requiredMarket--;
+			return room;
+		}
+		else if(rand < thresholdKeyRoom)
+		{
+			room = new KeyRoom(x,y);
+			room.construct();
+			requiredKeyRoom--;
 			return room;
 		}
 
