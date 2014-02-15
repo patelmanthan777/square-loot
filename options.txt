@@ -6,4 +6,4 @@ PlayerAcc=20
 RobotAcc=10
 OwnPressureCoef=100
 MusicVolume=0.1
-PlayerOxygenConsumption=25
+PlayerOxygenConsumption=50

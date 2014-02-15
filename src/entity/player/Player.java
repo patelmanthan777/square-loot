@@ -83,7 +83,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		}
 				
 		inventory = new Inventory(5,this);
-		actionZone = new ActionZone(actionRange);
+		actionZone = new ActionZone(actionRange, position.x, position.y);
 		actionZone.init();
 	}
 	
@@ -91,7 +91,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		this.setHealth(getMaxHealth());
 		inventory = new Inventory(5,this);
 		initPhysics();
-		actionZone = new ActionZone(actionRange);
+		actionZone = new ActionZone(actionRange, position.x, position.y);
 		actionZone.init();
 		this.energy = 0;
 		pickUp(new LaserRifle(100,

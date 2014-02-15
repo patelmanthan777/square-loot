@@ -2,15 +2,21 @@ package environment.room;
 
 import environment.Map;
 import environment.blocks.BlockFactory;
+import environment.element.EndGate;
 
 public class EndRoom extends Room{
-	private int k = 2;
+	private int endGateSize = 2;
+	private EndGate endGate;
+	private int lock = 4;
 	
 	public EndRoom(float posX, float posY) {
 		super(posX, posY);
 		miniMapColor.x = 0;
 		miniMapColor.y = 0;
 		miniMapColor.z = 1;
+		endGate = new EndGate(endGateSize, lock, posX/Map.blockPixelSize.x + Map.roomBlockSize.x/2, posY/Map.blockPixelSize.y+Map.roomBlockSize.y/2);
+		System.out.println();
+		endGate.initPhysics();
 	}
 
 	@Override
@@ -39,12 +45,11 @@ public class EndRoom extends Room{
 			grid[(int)Map.roomBlockSize.x-2][i] = BlockFactory.createBorderBlock();
 		}
 		
-		for(int i = (int)Map.roomBlockSize.x/2-k; i < (int)Map.roomBlockSize.x/2+k; i++){
-			for(int j = (int)Map.roomBlockSize.y/2-k; j < (int)Map.roomBlockSize.y/2+k; j++){
+		for(int i = (int)Map.roomBlockSize.x/2-endGateSize; i < (int)Map.roomBlockSize.x/2+endGateSize; i++){
+			for(int j = (int)Map.roomBlockSize.y/2-endGateSize; j < (int)Map.roomBlockSize.y/2+endGateSize; j++){
 				grid[i][j] = BlockFactory.createEndBlock();
 			}
-
-		}		
+		}	
 	}
 	
 	@Override
