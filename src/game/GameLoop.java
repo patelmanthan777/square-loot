@@ -104,7 +104,7 @@ public class GameLoop extends Game{
 			Timer.stop();
 			Timer.start();
 		}else{
-			p.initPhysics();
+			p.reinitPhysics();
 		}
 		p.setPosition(map.getSpawnPosition());
 		LightManager.addShadowCaster(map);

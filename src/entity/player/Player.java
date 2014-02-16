@@ -87,6 +87,12 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		actionZone.init();
 	}
 	
+	public void reinitPhysics() {
+		initPhysics();
+		actionZone = new ActionZone(actionRange, position.x, position.y);
+		actionZone.init();
+	}
+	
 	public void reinit(){		
 		this.setHealth(getMaxHealth());
 		inventory = new Inventory(5,this);
