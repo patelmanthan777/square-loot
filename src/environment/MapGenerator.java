@@ -11,6 +11,7 @@ import environment.room.Market;
 import environment.room.RandomBlockRoom;
 import environment.room.Room;
 import environment.room.SpawnRoom;
+import environment.room.SquareRoom;
 
 public class MapGenerator {
 	private static LinkedList<Room> rooms;
@@ -191,7 +192,11 @@ public class MapGenerator {
 	
 	private static Room randRoom(float x, float y, int nbRoom, int n){
 		Room room;
-
+		
+		room = new SquareRoom(x, y);
+		room.construct();
+		return room;
+/*
 		Double rand = Math.random();
 		Double factor = ((double)nbRoom)/n;
 		Double thresholdEndRoom = factor * requiredEndRoom;
@@ -228,6 +233,6 @@ public class MapGenerator {
 		}
 
 		room.construct();
-		return room;
+		return room;*/
 	}
 }
