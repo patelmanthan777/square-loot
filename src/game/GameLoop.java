@@ -51,7 +51,7 @@ public class GameLoop extends Game{
 		EntityManager.init();
 		GraphicsAL.init();
 
-		map = new Map(15, new Vector2f(10,10), new Vector2f(20,16), ConfigManager.unitPixelSize);
+		map = new Map(15, new Vector2f(10,10), new Vector2f(3,3), ConfigManager.unitPixelSize);
 		map.initPhysics();
 		map.renderMapToFrameBuffers();	
 

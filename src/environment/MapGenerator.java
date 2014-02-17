@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.lwjgl.util.vector.Vector2f;
 
+import environment.room.ClassicRoom;
 import environment.room.EndRoom;
 import environment.room.EnergyRoom;
 import environment.room.KeyRoom;
@@ -11,8 +12,6 @@ import environment.room.Market;
 import environment.room.RandomBlockRoom;
 import environment.room.Room;
 import environment.room.SpawnRoom;
-import environment.room.SquareRoom;
-
 public class MapGenerator {
 	private static LinkedList<Room> rooms;
 	/**
@@ -193,7 +192,7 @@ public class MapGenerator {
 	private static Room randRoom(float x, float y, int nbRoom, int n){
 		Room room;
 		
-		room = new SquareRoom(x, y);
+		room = new ClassicRoom(x, y);
 		room.construct();
 		return room;
 /*

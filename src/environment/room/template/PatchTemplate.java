@@ -2,12 +2,12 @@ package environment.room.template;
 
 import environment.blocks.Block;
 
-public abstract class RoomTemplate {
-	static final protected int templateSize = 10;
+public abstract class PatchTemplate {
+	static final public int templateSize = 10;
 	
 	protected BlockTemplate patch[][];
 	
-	RoomTemplate()
+	PatchTemplate()
 	{
 		patch = new BlockTemplate[templateSize][templateSize];
 	}

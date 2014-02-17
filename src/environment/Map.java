@@ -6,10 +6,13 @@ import light.PointLight;
 import light.Laser;
 import light.LightManager;
 import light.ShadowBuffer;
+
 import org.lwjgl.util.vector.Vector2f;
+
 import configuration.ConfigManager;
 import environment.blocks.Block;
 import environment.room.Room;
+import environment.room.template.PatchTemplate;
 import rendering.FBO;
 import rendering.ShadowCaster;
 
@@ -24,6 +27,10 @@ public class Map implements ShadowCaster {
 	 * Room size in number of block.
 	 */
 	public static Vector2f roomBlockSize;
+	/**
+	 * Room size in number of template
+	 */
+	public static Vector2f roomSize;
 	/**
 	 * Room size in number of pixels.
 	 */
@@ -78,10 +85,12 @@ public class Map implements ShadowCaster {
 	 */
 	public static FBO[][][] mapFBO = new FBO[textureNb][textureNb][maxLayer];
 
-	public Map(int n, Vector2f mapRoomSize, Vector2f roomBlockSize,
+	public Map(int n, Vector2f mapRoomSize, Vector2f roomSize,
 			float blockPixelSize) {
 		Map.mapRoomSize = mapRoomSize;
-		Map.roomBlockSize = roomBlockSize;
+		Map.roomSize = roomSize;
+		Map.roomBlockSize = new Vector2f(roomSize.x * PatchTemplate.templateSize + 4,
+										 roomSize.y * PatchTemplate.templateSize + 4);
 		Map.blockPixelSize = blockPixelSize;
 
 		Map.roomPixelSize = new Vector2f(roomBlockSize.x * blockPixelSize,
