@@ -1,7 +1,10 @@
 package environment.room;
 
+import item.ItemManager;
+import item.Key;
 import environment.Map;
 import environment.blocks.BlockFactory;
+import environment.element.EndGate;
 import event.Timer;
 
 
@@ -45,7 +48,13 @@ public class SpawnRoom extends OxygenRoom{
 		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2] = BlockFactory.createSpawnBlock();
 		grid[(int)Map.roomBlockSize.x/2][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
-		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();				
+		grid[(int)Map.roomBlockSize.x/2-1][(int)Map.roomBlockSize.y/2-1] = BlockFactory.createSpawnBlock();
+		
+		for(;EndGate.keys > 0; EndGate.keys--){			
+			ItemManager.add(new Key(x/Map.blockPixelSize+Map.roomBlockSize.x/2,
+									y/Map.blockPixelSize+Map.roomBlockSize.y/2));
+		}
+			
 	}
 	
 	@Override

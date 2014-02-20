@@ -7,7 +7,7 @@ import environment.element.EndGate;
 public class EndRoom extends Room{
 	private int endGateSize = 2;
 	private EndGate endGate;
-	private int lock = 4;
+	private int lock = -4;
 	
 	public EndRoom(float posX, float posY) {
 		super(posX, posY);

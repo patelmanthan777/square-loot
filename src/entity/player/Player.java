@@ -30,6 +30,7 @@ import entity.LivingEntity;
 import entity.npc.Npc;
 import entity.npc.Shopkeeper;
 import environment.Map;
+import environment.element.EndGate;
 import environment.room.OxygenRoom;
 import event.Timer;
 
@@ -152,8 +153,10 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		m.getRoom(this.getX(), this.getY()).consumeOxygen((float)(delta * oxygenConsumptionPerSecond)/(float)(Timer.unitInOneSecond));
 		
 		
-		if(getHealth() == 0)
+		if(getHealth() == 0){
 			Game.isAlive = false;
+			EndGate.keys = -1;
+		}
 			
 	}
 	
