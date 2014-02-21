@@ -5,8 +5,8 @@ import item.ItemListEnum;
 
 public abstract class Accessory extends Equipment {
 	
-	public Accessory(float x, float y, ItemListEnum s)
+	public Accessory(float x, float y, ItemListEnum s, long cd)
 	{
-		super(x,y,s);		
+		super(x,y,s,cd);		
 	}
 }
