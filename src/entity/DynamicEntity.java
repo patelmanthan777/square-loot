@@ -57,6 +57,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 	 * @param translationy
 	 *            represents vertical motion
 	 */
+	
 	public void translate(float translationx, float translationy) {
 		this.translation.x += translationx;
 		this.translation.y += translationy;
@@ -115,7 +116,7 @@ public abstract class DynamicEntity extends Entity implements Drawable, PhysicsO
 				
 		
 		float newSpeedx = this.speed.x - this.speed.x * descFactor;
-		float newSpeedy = this.speed.y -= this.speed.y * descFactor;
+		float newSpeedy = this.speed.y - this.speed.y * descFactor;
 		
 		
 		this.speed.x = MathFunction.sameSigne(speed.x,newSpeedx)? newSpeedx : 0;

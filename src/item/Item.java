@@ -14,13 +14,19 @@ import static org.lwjgl.opengl.GL11.glEnable;
 
 
 
+import org.jbox2d.collision.shapes.CircleShape;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.util.vector.Vector2f;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 
 import configuration.ConfigManager;
 import physics.GameBodyType;
+import physics.PhysicsDataStructure;
+import physics.PhysicsManager;
 import physics.PhysicsObject;
 import rendering.Drawable;
 import utils.GraphicsAL;
@@ -32,6 +38,10 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 	Vector2f [] points = new Vector2f[4];
 	public final ItemListEnum self;
 	public boolean destroyed = false;	
+	
+	protected float speedValue = 0;
+	protected Vector2f initSpeed = new Vector2f(0,0);
+	protected Vector2f throwdirection = new Vector2f(0,0);
 	
 	protected SpriteSheet sprites;
 	protected Image image;
@@ -47,7 +57,7 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 		for(int i = 0 ; i < 4 ; i++){
 			points[i] = new Vector2f();
 		}
-		
+				
 		
 	}
 	
@@ -97,6 +107,40 @@ public abstract class Item extends DynamicEntity implements Drawable, PhysicsObj
 		glDisable(GL_BLEND);
 	}
 	
+	@Override
+	public void initPhysics(){
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = btype;
+		bodyDef.fixedRotation = true;
+		bodyDef.position.set(position.x, position.y);
+		body = PhysicsManager.createBody(bodyDef);
+		CircleShape dynamicCircle = new CircleShape();
+		dynamicCircle.setRadius(this.halfSize.x);
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = dynamicCircle;
+		fixtureDef.density = 0.3f;
+		fixtureDef.friction = 0.0f;
+		body.createFixture(fixtureDef);
+		
+		
+		
+		this.speed.set((float) (throwdirection.x * speedValue + initSpeed.x),
+					   (float) (throwdirection.y * speedValue + initSpeed.y));
+		
+		Vec2 vel = new Vec2((direction.x * speedValue + initSpeed.x),
+							(direction.y * speedValue + initSpeed.y));
+		body.setLinearVelocity(vel);
+		
+		PhysicsDataStructure s = new PhysicsDataStructure(this, gbtype); 
+		body.setUserData(s);
+	}
+	
+	public void setThrow(float vx, float vy, float dx, float dy){
+		initSpeed.set(vx, vy);
+		throwdirection.set(dx,dy);
+		
+		speedValue=30;
+	}
 	
 	public abstract int getTextureID();
 }

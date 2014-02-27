@@ -114,10 +114,11 @@ public class EntityManager {
 		player.setLaser(playerLaser);
 		player.pickUp(new LaserRifle(100,
 									 0f,
-				 0f,
-				 100f,
-				 10,
-				 10));
+									 0f,
+									 100f,
+									 10,
+									 10));
+		
 		player.pickUp(new Battery(200,200));
 		player.pickUp(new Battery(200,200));
 		player.pickUp(new Battery(200,200));

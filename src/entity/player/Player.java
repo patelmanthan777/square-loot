@@ -260,9 +260,12 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		return light;
 	}
 	
-	private void dropItem(Item i, float x, float y){	
+	private void dropItem(Item i){
+		i.setThrow(speed.x, speed.y, direction.x, direction.y);
+		float x = (float) (position.x + (0.6f * Math.sqrt(2)) * direction.x /Math.sqrt(direction.x*direction.x + direction.y*direction.y));
+		float y = (float) (position.y + (0.6f * Math.sqrt(2)) * direction.y /Math.sqrt(direction.x*direction.x + direction.y*direction.y));
 		ItemManager.add(i);
-		i.setPosition(x, y);
+		i.setPosition(x, y);				
 	}
 	
 	public void pickUpOrBuy(){
@@ -280,16 +283,15 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 	public boolean pickUp(Item i){
 		Item tmp = inventory.add(i);
 		if(tmp != null)
-			dropItem(tmp, position.x, position.y);
+			dropItem(tmp);
 		
 		return tmp != i;
 	}
 	
 	public void primaryWeapon(float directionX, float directionY){
-		float x = (float) (position.x + (0.4f * Math.sqrt(2)) * directionX /Math.sqrt(directionX*directionX + directionY*directionY));
-		float y = (float) (position.y + (0.4f * Math.sqrt(2)) * directionY /Math.sqrt(directionX*directionX + directionY*directionY));
+		float x = (float) (position.x + (0.4f * Math.sqrt(2)) * directionX /Math.sqrt(directionX*directionX + directionY*directionY));		float y = (float) (position.y + (0.4f * Math.sqrt(2)) * directionY /Math.sqrt(directionX*directionX + directionY*directionY));
 		inventory.equippedItemAction(InventoryItemEnum.PWEAPON, x, y,
-									  							directionX, directionY);
+				                     directionX, directionY);
 	}
 	
 
@@ -317,7 +319,7 @@ public class Player extends LivingEntity implements MiniMapDrawable {
 		}
 		
 		if (tmp != null){
-			dropItem(tmp, position.x, position.y);			
+			dropItem(tmp);			
 		}
 	}
 	
