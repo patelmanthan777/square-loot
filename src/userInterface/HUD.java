@@ -17,8 +17,10 @@ import de.lessvoid.nifty.builder.ImageBuilder;
 import de.lessvoid.nifty.builder.LayerBuilder;
 import de.lessvoid.nifty.builder.PanelBuilder;
 import de.lessvoid.nifty.builder.ScreenBuilder;
+import de.lessvoid.nifty.builder.TextBuilder;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.ImageRenderer;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.nulldevice.NullSoundDevice;
 import de.lessvoid.nifty.render.NiftyImage;
 import de.lessvoid.nifty.renderer.lwjgl.input.LwjglInputSystem;
@@ -27,8 +29,11 @@ import de.lessvoid.nifty.spi.time.impl.AccurateTimeProvider;
 import de.lessvoid.nifty.tools.SizeValue;
 import entity.player.Player;
 import environment.room.OxygenRoom;
+import event.Timer;
 
 public class HUD {
+	private static int TEXTHEIGHT = 30; 
+	
 	private static Player player;
 	private static Inventory inventory;
 	static Nifty nifty;
@@ -67,6 +72,7 @@ public class HUD {
 		updateHealthBar();
 		updateOxygenBar();
 		updateApneaBar();
+		updateTexts();
 		
 		return nifty.update();
 	}
@@ -114,6 +120,28 @@ public class HUD {
 		e.getParent().layoutElements();
 	}
 	
+	private static void updateTexts(){
+		Element e = HUD.nifty.getCurrentScreen().findElementByName("fps");
+		TextRenderer txt = e.getRenderer(TextRenderer.class);
+		String s = Timer.getFPSDisplay();
+		txt.setText(s);
+			
+		e = HUD.nifty.getCurrentScreen().findElementByName("time");
+		txt = e.getRenderer(TextRenderer.class);
+		s = Timer.getChrono();
+		txt.setText(s);
+		
+		e = HUD.nifty.getCurrentScreen().findElementByName("energy");
+		txt = e.getRenderer(TextRenderer.class);
+		s = "" + player.getEnergy();
+		txt.setText(s);
+				
+		e = HUD.nifty.getCurrentScreen().findElementByName("battery");
+		txt = e.getRenderer(TextRenderer.class);
+		s = "" + player.getBatteriesNb();
+		txt.setText(s);
+	}
+	
 	public static void render(){
 		GL11.glDisable(GL11.GL_CULL_FACE);       
         
@@ -141,6 +169,133 @@ public class HUD {
     		   
 				panel( new PanelBuilder(){{
 					width("25%");
+					childLayoutCenter();
+					
+					panel( new PanelBuilder(){{
+						width("80%");
+						height("90%");
+						childLayoutVertical();
+
+						panel( new PanelBuilder(){{							
+							childLayoutCenter();
+							
+							panel( new PanelBuilder(){{
+								
+								childLayoutHorizontal();
+								height(pixels(TEXTHEIGHT));
+								
+								panel( new PanelBuilder(){{
+									width("20%");
+									childLayoutHorizontal();
+									text(new TextBuilder(){{									
+										font("aurulent-sans-16.fnt");
+										text("FPS:");	
+									}});
+								}});
+								
+								panel( new PanelBuilder(){{							
+									childLayoutHorizontal();
+									text(new TextBuilder("fps"){{
+										font("aurulent-sans-16.fnt");
+										text("");	
+									}});
+								}});
+							}});
+						}});
+						
+						panel( new PanelBuilder(){{							
+							childLayoutCenter();
+
+							panel( new PanelBuilder(){{							
+								childLayoutHorizontal();
+								height(pixels(TEXTHEIGHT));
+								
+								panel( new PanelBuilder(){{
+									width("20%");
+									childLayoutHorizontal();
+								
+									text(new TextBuilder(){{
+										font("aurulent-sans-16.fnt");
+										text("Time:");	
+									}});
+								}});
+								
+								panel( new PanelBuilder(){{									
+									childLayoutHorizontal();
+									
+									text(new TextBuilder("time"){{
+										font("aurulent-sans-16.fnt");
+										text("");	
+									}});
+								}});
+							}});
+						}});
+						
+						panel( new PanelBuilder(){{							
+							childLayoutCenter();
+						
+							panel( new PanelBuilder(){{							
+								childLayoutHorizontal();
+								height(pixels(TEXTHEIGHT));
+								
+								panel( new PanelBuilder(){{
+									width("20%");
+									childLayoutHorizontal();
+
+									image( new ImageBuilder(){{
+										width("30%");
+										height("80%");
+										filename("assets/textures/energy.png");
+									}});									
+								}});
+
+								panel( new PanelBuilder(){{
+									childLayoutHorizontal();
+
+									text(new TextBuilder("energy"){{
+										font("aurulent-sans-16.fnt");
+										text("");	
+									}});
+								}});
+							}});
+						}});
+						
+						panel( new PanelBuilder(){{							
+							childLayoutCenter();
+						
+							panel( new PanelBuilder(){{							
+								childLayoutHorizontal();
+								height(pixels(TEXTHEIGHT));
+								
+								panel( new PanelBuilder(){{
+									width("20%");
+									childLayoutHorizontal();
+
+									image( new ImageBuilder(){{
+										width("20%");
+										height("85%");
+										filename("assets/textures/battery.png");
+									}});									
+								}});
+								
+								panel( new PanelBuilder(){{									
+									childLayoutHorizontal();
+
+									text(new TextBuilder("battery"){{
+										font("aurulent-sans-16.fnt");
+										text("");	
+									}});
+								}});
+							}});
+						}});
+						
+					}});
+					
+					panel( new PanelBuilder(){{
+						width("30%");
+						childLayoutVertical();
+					}});
+					
 				}});
     		   
 				panel( new PanelBuilder(){{

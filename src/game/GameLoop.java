@@ -73,9 +73,9 @@ public class GameLoop extends Game{
 		ItemManager.init();
 		
 		OverlayManager.init();
-		OverlayManager.createStatsOverlay();
+		//OverlayManager.createStatsOverlay();
 		OverlayManager.createMiniMap(map.getRooms(), p);
-		OverlayManager.createPlayerStatsOverlay(p);
+		//OverlayManager.createPlayerStatsOverlay(p);
 		
 		
 		SoundManager.init();

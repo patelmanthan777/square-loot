@@ -37,14 +37,14 @@ public class Timer {
         	int minutesInUnit = (int) (minutes * 60 * unitInOneSecond);
         	int seconds = (int) ((chrono - hoursInUnit - minutesInUnit )/unitInOneSecond);
         	
-        	chronoDisplay = "Time : " +  hours + ":" + ((minutes<10)?"0"+minutes:minutes) +  ":" + ((seconds<10)?"0"+seconds:seconds);
+        	chronoDisplay = "" +  hours + ":" + ((minutes<10)?"0"+minutes:minutes) +  ":" + ((seconds<10)?"0"+seconds:seconds);
         }
         
         FPScpt++;
         if(currentFrame/500 != lastFrame/500){
         	FPS = FPScpt*2;
         	FPScpt = 0;
-        	fpsDisplay = "FPS : " + FPS;
+        	fpsDisplay = "" + FPS;
         }
 	}
 	
